@@ -181,13 +181,13 @@
 
 <header class="topbar fixed top-0 w-full">
     <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
-        <a id="btn-back" href="https://bellodulac.netlify.app/index.html" class="btn-back shrink-0 shadow-sm">
+        <a id="btn-back" href="index.html" class="btn-back shrink-0 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             <span id="text-back">Retour</span>
         </a>
 
         <div class="flex items-center gap-2 min-w-0 flex-1 justify-center">
-            <img id="topbar-logo" src="https://bellodulac.netlify.app/images/bellodulac-logo.png" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+            <img id="topbar-logo" src="images/bellodulac-logo.png" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
             <span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Événements</span>
         </div>
 
@@ -270,7 +270,7 @@
 // Passez a false pour retirer completement le mode edition (bouton, formulaires,
 // export) de cette page publique. Utile pour desactiver l'edition en production
 // tout en gardant la meme page pour l'administration en local.
-window.EDIT_MODE = false;
+window.EDIT_MODE = true;
 
 (function () {
     const state = {
@@ -357,8 +357,8 @@ window.EDIT_MODE = false;
     };
 
     const LOGO_DATA = {
-        moustiers: { src: "https://bellodulac.netlify.app/images/bell-etoile-logo.png" },
-        salles:    { src: "https://bellodulac.netlify.app/images/bellodulac-logo.png" }
+        moustiers: { src: "images/bell-etoile-logo.png" },
+        salles:    { src: "images/bellodulac-logo.png" }
     };
 
     const WEEKDAY_CODES = ['sun','mon','tue','wed','thu','fri','sat']; // aligné sur Date.getDay()
@@ -438,7 +438,7 @@ window.EDIT_MODE = false;
         const backParams = new URLSearchParams();
         backParams.set('lang', state.lang);
         if (p.get('logement')) backParams.set('logement', p.get('logement'));
-        $('#btn-back').href = `https://bellodulac.netlify.app/index.html?${backParams.toString()}`;
+        $('#btn-back').href = `index.html?${backParams.toString()}`;
     }
 
     // -------- date helpers dependant de la config
@@ -709,6 +709,12 @@ window.EDIT_MODE = false;
         return '★'.repeat(r) + '☆'.repeat(3 - r);
     }
 
+    // ordre d'affichage au sein d'un jour : coups de coeur d'abord, puis meilleure note en tete
+    function sortByFavoriteThenRating(a, b) {
+        if (!!b.favorite !== !!a.favorite) return (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0);
+        return (b.rating || 0) - (a.rating || 0);
+    }
+
     // en-tete colore commun aux cartes du calendrier et aux bandeaux du mode edition
     function buildDayHeadEl(cfg, day, isToday, dayIcon) {
         const weekdayIdx = (day.getDay() + 6) % 7; // 0 = lundi
@@ -838,7 +844,8 @@ window.EDIT_MODE = false;
             const iso = toISO(day);
             const dayEvents = allEvents
                 .filter(e => e.date === iso)
-                .filter(matchesFilters);
+                .filter(matchesFilters)
+                .sort(sortByFavoriteThenRating);
 
             // en mode agenda (fullWeeks=false), on saute les jours vides pour rester compact
             if (dayEvents.length === 0 && !cfg.fullWeeks) return;
@@ -1425,7 +1432,7 @@ window.EDIT_MODE = false;
         } else {
             // Chargement en <script> (comme pois.js), avec repli local si l'URL externe echoue.
 			// ex: "https://gist.githack.com/votre-compte/xxx/raw/evenements.js"
-            const EXTERNAL_URL = "https://gist.githack.com/verdonstudio/d2425fd19c5e07439d4aa680f01953cc/raw/07741b9c573eb6b1994ac5a8b3767d6f7afb556c/evenements.js"; 
+            const EXTERNAL_URL = "https://gist.githack.com/verdonstudio/d2425fd19c5e07439d4aa680f01953cc/raw/07741b9c573eb6b1994ac5a8b3767d6f7afb556c/evenements.js"; 	
             const LOCAL_URL = "evenements.js";
 
             function loadLocal() {
