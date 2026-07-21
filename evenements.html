@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Événements — Bell'O du Lac™ & Bell'Étoile™</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+
+
+
+
+<style>
+    :root {
+        --c-bg:        #fdfbf7;
+        --c-ink:       #1e293b;
+        --c-muted:     #64748b;
+        --c-primary:   #0284c7;
+        --c-border:    rgba(14, 165, 233, 0.1);
+        --c-card:      #ffffff;
+    }
+    body { font-family: 'Inter', sans-serif; margin: 0; background: var(--c-bg); color: var(--c-ink); }
+    .font-display { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+    /* Topbar identique aux autres pages du site */
+    .topbar {
+        background-color: rgba(253, 251, 247, 0.85);
+        -webkit-backdrop-filter: saturate(200%) blur(24px);
+        backdrop-filter: saturate(200%) blur(24px);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        z-index: 50;
+    }
+    .chip { transition: all 0.2s ease; }
+
+    /* Barre d'actions du mode edition : reste visible pendant le scroll */
+    .edit-toolbar {
+        position: sticky;
+        top: 56px; /* hauteur de la topbar fixe */
+        z-index: 40;
+        background: var(--c-bg);
+        margin: 0 -1rem 12px;
+        padding: 10px 1rem 12px;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .chip:hover { background: #f0f9ff; transform: scale(1.02); }
+
+    .btn-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 999px;
+        background: #f1f5f9; border: 1px solid rgba(0,0,0,0.05);
+        font-size: 12px; font-weight: 600; color: #334155;
+        transition: all 0.2s; text-decoration: none;
+    }
+    .btn-back:hover { background: #e2e8f0; color: #0f172a; }
+
+    #content { margin-top: 56px; padding-bottom: 48px; }
+
+    /* ---- Filtres (légende cliquable, comme les filtres carte de l'accueil) ---- */
+    .filter-chip {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 12px; border-radius: 999px;
+        font-size: 12px; font-weight: 600;
+        border: 1.5px solid transparent;
+        background: #fff; color: var(--c-muted);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
+    }
+    .filter-chip:hover { transform: translateY(-1px); }
+    .filter-chip.active { color: #fff; border-color: transparent; }
+    .filter-chip.fav-chip.active { background: #f59e0b; }
+
+    /* ---- Cartes jour ---- */
+    .day-card { border-radius: 20px; overflow: hidden; background: var(--c-card); border: 1px solid var(--c-border); box-shadow: 0 4px 20px rgba(2,132,199,0.05); }
+    .day-head {
+        display: flex; align-items: center; gap: 12px;
+        padding: 14px 18px; color: #fff;
+    }
+    .day-head .day-num { font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1; }
+    .day-head .day-meta { display: flex; flex-direction: column; line-height: 1.15; }
+    .day-head .day-name { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.95; }
+    .day-head .day-month { font-size: 12px; opacity: 0.85; }
+    .day-head .day-icon { margin-left: auto; font-size: 18px; opacity: 0.9; }
+
+    .event-row {
+        display: flex; align-items: flex-start; gap: 12px;
+        padding: 12px 18px; border-top: 1px solid var(--c-border);
+        text-decoration: none; color: inherit;
+        transition: background 0.15s ease;
+    }
+    .event-row:hover { background: #f8fafc; }
+    .event-icon {
+        flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 16px; color: #fff;
+    }
+    .event-body { flex: 1; min-width: 0; }
+    .event-time { font-size: 11px; font-weight: 700; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+    .event-title { font-size: 14px; font-weight: 700; color: var(--c-ink); margin-top: 1px; }
+    .event-place { font-size: 12.5px; color: var(--c-primary); font-weight: 600; }
+    .event-details { font-size: 12.5px; color: var(--c-muted); margin-top: 1px; }
+    .event-star { flex-shrink: 0; font-size: 15px; margin-top: 2px; }
+    .event-link-arrow { flex-shrink: 0; color: var(--c-muted); margin-top: 6px; }
+    .event-row:hover .event-link-arrow { color: var(--c-primary); }
+
+    .event-row.highlighted { outline: 2px solid #f59e0b; outline-offset: -2px; background: #fffbeb; }
+
+    .no-events { padding: 16px 18px; font-size: 13px; color: var(--c-muted); font-style: italic; }
+
+    /* ---- Mode edition : bandeaux de jour + choix des couleurs ---- */
+    .edit-day-banner {
+        display: flex; align-items: center; gap: 10px;
+        padding: 8px 14px; color: #fff; border-radius: 12px;
+        font-size: 12px;
+    }
+    .edit-day-banner .day-num { font-family: 'Fraunces', Georgia, serif; font-size: 18px; font-weight: 700; line-height: 1; }
+    .edit-day-banner .day-meta { display: flex; flex-direction: column; line-height: 1.1; }
+    .edit-day-banner .day-name { font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; font-size: 10.5px; }
+    .edit-day-banner .day-month { font-size: 10.5px; opacity: 0.9; }
+    .edit-day-banner--recurring { background: #475569; }
+    .edit-daycolors { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .edit-daycolors-label { font-size: 11px; font-weight: 700; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+    .edit-daycolors-swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+    .edit-daycolor-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; color: var(--c-muted); cursor: pointer; }
+    .edit-daycolor-item input[type="color"] { width: 26px; height: 22px; border: none; border-radius: 6px; padding: 0; cursor: pointer; background: none; }
+
+    .card { background: var(--c-card); border: 1px solid var(--c-border); border-radius: 20px; box-shadow: 0 4px 20px rgba(2,132,199,0.03); }
+
+    @keyframes flashHighlight { 0%,100% { background: #fffbeb; } 50% { background: #fef3c7; } }
+    .event-row.flash { animation: flashHighlight 1s ease-in-out 2; }
+
+    /* ---- Mode edition ---- */
+    .btn-edit-toggle {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border-radius: 999px;
+        background: #fff; border: 1px solid rgba(0,0,0,0.08);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06); cursor: pointer;
+        font-size: 14px; transition: all 0.2s ease; flex-shrink: 0;
+    }
+    .btn-edit-toggle:hover { background: #f0f9ff; }
+    .btn-edit-toggle.active { background: var(--c-primary); color: #fff; border-color: transparent; }
+
+    .edit-row { background: var(--c-card); border: 1px solid var(--c-border); border-radius: 16px; padding: 14px 16px; box-shadow: 0 2px 10px rgba(2,132,199,0.04); }
+    .edit-row .ef-label { font-size: 10.5px; font-weight: 700; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.03em; display: block; margin-bottom: 3px; }
+    .edit-row input[type="text"], .edit-row input[type="number"], .edit-row input[type="date"], .edit-row select, .edit-row textarea {
+        width: 100%; font-size: 12.5px; padding: 6px 8px; border: 1px solid #e2e8f0; border-radius: 8px;
+        background: #fff; color: var(--c-ink); font-family: inherit; box-sizing: border-box;
+    }
+    .edit-row textarea { resize: vertical; min-height: 40px; }
+    .edit-row input:focus, .edit-row select:focus, .edit-row textarea:focus { outline: 2px solid var(--c-primary); outline-offset: 0; border-color: transparent; }
+    .ef-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px 12px; margin-top: 10px; }
+    .ef-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px 12px; margin-top: 10px; }
+    .ef-checkline { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--c-ink); }
+    .btn-del-event {
+        flex-shrink: 0; width: 28px; height: 28px; border-radius: 999px;
+        border: 1px solid rgba(220,38,38,0.25); background: #fef2f2; color: #dc2626;
+        cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
+    }
+    .btn-del-event:hover { background: #fee2e2; }
+    .btn-dup-event {
+        flex-shrink: 0; width: 28px; height: 28px; border-radius: 999px;
+        border: 1px solid var(--c-border); background: #f0f9ff; color: var(--c-primary);
+        cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
+    }
+    .btn-dup-event:hover { background: #e0f2fe; }
+    .edit-row-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .edit-type-toggle { display: inline-flex; border-radius: 999px; overflow: hidden; border: 1px solid #e2e8f0; }
+    .edit-type-toggle button { padding: 5px 12px; font-size: 11.5px; font-weight: 700; background: #fff; color: var(--c-muted); border: none; cursor: pointer; }
+    .edit-type-toggle button.active { background: var(--c-primary); color: #fff; }
+    .byday-grid { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .byday-chip { font-size: 10.5px; font-weight: 700; padding: 4px 7px; border-radius: 6px; border: 1px solid #e2e8f0; background: #fff; color: var(--c-muted); cursor: pointer; }
+    .byday-chip.active { background: var(--c-primary); color: #fff; border-color: transparent; }
+    .edit-row-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .edit-row-id { font-size: 11px; font-weight: 700; color: var(--c-muted); font-family: 'Courier New', monospace; }
+</style>
+</head>
+<body>
+
+<header class="topbar fixed top-0 w-full">
+    <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+        <a id="btn-back" href="index.html" class="btn-back shrink-0 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <span id="text-back">Retour</span>
+        </a>
+
+        <div class="flex items-center gap-2 min-w-0 flex-1 justify-center">
+            <img id="topbar-logo" src="images/bellodulac-logo.png" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+            <span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Événements</span>
+        </div>
+
+        <button id="btn-edit-toggle" type="button" class="btn-edit-toggle" title="Mode edition" aria-label="Mode edition">✏️</button>
+        <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
+            <option value="FR">FR</option>
+            <option value="EN">EN</option>
+        </select>
+    </div>
+</header>
+
+<main id="content" class="max-w-3xl mx-auto px-4">
+
+    <div class="mt-5 mb-5">
+        <h1 id="page-title" class="text-2xl font-bold font-display text-[var(--c-ink)]">—</h1>
+        <p id="page-subtitle" class="text-sm text-[var(--c-muted)] mt-1">—</p>
+    </div>
+
+    <div id="view-calendar">
+    <div class="flex flex-wrap items-center gap-2 mb-2" id="filter-bar" role="toolbar" aria-label="Filtres"></div>
+
+    <div class="flex flex-wrap items-center justify-between gap-2 text-xs mb-5">
+        <span id="events-counter" class="text-[var(--c-muted)]">—</span>
+        <div class="flex items-center gap-2">
+            <select id="rating-select" class="chip text-[11px] font-medium border border-gray-200 bg-white pl-2 pr-6 py-1 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 6px center;"></select>
+            <button id="btn-toggle-past" type="button" class="text-[var(--c-primary)] font-medium hidden"></button>
+        </div>
+    </div>
+
+    <div id="calendar-list" class="space-y-4"></div>
+
+    <div class="card p-4 mt-8" id="highlights-card">
+        <h2 id="highlights-title" class="text-base font-semibold font-display mb-2">—</h2>
+        <ul id="highlights-list" class="space-y-1.5 text-sm text-[var(--c-ink)]"></ul>
+    </div>
+
+    <div class="card p-4 mt-4" id="practical-card">
+        <h2 id="practical-title" class="text-base font-semibold font-display mb-2">—</h2>
+        <p id="practical-text" class="text-sm text-[var(--c-muted)]">—</p>
+    </div>
+
+    <div class="card p-4 mt-4" id="distances-card">
+        <h2 id="distances-title" class="text-base font-semibold font-display mb-2">—</h2>
+        <div id="distances-list" class="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-[var(--c-ink)]"></div>
+    </div>
+    </div>
+
+    <div id="view-edit" class="hidden">
+        <p id="edit-intro" class="text-xs text-[var(--c-muted)] mb-3 italic">—</p>
+        <div class="edit-toolbar">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <span id="edit-counter" class="text-sm font-semibold text-[var(--c-ink)]">—</span>
+                <div class="flex items-center gap-2">
+                    <button id="btn-add-event" type="button" class="filter-chip" style="background:#0284c7;color:#fff;border-color:transparent;">
+                        <span>➕</span><span id="btn-add-event-label">Ajouter un evenement</span>
+                    </button>
+                    <button id="btn-download-json" type="button" class="filter-chip" style="background:#16a34a;color:#fff;border-color:transparent;">
+                        <span>💾</span><span id="btn-download-label">Telecharger evenements.js</span>
+                    </button>
+                </div>
+            </div>
+            <label class="flex items-center gap-2 mt-2 text-xs text-[var(--c-muted)] cursor-pointer select-none">
+                <input type="checkbox" id="edit-hide-recurring" checked>
+                <span id="edit-hide-recurring-label">Masquer les evenements recurrents</span>
+            </label>
+            <div class="edit-daycolors" id="edit-daycolors">
+                <span id="edit-daycolors-label" class="edit-daycolors-label">Couleurs des jours</span>
+                <div class="edit-daycolors-swatches" id="edit-daycolors-swatches"></div>
+            </div>
+        </div>
+        <div id="edit-list" class="space-y-3"></div>
+    </div>
+
+    <p id="footer-note" class="text-[11px] text-[var(--c-muted)] text-center mt-6 mb-2 px-4">—</p>
+    <p class="text-[10px] text-[var(--c-muted)]/70 text-center">© 2026 Bell'O du Lac™ & Bell'Étoile™. <span id="footer-legal-rest"></span></p>
+
+</main>
+
+<script>
+// Passez a false pour retirer completement le mode edition (bouton, formulaires,
+// export) de cette page publique. Utile pour desactiver l'edition en production
+// tout en gardant la meme page pour l'administration en local.
+window.EDIT_MODE = false;
+
+(function () {
+    const state = {
+        lang: 'FR',
+        logement: 'salles',
+        activeCats: new Set(['__all__']),
+        favOnly: false,
+        showPast: false,
+        minRating: 0,
+        dateStart: null, // filtre de plage explicite via URL (edatestart) -- lien filtre a envoyer au client
+        dateEnd: null,   // filtre de plage explicite via URL (edateend)
+        focusDay: null,
+        focusEvent: null,
+        editMode: false,
+        editEvents: null, // copie de travail de data.events, initialisee a l'entree en mode edition
+        editDayColors: null // copie de travail des couleurs par jour de semaine, idem
+    };
+
+    const I18N = {
+        FR: {
+            back: "Retour", brand: "Bell'O du Lac™ & Bell'Étoile™", pageTitle: "Événements",
+            all: "Tous", favOnly: "Coups de cœur ⭐", showPast: "Afficher les jours passés",
+            hidePastAgain: "Masquer les jours passés", noEvents: "Aucun événement ce jour",
+            highlightsTitle: "Nos coups de cœur", practicalTitle: "Infos pratiques", distancesTitle: "Distances",
+            legalRest: "Tous droits réservés.", recurring: "Récurrent",
+            ratingAll: "Toutes les notes", rating1: "★ et plus", rating2: "★★ et plus", rating3: "★★★ uniquement",
+            ratingTitle: "Avis Bell'O du Lac",
+            weekdays: ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"],
+            months: ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
+            editOn: "Editer", editOff: "Retour au calendrier",
+            editIntro: "Mode edition : tous les evenements sont affiches, sans filtre de date.",
+            addEvent: "Ajouter un evenement", download: "Telecharger evenements.js",
+            deleteEvent: "Supprimer cet evenement ?", duplicateEvent: "Dupliquer cet evenement", oneTime: "Ponctuel", recurringType: "Recurrent",
+            fCategory: "Categorie", fPlace: "Lieu", fDate: "Date", fFreq: "Frequence", fInterval: "Intervalle (tous les X)",
+            fByDay: "Jours de la semaine", fByMonthDay: "Jour du mois", fStart: "Debut", fEnd: "Fin (optionnel)",
+            fTimeFr: "Horaire (FR)", fTimeEn: "Horaire (EN)", fTitleFr: "Titre (FR)", fTitleEn: "Titre (EN)",
+            fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Lien (URL, optionnel)",
+            fFavorite: "Coup de coeur", fRating: "Note maison (0 a 3)",
+            freqDaily: "Quotidien", freqWeekly: "Hebdomadaire", freqMonthly: "Mensuel",
+            editCounter: (shown, total) => shown === total
+                ? `${total} evenement${total > 1 ? 's' : ''} au total`
+                : `${shown} affiche${shown > 1 ? 's' : ''} sur ${total} au total`,
+            hideRecurring: "Masquer les evenements recurrents",
+            recurringSectionTitle: "Evenements recurrents",
+            dayColorsLabel: "Couleurs des jours",
+            newEventTitle: "Nouvel evenement", requireTitle: "Chaque evenement doit avoir au moins un titre (FR).",
+            requireDateOrRec: "Chaque evenement doit avoir soit une date, soit une recurrence.",
+            duplicateId: "Deux evenements ont le meme identifiant : ",
+            byDayShort: { sun:"Dim", mon:"Lun", tue:"Mar", wed:"Mer", thu:"Jeu", fri:"Ven", sat:"Sam" },
+            fLogement: "Concerne le logement", logementBoth: "Les deux", logementSalles: "Les Salles-sur-Verdon", logementMoustiers: "Moustiers-Sainte-Marie"
+        },
+        EN: {
+            back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", pageTitle: "Events",
+            all: "All", favOnly: "Highlights ⭐", showPast: "Show past days",
+            hidePastAgain: "Hide past days again", noEvents: "No events this day",
+            highlightsTitle: "Our highlights", practicalTitle: "Practical info", distancesTitle: "Distances",
+            legalRest: "All rights reserved.", recurring: "Recurring",
+            ratingAll: "All ratings", rating1: "★ and up", rating2: "★★ and up", rating3: "★★★ only",
+            ratingTitle: "Bell'O du Lac rating",
+            weekdays: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+            months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+            editOn: "Edit", editOff: "Back to calendar",
+            editIntro: "Edit mode: every event is shown, with no date filtering.",
+            addEvent: "Add an event", download: "Download evenements.js",
+            deleteEvent: "Delete this event?", duplicateEvent: "Duplicate this event", oneTime: "One-time", recurringType: "Recurring",
+            fCategory: "Category", fPlace: "Place", fDate: "Date", fFreq: "Frequency", fInterval: "Interval (every X)",
+            fByDay: "Days of week", fByMonthDay: "Day of month", fStart: "Start", fEnd: "End (optional)",
+            fTimeFr: "Time (FR)", fTimeEn: "Time (EN)", fTitleFr: "Title (FR)", fTitleEn: "Title (EN)",
+            fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Link (URL, optional)",
+            fFavorite: "Highlight", fRating: "House rating (0 to 3)",
+            freqDaily: "Daily", freqWeekly: "Weekly", freqMonthly: "Monthly",
+            editCounter: (shown, total) => shown === total
+                ? `${total} event${total > 1 ? 's' : ''} total`
+                : `${shown} shown out of ${total} total`,
+            hideRecurring: "Hide recurring events",
+            recurringSectionTitle: "Recurring events",
+            dayColorsLabel: "Day colors",
+            newEventTitle: "New event", requireTitle: "Every event needs at least a title (FR).",
+            requireDateOrRec: "Every event needs either a date or a recurrence.",
+            duplicateId: "Two events share the same id: ",
+            byDayShort: { sun:"Sun", mon:"Mon", tue:"Tue", wed:"Wed", thu:"Thu", fri:"Fri", sat:"Sat" },
+            fLogement: "Applies to accommodation", logementBoth: "Both", logementSalles: "Les Salles-sur-Verdon", logementMoustiers: "Moustiers-Sainte-Marie"
+        }
+    };
+
+    const LOGO_DATA = {
+        moustiers: { src: "images/bell-etoile-logo.png" },
+        salles:    { src: "images/bellodulac-logo.png" }
+    };
+
+    const WEEKDAY_CODES = ['sun','mon','tue','wed','thu','fri','sat']; // aligné sur Date.getDay()
+
+    // Palette par defaut (lundi..dimanche), utilisee si aucune couleur personnalisee n'est configuree
+    const DEFAULT_DAY_PALETTE = ['#7c3aed', '#6d28d9', '#16a34a', '#db2777', '#1e3a8a', '#f97316', '#0f766e'];
+    function dayColorFor(cfg, weekdayIdx) {
+        return (cfg && Array.isArray(cfg.dayColors) && cfg.dayColors[weekdayIdx]) || DEFAULT_DAY_PALETTE[weekdayIdx];
+    }
+
+    const $  = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+    // texte localisé : accepte une chaine simple, ou un objet {FR, EN}
+    const t = (val) => {
+        if (val == null) return '';
+        if (typeof val === 'object') return val[state.lang] || val.FR || val.EN || '';
+        return val;
+    };
+
+    function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+    function toISO(d) { return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+    function parseISO(str) {
+        const [y, m, d] = str.split('-').map(Number);
+        return new Date(y, m - 1, d);
+    }
+    function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
+    function startOfToday() { const n = new Date(); n.setHours(0,0,0,0); return n; }
+
+    // -------- URL params
+    function readUrlParams() {
+        const p = new URLSearchParams(window.location.search);
+        if (p.get('lang')) state.lang = p.get('lang').toUpperCase();
+        const logParam = (p.get('logement') || 'salles').toLowerCase();
+        state.logement = logParam.includes('moustiers') ? 'moustiers' : 'salles';
+
+        const rawCats = p.get('ecat');
+        if (rawCats) state.activeCats = new Set(rawCats.split(',').map(c => c.trim()).filter(Boolean));
+
+        state.favOnly = p.get('efav') === '1' || p.get('efav') === 'true';
+        state.showPast = p.get('epast') === '1' || p.get('epast') === 'true';
+        const rawRating = parseInt(p.get('erating'), 10);
+        state.minRating = (rawRating >= 0 && rawRating <= 3) ? rawRating : 0;
+        state.focusDay = p.get('eday') || null;
+        state.focusEvent = p.get('eevent') || null;
+
+        // plage de dates explicite (lien filtre a envoyer au client) : edatestart / edateend, format AAAA-MM-JJ
+        const isoDateRe = /^\d{4}-\d{2}-\d{2}$/;
+        const rawStart = p.get('edatestart');
+        const rawEnd = p.get('edateend');
+        state.dateStart = (rawStart && isoDateRe.test(rawStart)) ? rawStart : null;
+        state.dateEnd = (rawEnd && isoDateRe.test(rawEnd)) ? rawEnd : null;
+        if (state.dateStart && state.dateEnd && state.dateStart > state.dateEnd) {
+            const tmp = state.dateStart; state.dateStart = state.dateEnd; state.dateEnd = tmp;
+        }
+    }
+
+    function syncUrl() {
+        const p = new URLSearchParams(window.location.search);
+        p.set('lang', state.lang);
+
+        const catsArr = Array.from(state.activeCats);
+        if (!catsArr.includes('__all__') && catsArr.length > 0) p.set('ecat', catsArr.join(','));
+        else p.delete('ecat');
+
+        if (state.favOnly) p.set('efav', '1'); else p.delete('efav');
+        if (state.showPast) p.set('epast', '1'); else p.delete('epast');
+        if (state.minRating > 0) p.set('erating', state.minRating); else p.delete('erating');
+
+        if (state.dateStart) p.set('edatestart', state.dateStart); else p.delete('edatestart');
+        if (state.dateEnd) p.set('edateend', state.dateEnd); else p.delete('edateend');
+
+        const url = window.location.pathname + '?' + p.toString() + window.location.hash;
+        try { history.replaceState(null, '', url); } catch (e) {}
+
+        // Bouton retour : conserve uniquement le contexte général (lang, logement)
+        const backParams = new URLSearchParams();
+        backParams.set('lang', state.lang);
+        if (p.get('logement')) backParams.set('logement', p.get('logement'));
+        $('#btn-back').href = `index.html?${backParams.toString()}`;
+    }
+
+    // -------- date helpers dependant de la config
+    function computeRange(cfg) {
+        const today = startOfToday();
+        let start = cfg.startDate ? parseISO(cfg.startDate) : new Date(today);
+        let end = addDays(start, (cfg.daysAhead || 7) - 1);
+
+        if (cfg.fullWeeks) {
+            const wantMonday = (cfg.weekStart || 'monday') === 'monday';
+            const dow = (d) => (d.getDay() + 6) % 7; // 0 = lundi ... 6 = dimanche
+            const dowSun = (d) => d.getDay(); // 0 = dimanche
+
+            if (wantMonday) {
+                start = addDays(start, -dow(start));
+                end = addDays(end, 6 - dow(end));
+            } else {
+                start = addDays(start, -dowSun(start));
+                end = addDays(end, 6 - dowSun(end));
+            }
+        }
+
+        if (cfg.hidePast && start < today) start = new Date(today);
+
+        // lien filtre a envoyer au client : une plage explicite dans l'URL remplace la plage calculee
+        if (state.dateStart) start = parseISO(state.dateStart);
+        if (state.dateEnd) end = parseISO(state.dateEnd);
+
+        return { start, end, today };
+    }
+
+    function buildDayList(start, end) {
+        const days = [];
+        let cur = new Date(start);
+        while (cur <= end) {
+            days.push(new Date(cur));
+            cur = addDays(cur, 1);
+        }
+        return days;
+    }
+
+    // -------- moteur de récurrence : transforme un modèle "recurrence" en
+    // instances datées concrètes, dans la fenêtre [rangeStart, rangeEnd].
+    function startOfWeekMonday(d) {
+        const r = new Date(d);
+        r.setDate(r.getDate() - ((r.getDay() + 6) % 7));
+        return r;
+    }
+
+    function makeInstance(tpl, date) {
+        const clone = Object.assign({}, tpl);
+        delete clone.recurrence;
+        clone.date = toISO(date);
+        clone.id = `${tpl.id}__${clone.date}`;
+        clone.recurring = true;
+        return clone;
+    }
+
+    function expandOne(tpl, rangeStart, rangeEnd) {
+        const rec = tpl.recurrence;
+        if (!rec || !rec.startDate) return [];
+        const recStart = parseISO(rec.startDate);
+        const recEnd = rec.endDate ? parseISO(rec.endDate) : null;
+
+        const from = recStart > rangeStart ? recStart : rangeStart;
+        const to = recEnd && recEnd < rangeEnd ? recEnd : rangeEnd;
+        if (from > to) return [];
+
+        const interval = Math.max(1, rec.interval || 1);
+        const out = [];
+
+        if (rec.freq === 'daily') {
+            let cur = new Date(recStart);
+            while (cur < from) cur = addDays(cur, interval);
+            while (cur <= to) {
+                if (cur >= from) out.push(makeInstance(tpl, cur));
+                cur = addDays(cur, interval);
+            }
+        } else if (rec.freq === 'weekly') {
+            const codes = (rec.byDay && rec.byDay.length ? rec.byDay : [WEEKDAY_CODES[recStart.getDay()]])
+                .map(d => d.toLowerCase().slice(0, 3));
+            const dayIdxs = new Set(codes.map(c => WEEKDAY_CODES.indexOf(c)).filter(i => i >= 0));
+            const recWeekStart = startOfWeekMonday(recStart);
+
+            let cur = new Date(from);
+            while (cur <= to) {
+                if (cur >= recStart && dayIdxs.has(cur.getDay())) {
+                    const weeksSince = Math.round((startOfWeekMonday(cur) - recWeekStart) / (7 * 86400000));
+                    if (weeksSince >= 0 && weeksSince % interval === 0) {
+                        out.push(makeInstance(tpl, cur));
+                    }
+                }
+                cur = addDays(cur, 1);
+            }
+        } else if (rec.freq === 'monthly') {
+            const dom = rec.byMonthDay || recStart.getDate();
+            let m = new Date(recStart.getFullYear(), recStart.getMonth(), dom);
+            let monthCount = 0;
+            while (m <= to) {
+                if (m >= from && m >= recStart && monthCount % interval === 0) {
+                    out.push(makeInstance(tpl, m));
+                }
+                monthCount++;
+                m = new Date(recStart.getFullYear(), recStart.getMonth() + monthCount * interval, dom);
+            }
+        }
+
+        return out;
+    }
+
+    function getAllEventsInRange(data, rangeStart, rangeEnd) {
+        const oneOff = (data.events || []).filter(e => e.date);
+        const templates = (data.events || []).filter(e => e.recurrence);
+        const expanded = templates.flatMap(tpl => expandOne(tpl, rangeStart, rangeEnd));
+        return oneOff.concat(expanded);
+    }
+
+    // -------- coups de coeur (section "Nos coups de coeur")
+    // valeur localisee {FR,EN} a partir d'un champ evenement (title etc.) qui peut etre une simple chaine
+    function bilingual(val) {
+        if (val == null) return { FR: '', EN: '' };
+        if (typeof val === 'object') return { FR: val.FR || val.EN || '', EN: val.EN || val.FR || '' };
+        return { FR: String(val), EN: String(val) };
+    }
+
+    function matchesLogementOnly(evt) {
+        return !(evt.logement && evt.logement !== 'both' && evt.logement !== state.logement);
+    }
+
+    // construit la liste affichee dans "Nos coups de coeur" :
+    // le coup de coeur est un parametre de chaque evenement (favorite: true/false), ponctuel ou
+    // recurrent -- ce n'est plus une liste statique a maintenir a part. On prend tous les evenements
+    // (occurrences recurrentes comprises) qui tombent dans la fenetre de temps consideree pour le
+    // calendrier (edatestart/edateend si renseignes, sinon date du jour + daysAhead), filtres sur le
+    // logement courant, et marques favorite=true.
+    // date courte localisee (ex. "dimanche 26 juillet") -- utilisee pour distinguer les coups de
+    // coeur qui partagent le meme titre (fete sur plusieurs jours, evenement recurrent, etc.)
+    function formatShortDateFor(lang, iso) {
+        const d = parseISO(iso);
+        const weekdayIdx = (d.getDay() + 6) % 7;
+        return `${I18N[lang].weekdays[weekdayIdx]} ${d.getDate()} ${I18N[lang].months[d.getMonth()]}`;
+    }
+
+    function computeHighlightsList(data, cfg, start, end) {
+        const startIso = toISO(start), endIso = toISO(end);
+        // getAllEventsInRange ne filtre pas les evenements ponctuels par date (seules les occurrences
+        // recurrentes sont bornees a [start,end]) : on applique nous-memes le filtre de date ici.
+        const occurrences = getAllEventsInRange(data, start, end)
+            .filter(e => e.date >= startIso && e.date <= endIso)
+            .filter(matchesLogementOnly);
+
+        return occurrences
+            .filter(e => e.favorite)
+            .sort((a, b) => a.date.localeCompare(b.date))
+            .map(e => {
+                const titleLoc = bilingual(e.title);
+                const placeSuffix = e.place ? ' — ' + e.place : '';
+                return {
+                    FR: titleLoc.FR + placeSuffix + ' · ' + formatShortDateFor('FR', e.date),
+                    EN: titleLoc.EN + placeSuffix + ' · ' + formatShortDateFor('EN', e.date)
+                };
+            });
+    }
+
+    // -------- filtres / legende
+    function buildFilterBar(cfg) {
+        const bar = $('#filter-bar');
+        bar.innerHTML = '';
+
+        const allChip = document.createElement('button');
+        allChip.type = 'button';
+        allChip.className = 'filter-chip';
+        allChip.textContent = I18N[state.lang].all;
+        allChip.dataset.cat = '__all__';
+        bar.appendChild(allChip);
+
+        cfg.categories.forEach(cat => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'filter-chip';
+            chip.dataset.cat = cat.id;
+            chip.innerHTML = `<span>${cat.icon}</span><span>${t(cat.label)}</span>`;
+            bar.appendChild(chip);
+        });
+
+        $$('.filter-chip', bar).forEach(chip => {
+            chip.addEventListener('click', () => {
+                const cat = chip.dataset.cat;
+                if (cat === '__all__') {
+                    state.activeCats = new Set(['__all__']);
+                } else {
+                    state.activeCats.delete('__all__');
+                    if (state.activeCats.has(cat)) state.activeCats.delete(cat);
+                    else state.activeCats.add(cat);
+                    if (state.activeCats.size === 0) state.activeCats = new Set(['__all__']);
+                }
+                render();
+                syncUrl();
+            });
+        });
+
+        if (cfg.highlightFavorites) {
+            const favChip = document.createElement('button');
+            favChip.type = 'button';
+            favChip.className = 'filter-chip fav-chip';
+            favChip.id = 'chip-fav';
+            favChip.textContent = I18N[state.lang].favOnly;
+            favChip.addEventListener('click', () => {
+                state.favOnly = !state.favOnly;
+                render();
+                syncUrl();
+            });
+            bar.appendChild(favChip);
+        }
+
+        // Filtre par note Bell'O du Lac (select, distinct des chips de catégorie)
+        const ratingSelect = $('#rating-select');
+        ratingSelect.innerHTML = `
+            <option value="0">${I18N[state.lang].ratingAll}</option>
+            <option value="1">${I18N[state.lang].rating1}</option>
+            <option value="2">${I18N[state.lang].rating2}</option>
+            <option value="3">${I18N[state.lang].rating3}</option>
+        `;
+        ratingSelect.value = String(state.minRating);
+        ratingSelect.onchange = (e) => {
+            state.minRating = parseInt(e.target.value, 10) || 0;
+            render();
+            syncUrl();
+        };
+    }
+
+    function refreshFilterBarState(cfg) {
+        $$('.filter-chip', $('#filter-bar')).forEach(chip => {
+            const cat = chip.dataset.cat;
+            if (!cat) return; // fav chip handled below
+            const active = state.activeCats.has(cat) || (cat === '__all__' && state.activeCats.has('__all__'));
+            chip.classList.toggle('active', active);
+            const catDef = cfg.categories.find(c => c.id === cat);
+            chip.style.background = active ? (catDef ? catDef.color : '#0284c7') : '#fff';
+        });
+        const favChip = $('#chip-fav');
+        if (favChip) favChip.classList.toggle('active', state.favOnly);
+        const ratingSelect = $('#rating-select');
+        if (ratingSelect) ratingSelect.value = String(state.minRating);
+    }
+
+    function matchesFilters(evt) {
+        // logement : absent ou "both" = visible partout ; sinon reserve a "salles" ou "moustiers"
+        if (evt.logement && evt.logement !== 'both' && evt.logement !== state.logement) return false;
+        if (state.favOnly && !evt.favorite) return false;
+        if (!state.activeCats.has('__all__') && !state.activeCats.has(evt.cat)) return false;
+        if (state.minRating > 0 && (evt.rating || 0) < state.minRating) return false;
+        return true;
+    }
+
+    // -------- rendu calendrier
+    function catDef(cfg, id) { return cfg.categories.find(c => c.id === id) || { icon: '•', color: '#64748b', label: { FR: id, EN: id } }; }
+
+    function eventUrl(evt) {
+        if (evt.url) return evt.url;
+        const q = encodeURIComponent(`${evt.place}, ${t(evt.title)}`);
+        return `https://www.google.com/search?q=${q}`;
+    }
+
+    function ratingStars(rating) {
+        const r = Math.max(0, Math.min(3, rating || 0));
+        if (r === 0) return '';
+        return '★'.repeat(r) + '☆'.repeat(3 - r);
+    }
+
+    // en-tete colore commun aux cartes du calendrier et aux bandeaux du mode edition
+    function buildDayHeadEl(cfg, day, isToday, dayIcon) {
+        const weekdayIdx = (day.getDay() + 6) % 7; // 0 = lundi
+        const color = dayColorFor(cfg, weekdayIdx);
+        const head = document.createElement('div');
+        head.className = 'day-head';
+        head.dataset.weekday = String(weekdayIdx);
+        head.style.background = color;
+        head.innerHTML = `
+            <div class="day-num">${day.getDate()}</div>
+            <div class="day-meta">
+                <span class="day-name">${I18N[state.lang].weekdays[weekdayIdx]}${isToday ? ' · ' + (state.lang === 'EN' ? 'Today' : "Aujourd'hui") : ''}</span>
+                <span class="day-month">${I18N[state.lang].months[day.getMonth()]}</span>
+            </div>
+            ${dayIcon ? `<span class="day-icon">${dayIcon}</span>` : ''}
+        `;
+        return head;
+    }
+
+    function renderDayCard(cfg, day, dayEvents, isToday) {
+        const iso = toISO(day);
+
+        const wrap = document.createElement('div');
+        wrap.className = 'day-card';
+        wrap.dataset.day = iso;
+
+        const allNocturne = dayEvents.length > 0 && dayEvents.every(e => e.cat === 'nocturne');
+        const dayIcon = allNocturne ? '🌙' : '☀️';
+
+        wrap.appendChild(buildDayHeadEl(cfg, day, isToday, dayIcon));
+
+        if (dayEvents.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'no-events';
+            empty.textContent = I18N[state.lang].noEvents;
+            wrap.appendChild(empty);
+        } else {
+            dayEvents.forEach(evt => {
+                const cd = catDef(cfg, evt.cat);
+                const row = document.createElement('a');
+                row.href = eventUrl(evt);
+                row.target = '_blank';
+                row.rel = 'noopener';
+                row.className = 'event-row';
+                row.id = `event-${evt.id}`;
+                if (state.focusEvent === evt.id) row.classList.add('highlighted');
+                const stars = ratingStars(evt.rating);
+                row.innerHTML = `
+                    <span class="event-icon" style="background:${cd.color}">${cd.icon}</span>
+                    <span class="event-body">
+                        <span class="event-time-row">
+                            <span class="event-time">${t(evt.time)}</span>
+                            ${evt.recurring ? `<span class="event-recur-badge">🔁 ${I18N[state.lang].recurring}</span>` : ''}
+                        </span>
+                        <span class="event-title block">${t(evt.title)}</span>
+                        <span class="event-place block">${evt.place}</span>
+                        <span class="event-details block">${t(evt.details)}</span>
+                        ${stars ? `<span class="event-rating block" title="${I18N[state.lang].ratingTitle} : ${evt.rating}/3">${stars}</span>` : ''}
+                    </span>
+                    ${evt.favorite ? '<span class="event-star">⭐</span>' : ''}
+                    <svg class="event-link-arrow" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+                `;
+                row.addEventListener('click', () => {
+                    if (window.BDLAnalytics) window.BDLAnalytics.trackEvent(evt.id, t(evt.title), evt.cat);
+                });
+                wrap.appendChild(row);
+            });
+        }
+
+        return wrap;
+    }
+
+    // La liste des catégories vit à la racine du JSON (data.categories) et non
+    // dans data.config : on fusionne les deux pour simplifier le reste du code.
+    function getConfig(data) {
+        return Object.assign({}, data.config, { categories: data.categories || [] });
+    }
+
+    // Résout la clé de logement ("salles" ou "moustiers") vers l'entrée
+    // correspondante d'un objet keyed par logement, avec repli sur "salles".
+    function pickByLogement(obj, fallback) {
+        if (!obj) return fallback;
+        return obj[state.logement] || obj.salles || fallback;
+    }
+
+    function render() {
+        const data = window.EVENTS_DATA;
+        if (!data) return;
+        const cfg = getConfig(data);
+
+        // textes
+        $('#page-title').textContent = t(cfg.title) || I18N[state.lang].pageTitle;
+        $('#page-subtitle').textContent = t(cfg.subtitle);
+        $('#label-title').textContent = I18N[state.lang].pageTitle;
+        $('#text-back').textContent = I18N[state.lang].back;
+        $('#highlights-title').textContent = I18N[state.lang].highlightsTitle;
+        $('#practical-title').textContent = I18N[state.lang].practicalTitle;
+        const originLabel = t(pickByLogement(cfg.distanceOrigin, ''));
+        $('#distances-title').textContent = originLabel
+            ? `${I18N[state.lang].distancesTitle} — ${originLabel}`
+            : I18N[state.lang].distancesTitle;
+        $('#practical-text').textContent = t(cfg.practicalInfo);
+        $('#footer-note').textContent = t(cfg.footerNote);
+        $('#footer-legal-rest').textContent = I18N[state.lang].legalRest;
+        $('#lang-select').value = state.lang;
+
+        const brand = LOGO_DATA[state.logement] || LOGO_DATA.salles;
+        const logoEl = $('#topbar-logo');
+        logoEl.src = brand.src;
+        logoEl.classList.remove('hidden');
+
+        refreshFilterBarState(cfg);
+
+        // plage de dates
+        const effectiveCfg = Object.assign({}, cfg, { hidePast: cfg.hidePast && !state.showPast });
+        const { start, end, today } = computeRange(effectiveCfg);
+        const days = buildDayList(start, end);
+
+        // événements ponctuels + occurrences récurrentes calculées pour la plage affichée
+        const allEvents = getAllEventsInRange(data, start, end);
+
+        const list = $('#calendar-list');
+        list.innerHTML = '';
+        let total = 0;
+
+        days.forEach(day => {
+            const iso = toISO(day);
+            const dayEvents = allEvents
+                .filter(e => e.date === iso)
+                .filter(matchesFilters);
+
+            // en mode agenda (fullWeeks=false), on saute les jours vides pour rester compact
+            if (dayEvents.length === 0 && !cfg.fullWeeks) return;
+
+            total += dayEvents.length;
+            const isToday = iso === toISO(today);
+            list.appendChild(renderDayCard(cfg, day, dayEvents, isToday));
+        });
+
+        $('#events-counter').textContent = state.lang === 'EN'
+            ? `${total} event${total > 1 ? 's' : ''}`
+            : `${total} événement${total > 1 ? 's' : ''}`;
+
+        // bouton "afficher les jours passés" (masque quand une plage de dates explicite est imposee par l'URL)
+        const btnPast = $('#btn-toggle-past');
+        if (cfg.hidePast && !state.dateStart && !state.dateEnd) {
+            btnPast.classList.remove('hidden');
+            btnPast.textContent = state.showPast ? I18N[state.lang].hidePastAgain : I18N[state.lang].showPast;
+            btnPast.onclick = () => { state.showPast = !state.showPast; render(); syncUrl(); };
+        } else {
+            btnPast.classList.add('hidden');
+        }
+
+        // coups de coeur / distances (distances dépendent du logement courant)
+        // fenetre de temps consideree = celle du calendrier (edatestart/edateend si renseignes,
+        // sinon date du jour + daysAhead) ; voir computeHighlightsList pour le detail des regles
+        const visibleHighlights = computeHighlightsList(data, cfg, start, end);
+
+        const hlList = $('#highlights-list');
+        hlList.innerHTML = '';
+        visibleHighlights.forEach(h => {
+            const li = document.createElement('li');
+            li.textContent = `⭐ ${t(h)}`;
+            hlList.appendChild(li);
+        });
+        $('#highlights-card').classList.toggle('hidden', visibleHighlights.length === 0);
+
+        const distancesForLogement = pickByLogement(data.distances, []);
+        const distList = $('#distances-list');
+        distList.innerHTML = '';
+        distancesForLogement.forEach(d => {
+            const div = document.createElement('div');
+            div.textContent = `${d.place} : ${d.km} km (${d.min} min)`;
+            distList.appendChild(div);
+        });
+        $('#distances-card').classList.toggle('hidden', !(distancesForLogement && distancesForLogement.length));
+
+        // deep-link : scroll + flash sur le jour ou l'evenement demande
+        if (state.focusEvent) {
+            const el = document.getElementById(`event-${state.focusEvent}`);
+            if (el) {
+                setTimeout(() => {
+                    if (typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.add('flash');
+                }, 150);
+            }
+        } else if (state.focusDay) {
+            const el = list.querySelector(`[data-day="${state.focusDay}"]`);
+            if (el && typeof el.scrollIntoView === 'function') setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+        }
+    }
+
+
+    // ==================================================================
+    // ---- Mode edition : ajout / modification / suppression + export ----
+    // ==================================================================
+
+    let __uidCounter = 0;
+    function nextUid() { return 'u' + (++__uidCounter) + '-' + Math.random().toString(36).slice(2, 7); }
+
+    // decompose une valeur localisee (chaine simple OU {FR,EN}) en {fr, en} pour les formulaires
+    function locGet(val) {
+        if (val == null) return { fr: '', en: '' };
+        if (typeof val === 'object') return { fr: val.FR || '', en: val.EN || '' };
+        return { fr: String(val), en: String(val) };
+    }
+
+    // recompose une valeur localisee au format du fichier (chaine simple si EN vide/identique, sinon objet {FR,EN})
+    function locPack(fr, en) {
+        const f = (fr || '').trim();
+        const e = (en || '').trim();
+        if (!e || e === f) return f;
+        return { FR: f, EN: e };
+    }
+
+    function enterEditMode() {
+        const data = window.EVENTS_DATA;
+        if (!data) return;
+        if (!state.editEvents) {
+            state.editEvents = (data.events || []).map(evt => Object.assign({ __uid: nextUid() }, evt));
+        }
+        if (!state.editDayColors) {
+            const cfg = getConfig(data);
+            state.editDayColors = (Array.isArray(cfg.dayColors) && cfg.dayColors.length === 7)
+                ? cfg.dayColors.slice()
+                : DEFAULT_DAY_PALETTE.slice();
+        }
+        state.editMode = true;
+        $('#view-calendar').classList.add('hidden');
+        $('#view-edit').classList.remove('hidden');
+        const btn = $('#btn-edit-toggle');
+        btn.classList.add('active');
+        btn.textContent = '📅';
+        btn.title = I18N[state.lang].editOff;
+        renderEditList();
+    }
+
+    function exitEditMode() {
+        state.editMode = false;
+        $('#view-edit').classList.add('hidden');
+        $('#view-calendar').classList.remove('hidden');
+        const btn = $('#btn-edit-toggle');
+        btn.classList.remove('active');
+        btn.textContent = '✏️';
+        btn.title = I18N[state.lang].editOn;
+        render();
+    }
+
+    function toggleEditMode() {
+        if (!window.EDIT_MODE) return; // securite si appele manuellement (ex: console)
+        if (state.editMode) exitEditMode(); else enterEditMode();
+    }
+
+    // cle de tri chronologique : date ponctuelle, ou date de debut pour un evenement recurrent
+    function editSortKey(evt) {
+        if (evt.date) return evt.date;
+        if (evt.recurrence && evt.recurrence.startDate) return evt.recurrence.startDate;
+        return '9999-99-99'; // pas de date connue : relegue en fin de liste
+    }
+
+    // reconstruit les pastilles de couleur (une par jour de semaine) dans la barre d'edition
+    function renderDayColorPicker(L) {
+        const label = $('#edit-daycolors-label');
+        if (label) label.textContent = L.dayColorsLabel;
+        const wrap = $('#edit-daycolors-swatches');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        L.weekdays.forEach((name, i) => {
+            const item = document.createElement('label');
+            item.className = 'edit-daycolor-item';
+            item.title = name;
+            const input = document.createElement('input');
+            input.type = 'color';
+            input.value = state.editDayColors[i];
+            const span = document.createElement('span');
+            span.textContent = name.slice(0, 3);
+            item.appendChild(input);
+            item.appendChild(span);
+            // 'input' se declenche en continu pendant le glisse dans le selecteur de couleur :
+            // on evite de reconstruire toute la liste a chaque tick, on recolore juste les bandeaux existants
+            input.addEventListener('input', () => {
+                state.editDayColors[i] = input.value;
+                refreshDayBannerColors();
+            });
+            wrap.appendChild(item);
+        });
+    }
+
+    function refreshDayBannerColors() {
+        $$('[data-weekday]', $('#edit-list')).forEach(el => {
+            const wi = parseInt(el.dataset.weekday, 10);
+            if (!isNaN(wi) && state.editDayColors[wi]) el.style.background = state.editDayColors[wi];
+        });
+    }
+
+    function renderEditList() {
+        const data = window.EVENTS_DATA;
+        if (!data || !state.editEvents) return;
+        const cfg = getConfig(data);
+        const L = I18N[state.lang];
+
+        // meme ordre chronologique qu'en mode lecture
+        state.editEvents.sort((a, b) => editSortKey(a).localeCompare(editSortKey(b)));
+
+        $('#edit-intro').textContent = L.editIntro;
+        $('#btn-add-event-label').textContent = L.addEvent;
+        $('#btn-download-label').textContent = L.download;
+        $('#edit-hide-recurring-label').textContent = L.hideRecurring;
+        renderDayColorPicker(L);
+
+        // masque les evenements recurrents si la case est cochee (cochee par defaut)
+        const hideRecurring = $('#edit-hide-recurring').checked;
+        const visible = [];
+        state.editEvents.forEach((evt, idx) => {
+            if (hideRecurring && evt.recurrence) return;
+            visible.push({ evt, idx });
+        });
+
+        $('#edit-counter').textContent = L.editCounter(visible.length, state.editEvents.length);
+
+        // groupe par jour (comme en mode lecture) pour se reperer ; les recurrents forment
+        // une section a part puisqu'ils ne vivent pas sur une seule date
+        const cfgForColors = Object.assign({}, cfg, { dayColors: state.editDayColors });
+        const datedVisible = visible.filter(v => v.evt.date);
+        const recurringVisible = visible.filter(v => !v.evt.date);
+        const todayIso = toISO(startOfToday());
+
+        const list = $('#edit-list');
+        list.innerHTML = '';
+
+        let displayPos = 0;
+        let currentDateKey = null;
+        datedVisible.forEach(({ evt, idx }) => {
+            if (evt.date !== currentDateKey) {
+                currentDateKey = evt.date;
+                const day = parseISO(evt.date);
+                const banner = buildDayHeadEl(cfgForColors, day, evt.date === todayIso);
+                banner.classList.add('edit-day-banner');
+                banner.classList.remove('day-head');
+                list.appendChild(banner);
+            }
+            list.appendChild(renderEditRow(evt, idx, cfg, displayPos));
+            displayPos++;
+        });
+
+        if (recurringVisible.length > 0) {
+            const recBanner = document.createElement('div');
+            recBanner.className = 'edit-day-banner edit-day-banner--recurring';
+            recBanner.innerHTML = `<div class="day-meta"><span class="day-name">🔁 ${L.recurringSectionTitle}</span></div>`;
+            list.appendChild(recBanner);
+            recurringVisible.forEach(({ evt, idx }) => {
+                list.appendChild(renderEditRow(evt, idx, cfg, displayPos));
+                displayPos++;
+            });
+        }
+    }
+
+    function renderEditRow(evt, idx, cfg, displayPos) {
+        const L = I18N[state.lang];
+        const wrap = document.createElement('div');
+        wrap.className = 'edit-row';
+        wrap.dataset.uid = evt.__uid;
+
+        const catOptionsHtml = (cfg.categories || []).map(c => `<option value="${c.id}">${c.icon} ${t(c.label)}</option>`).join('');
+
+        wrap.innerHTML = `
+            <div class="edit-row-head">
+                <span class="edit-row-id">#${displayPos + 1}${evt.id ? ' · ' + evt.id : ''}</span>
+                <div class="edit-row-actions">
+                    <button type="button" class="btn-dup-event" data-action="duplicate" title="${L.duplicateEvent}">📋</button>
+                    <button type="button" class="btn-del-event" data-action="delete" title="${L.deleteEvent}">🗑️</button>
+                </div>
+            </div>
+            <div class="ef-grid-3">
+                <div><span class="ef-label">ID</span><input type="text" class="f-id" placeholder="ex: evt-64"></div>
+                <div><span class="ef-label">${L.fCategory}</span><select class="f-cat">${catOptionsHtml}</select></div>
+                <div><span class="ef-label">${L.fPlace}</span><input type="text" class="f-place"></div>
+            </div>
+            <div style="margin-top:10px;">
+                <span class="ef-label">${L.fLogement}</span>
+                <div class="edit-type-toggle">
+                    <button type="button" class="f-logement-btn" data-logement="both">${L.logementBoth}</button>
+                    <button type="button" class="f-logement-btn" data-logement="salles">${L.logementSalles}</button>
+                    <button type="button" class="f-logement-btn" data-logement="moustiers">${L.logementMoustiers}</button>
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <div class="edit-type-toggle">
+                    <button type="button" class="f-type-btn" data-type="date">${L.oneTime}</button>
+                    <button type="button" class="f-type-btn" data-type="rec">${L.recurringType}</button>
+                </div>
+                <div class="f-date-fields ef-grid">
+                    <div><span class="ef-label">${L.fDate}</span><input type="date" class="f-date"></div>
+                </div>
+                <div class="f-rec-fields ef-grid-3" style="display:none;">
+                    <div><span class="ef-label">${L.fFreq}</span>
+                        <select class="f-rec-freq">
+                            <option value="daily">${L.freqDaily}</option>
+                            <option value="weekly">${L.freqWeekly}</option>
+                            <option value="monthly">${L.freqMonthly}</option>
+                        </select>
+                    </div>
+                    <div><span class="ef-label">${L.fInterval}</span><input type="number" min="1" class="f-rec-interval"></div>
+                    <div class="f-bymonthday-wrap"><span class="ef-label">${L.fByMonthDay}</span><input type="number" min="1" max="31" class="f-rec-bymonthday"></div>
+                    <div class="f-byday-wrap" style="grid-column:1 / -1;"><span class="ef-label">${L.fByDay}</span><div class="byday-grid"></div></div>
+                    <div><span class="ef-label">${L.fStart}</span><input type="date" class="f-rec-start"></div>
+                    <div><span class="ef-label">${L.fEnd}</span><input type="date" class="f-rec-end"></div>
+                </div>
+            </div>
+            <div class="ef-grid">
+                <div><span class="ef-label">${L.fTimeFr}</span><input type="text" class="f-time-fr"></div>
+                <div><span class="ef-label">${L.fTimeEn}</span><input type="text" class="f-time-en"></div>
+            </div>
+            <div class="ef-grid">
+                <div><span class="ef-label">${L.fTitleFr} *</span><input type="text" class="f-title-fr"></div>
+                <div><span class="ef-label">${L.fTitleEn}</span><input type="text" class="f-title-en"></div>
+            </div>
+            <div class="ef-grid">
+                <div><span class="ef-label">${L.fDetailsFr}</span><textarea class="f-details-fr"></textarea></div>
+                <div><span class="ef-label">${L.fDetailsEn}</span><textarea class="f-details-en"></textarea></div>
+            </div>
+            <div class="ef-grid-3" style="align-items:end;">
+                <div><span class="ef-label">${L.fUrl}</span><input type="text" class="f-url"></div>
+                <label class="ef-checkline" style="padding-bottom:6px;"><input type="checkbox" class="f-favorite"> ${L.fFavorite}</label>
+                <div><span class="ef-label">${L.fRating}</span>
+                    <select class="f-rating"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+                </div>
+            </div>
+        `;
+
+        // ---- remplissage des valeurs via le DOM (jamais d'interpolation de contenu utilisateur dans le HTML) ----
+        const timeLoc = locGet(evt.time);
+        const titleLoc = locGet(evt.title);
+        const detailsLoc = locGet(evt.details);
+
+        $('.f-id', wrap).value = evt.id || '';
+        $('.f-cat', wrap).value = evt.cat || (cfg.categories[0] && cfg.categories[0].id) || '';
+        $('.f-place', wrap).value = evt.place || '';
+        $('.f-time-fr', wrap).value = timeLoc.fr;
+        $('.f-time-en', wrap).value = timeLoc.en;
+        $('.f-title-fr', wrap).value = titleLoc.fr;
+        $('.f-title-en', wrap).value = titleLoc.en;
+        $('.f-details-fr', wrap).value = detailsLoc.fr;
+        $('.f-details-en', wrap).value = detailsLoc.en;
+        $('.f-url', wrap).value = evt.url || '';
+        $('.f-favorite', wrap).checked = !!evt.favorite;
+        $('.f-rating', wrap).value = String(evt.rating || 0);
+
+        $('.f-date', wrap).value = evt.date || '';
+        const rec = evt.recurrence || {};
+        $('.f-rec-freq', wrap).value = rec.freq || 'weekly';
+        $('.f-rec-interval', wrap).value = rec.interval || 1;
+        $('.f-rec-bymonthday', wrap).value = rec.byMonthDay || '';
+        $('.f-rec-start', wrap).value = rec.startDate || '';
+        $('.f-rec-end', wrap).value = rec.endDate || '';
+
+        const bydayWrap = $('.byday-grid', wrap);
+        const bydaySelected = new Set(rec.byDay || []);
+        WEEKDAY_CODES.forEach(code => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'byday-chip' + (bydaySelected.has(code) ? ' active' : '');
+            chip.textContent = L.byDayShort[code];
+            chip.dataset.code = code;
+            chip.addEventListener('click', () => {
+                chip.classList.toggle('active');
+                syncRowToModel(wrap, idx);
+            });
+            bydayWrap.appendChild(chip);
+        });
+
+        function updateFreqFieldsVisibility() {
+            const freq = $('.f-rec-freq', wrap).value;
+            $('.f-byday-wrap', wrap).style.display = freq === 'weekly' ? '' : 'none';
+            $('.f-bymonthday-wrap', wrap).style.display = freq === 'monthly' ? '' : 'none';
+        }
+        function setType(type) {
+            $$('.f-type-btn', wrap).forEach(b => b.classList.toggle('active', b.dataset.type === type));
+            $('.f-date-fields', wrap).style.display = type === 'date' ? '' : 'none';
+            $('.f-rec-fields', wrap).style.display = type === 'rec' ? 'grid' : 'none';
+            updateFreqFieldsVisibility();
+        }
+        setType(evt.recurrence ? 'rec' : 'date');
+
+        function setLogement(val) {
+            $$('.f-logement-btn', wrap).forEach(b => b.classList.toggle('active', b.dataset.logement === val));
+        }
+        setLogement(evt.logement || 'both');
+        $$('.f-logement-btn', wrap).forEach(btn => {
+            btn.addEventListener('click', () => { setLogement(btn.dataset.logement); syncRowToModel(wrap, idx); });
+        });
+
+        $$('.f-type-btn', wrap).forEach(btn => {
+            btn.addEventListener('click', () => { setType(btn.dataset.type); syncRowToModel(wrap, idx); });
+        });
+        $('.f-rec-freq', wrap).addEventListener('change', () => { updateFreqFieldsVisibility(); syncRowToModel(wrap, idx); });
+
+        $$('input, select, textarea', wrap).forEach(el => {
+            el.addEventListener('input', () => syncRowToModel(wrap, idx));
+            el.addEventListener('change', () => syncRowToModel(wrap, idx));
+        });
+
+        $('.btn-del-event', wrap).addEventListener('click', () => {
+            if (window.confirm(L.deleteEvent)) {
+                state.editEvents.splice(idx, 1);
+                renderEditList();
+            }
+        });
+
+        $('.btn-dup-event', wrap).addEventListener('click', () => {
+            duplicateEventRow(idx);
+        });
+
+        return wrap;
+    }
+
+    // duplique un evenement (ponctuel ou recurrent) a l'identique, seule la date est a modifier :
+    // le nouvel evenement est insere juste apres l'original, sans id (regenere a la validation), et
+    // le focus se place directement sur le champ date pour que l'utilisateur n'ait plus qu'a la changer.
+    function duplicateEventRow(idx) {
+        const original = state.editEvents[idx];
+        if (!original) return;
+        const clone = JSON.parse(JSON.stringify(original));
+        clone.__uid = nextUid();
+        clone.id = '';
+        state.editEvents.splice(idx + 1, 0, clone);
+        renderEditList();
+        setTimeout(() => {
+            const row = $(`.edit-row[data-uid="${clone.__uid}"]`, $('#edit-list'));
+            if (row && typeof row.scrollIntoView === 'function') row.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const dateInput = row && (clone.recurrence ? $('.f-rec-start', row) : $('.f-date', row));
+            if (dateInput) {
+                if (typeof dateInput.focus === 'function') dateInput.focus();
+                if (typeof dateInput.select === 'function') dateInput.select();
+            }
+        }, 50);
+    }
+
+    // recopie les valeurs saisies dans state.editEvents[idx], sans redessiner la ligne
+    // (pour ne pas perdre le focus / la position du curseur pendant la saisie)
+    function syncRowToModel(wrap, idx) {
+        const evt = state.editEvents[idx];
+        if (!evt) return;
+
+        evt.id = $('.f-id', wrap).value.trim();
+        evt.cat = $('.f-cat', wrap).value;
+        evt.place = $('.f-place', wrap).value.trim();
+        evt.favorite = $('.f-favorite', wrap).checked;
+        evt.rating = parseInt($('.f-rating', wrap).value, 10) || 0;
+
+        const activeLogement = $$('.f-logement-btn', wrap).find(b => b.classList.contains('active'));
+        evt.logement = activeLogement ? activeLogement.dataset.logement : 'both';
+
+        const urlVal = $('.f-url', wrap).value.trim();
+        if (urlVal) evt.url = urlVal; else delete evt.url;
+
+        evt.time = locPack($('.f-time-fr', wrap).value, $('.f-time-en', wrap).value);
+        evt.title = locPack($('.f-title-fr', wrap).value, $('.f-title-en', wrap).value);
+        evt.details = locPack($('.f-details-fr', wrap).value, $('.f-details-en', wrap).value);
+
+        const activeType = $$('.f-type-btn', wrap).find(b => b.classList.contains('active'));
+        const isRec = activeType && activeType.dataset.type === 'rec';
+
+        if (isRec) {
+            delete evt.date;
+            const freq = $('.f-rec-freq', wrap).value;
+            const rec = {
+                freq,
+                interval: parseInt($('.f-rec-interval', wrap).value, 10) || 1,
+                startDate: $('.f-rec-start', wrap).value || null,
+                endDate: $('.f-rec-end', wrap).value || null
+            };
+            if (freq === 'weekly') {
+                rec.byDay = $$('.byday-chip', wrap).filter(c => c.classList.contains('active')).map(c => c.dataset.code);
+            }
+            if (freq === 'monthly') {
+                rec.byMonthDay = parseInt($('.f-rec-bymonthday', wrap).value, 10) || 1;
+            }
+            evt.recurrence = rec;
+        } else {
+            delete evt.recurrence;
+            evt.date = $('.f-date', wrap).value || '';
+        }
+    }
+
+    function addEventRow() {
+        const data = window.EVENTS_DATA;
+        const cfg = getConfig(data);
+        const newEvt = {
+            __uid: nextUid(),
+            id: '',
+            cat: (cfg.categories[0] && cfg.categories[0].id) || '',
+            place: '',
+            logement: 'both',
+            time: '',
+            title: '',
+            details: '',
+            favorite: false,
+            rating: 0,
+            date: toISO(startOfToday())
+        };
+        state.editEvents.push(newEvt);
+        renderEditList();
+        setTimeout(() => {
+            // le tri chronologique + le filtre recurrents peuvent deplacer la ligne :
+            // on la retrouve par son identifiant interne plutot que de supposer qu'elle est en fin de liste
+            const row = $(`.edit-row[data-uid="${newEvt.__uid}"]`, $('#edit-list'));
+            if (row && typeof row.scrollIntoView === 'function') row.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const firstInput = row && $('.f-title-fr', row);
+            if (firstInput && typeof firstInput.focus === 'function') firstInput.focus();
+        }, 50);
+    }
+
+    function validateEditEvents() {
+        const L = I18N[state.lang];
+        const ids = new Set();
+        for (const evt of state.editEvents) {
+            const titleLoc = locGet(evt.title);
+            if (!titleLoc.fr) {
+                window.alert(L.requireTitle + (evt.place ? ' (' + evt.place + ')' : ''));
+                return false;
+            }
+            if (!evt.date && !evt.recurrence) {
+                window.alert(L.requireDateOrRec + ' (' + titleLoc.fr + ')');
+                return false;
+            }
+            if (!evt.id) evt.id = 'evt-' + Math.random().toString(36).slice(2, 8);
+            if (ids.has(evt.id)) {
+                window.alert(L.duplicateId + evt.id);
+                return false;
+            }
+            ids.add(evt.id);
+        }
+        return true;
+    }
+
+    // construit le contenu texte du fichier evenements.js a partir des donnees courantes
+    function buildExportContent() {
+        const data = window.EVENTS_DATA;
+        const sourceEvents = state.editEvents || data.events || [];
+        const events = sourceEvents.map(evt => {
+            const clean = Object.assign({}, evt);
+            delete clean.__uid;
+            delete clean.recurring;
+            if (clean.recurrence) delete clean.date;
+            else delete clean.recurrence;
+            if (!clean.url) delete clean.url;
+            return clean;
+        });
+
+        const configOut = Object.assign({}, data.config, {
+            dayColors: state.editDayColors || (data.config && data.config.dayColors) || DEFAULT_DAY_PALETTE.slice()
+        });
+
+        const out = {
+            config: configOut,
+            categories: data.categories,
+            distances: data.distances,
+            events
+            // note : plus de tableau "highlights" -- "Nos coups de coeur" est calcule a l'affichage
+            // a partir des evenements marques favorite=true (voir computeHighlightsList).
+        };
+
+        return '// Genere automatiquement depuis le mode edition de evenements.html.\n' +
+            '// Derniere generation : ' + new Date().toISOString() + '\n' +
+            'window.EVENTS_DATA = ' + JSON.stringify(out, null, 2) + ';\n';
+    }
+
+    function downloadEvenementsJs() {
+        if (!validateEditEvents()) return;
+        renderEditList();
+        const content = buildExportContent();
+        const blob = new Blob([content], { type: 'text/javascript;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'evenements.js';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
+
+    function init() {
+        readUrlParams();
+
+        function start() {
+            const data = window.EVENTS_DATA;
+            if (data) buildFilterBar(getConfig(data));
+            render();
+            syncUrl();
+
+            $('#lang-select').addEventListener('change', (e) => {
+                state.lang = e.target.value;
+                buildFilterBar(getConfig(window.EVENTS_DATA));
+                if (state.editMode) renderEditList(); else render();
+                syncUrl();
+            });
+
+            if (window.EDIT_MODE) {
+                $('#btn-edit-toggle').addEventListener('click', toggleEditMode);
+                $('#btn-add-event').addEventListener('click', addEventRow);
+                $('#btn-download-json').addEventListener('click', downloadEvenementsJs);
+                $('#edit-hide-recurring').addEventListener('change', renderEditList);
+            } else {
+                // EDIT_MODE desactive : le bouton d'edition est totalement retire de la page.
+                $('#btn-edit-toggle').remove();
+            }
+        }
+
+        if (window.EVENTS_DATA) {
+            start();
+        } else {
+            // Chargement en <script> (comme pois.js), avec repli local si l'URL externe echoue.
+			// ex: "https://gist.githack.com/votre-compte/xxx/raw/evenements.js"
+            const EXTERNAL_URL = "https://gist.githack.com/verdonstudio/d2425fd19c5e07439d4aa680f01953cc/raw/07741b9c573eb6b1994ac5a8b3767d6f7afb556c/evenements.js"; 
+            const LOCAL_URL = "evenements.js";
+
+            function loadLocal() {
+                const s = document.createElement('script');
+                s.src = LOCAL_URL;
+                s.onload = start;
+                s.onerror = () => console.error("Impossible de charger evenements.js");
+                document.head.appendChild(s);
+            }
+
+            if (EXTERNAL_URL) {
+                const s = document.createElement('script');
+                s.src = EXTERNAL_URL;
+                s.onload = start;
+                s.onerror = loadLocal;
+                document.head.appendChild(s);
+            } else {
+                loadLocal();
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+})();
+
+</script>
+</body>
+</html>
