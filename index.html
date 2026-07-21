@@ -438,7 +438,7 @@ window.EDIT_MODE = false;
         const backParams = new URLSearchParams();
         backParams.set('lang', state.lang);
         if (p.get('logement')) backParams.set('logement', p.get('logement'));
-        $('#btn-back').href = `index.html?${backParams.toString()}`;
+        $('#btn-back').href = `https://bellodulac.netlify.app/index.html?${backParams.toString()}`;
     }
 
     // -------- date helpers dependant de la config
