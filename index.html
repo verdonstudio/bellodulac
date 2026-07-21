@@ -127,12 +127,24 @@
 			cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
 		}
 		.btn-del-event:hover { background: #fee2e2; }
+		.btn-dup-event {
+			flex-shrink: 0; width: 28px; height: 28px; border-radius: 999px;
+			border: 1px solid var(--c-border); background: #f0f9ff; color: var(--c-primary);
+			cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
+		}
+		.btn-dup-event:hover { background: #e0f2fe; }
+		.edit-row-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 		.edit-type-toggle { display: inline-flex; border-radius: 999px; overflow: hidden; border: 1px solid #e2e8f0; }
 		.edit-type-toggle button { padding: 5px 12px; font-size: 11.5px; font-weight: 700; background: #fff; color: var(--c-muted); border: none; cursor: pointer; }
 		.edit-type-toggle button.active { background: var(--c-primary); color: #fff; }
 		.byday-grid { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
 		.byday-chip { font-size: 10.5px; font-weight: 700; padding: 4px 7px; border-radius: 6px; border: 1px solid #e2e8f0; background: #fff; color: var(--c-muted); cursor: pointer; }
 		.byday-chip.active { background: var(--c-primary); color: #fff; border-color: transparent; }
+		.edit-daycolors { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+		.edit-daycolors-label { font-size: 11px; font-weight: 700; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+		.edit-daycolors-swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+		.edit-daycolor-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; color: var(--c-muted); cursor: pointer; }
+		.edit-daycolor-item input[type="color"] { width: 26px; height: 22px; border: none; border-radius: 6px; padding: 0; cursor: pointer; background: none; }
 		.edit-row-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 		.edit-row-id { font-size: 11px; font-weight: 700; color: var(--c-muted); font-family: 'Courier New', monospace; }
 	</style>
@@ -172,6 +184,7 @@
 		<div class="flex flex-wrap items-center justify-between gap-2 text-xs mb-5">
 			<span id="events-counter" class="text-[var(--c-muted)]">—</span>
 			<div class="flex items-center gap-2">
+				<select id="place-select" class="chip text-[11px] font-medium border border-gray-200 bg-white pl-2 pr-6 py-1 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 6px center;"></select>
 				<select id="rating-select" class="chip text-[11px] font-medium border border-gray-200 bg-white pl-2 pr-6 py-1 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 6px center;"></select>
 				<button id="btn-toggle-past" type="button" class="text-[var(--c-primary)] font-medium hidden"></button>
 			</div>
@@ -208,7 +221,12 @@
 					</button>
 				</div>
 			</div>
+			<div class="edit-daycolors" id="edit-daycolors">
+				<span id="edit-daycolors-label" class="edit-daycolors-label">Couleurs des jours</span>
+				<div class="edit-daycolors-swatches" id="edit-daycolors-swatches"></div>
+			</div>
 			<div id="edit-list" class="space-y-3"></div>
+			<datalist id="places-datalist"></datalist>
 		</div>
 
 		<p id="footer-note" class="text-[11px] text-[var(--c-muted)] text-center mt-6 mb-2 px-4">—</p>
@@ -227,19 +245,24 @@
 			lang: 'FR',
 			logement: 'salles',
 			activeCats: new Set(['__all__']),
+			activePlace: null,
 			favOnly: false,
 			showPast: false,
 			minRating: 0,
+			dateStart: null, // filtre de plage explicite via URL (edatestart) -- lien filtre a envoyer au client
+			dateEnd: null,   // filtre de plage explicite via URL (edateend)
 			focusDay: null,
 			focusEvent: null,
 			editMode: false,
-			editEvents: null // copie de travail de data.events, initialisee a l'entree en mode edition
+			editEvents: null, // copie de travail de data.events, initialisee a l'entree en mode edition
+			editDayColors: null // copie de travail des couleurs par jour de semaine, idem
 		};
 
 		const I18N = {
 			FR: {
 				back: "Retour", brand: "Bell'O du Lac™ & Bell'Étoile™", pageTitle: "Événements",
-				all: "Tous", favOnly: "Coups de cœur ⭐", showPast: "Afficher les jours passés",
+				all: "Tous", allPlaces: "Tous les lieux", fPlaceFilter: "Lieu", dayColorsLabel: "Couleurs des jours",
+				favOnly: "Coups de cœur ⭐", showPast: "Afficher les jours passés",
 				hidePastAgain: "Masquer les jours passés", noEvents: "Aucun événement ce jour",
 				highlightsTitle: "Nos coups de cœur", practicalTitle: "Infos pratiques", distancesTitle: "Distances",
 				legalRest: "Tous droits réservés.", recurring: "Récurrent",
@@ -250,7 +273,7 @@
 				editOn: "Editer", editOff: "Retour au calendrier",
 				editIntro: "Mode edition : tous les evenements sont affiches, sans filtre de date.",
 				addEvent: "Ajouter un evenement", download: "Telecharger evenements.js",
-				deleteEvent: "Supprimer cet evenement ?", oneTime: "Ponctuel", recurringType: "Recurrent",
+				deleteEvent: "Supprimer cet evenement ?", duplicateEvent: "Dupliquer cet evenement", oneTime: "Ponctuel", recurringType: "Recurrent",
 				fCategory: "Categorie", fPlace: "Lieu", fDate: "Date", fFreq: "Frequence", fInterval: "Intervalle (tous les X)",
 				fByDay: "Jours de la semaine", fByMonthDay: "Jour du mois", fStart: "Debut", fEnd: "Fin (optionnel)",
 				fTimeFr: "Horaire (FR)", fTimeEn: "Horaire (EN)", fTitleFr: "Titre (FR)", fTitleEn: "Titre (EN)",
@@ -266,7 +289,8 @@
 			},
 			EN: {
 				back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", pageTitle: "Events",
-				all: "All", favOnly: "Highlights ⭐", showPast: "Show past days",
+				all: "All", allPlaces: "All places", fPlaceFilter: "Place", dayColorsLabel: "Day colors",
+				favOnly: "Highlights ⭐", showPast: "Show past days",
 				hidePastAgain: "Hide past days again", noEvents: "No events this day",
 				highlightsTitle: "Our highlights", practicalTitle: "Practical info", distancesTitle: "Distances",
 				legalRest: "All rights reserved.", recurring: "Recurring",
@@ -277,7 +301,7 @@
 				editOn: "Edit", editOff: "Back to calendar",
 				editIntro: "Edit mode: every event is shown, with no date filtering.",
 				addEvent: "Add an event", download: "Download evenements.js",
-				deleteEvent: "Delete this event?", oneTime: "One-time", recurringType: "Recurring",
+				deleteEvent: "Delete this event?", duplicateEvent: "Duplicate this event", oneTime: "One-time", recurringType: "Recurring",
 				fCategory: "Category", fPlace: "Place", fDate: "Date", fFreq: "Frequency", fInterval: "Interval (every X)",
 				fByDay: "Days of week", fByMonthDay: "Day of month", fStart: "Start", fEnd: "End (optional)",
 				fTimeFr: "Time (FR)", fTimeEn: "Time (EN)", fTitleFr: "Title (FR)", fTitleEn: "Title (EN)",
@@ -299,6 +323,12 @@
 		};
 
 		const WEEKDAY_CODES = ['sun','mon','tue','wed','thu','fri','sat']; // aligné sur Date.getDay()
+
+		// Palette par defaut (lundi..dimanche), utilisee si aucune couleur personnalisee n'est configuree
+		const DEFAULT_DAY_PALETTE = ['#7c3aed', '#6d28d9', '#16a34a', '#db2777', '#1e3a8a', '#f97316', '#0f766e'];
+		function dayColorFor(cfg, weekdayIdx) {
+			return (cfg && Array.isArray(cfg.dayColors) && cfg.dayColors[weekdayIdx]) || DEFAULT_DAY_PALETTE[weekdayIdx];
+		}
 
 		const $  = (sel, root = document) => root.querySelector(sel);
 		const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -329,12 +359,23 @@
 			const rawCats = p.get('ecat');
 			if (rawCats) state.activeCats = new Set(rawCats.split(',').map(c => c.trim()).filter(Boolean));
 
+			state.activePlace = p.get('eplace') || null;
 			state.favOnly = p.get('efav') === '1' || p.get('efav') === 'true';
 			state.showPast = p.get('epast') === '1' || p.get('epast') === 'true';
 			const rawRating = parseInt(p.get('erating'), 10);
 			state.minRating = (rawRating >= 0 && rawRating <= 3) ? rawRating : 0;
 			state.focusDay = p.get('eday') || null;
 			state.focusEvent = p.get('eevent') || null;
+
+			// plage de dates explicite (lien filtre a envoyer au client) : edatestart / edateend, format AAAA-MM-JJ
+			const isoDateRe = /^\d{4}-\d{2}-\d{2}$/;
+			const rawStart = p.get('edatestart');
+			const rawEnd = p.get('edateend');
+			state.dateStart = (rawStart && isoDateRe.test(rawStart)) ? rawStart : null;
+			state.dateEnd = (rawEnd && isoDateRe.test(rawEnd)) ? rawEnd : null;
+			if (state.dateStart && state.dateEnd && state.dateStart > state.dateEnd) {
+				const tmp = state.dateStart; state.dateStart = state.dateEnd; state.dateEnd = tmp;
+			}
 		}
 
 		function syncUrl() {
@@ -345,9 +386,13 @@
 			if (!catsArr.includes('__all__') && catsArr.length > 0) p.set('ecat', catsArr.join(','));
 			else p.delete('ecat');
 
+			if (state.activePlace) p.set('eplace', state.activePlace); else p.delete('eplace');
 			if (state.favOnly) p.set('efav', '1'); else p.delete('efav');
 			if (state.showPast) p.set('epast', '1'); else p.delete('epast');
 			if (state.minRating > 0) p.set('erating', state.minRating); else p.delete('erating');
+
+			if (state.dateStart) p.set('edatestart', state.dateStart); else p.delete('edatestart');
+			if (state.dateEnd) p.set('edateend', state.dateEnd); else p.delete('edateend');
 
 			const url = window.location.pathname + '?' + p.toString() + window.location.hash;
 			try { history.replaceState(null, '', url); } catch (e) {}
@@ -380,6 +425,10 @@
 			}
 
 			if (cfg.hidePast && start < today) start = new Date(today);
+
+			// lien filtre a envoyer au client : une plage explicite dans l'URL remplace la plage calculee
+			if (state.dateStart) start = parseISO(state.dateStart);
+			if (state.dateEnd) end = parseISO(state.dateEnd);
 
 			return { start, end, today };
 		}
@@ -523,6 +572,18 @@
 				bar.appendChild(favChip);
 			}
 
+			// Filtre par lieu (select, liste normalisee des villages presents dans les donnees)
+			const placeSelect = $('#place-select');
+			const places = distinctPlaces(window.EVENTS_DATA || { events: [] });
+			placeSelect.innerHTML = `<option value="">${I18N[state.lang].allPlaces}</option>` +
+				places.map(p => `<option value="${p}">${p}</option>`).join('');
+			placeSelect.value = state.activePlace || '';
+			placeSelect.onchange = (e) => {
+				state.activePlace = e.target.value || null;
+				render();
+				syncUrl();
+			};
+
 			// Filtre par note Bell'O du Lac (select, distinct des chips de catégorie)
 			const ratingSelect = $('#rating-select');
 			ratingSelect.innerHTML = `
@@ -552,15 +613,32 @@
 			if (favChip) favChip.classList.toggle('active', state.favOnly);
 			const ratingSelect = $('#rating-select');
 			if (ratingSelect) ratingSelect.value = String(state.minRating);
+			const placeSelect = $('#place-select');
+			if (placeSelect) placeSelect.value = state.activePlace || '';
+		}
+
+		// logement : absent ou "both" = visible partout ; sinon reserve a "salles" ou "moustiers"
+		function matchesLogementOnly(evt) {
+			if (evt.logement && evt.logement !== 'both' && evt.logement !== state.logement) return false;
+			return true;
 		}
 
 		function matchesFilters(evt) {
-			// logement : absent ou "both" = visible partout ; sinon reserve a "salles" ou "moustiers"
-			if (evt.logement && evt.logement !== 'both' && evt.logement !== state.logement) return false;
+			if (!matchesLogementOnly(evt)) return false;
 			if (state.favOnly && !evt.favorite) return false;
 			if (!state.activeCats.has('__all__') && !state.activeCats.has(evt.cat)) return false;
 			if (state.minRating > 0 && (evt.rating || 0) < state.minRating) return false;
+			if (state.activePlace && evt.place !== state.activePlace) return false;
 			return true;
+		}
+
+		// liste triee des lieux distincts presents dans les donnees (normalisee : un seul
+		// nom canonique par village, tel que saisi dans evenements.js -- sert au filtre
+		// "Lieu" et a la liste de suggestion (datalist) du formulaire d'edition, pour
+		// eviter que de nouvelles saisies introduisent des variantes (accents/tirets/casse).
+		function distinctPlaces(data) {
+			const set = new Set((data.events || []).map(e => (e.place || '').trim()).filter(Boolean));
+			return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
 		}
 
 		// -------- rendu calendrier
@@ -586,11 +664,66 @@
 			return (b.rating || 0) - (a.rating || 0);
 		}
 
+		// version {FR, EN} systematique d'une valeur localisee (chaine simple ou objet {FR,EN})
+		function bilingual(val) {
+			if (val == null) return { FR: '', EN: '' };
+			if (typeof val === 'object') return { FR: val.FR || val.EN || '', EN: val.EN || val.FR || '' };
+			return { FR: val, EN: val };
+		}
+
+		// "Vendredi 24 juillet" : jour de semaine + quantieme + mois, dans la langue demandee
+		function formatShortDateFor(lang, iso) {
+			const d = parseISO(iso);
+			const weekdayIdx = (d.getDay() + 6) % 7; // 0 = lundi
+			const L = I18N[lang];
+			return `${L.weekdays[weekdayIdx]} ${d.getDate()} ${L.months[d.getMonth()]}`;
+		}
+
+		// "Nos coups de coeur" n'est plus une liste statique : elle est recalculee a chaque
+		// rendu a partir des evenements (ponctuels + occurrences recurrentes) marques
+		// "favorite" et visibles dans la fenetre [start, end] actuellement affichee, en
+		// respectant le logement courant. La date est ajoutee a chaque libelle pour eviter
+		// les doublons visuels quand un meme evenement recurrent apparait plusieurs fois.
+		function computeHighlightsList(data, cfg, start, end) {
+			const startIso = toISO(start), endIso = toISO(end);
+			const occurrences = getAllEventsInRange(data, start, end)
+				.filter(e => e.date >= startIso && e.date <= endIso)
+				.filter(matchesLogementOnly);
+
+			return occurrences
+				.filter(e => e.favorite)
+				.sort((a, b) => a.date.localeCompare(b.date))
+				.map(e => {
+					const titleLoc = bilingual(e.title);
+					const placeSuffix = e.place ? ' — ' + e.place : '';
+					return {
+						FR: titleLoc.FR + placeSuffix + ' · ' + formatShortDateFor('FR', e.date),
+						EN: titleLoc.EN + placeSuffix + ' · ' + formatShortDateFor('EN', e.date)
+					};
+				});
+		}
+
+		// en-tete colore commun aux cartes du calendrier et (a l'avenir) aux bandeaux du mode edition
+		function buildDayHeadEl(cfg, day, isToday, dayIcon) {
+			const weekdayIdx = (day.getDay() + 6) % 7; // 0 = lundi
+			const color = dayColorFor(cfg, weekdayIdx);
+			const head = document.createElement('div');
+			head.className = 'day-head';
+			head.dataset.weekday = String(weekdayIdx);
+			head.style.background = color;
+			head.innerHTML = `
+				<div class="day-num">${day.getDate()}</div>
+				<div class="day-meta">
+					<span class="day-name">${I18N[state.lang].weekdays[weekdayIdx]}${isToday ? ' · ' + (state.lang === 'EN' ? 'Today' : "Aujourd'hui") : ''}</span>
+					<span class="day-month">${I18N[state.lang].months[day.getMonth()]}</span>
+				</div>
+				${dayIcon ? `<span class="day-icon">${dayIcon}</span>` : ''}
+			`;
+			return head;
+		}
+
 		function renderDayCard(cfg, day, dayEvents, isToday) {
 			const iso = toISO(day);
-			const weekdayIdx = (day.getDay() + 6) % 7; // 0 = lundi
-			const palette = ['#7c3aed', '#6d28d9', '#16a34a', '#db2777', '#1e3a8a', '#f97316', '#0f766e'];
-			const color = palette[weekdayIdx];
 
 			const wrap = document.createElement('div');
 			wrap.className = 'day-card';
@@ -599,18 +732,7 @@
 			const allNocturne = dayEvents.length > 0 && dayEvents.every(e => e.cat === 'nocturne');
 			const dayIcon = allNocturne ? '🌙' : '☀️';
 
-			const head = document.createElement('div');
-			head.className = 'day-head';
-			head.style.background = color;
-			head.innerHTML = `
-				<div class="day-num">${day.getDate()}</div>
-				<div class="day-meta">
-					<span class="day-name">${I18N[state.lang].weekdays[weekdayIdx]}${isToday ? ' · ' + (state.lang === 'EN' ? 'Today' : "Aujourd'hui") : ''}</span>
-					<span class="day-month">${I18N[state.lang].months[day.getMonth()]}</span>
-				</div>
-				<span class="day-icon">${dayIcon}</span>
-			`;
-			wrap.appendChild(head);
+			wrap.appendChild(buildDayHeadEl(cfg, day, isToday, dayIcon));
 
 			if (dayEvents.length === 0) {
 				const empty = document.createElement('div');
@@ -725,9 +847,9 @@
 				? `${total} event${total > 1 ? 's' : ''}`
 				: `${total} événement${total > 1 ? 's' : ''}`;
 
-			// bouton "afficher les jours passés"
+			// bouton "afficher les jours passés" (masque quand une plage de dates explicite est imposee par l'URL)
 			const btnPast = $('#btn-toggle-past');
-			if (cfg.hidePast) {
+			if (cfg.hidePast && !state.dateStart && !state.dateEnd) {
 				btnPast.classList.remove('hidden');
 				btnPast.textContent = state.showPast ? I18N[state.lang].hidePastAgain : I18N[state.lang].showPast;
 				btnPast.onclick = () => { state.showPast = !state.showPast; render(); syncUrl(); };
@@ -736,14 +858,15 @@
 			}
 
 			// coups de coeur / distances (distances dépendent du logement courant)
+			const visibleHighlights = computeHighlightsList(data, cfg, start, end);
 			const hlList = $('#highlights-list');
 			hlList.innerHTML = '';
-			(data.highlights || []).forEach(h => {
+			visibleHighlights.forEach(h => {
 				const li = document.createElement('li');
-				li.textContent = `⭐ ${t(h)}`;
+				li.textContent = `⭐ ${state.lang === 'EN' ? h.EN : h.FR}`;
 				hlList.appendChild(li);
 			});
-			$('#highlights-card').classList.toggle('hidden', !(data.highlights && data.highlights.length));
+			$('#highlights-card').classList.toggle('hidden', !visibleHighlights.length);
 
 			const distancesForLogement = pickByLogement(data.distances, []);
 			const distList = $('#distances-list');
@@ -799,6 +922,12 @@
 			if (!state.editEvents) {
 				state.editEvents = (data.events || []).map(evt => Object.assign({ __uid: nextUid() }, evt));
 			}
+			if (!state.editDayColors) {
+				const cfg = getConfig(data);
+				state.editDayColors = (Array.isArray(cfg.dayColors) && cfg.dayColors.length === 7)
+					? cfg.dayColors.slice()
+					: DEFAULT_DAY_PALETTE.slice();
+			}
 			state.editMode = true;
 			$('#view-calendar').classList.add('hidden');
 			$('#view-edit').classList.remove('hidden');
@@ -825,6 +954,41 @@
 			if (state.editMode) exitEditMode(); else enterEditMode();
 		}
 
+		// reconstruit les pastilles de couleur (une par jour de semaine) dans la barre d'edition
+		function renderDayColorPicker(L) {
+			const label = $('#edit-daycolors-label');
+			if (label) label.textContent = L.dayColorsLabel;
+			const wrap = $('#edit-daycolors-swatches');
+			if (!wrap) return;
+			wrap.innerHTML = '';
+			L.weekdays.forEach((name, i) => {
+				const item = document.createElement('label');
+				item.className = 'edit-daycolor-item';
+				item.title = name;
+				const input = document.createElement('input');
+				input.type = 'color';
+				input.value = state.editDayColors[i];
+				const span = document.createElement('span');
+				span.textContent = name.slice(0, 3);
+				item.appendChild(input);
+				item.appendChild(span);
+				// 'input' se declenche en continu pendant le glisse dans le selecteur de couleur :
+				// on evite de reconstruire toute la liste a chaque tick, on recolore juste les bandeaux existants
+				input.addEventListener('input', () => {
+					state.editDayColors[i] = input.value;
+					refreshDayBannerColors();
+				});
+				wrap.appendChild(item);
+			});
+		}
+
+		function refreshDayBannerColors() {
+			$$('[data-weekday]', $('#edit-list')).forEach(el => {
+				const wi = parseInt(el.dataset.weekday, 10);
+				if (!isNaN(wi) && state.editDayColors[wi]) el.style.background = state.editDayColors[wi];
+			});
+		}
+
 		function renderEditList() {
 			const data = window.EVENTS_DATA;
 			if (!data || !state.editEvents) return;
@@ -835,6 +999,13 @@
 			$('#btn-add-event-label').textContent = L.addEvent;
 			$('#btn-download-label').textContent = L.download;
 			$('#edit-counter').textContent = L.editCounter(state.editEvents.length);
+			renderDayColorPicker(L);
+
+			// Suggestions de lieux (datalist) : construites a partir des lieux deja utilises,
+			// pour guider vers les noms existants plutot que de laisser filer des variantes.
+			const placesList = $('#places-datalist');
+			placesList.innerHTML = distinctPlaces({ events: state.editEvents })
+				.map(p => `<option value="${p}"></option>`).join('');
 
 			const list = $('#edit-list');
 			list.innerHTML = '';
@@ -854,12 +1025,15 @@
 			wrap.innerHTML = `
 				<div class="edit-row-head">
 					<span class="edit-row-id">#${idx + 1}${evt.id ? ' · ' + evt.id : ''}</span>
-					<button type="button" class="btn-del-event" data-action="delete" title="${L.deleteEvent}">🗑️</button>
+					<div class="edit-row-actions">
+						<button type="button" class="btn-dup-event" data-action="duplicate" title="${L.duplicateEvent}">📋</button>
+						<button type="button" class="btn-del-event" data-action="delete" title="${L.deleteEvent}">🗑️</button>
+					</div>
 				</div>
 				<div class="ef-grid-3">
 					<div><span class="ef-label">ID</span><input type="text" class="f-id" placeholder="ex: evt-64"></div>
 					<div><span class="ef-label">${L.fCategory}</span><select class="f-cat">${catOptionsHtml}</select></div>
-					<div><span class="ef-label">${L.fPlace}</span><input type="text" class="f-place"></div>
+					<div><span class="ef-label">${L.fPlace}</span><input type="text" class="f-place" list="places-datalist"></div>
 				</div>
 				<div style="margin-top:10px;">
 					<span class="ef-label">${L.fLogement}</span>
@@ -992,7 +1166,33 @@
 				}
 			});
 
+			$('.btn-dup-event', wrap).addEventListener('click', () => {
+				duplicateEventRow(idx);
+			});
+
 			return wrap;
+		}
+
+		// duplique un evenement (ponctuel ou recurrent) a l'identique, seule la date est a modifier :
+		// le nouvel evenement est insere juste apres l'original, sans id (regenere a la validation), et
+		// le focus se place directement sur le champ date pour que l'utilisateur n'ait plus qu'a la changer.
+		function duplicateEventRow(idx) {
+			const original = state.editEvents[idx];
+			if (!original) return;
+			const clone = JSON.parse(JSON.stringify(original));
+			clone.__uid = nextUid();
+			clone.id = '';
+			state.editEvents.splice(idx + 1, 0, clone);
+			renderEditList();
+			setTimeout(() => {
+				const row = $(`.edit-row[data-uid="${clone.__uid}"]`, $('#edit-list'));
+				if (row && typeof row.scrollIntoView === 'function') row.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				const dateInput = row && (clone.recurrence ? $('.f-rec-start', row) : $('.f-date', row));
+				if (dateInput) {
+					if (typeof dateInput.focus === 'function') dateInput.focus();
+					if (typeof dateInput.select === 'function') dateInput.select();
+				}
+			}, 50);
 		}
 
 		// recopie les valeurs saisies dans state.editEvents[idx], sans redessiner la ligne
@@ -1106,10 +1306,13 @@
 				return clean;
 			});
 
+			const configOut = Object.assign({}, data.config, {
+				dayColors: state.editDayColors || (data.config && data.config.dayColors) || DEFAULT_DAY_PALETTE.slice()
+			});
+
 			const out = {
-				config: data.config,
+				config: configOut,
 				categories: data.categories,
-				highlights: data.highlights,
 				distances: data.distances,
 				events
 			};
@@ -1166,7 +1369,8 @@
 			} else {
 				// Chargement en <script> (comme pois.js), avec repli local si l'URL externe echoue.
 				// ex: "https://gist.githack.com/votre-compte/xxx/raw/evenements.js" https://gist.githubusercontent.com/verdonstudio/d2425fd19c5e07439d4aa680f01953cc/raw/evenements.js
-				const EXTERNAL_URL = "https://gist.githack.com/verdonstudio/d2425fd19c5e07439d4aa680f01953cc/raw/evenements.js"; 
+				const EXTERNAL_URL = "https://gist.githack.com/verdonstudio/d2425fd19c5e07439d4aa680f01953cc/raw/evenements.js";
+				const LOCAL_URL = "evenements.js";
 
 				function loadLocal() {
 					const s = document.createElement('script');
