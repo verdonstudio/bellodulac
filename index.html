@@ -147,6 +147,74 @@
 		.edit-daycolor-item input[type="color"] { width: 26px; height: 22px; border: none; border-radius: 6px; padding: 0; cursor: pointer; background: none; }
 		.edit-row-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 		.edit-row-id { font-size: 11px; font-weight: 700; color: var(--c-muted); font-family: 'Courier New', monospace; }
+
+		/* ---- Calendrier mensuel imprimable ---- */
+		#monthcal-print-header { display: flex; align-items: center; gap: 12px; padding: 6px 4px 14px; }
+		#monthcal-print-logo { width: 44px; height: 44px; border-radius: 999px; object-fit: cover; box-shadow: 0 1px 4px rgba(0,0,0,0.15); flex-shrink: 0; }
+		#monthcal-print-title { font-size: 19px; font-weight: 700; margin: 0; color: var(--c-ink); }
+		#monthcal-print-subtitle { font-size: 12.5px; color: var(--c-muted); margin: 2px 0 0; font-weight: 600; }
+
+		.monthcal-table-wrap { overflow-x: auto; }
+		.monthcal-table {
+			width: 100%; border-collapse: separate; border-spacing: 1px;
+			background: var(--c-border); border: 1px solid var(--c-border);
+			border-radius: 12px; overflow: hidden; table-layout: fixed;
+		}
+		.monthcal-table th[colspan] { padding: 0; background: transparent; border: none; }
+		.monthcal-daylabel {
+			color: #fff; font-size: 10px; font-weight: 700;
+			text-transform: uppercase; text-align: center; padding: 6px 2px; letter-spacing: 0.03em;
+		}
+		.monthcal-cell { background: #fff; min-height: 92px; height: 92px; padding: 4px 5px; box-sizing: border-box; vertical-align: top; }
+		.monthcal-cell.is-empty { background: #fafafa; }
+		.monthcal-cell.is-today { box-shadow: inset 0 0 0 2px var(--c-primary); }
+		.monthcal-daynum {
+			display: inline-flex; align-items: center; justify-content: center;
+			min-width: 18px; height: 18px; padding: 0 4px; border-radius: 999px;
+			font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 2px;
+		}
+		.monthcal-events { display: flex; flex-direction: column; gap: 2px; }
+		.monthcal-event { font-size: 9.5px; line-height: 1.25; color: var(--c-ink); display: flex; align-items: flex-start; gap: 3px; }
+		.monthcal-event-dot { flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; margin-top: 3px; }
+		.monthcal-event-place { font-size: 8.5px; color: var(--c-muted); font-weight: 600; display: block; margin-left: 9px; }
+
+		body.monthcal-fs-lock { overflow: hidden; }
+		#view-monthcal.monthcal-fullscreen {
+			position: fixed; inset: 0; z-index: 999; background: var(--c-bg);
+			overflow-y: auto; padding: 16px; margin: 0; max-width: none;
+		}
+		#view-monthcal.monthcal-fullscreen .monthcal-table { font-size: 1.05em; }
+		#view-monthcal.monthcal-fullscreen .monthcal-cell { min-height: 110px; height: 110px; }
+
+		@media print {
+			body * { visibility: hidden; }
+			#monthcal-print-area, #monthcal-print-area * { visibility: visible; }
+			#monthcal-print-area { position: absolute; left: 0; top: 0; width: 100%; }
+			#monthcal-print-area, #monthcal-print-area * {
+				-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important;
+			}
+			.monthcal-table thead { display: table-header-group; }
+			.monthcal-table tr { page-break-inside: avoid; break-inside: avoid; }
+			#monthcal-print-logo { width: 26px; height: 26px; }
+			#monthcal-print-title { font-size: 14px; }
+			#monthcal-print-subtitle { font-size: 10px; }
+			#monthcal-print-header { padding: 2px 2px 6px; gap: 8px; }
+			.monthcal-cell { min-height: 70px; height: 70px; padding: 2px 3px; }
+			.monthcal-daylabel { padding: 3px 2px; font-size: 9px; }
+			.monthcal-daynum { height: 15px; min-width: 15px; font-size: 9.5px; }
+			.monthcal-event { font-size: 8px; }
+			.monthcal-event-place { font-size: 7px; }
+			@page { size: landscape; margin: 8mm; }
+		}
+
+		.event-share-btn {
+			flex-shrink: 0; width: 24px; height: 24px; border-radius: 999px;
+			border: none; background: transparent; color: var(--c-muted);
+			cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
+			transition: background 0.15s ease, color 0.15s ease; margin-top: 2px; padding: 0;
+		}
+		.event-share-btn:hover { background: #e0f2fe; color: var(--c-primary); }
+		.event-share-btn.copied { color: #16a34a; }
 	</style>
 	</head>
 	<body>
@@ -163,6 +231,9 @@
 				<span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Événements</span>
 			</div>
 
+			<a id="btn-selogers" href="https://bellodulac.netlify.app/logements.html" class="btn-back shrink-0 shadow-sm" style="text-decoration:none;">
+				🏡 <span id="btn-selogers-label">Se loger</span>
+			</a>
 			<button id="btn-edit-toggle" type="button" class="btn-edit-toggle" title="Mode edition" aria-label="Mode edition">✏️</button>
 			<select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
 				<option value="FR">FR</option>
@@ -178,7 +249,7 @@
 			<p id="page-subtitle" class="text-sm text-[var(--c-muted)] mt-1">—</p>
 		</div>
 
-		<div id="view-calendar">
+		<div id="shared-controls">
 		<div class="flex flex-wrap items-center gap-2 mb-2" id="filter-bar" role="toolbar" aria-label="Filtres"></div>
 
 		<div class="flex flex-wrap items-center justify-between gap-2 text-xs mb-5">
@@ -187,9 +258,14 @@
 				<select id="place-select" class="chip text-[11px] font-medium border border-gray-200 bg-white pl-2 pr-6 py-1 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 6px center;"></select>
 				<select id="rating-select" class="chip text-[11px] font-medium border border-gray-200 bg-white pl-2 pr-6 py-1 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 6px center;"></select>
 				<button id="btn-toggle-past" type="button" class="text-[var(--c-primary)] font-medium hidden"></button>
+				<button id="btn-month-calendar" type="button" class="filter-chip">
+					<span>🗓️</span><span id="btn-month-calendar-label">Calendrier mensuel</span>
+				</button>
 			</div>
 		</div>
+		</div>
 
+		<div id="view-calendar">
 		<div id="calendar-list" class="space-y-4"></div>
 
 		<div class="card p-4 mt-8" id="highlights-card">
@@ -206,6 +282,53 @@
 			<h2 id="distances-title" class="text-base font-semibold font-display mb-2">—</h2>
 			<div id="distances-list" class="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-[var(--c-ink)]"></div>
 		</div>
+		</div>
+
+		<div id="view-monthcal" class="hidden">
+			<div id="monthcal-toolbar" class="flex flex-wrap items-center justify-between gap-2 mb-4">
+				<div class="flex items-center gap-2">
+					<button id="btn-monthcal-prev" type="button" class="filter-chip" aria-label="Mois precedent">◀</button>
+					<span id="monthcal-label" class="text-sm font-semibold font-display px-1">—</span>
+					<button id="btn-monthcal-next" type="button" class="filter-chip" aria-label="Mois suivant">▶</button>
+				</div>
+				<div class="flex items-center gap-2">
+					<button id="btn-monthcal-fullscreen" type="button" class="filter-chip">
+						<span class="monthcal-fs-icon">⛶</span><span id="btn-monthcal-fullscreen-label">Plein écran</span>
+					</button>
+					<button id="btn-monthcal-print" type="button" class="filter-chip" style="background:#0284c7;color:#fff;border-color:transparent;">
+						<span>🖨️</span><span id="btn-monthcal-print-label">Imprimer</span>
+					</button>
+					<button id="btn-monthcal-close" type="button" class="filter-chip">
+						<span id="btn-monthcal-close-label">Retour au calendrier</span>
+					</button>
+				</div>
+			</div>
+
+			<div id="monthcal-print-area">
+				<div class="monthcal-table-wrap">
+					<table class="monthcal-table">
+						<colgroup>
+							<col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%">
+							<col style="width:14.2857%"><col style="width:14.2857%"><col style="width:14.2857%">
+						</colgroup>
+						<thead>
+							<tr id="monthcal-print-header-row">
+								<th colspan="7">
+									<div id="monthcal-print-header">
+										<img id="monthcal-print-logo" alt="" />
+										<div>
+											<h2 id="monthcal-print-title" class="font-display">—</h2>
+											<p id="monthcal-print-subtitle">—</p>
+										</div>
+									</div>
+								</th>
+							</tr>
+							<tr id="monthcal-daylabel-row"></tr>
+						</thead>
+						<tbody id="monthcal-grid"></tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 
 		<div id="view-edit" class="hidden">
@@ -238,7 +361,7 @@
 	// Passez a false pour retirer completement le mode edition (bouton, formulaires,
 	// export) de cette page publique. Utile pour desactiver l'edition en production
 	// tout en gardant la meme page pour l'administration en local.
-	window.EDIT_MODE = false;
+	window.EDIT_MODE = new URLSearchParams(window.location.search).get('edit') === '1';
 
 	(function () {
 		const state = {
@@ -253,9 +376,12 @@
 			dateEnd: null,   // filtre de plage explicite via URL (edateend)
 			focusDay: null,
 			focusEvent: null,
+			highlightEvent: false,
 			editMode: false,
 			editEvents: null, // copie de travail de data.events, initialisee a l'entree en mode edition
-			editDayColors: null // copie de travail des couleurs par jour de semaine, idem
+			editDayColors: null, // copie de travail des couleurs par jour de semaine, idem
+			activeView: 'calendar', // 'calendar' | 'monthcal'
+			monthCalDate: null     // 1er jour du mois affiche dans le calendrier mensuel
 		};
 
 		const I18N = {
@@ -278,6 +404,7 @@
 				fByDay: "Jours de la semaine", fByMonthDay: "Jour du mois", fStart: "Debut", fEnd: "Fin (optionnel)",
 				fTimeFr: "Horaire (FR)", fTimeEn: "Horaire (EN)", fTitleFr: "Titre (FR)", fTitleEn: "Titre (EN)",
 				fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Lien (URL, optionnel)",
+				fImg: "Image (URL ou chemin)",
 				fFavorite: "Coup de coeur", fRating: "Note maison (0 a 3)",
 				freqDaily: "Quotidien", freqWeekly: "Hebdomadaire", freqMonthly: "Mensuel",
 				editCounter: (n) => `${n} evenement${n > 1 ? 's' : ''} au total`,
@@ -285,7 +412,12 @@
 				requireDateOrRec: "Chaque evenement doit avoir soit une date, soit une recurrence.",
 				duplicateId: "Deux evenements ont le meme identifiant : ",
 				byDayShort: { sun:"Dim", mon:"Lun", tue:"Mar", wed:"Mer", thu:"Jeu", fri:"Ven", sat:"Sam" },
-				fLogement: "Concerne le logement", logementBoth: "Les deux", logementSalles: "Les Salles-sur-Verdon", logementMoustiers: "Moustiers-Sainte-Marie"
+				fLogement: "Concerne le logement", logementBoth: "Les deux", logementSalles: "Les Salles-sur-Verdon", logementMoustiers: "Moustiers-Sainte-Marie",
+				monthCal: "Calendrier mensuel", monthCalTitle: "Festivités", printLabel: "Imprimer", backToCalendar: "Retour au calendrier",
+				monthCalPrev: "Mois précédent", monthCalNext: "Mois suivant",
+				monthEventsCount: (n) => `${n} événement${n > 1 ? 's' : ''} ce mois-ci`,
+				fullscreenLabel: "Plein écran", exitFullscreenLabel: "Quitter le plein écran",
+				selogers: "Se loger", copyLinkLabel: "Copier le lien de cet évènement", linkCopied: "Lien copié !"
 			},
 			EN: {
 				back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", pageTitle: "Events",
@@ -306,6 +438,7 @@
 				fByDay: "Days of week", fByMonthDay: "Day of month", fStart: "Start", fEnd: "End (optional)",
 				fTimeFr: "Time (FR)", fTimeEn: "Time (EN)", fTitleFr: "Title (FR)", fTitleEn: "Title (EN)",
 				fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Link (URL, optional)",
+				fImg: "Image (URL or path)",
 				fFavorite: "Highlight", fRating: "House rating (0 to 3)",
 				freqDaily: "Daily", freqWeekly: "Weekly", freqMonthly: "Monthly",
 				editCounter: (n) => `${n} event${n > 1 ? 's' : ''} total`,
@@ -313,7 +446,12 @@
 				requireDateOrRec: "Every event needs either a date or a recurrence.",
 				duplicateId: "Two events share the same id: ",
 				byDayShort: { sun:"Sun", mon:"Mon", tue:"Tue", wed:"Wed", thu:"Thu", fri:"Fri", sat:"Sat" },
-				fLogement: "Applies to accommodation", logementBoth: "Both", logementSalles: "Les Salles-sur-Verdon", logementMoustiers: "Moustiers-Sainte-Marie"
+				fLogement: "Applies to accommodation", logementBoth: "Both", logementSalles: "Les Salles-sur-Verdon", logementMoustiers: "Moustiers-Sainte-Marie",
+				monthCal: "Monthly calendar", monthCalTitle: "Festivities", printLabel: "Print", backToCalendar: "Back to calendar",
+				monthCalPrev: "Previous month", monthCalNext: "Next month",
+				monthEventsCount: (n) => `${n} event${n > 1 ? 's' : ''} this month`,
+				fullscreenLabel: "Full screen", exitFullscreenLabel: "Exit full screen",
+				selogers: "Book a stay", copyLinkLabel: "Copy this event's link", linkCopied: "Link copied!"
 			}
 		};
 
@@ -366,6 +504,7 @@
 			state.minRating = (rawRating >= 0 && rawRating <= 3) ? rawRating : 0;
 			state.focusDay = p.get('eday') || null;
 			state.focusEvent = p.get('eevent') || null;
+			state.highlightEvent = p.get('highlight') === '1' || p.get('highlight') === 'true';
 
 			// plage de dates explicite (lien filtre a envoyer au client) : edatestart / edateend, format AAAA-MM-JJ
 			const isoDateRe = /^\d{4}-\d{2}-\d{2}$/;
@@ -376,11 +515,19 @@
 			if (state.dateStart && state.dateEnd && state.dateStart > state.dateEnd) {
 				const tmp = state.dateStart; state.dateStart = state.dateEnd; state.dateEnd = tmp;
 			}
+
+			const rawMonth = p.get('emonth'); // format attendu : AAAA-MM
+			if (rawMonth && /^\d{4}-\d{2}$/.test(rawMonth)) {
+				const [y, m] = rawMonth.split('-').map(Number);
+				state.monthCalDate = new Date(y, m - 1, 1);
+				state.activeView = 'monthcal';
+			}
 		}
 
 		function syncUrl() {
 			const p = new URLSearchParams(window.location.search);
 			p.set('lang', state.lang);
+			p.set('logement', state.logement); // initialise/preserve toujours le logement dans l'URL (comme sur index)
 
 			const catsArr = Array.from(state.activeCats);
 			if (!catsArr.includes('__all__') && catsArr.length > 0) p.set('ecat', catsArr.join(','));
@@ -394,6 +541,12 @@
 			if (state.dateStart) p.set('edatestart', state.dateStart); else p.delete('edatestart');
 			if (state.dateEnd) p.set('edateend', state.dateEnd); else p.delete('edateend');
 
+			if (state.activeView === 'monthcal' && state.monthCalDate) {
+				p.set('emonth', `${state.monthCalDate.getFullYear()}-${pad2(state.monthCalDate.getMonth() + 1)}`);
+			} else {
+				p.delete('emonth');
+			}
+
 			const url = window.location.pathname + '?' + p.toString() + window.location.hash;
 			try { history.replaceState(null, '', url); } catch (e) {}
 
@@ -402,6 +555,12 @@
 			backParams.set('lang', state.lang);
 			if (p.get('logement')) backParams.set('logement', p.get('logement'));
 			$('#btn-back').href = `https://bellodulac.netlify.app/index.html?${backParams.toString()}`;
+
+			// Bouton Se loger : conserve la langue et le logement courants
+			const btnSeloger = $('#btn-selogers');
+			if (btnSeloger) {
+				btnSeloger.href = `https://bellodulac.netlify.app/logements.html?lang=${state.lang}&logement=${state.logement}`;
+			}
 		}
 
 		// -------- date helpers dependant de la config
@@ -553,7 +712,7 @@
 						else state.activeCats.add(cat);
 						if (state.activeCats.size === 0) state.activeCats = new Set(['__all__']);
 					}
-					render();
+					renderActiveView();
 					syncUrl();
 				});
 			});
@@ -566,7 +725,7 @@
 				favChip.textContent = I18N[state.lang].favOnly;
 				favChip.addEventListener('click', () => {
 					state.favOnly = !state.favOnly;
-					render();
+					renderActiveView();
 					syncUrl();
 				});
 				bar.appendChild(favChip);
@@ -580,7 +739,7 @@
 			placeSelect.value = state.activePlace || '';
 			placeSelect.onchange = (e) => {
 				state.activePlace = e.target.value || null;
-				render();
+				renderActiveView();
 				syncUrl();
 			};
 
@@ -595,7 +754,7 @@
 			ratingSelect.value = String(state.minRating);
 			ratingSelect.onchange = (e) => {
 				state.minRating = parseInt(e.target.value, 10) || 0;
-				render();
+				renderActiveView();
 				syncUrl();
 			};
 		}
@@ -703,6 +862,87 @@
 				});
 		}
 
+		// -------- deep-link vers un evenement precis (eevent + highlight=true), a la maniere du
+		// parametre "poi" du panorama/de la carte : resout l'identifiant fourni vers l'occurrence
+		// exacte a mettre en surbrillance, meme si elle n'est pas dans la fenetre d'affichage
+		// courante (auquel cas le rendu etend la plage pour la faire apparaitre).
+		function resolveHighlightTarget(data, focusEventId) {
+			if (!focusEventId) return null;
+			const events = data.events || [];
+
+			// 1) identifiant exact d'un evenement ponctuel
+			const direct = events.find(e => e.id === focusEventId && e.date);
+			if (direct) return { id: direct.id, date: direct.date };
+
+			// 2) identifiant d'un modele recurrent : on cible sa toute premiere occurrence a partir
+			//    de sa date de debut de recurrence (sans etre limite a la fenetre affichee)
+			const template = events.find(e => e.id === focusEventId && e.recurrence);
+			if (template) {
+				const recStart = template.recurrence.startDate ? parseISO(template.recurrence.startDate) : startOfToday();
+				const horizon = addDays(recStart, 366 * 3);
+				const occurrences = expandOne(template, recStart, horizon).sort((a, b) => a.date.localeCompare(b.date));
+				if (occurrences.length) return { id: occurrences[0].id, date: occurrences[0].date };
+				return null;
+			}
+
+			// 3) l'identifiant fourni est peut-etre deja celui d'une occurrence precise ("modeleId__AAAA-MM-JJ")
+			const parentTpl = events.find(e => e.recurrence && focusEventId.startsWith(e.id + '__'));
+			if (parentTpl) {
+				const dateStr = focusEventId.slice(parentTpl.id.length + 2);
+				if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return { id: focusEventId, date: dateStr };
+			}
+
+			return null;
+		}
+
+		// construit le lien direct vers un evenement precis (picto de partage sur chaque ligne) :
+		// pour une occurrence recurrente, on partage l'identifiant du modele (pas l'occurrence precise),
+		// pour que le lien resolve toujours vers "la prochaine occurrence" via resolveHighlightTarget.
+		function buildEventShareUrl(evt) {
+			const targetId = evt.recurring ? evt.id.split('__')[0] : evt.id;
+			const p = new URLSearchParams();
+			p.set('lang', state.lang);
+			p.set('logement', state.logement);
+			p.set('eevent', targetId);
+			p.set('highlight', 'true');
+			return `${window.location.origin}${window.location.pathname}?${p.toString()}`;
+		}
+
+		function fallbackCopyText(text, cb) {
+			try {
+				const ta = document.createElement('textarea');
+				ta.value = text;
+				ta.style.position = 'fixed';
+				ta.style.opacity = '0';
+				document.body.appendChild(ta);
+				ta.focus();
+				ta.select();
+				const ok = document.execCommand('copy');
+				document.body.removeChild(ta);
+				cb(ok);
+			} catch (e) {
+				cb(false);
+			}
+		}
+
+		function flashShareBtn(btn, ok) {
+			if (!btn) return;
+			const original = btn.textContent;
+			btn.textContent = ok ? '✅' : '⚠️';
+			btn.classList.toggle('copied', ok);
+			setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1400);
+		}
+
+		function copyEventLink(evt, btn) {
+			const url = buildEventShareUrl(evt);
+			const done = (ok) => flashShareBtn(btn, ok);
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(url).then(() => done(true)).catch(() => fallbackCopyText(url, done));
+			} else {
+				fallbackCopyText(url, done);
+			}
+		}
+
 		// en-tete colore commun aux cartes du calendrier et (a l'avenir) aux bandeaux du mode edition
 		function buildDayHeadEl(cfg, day, isToday, dayIcon) {
 			const weekdayIdx = (day.getDay() + 6) % 7; // 0 = lundi
@@ -748,7 +988,7 @@
 					row.rel = 'noopener';
 					row.className = 'event-row';
 					row.id = `event-${evt.id}`;
-					if (state.focusEvent === evt.id) row.classList.add('highlighted');
+					if (state._highlightTargetId && evt.id === state._highlightTargetId) row.classList.add('highlighted');
 					const stars = ratingStars(evt.rating);
 					row.innerHTML = `
 						<span class="event-icon" style="background:${cd.color}">${cd.icon}</span>
@@ -763,11 +1003,20 @@
 							${stars ? `<span class="event-rating block" title="${I18N[state.lang].ratingTitle} : ${evt.rating}/3">${stars}</span>` : ''}
 						</span>
 						${evt.favorite ? '<span class="event-star">⭐</span>' : ''}
+						<button type="button" class="event-share-btn" data-share="1" title="${I18N[state.lang].copyLinkLabel}" aria-label="${I18N[state.lang].copyLinkLabel}">🔗</button>
 						<svg class="event-link-arrow" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
 					`;
 					row.addEventListener('click', () => {
 						if (window.BDLAnalytics) window.BDLAnalytics.trackEvent(evt.id, t(evt.title), evt.cat);
 					});
+					const shareBtn = row.querySelector('.event-share-btn');
+					if (shareBtn) {
+						shareBtn.addEventListener('click', (e) => {
+							e.preventDefault();
+							e.stopPropagation();
+							copyEventLink(evt, shareBtn);
+						});
+					}
 					wrap.appendChild(row);
 				});
 			}
@@ -796,7 +1045,7 @@
 			// textes
 			$('#page-title').textContent = t(cfg.title) || I18N[state.lang].pageTitle;
 			$('#page-subtitle').textContent = t(cfg.subtitle);
-			$('#label-title').textContent = I18N[state.lang].pageTitle;
+			$('#label-title').textContent = I18N[state.lang].brand;
 			$('#text-back').textContent = I18N[state.lang].back;
 			$('#highlights-title').textContent = I18N[state.lang].highlightsTitle;
 			$('#practical-title').textContent = I18N[state.lang].practicalTitle;
@@ -808,6 +1057,7 @@
 			$('#footer-note').textContent = t(cfg.footerNote);
 			$('#footer-legal-rest').textContent = I18N[state.lang].legalRest;
 			$('#lang-select').value = state.lang;
+			$('#btn-selogers-label').textContent = I18N[state.lang].selogers;
 
 			const brand = LOGO_DATA[state.logement] || LOGO_DATA.salles;
 			const logoEl = $('#topbar-logo');
@@ -818,7 +1068,21 @@
 
 			// plage de dates
 			const effectiveCfg = Object.assign({}, cfg, { hidePast: cfg.hidePast && !state.showPast });
-			const { start, end, today } = computeRange(effectiveCfg);
+			let { start, end, today } = computeRange(effectiveCfg);
+
+			// deep-link eevent + highlight=true : resout la cible (y compris 1ere occurrence d'un
+			// recurrent) et etend au besoin la plage affichee pour qu'elle soit visible dans la liste
+			state._highlightTargetId = null;
+			if (state.focusEvent && state.highlightEvent) {
+				const resolved = resolveHighlightTarget(data, state.focusEvent);
+				if (resolved) {
+					state._highlightTargetId = resolved.id;
+					const targetDate = parseISO(resolved.date);
+					if (targetDate < start) start = new Date(targetDate);
+					if (targetDate > end) end = new Date(targetDate);
+				}
+			}
+
 			const days = buildDayList(start, end);
 
 			// événements ponctuels + occurrences récurrentes calculées pour la plage affichée
@@ -849,7 +1113,7 @@
 
 			// bouton "afficher les jours passés" (masque quand une plage de dates explicite est imposee par l'URL)
 			const btnPast = $('#btn-toggle-past');
-			if (cfg.hidePast && !state.dateStart && !state.dateEnd) {
+			if (window.EDIT_MODE && cfg.hidePast && !state.dateStart && !state.dateEnd) {
 				btnPast.classList.remove('hidden');
 				btnPast.textContent = state.showPast ? I18N[state.lang].hidePastAgain : I18N[state.lang].showPast;
 				btnPast.onclick = () => { state.showPast = !state.showPast; render(); syncUrl(); };
@@ -879,8 +1143,8 @@
 			$('#distances-card').classList.toggle('hidden', !(distancesForLogement && distancesForLogement.length));
 
 			// deep-link : scroll + flash sur le jour ou l'evenement demande
-			if (state.focusEvent) {
-				const el = document.getElementById(`event-${state.focusEvent}`);
+			if (state.focusEvent && state.highlightEvent && state._highlightTargetId) {
+				const el = document.getElementById(`event-${state._highlightTargetId}`);
 				if (el) {
 					setTimeout(() => {
 						if (typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -891,6 +1155,163 @@
 				const el = list.querySelector(`[data-day="${state.focusDay}"]`);
 				if (el && typeof el.scrollIntoView === 'function') setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
 			}
+		}
+
+
+		// ==================================================================
+		// ---- Calendrier mensuel imprimable ----
+		// ==================================================================
+
+		// Dispatcheur unique : garantit que le "chrome" partage (topbar, filtres,
+		// coups de coeur/distances) reste toujours a jour, que l'on soit sur la
+		// vue agenda ou la vue calendrier mensuel, puis bascule l'affichage.
+		function renderActiveView() {
+			if (state.editMode) { renderEditList(); return; }
+			render();
+			if (state.activeView === 'monthcal') {
+				$('#view-calendar').classList.add('hidden');
+				$('#view-monthcal').classList.remove('hidden');
+				renderMonthCalendar();
+			} else {
+				$('#view-monthcal').classList.add('hidden');
+				$('#view-calendar').classList.remove('hidden');
+			}
+		}
+
+		function updateMonthcalLabels() {
+			const L = I18N[state.lang];
+			$('#btn-month-calendar-label').textContent = L.monthCal;
+			$('#btn-monthcal-print-label').textContent = L.printLabel;
+			$('#btn-monthcal-close-label').textContent = L.backToCalendar;
+			const isFs = $('#view-monthcal').classList.contains('monthcal-fullscreen');
+			$('#btn-monthcal-fullscreen-label').textContent = isFs ? L.exitFullscreenLabel : L.fullscreenLabel;
+			const icon = $('.monthcal-fs-icon');
+			if (icon) icon.textContent = isFs ? '🗗' : '⛶';
+		}
+
+		function toggleMonthcalFullscreen() {
+			const isFs = $('#view-monthcal').classList.toggle('monthcal-fullscreen');
+			document.body.classList.toggle('monthcal-fs-lock', isFs);
+			updateMonthcalLabels();
+		}
+
+		function openMonthCalendar() {
+			const data = window.EVENTS_DATA;
+			if (!data) return;
+			if (state.editMode) exitEditMode();
+			if (!state.monthCalDate) {
+				const cfg = getConfig(data);
+				const base = cfg.startDate ? parseISO(cfg.startDate) : new Date();
+				state.monthCalDate = new Date(base.getFullYear(), base.getMonth(), 1);
+			}
+			state.activeView = 'monthcal';
+			renderActiveView();
+			syncUrl();
+		}
+
+		function closeMonthCalendar() {
+			state.activeView = 'calendar';
+			$('#view-monthcal').classList.remove('monthcal-fullscreen');
+			document.body.classList.remove('monthcal-fs-lock');
+			updateMonthcalLabels();
+			renderActiveView();
+			syncUrl();
+		}
+
+		function shiftMonthCalendar(delta) {
+			const d = state.monthCalDate || new Date();
+			state.monthCalDate = new Date(d.getFullYear(), d.getMonth() + delta, 1);
+			renderActiveView();
+			syncUrl();
+		}
+
+		function renderMonthCalendar() {
+			const data = window.EVENTS_DATA;
+			if (!data || !state.monthCalDate) return;
+			const cfg = getConfig(data);
+			const L = I18N[state.lang];
+
+			const monthStart = new Date(state.monthCalDate.getFullYear(), state.monthCalDate.getMonth(), 1);
+			const monthEnd = new Date(state.monthCalDate.getFullYear(), state.monthCalDate.getMonth() + 1, 0);
+
+			// en-tete "logement" (logo + libelle), dans l'esprit des flyers "Festivites [annee] [mois]"
+			const brand = LOGO_DATA[state.logement] || LOGO_DATA.salles;
+			$('#monthcal-print-logo').src = brand.src;
+			const logementLabel = state.logement === 'moustiers' ? L.logementMoustiers : L.logementSalles;
+			$('#monthcal-print-title').textContent = `${L.monthCalTitle} ${monthStart.getFullYear()} — ${L.months[monthStart.getMonth()]}`;
+			$('#monthcal-print-subtitle').textContent = logementLabel;
+			$('#monthcal-label').textContent = `${L.months[monthStart.getMonth()]} ${monthStart.getFullYear()}`;
+
+			// memes filtres actifs (categories / lieu / coup de coeur / note / logement) que la vue agenda
+			const allEvents = getAllEventsInRange(data, monthStart, monthEnd).filter(matchesFilters);
+
+			const byDate = {};
+			allEvents.forEach(e => { (byDate[e.date] = byDate[e.date] || []).push(e); });
+			Object.keys(byDate).forEach(k => { byDate[k] = byDate[k].slice().sort(sortByFavoriteThenRating); });
+
+			// en-tete des jours de semaine : memes couleurs (personnalisables) que la vue standard
+			const labelRow = $('#monthcal-daylabel-row');
+			labelRow.innerHTML = '';
+			L.weekdays.forEach((w, i) => {
+				const th = document.createElement('th');
+				th.className = 'monthcal-daylabel';
+				th.style.background = dayColorFor(cfg, i);
+				th.textContent = w.slice(0, 3);
+				labelRow.appendChild(th);
+			});
+
+			const tbody = $('#monthcal-grid');
+			tbody.innerHTML = '';
+
+			let row = null;
+			let colCount = 0;
+			function newRow() {
+				row = document.createElement('tr');
+				tbody.appendChild(row);
+				colCount = 0;
+			}
+			function pushCell(td) {
+				if (!row || colCount === 7) newRow();
+				row.appendChild(td);
+				colCount++;
+			}
+			function emptyCell() {
+				const td = document.createElement('td');
+				td.className = 'monthcal-cell is-empty';
+				pushCell(td);
+			}
+
+			newRow();
+			const leading = (monthStart.getDay() + 6) % 7; // 0 = lundi
+			for (let i = 0; i < leading; i++) emptyCell();
+
+			const today = startOfToday();
+			let cur = new Date(monthStart);
+			while (cur <= monthEnd) {
+				const iso = toISO(cur);
+				const weekdayIdx = (cur.getDay() + 6) % 7;
+				const td = document.createElement('td');
+				td.className = 'monthcal-cell';
+				if (iso === toISO(today)) td.classList.add('is-today');
+
+				const dayEvents = byDate[iso] || [];
+				const eventsHtml = dayEvents.map(evt => {
+					const cd = catDef(cfg, evt.cat);
+					const placeHtml = evt.place ? `<span class="monthcal-event-place">${evt.place}</span>` : '';
+					return `<div class="monthcal-event"><span class="monthcal-event-dot" style="background:${cd.color}"></span><span>${evt.favorite ? '⭐ ' : ''}${t(evt.title)}</span></div>${placeHtml}`;
+				}).join('');
+
+				td.innerHTML = `<span class="monthcal-daynum" style="background:${dayColorFor(cfg, weekdayIdx)}">${cur.getDate()}</span><div class="monthcal-events">${eventsHtml}</div>`;
+				pushCell(td);
+				cur = addDays(cur, 1);
+			}
+
+			// complete la derniere semaine pour garder des lignes pleines a l'impression
+			const totalCellsSoFar = leading + monthEnd.getDate();
+			const trailing = (7 - (totalCellsSoFar % 7)) % 7;
+			for (let i = 0; i < trailing; i++) emptyCell();
+
+			$('#events-counter').textContent = L.monthEventsCount(allEvents.length);
 		}
 
 
@@ -929,7 +1350,9 @@
 					: DEFAULT_DAY_PALETTE.slice();
 			}
 			state.editMode = true;
+			$('#shared-controls').classList.add('hidden');
 			$('#view-calendar').classList.add('hidden');
+			$('#view-monthcal').classList.add('hidden');
 			$('#view-edit').classList.remove('hidden');
 			const btn = $('#btn-edit-toggle');
 			btn.classList.add('active');
@@ -940,13 +1363,16 @@
 
 		function exitEditMode() {
 			state.editMode = false;
+			state.activeView = 'calendar';
+			$('#shared-controls').classList.remove('hidden');
 			$('#view-edit').classList.add('hidden');
+			$('#view-monthcal').classList.add('hidden');
 			$('#view-calendar').classList.remove('hidden');
 			const btn = $('#btn-edit-toggle');
 			btn.classList.remove('active');
 			btn.textContent = '✏️';
 			btn.title = I18N[state.lang].editOn;
-			render();
+			renderActiveView();
 		}
 
 		function toggleEditMode() {
@@ -1078,6 +1504,9 @@
 					<div><span class="ef-label">${L.fDetailsFr}</span><textarea class="f-details-fr"></textarea></div>
 					<div><span class="ef-label">${L.fDetailsEn}</span><textarea class="f-details-en"></textarea></div>
 				</div>
+				<div class="ef-grid">
+					<div><span class="ef-label">${L.fImg}</span><input type="text" class="f-img" placeholder="images/mon-evenement.jpg"></div>
+				</div>
 				<div class="ef-grid-3" style="align-items:end;">
 					<div><span class="ef-label">${L.fUrl}</span><input type="text" class="f-url"></div>
 					<label class="ef-checkline" style="padding-bottom:6px;"><input type="checkbox" class="f-favorite"> ${L.fFavorite}</label>
@@ -1101,6 +1530,7 @@
 			$('.f-title-en', wrap).value = titleLoc.en;
 			$('.f-details-fr', wrap).value = detailsLoc.fr;
 			$('.f-details-en', wrap).value = detailsLoc.en;
+			$('.f-img', wrap).value = evt.img || '';
 			$('.f-url', wrap).value = evt.url || '';
 			$('.f-favorite', wrap).checked = !!evt.favorite;
 			$('.f-rating', wrap).value = String(evt.rating || 0);
@@ -1213,6 +1643,9 @@
 			const urlVal = $('.f-url', wrap).value.trim();
 			if (urlVal) evt.url = urlVal; else delete evt.url;
 
+			const imgVal = $('.f-img', wrap).value.trim();
+			if (imgVal) evt.img = imgVal; else delete evt.img;
+
 			evt.time = locPack($('.f-time-fr', wrap).value, $('.f-time-en', wrap).value);
 			evt.title = locPack($('.f-title-fr', wrap).value, $('.f-title-en', wrap).value);
 			evt.details = locPack($('.f-details-fr', wrap).value, $('.f-details-en', wrap).value);
@@ -1303,6 +1736,7 @@
 				if (clean.recurrence) delete clean.date;
 				else delete clean.recurrence;
 				if (!clean.url) delete clean.url;
+				if (!clean.img) delete clean.img;
 				return clean;
 			});
 
@@ -1344,14 +1778,28 @@
 			function start() {
 				const data = window.EVENTS_DATA;
 				if (data) buildFilterBar(getConfig(data));
-				render();
+				updateMonthcalLabels();
+				renderActiveView();
 				syncUrl();
 
 				$('#lang-select').addEventListener('change', (e) => {
 					state.lang = e.target.value;
 					buildFilterBar(getConfig(window.EVENTS_DATA));
-					if (state.editMode) renderEditList(); else render();
+					updateMonthcalLabels();
+					if (state.editMode) renderEditList(); else renderActiveView();
 					syncUrl();
+				});
+
+				$('#btn-month-calendar').addEventListener('click', openMonthCalendar);
+				$('#btn-monthcal-close').addEventListener('click', closeMonthCalendar);
+				$('#btn-monthcal-prev').addEventListener('click', () => shiftMonthCalendar(-1));
+				$('#btn-monthcal-next').addEventListener('click', () => shiftMonthCalendar(1));
+				$('#btn-monthcal-print').addEventListener('click', () => window.print());
+				$('#btn-monthcal-fullscreen').addEventListener('click', toggleMonthcalFullscreen);
+				document.addEventListener('keydown', (e) => {
+					if (e.key === 'Escape' && $('#view-monthcal').classList.contains('monthcal-fullscreen')) {
+						toggleMonthcalFullscreen();
+					}
 				});
 
 				if (window.EDIT_MODE) {
