@@ -147,6 +147,8 @@
 		.edit-daycolor-item input[type="color"] { width: 26px; height: 22px; border: none; border-radius: 6px; padding: 0; cursor: pointer; background: none; }
 		.edit-row-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 		.edit-row-id { font-size: 11px; font-weight: 700; color: var(--c-muted); font-family: 'Courier New', monospace; }
+		.edit-row-select { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; color: var(--c-muted); cursor: pointer; user-select: none; }
+		.edit-row-select input { cursor: pointer; width: 14px; height: 14px; }
 
 		/* ---- Calendrier mensuel imprimable ---- */
 		#monthcal-print-header { display: flex; align-items: center; gap: 12px; padding: 6px 4px 14px; }
@@ -215,6 +217,16 @@
 		}
 		.event-share-btn:hover { background: #e0f2fe; color: var(--c-primary); }
 		.event-share-btn.copied { color: #16a34a; }
+
+		.event-select-cb {
+			flex-shrink: 0; width: 18px; height: 18px; margin-top: 5px; padding: 0;
+			border: 1.5px solid #cbd5e1; border-radius: 5px; background: #fff;
+			display: flex; align-items: center; justify-content: center; cursor: pointer;
+			transition: all 0.15s ease;
+		}
+		.event-select-cb:hover { border-color: var(--c-primary); }
+		.event-select-cb[aria-pressed="true"] { background: var(--c-primary); border-color: var(--c-primary); }
+		.event-select-cb[aria-pressed="true"]::after { content: '✓'; color: #fff; font-size: 11px; font-weight: 700; line-height: 1; }
 	</style>
 	</head>
 	<body>
@@ -260,6 +272,12 @@
 				<button id="btn-toggle-past" type="button" class="text-[var(--c-primary)] font-medium hidden"></button>
 				<button id="btn-month-calendar" type="button" class="filter-chip">
 					<span>🗓️</span><span id="btn-month-calendar-label">Calendrier mensuel</span>
+				</button>
+				<a id="btn-view-selection" class="filter-chip hidden" style="background:#0284c7;color:#fff;border-color:transparent;" target="_blank" rel="noopener">
+					<span>👁️</span><span id="btn-view-selection-label">Voir ma sélection</span>
+				</a>
+				<button id="btn-copy-selection" type="button" class="filter-chip hidden" title="Copier le lien de la sélection" aria-label="Copier le lien de la sélection">
+					<span id="btn-copy-selection-icon">🔗</span>
 				</button>
 			</div>
 		</div>
@@ -342,6 +360,9 @@
 					<button id="btn-download-json" type="button" class="filter-chip" style="background:#16a34a;color:#fff;border-color:transparent;">
 						<span>💾</span><span id="btn-download-label">Telecharger evenements.js</span>
 					</button>
+					<button id="btn-copy-highlights" type="button" class="filter-chip">
+						<span id="btn-copy-highlights-label">🔗 Copier le lien Temps forts</span>
+					</button>
 				</div>
 			</div>
 			<div class="edit-daycolors" id="edit-daycolors">
@@ -363,10 +384,20 @@
 	// tout en gardant la meme page pour l'administration en local.
 	window.EDIT_MODE = new URLSearchParams(window.location.search).get('edit') === '1';
 
+	// Secteur par defaut (coarse : salles ou moustiers), derive du logement par defaut
+	// de logements.js (source de verite partagee) ; repli en dur si le fichier de
+	// config n'a pas pu etre charge du tout.
+	let DEFAULT_SECTEUR = 'salles';
+	// valeur precise par defaut (ex: "salles6"), utilisee pour l'aller-retour URL exact
+	// (voir state.logementRaw plus bas) ; distincte de DEFAULT_SECTEUR qui reste la version
+	// grossiere ('salles'/'moustiers') utilisee pour le filtrage/logo/libelles internes.
+	let DEFAULT_LISTING_ID = 'salles6';
+
 	(function () {
 		const state = {
 			lang: 'FR',
 			logement: 'salles',
+			logementRaw: 'salles6', // valeur precise (salles6/salles8/moustiers) preservee dans l'URL/les liens
 			activeCats: new Set(['__all__']),
 			activePlace: null,
 			favOnly: false,
@@ -380,8 +411,10 @@
 			editMode: false,
 			editEvents: null, // copie de travail de data.events, initialisee a l'entree en mode edition
 			editDayColors: null, // copie de travail des couleurs par jour de semaine, idem
+			editSelectedHl: null, // Set des __uid selectionnes pour generer le lien highlights.html
 			activeView: 'calendar', // 'calendar' | 'monthcal'
-			monthCalDate: null     // 1er jour du mois affiche dans le calendrier mensuel
+			monthCalDate: null,    // 1er jour du mois affiche dans le calendrier mensuel
+			selectedHl: new Set()  // selection d'evenements (tous utilisateurs) pour generer un lien highlights.html
 		};
 
 		const I18N = {
@@ -417,7 +450,11 @@
 				monthCalPrev: "Mois précédent", monthCalNext: "Mois suivant",
 				monthEventsCount: (n) => `${n} événement${n > 1 ? 's' : ''} ce mois-ci`,
 				fullscreenLabel: "Plein écran", exitFullscreenLabel: "Quitter le plein écran",
-				selogers: "Se loger", copyLinkLabel: "Copier le lien de cet évènement", linkCopied: "Lien copié !"
+				selogers: "Se loger", copyLinkLabel: "Copier le lien de cet évènement", linkCopied: "Lien copié !",
+				selectForHighlights: "Inclure dans le lien Temps forts",
+				copyHighlightsLink: (n) => n > 0 ? `🔗 Copier le lien Temps forts (${n})` : "🔗 Copier le lien Temps forts",
+				noSelectionAlert: "Sélectionnez au moins un évènement à inclure dans le lien.",
+				viewSelection: "Voir ma sélection", selectForHighlightsTitle: "Ajouter à ma sélection"
 			},
 			EN: {
 				back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", pageTitle: "Events",
@@ -451,7 +488,11 @@
 				monthCalPrev: "Previous month", monthCalNext: "Next month",
 				monthEventsCount: (n) => `${n} event${n > 1 ? 's' : ''} this month`,
 				fullscreenLabel: "Full screen", exitFullscreenLabel: "Exit full screen",
-				selogers: "Book a stay", copyLinkLabel: "Copy this event's link", linkCopied: "Link copied!"
+				selogers: "Book a stay", copyLinkLabel: "Copy this event's link", linkCopied: "Link copied!",
+				selectForHighlights: "Include in Highlights link",
+				copyHighlightsLink: (n) => n > 0 ? `🔗 Copy Highlights link (${n})` : "🔗 Copy Highlights link",
+				noSelectionAlert: "Select at least one event to include in the link.",
+				viewSelection: "View my selection", selectForHighlightsTitle: "Add to my selection"
 			}
 		};
 
@@ -491,7 +532,10 @@
 		function readUrlParams() {
 			const p = new URLSearchParams(window.location.search);
 			if (p.get('lang')) state.lang = p.get('lang').toUpperCase();
-			const logParam = (p.get('logement') || 'salles').toLowerCase();
+			// valeur precise (ex: "salles6"/"salles8"/"moustiers") a preserver telle quelle dans l'URL/les liens ;
+			// accepte les mêmes alias que les autres pages (logement/listing/l/id).
+			state.logementRaw = p.get('logement') || p.get('listing') || p.get('l') || p.get('id') || DEFAULT_LISTING_ID;
+			const logParam = state.logementRaw.toLowerCase();
 			state.logement = logParam.includes('moustiers') ? 'moustiers' : 'salles';
 
 			const rawCats = p.get('ecat');
@@ -527,7 +571,8 @@
 		function syncUrl() {
 			const p = new URLSearchParams(window.location.search);
 			p.set('lang', state.lang);
-			p.set('logement', state.logement); // initialise/preserve toujours le logement dans l'URL (comme sur index)
+			p.set('logement', state.logementRaw); // preserve la valeur precise (salles6/salles8/moustiers), jamais la version grossiere
+			['listing', 'l', 'id'].forEach(k => p.delete(k)); // nettoie les alias eventuels, "logement" reste la cle canonique
 
 			const catsArr = Array.from(state.activeCats);
 			if (!catsArr.includes('__all__') && catsArr.length > 0) p.set('ecat', catsArr.join(','));
@@ -553,13 +598,13 @@
 			// Bouton retour : conserve uniquement le contexte général (lang, logement)
 			const backParams = new URLSearchParams();
 			backParams.set('lang', state.lang);
-			if (p.get('logement')) backParams.set('logement', p.get('logement'));
+			backParams.set('logement', state.logementRaw);
 			$('#btn-back').href = `https://bellodulac.netlify.app/index.html?${backParams.toString()}`;
 
-			// Bouton Se loger : conserve la langue et le logement courants
+			// Bouton Se loger : conserve la langue et le logement courants (valeur precise)
 			const btnSeloger = $('#btn-selogers');
 			if (btnSeloger) {
-				btnSeloger.href = `https://bellodulac.netlify.app/logements.html?lang=${state.lang}&logement=${state.logement}`;
+				btnSeloger.href = `https://bellodulac.netlify.app/logements.html?lang=${state.lang}&logement=${state.logementRaw}`;
 			}
 		}
 
@@ -879,8 +924,10 @@
 			const template = events.find(e => e.id === focusEventId && e.recurrence);
 			if (template) {
 				const recStart = template.recurrence.startDate ? parseISO(template.recurrence.startDate) : startOfToday();
-				const horizon = addDays(recStart, 366 * 3);
-				const occurrences = expandOne(template, recStart, horizon).sort((a, b) => a.date.localeCompare(b.date));
+				const today = startOfToday();
+				const expandFrom = recStart > today ? recStart : today;
+				const horizon = addDays(expandFrom, 366 * 3);
+				const occurrences = expandOne(template, expandFrom, horizon).sort((a, b) => a.date.localeCompare(b.date));
 				if (occurrences.length) return { id: occurrences[0].id, date: occurrences[0].date };
 				return null;
 			}
@@ -902,7 +949,7 @@
 			const targetId = evt.recurring ? evt.id.split('__')[0] : evt.id;
 			const p = new URLSearchParams();
 			p.set('lang', state.lang);
-			p.set('logement', state.logement);
+			p.set('logement', state.logementRaw);
 			p.set('eevent', targetId);
 			p.set('highlight', 'true');
 			return `${window.location.origin}${window.location.pathname}?${p.toString()}`;
@@ -936,6 +983,76 @@
 		function copyEventLink(evt, btn) {
 			const url = buildEventShareUrl(evt);
 			const done = (ok) => flashShareBtn(btn, ok);
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(url).then(() => done(true)).catch(() => fallbackCopyText(url, done));
+			} else {
+				fallbackCopyText(url, done);
+			}
+		}
+
+		// -------- selection multiple (tous utilisateurs) -> lien highlights.html --------
+		// identifiant a retenir pour un evenement affiche : l'id du modele pour une occurrence
+		// recurrente (pour que highlights.html retrouve toujours "la prochaine occurrence"),
+		// l'id tel quel pour un evenement ponctuel.
+		function highlightIdFor(evt) {
+			return evt.recurring ? evt.id.split('__')[0] : evt.id;
+		}
+
+		// Construit les parametres de filtre actuellement actifs sur evenements.html (hors lang/logement),
+		// pour pouvoir les restituer si l'utilisateur revient depuis highlights.html via "Retour".
+		function buildEvenementsFilterParams() {
+			const p = new URLSearchParams();
+			const catsArr = Array.from(state.activeCats);
+			if (!catsArr.includes('__all__') && catsArr.length > 0) p.set('ecat', catsArr.join(','));
+			if (state.activePlace) p.set('eplace', state.activePlace);
+			if (state.favOnly) p.set('efav', '1');
+			if (state.minRating > 0) p.set('erating', state.minRating);
+			if (state.dateStart) p.set('edatestart', state.dateStart);
+			if (state.dateEnd) p.set('edateend', state.dateEnd);
+			if (state.activeView === 'monthcal' && state.monthCalDate) {
+				p.set('emonth', `${state.monthCalDate.getFullYear()}-${pad2(state.monthCalDate.getMonth() + 1)}`);
+			}
+			return p;
+		}
+
+		function buildSelectionUrl() {
+			const ids = Array.from(state.selectedHl);
+			const p = new URLSearchParams();
+			p.set('lang', state.lang);
+			p.set('logement', state.logementRaw);
+			p.set('ids', ids.map(encodeURIComponent).join(','));
+			p.set('from', 'evenements');
+			buildEvenementsFilterParams().forEach((v, k) => p.set(k, v));
+			return `https://bellodulac.netlify.app/highlights.html?${p.toString()}`;
+		}
+
+		function updateSelectionUI() {
+			const n = state.selectedHl.size;
+			const viewBtn = $('#btn-view-selection');
+			const copyBtn = $('#btn-copy-selection');
+			const label = $('#btn-view-selection-label');
+			if (!viewBtn || !copyBtn || !label) return;
+			if (n === 0) {
+				viewBtn.classList.add('hidden');
+				copyBtn.classList.add('hidden');
+				return;
+			}
+			viewBtn.classList.remove('hidden');
+			copyBtn.classList.remove('hidden');
+			label.textContent = `${I18N[state.lang].viewSelection} (${n})`;
+			viewBtn.href = buildSelectionUrl();
+		}
+
+		function copySelectionLink() {
+			if (state.selectedHl.size === 0) return;
+			const url = buildSelectionUrl();
+			const icon = $('#btn-copy-selection-icon');
+			const original = icon ? icon.textContent : '🔗';
+			const done = (ok) => {
+				if (!icon) return;
+				icon.textContent = ok ? '✅' : '⚠️';
+				setTimeout(() => { icon.textContent = original; }, 1400);
+			};
 			if (navigator.clipboard && navigator.clipboard.writeText) {
 				navigator.clipboard.writeText(url).then(() => done(true)).catch(() => fallbackCopyText(url, done));
 			} else {
@@ -1003,6 +1120,7 @@
 							${stars ? `<span class="event-rating block" title="${I18N[state.lang].ratingTitle} : ${evt.rating}/3">${stars}</span>` : ''}
 						</span>
 						${evt.favorite ? '<span class="event-star">⭐</span>' : ''}
+						<button type="button" class="event-select-cb" aria-pressed="false" title="${I18N[state.lang].selectForHighlightsTitle}" aria-label="${I18N[state.lang].selectForHighlightsTitle}"></button>
 						<button type="button" class="event-share-btn" data-share="1" title="${I18N[state.lang].copyLinkLabel}" aria-label="${I18N[state.lang].copyLinkLabel}">🔗</button>
 						<svg class="event-link-arrow" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
 					`;
@@ -1015,6 +1133,20 @@
 							e.preventDefault();
 							e.stopPropagation();
 							copyEventLink(evt, shareBtn);
+						});
+					}
+					const selectCb = row.querySelector('.event-select-cb');
+					if (selectCb) {
+						const hlId = highlightIdFor(evt);
+						selectCb.setAttribute('aria-pressed', state.selectedHl.has(hlId) ? 'true' : 'false');
+						selectCb.addEventListener('click', (e) => {
+							e.preventDefault();
+							e.stopPropagation();
+							const nowSelected = selectCb.getAttribute('aria-pressed') !== 'true';
+							selectCb.setAttribute('aria-pressed', nowSelected ? 'true' : 'false');
+							if (nowSelected) state.selectedHl.add(hlId);
+							else state.selectedHl.delete(hlId);
+							updateSelectionUI();
 						});
 					}
 					wrap.appendChild(row);
@@ -1155,6 +1287,8 @@
 				const el = list.querySelector(`[data-day="${state.focusDay}"]`);
 				if (el && typeof el.scrollIntoView === 'function') setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
 			}
+
+			updateSelectionUI();
 		}
 
 
@@ -1349,6 +1483,7 @@
 					? cfg.dayColors.slice()
 					: DEFAULT_DAY_PALETTE.slice();
 			}
+			if (!state.editSelectedHl) state.editSelectedHl = new Set();
 			state.editMode = true;
 			$('#shared-controls').classList.add('hidden');
 			$('#view-calendar').classList.add('hidden');
@@ -1438,6 +1573,59 @@
 			state.editEvents.forEach((evt, idx) => {
 				list.appendChild(renderEditRow(evt, idx, cfg));
 			});
+
+			updateCopyHighlightsLabel();
+		}
+
+		// -------- selection multiple -> lien highlights.html --------
+		function updateCopyHighlightsLabel() {
+			const label = $('#btn-copy-highlights-label');
+			if (!label || !state.editSelectedHl) return;
+			label.textContent = I18N[state.lang].copyHighlightsLink(state.editSelectedHl.size);
+		}
+
+		function flashCopyHighlightsBtn(ok) {
+			const label = $('#btn-copy-highlights-label');
+			if (!label) return;
+			label.textContent = ok ? I18N[state.lang].linkCopied : '⚠️';
+			setTimeout(updateCopyHighlightsLabel, 1400);
+		}
+
+		// construit puis copie le lien highlights.html?ids=... pour les evenements coches,
+		// dans l'ordre de la liste d'edition ; genere un id si l'evenement n'en a pas encore.
+		function copyHighlightsLink() {
+			const L = I18N[state.lang];
+			if (!state.editSelectedHl || state.editSelectedHl.size === 0) {
+				window.alert(L.noSelectionAlert);
+				return;
+			}
+
+			const ids = [];
+			state.editEvents.forEach(evt => {
+				if (!state.editSelectedHl.has(evt.__uid)) return;
+				if (!evt.id) {
+					evt.id = 'evt-' + Math.random().toString(36).slice(2, 8);
+					const row = document.querySelector(`.edit-row[data-uid="${evt.__uid}"]`);
+					const idInput = row && $('.f-id', row);
+					if (idInput) idInput.value = evt.id;
+					const idLabel = row && $('.edit-row-id', row);
+					if (idLabel && !idLabel.textContent.includes(evt.id)) idLabel.textContent += ` · ${evt.id}`;
+				}
+				ids.push(evt.id);
+			});
+
+			const hp = new URLSearchParams();
+			hp.set('lang', state.lang);
+			hp.set('logement', state.logementRaw);
+			hp.set('ids', ids.map(encodeURIComponent).join(','));
+			hp.set('from', 'evenements');
+			buildEvenementsFilterParams().forEach((v, k) => hp.set(k, v));
+			const url = `https://bellodulac.netlify.app/highlights.html?${hp.toString()}`;
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(url).then(() => flashCopyHighlightsBtn(true)).catch(() => fallbackCopyText(url, flashCopyHighlightsBtn));
+			} else {
+				fallbackCopyText(url, flashCopyHighlightsBtn);
+			}
 		}
 
 		function renderEditRow(evt, idx, cfg) {
@@ -1450,7 +1638,10 @@
 
 			wrap.innerHTML = `
 				<div class="edit-row-head">
-					<span class="edit-row-id">#${idx + 1}${evt.id ? ' · ' + evt.id : ''}</span>
+					<label class="edit-row-select" title="${L.selectForHighlights}">
+						<input type="checkbox" class="f-select-hl">
+						<span class="edit-row-id">#${idx + 1}${evt.id ? ' · ' + evt.id : ''}</span>
+					</label>
 					<div class="edit-row-actions">
 						<button type="button" class="btn-dup-event" data-action="duplicate" title="${L.duplicateEvent}">📋</button>
 						<button type="button" class="btn-del-event" data-action="delete" title="${L.deleteEvent}">🗑️</button>
@@ -1589,8 +1780,20 @@
 				el.addEventListener('change', () => syncRowToModel(wrap, idx));
 			});
 
+			const selectCb = $('.f-select-hl', wrap);
+			if (selectCb) {
+				selectCb.checked = state.editSelectedHl.has(evt.__uid);
+				selectCb.addEventListener('click', (e) => e.stopPropagation());
+				selectCb.addEventListener('change', () => {
+					if (selectCb.checked) state.editSelectedHl.add(evt.__uid);
+					else state.editSelectedHl.delete(evt.__uid);
+					updateCopyHighlightsLabel();
+				});
+			}
+
 			$('.btn-del-event', wrap).addEventListener('click', () => {
 				if (window.confirm(L.deleteEvent)) {
+					state.editSelectedHl.delete(evt.__uid);
 					state.editEvents.splice(idx, 1);
 					renderEditList();
 				}
@@ -1802,10 +2005,13 @@
 					}
 				});
 
+				$('#btn-copy-selection').addEventListener('click', copySelectionLink);
+
 				if (window.EDIT_MODE) {
 					$('#btn-edit-toggle').addEventListener('click', toggleEditMode);
 					$('#btn-add-event').addEventListener('click', addEventRow);
 					$('#btn-download-json').addEventListener('click', downloadEvenementsJs);
+					$('#btn-copy-highlights').addEventListener('click', copyHighlightsLink);
 				} else {
 					// EDIT_MODE desactive : le bouton d'edition est totalement retire de la page.
 					$('#btn-edit-toggle').remove();
@@ -1840,7 +2046,39 @@
 			}
 		}
 
-		document.addEventListener('DOMContentLoaded', init);
+		// Chargement de logements.js (source de verite du logement par defaut), avant meme
+		// readUrlParams() : DEFAULT_SECTEUR doit etre a jour avant toute lecture de l'URL.
+		// Repli local si l'URL externe echoue (meme schema que pois.js/evenements.js) ; en
+		// dernier recours le DEFAULT_SECTEUR code en dur ci-dessus reste utilise.
+		function chargerLogementsPuisInit() {
+			function proceed() {
+				if (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) {
+					DEFAULT_LISTING_ID = window.LOGEMENTS_DATA.default.toString();
+					DEFAULT_SECTEUR = DEFAULT_LISTING_ID.toLowerCase().includes('moustiers') ? 'moustiers' : 'salles';
+				}
+				init();
+			}
+			if (window.LOGEMENTS_DATA) { proceed(); return; }
+
+			const EXTERNAL_URL = "https://gist.githack.com/verdonstudio/096afae141a34a87c8dfb495fde10f0e/raw/logements.js";
+			const LOCAL_URL = "logements.js";
+
+			function loadLocal() {
+				const s = document.createElement('script');
+				s.src = LOCAL_URL;
+				s.onload = proceed;
+				s.onerror = () => { console.error("Impossible de charger logements.js"); proceed(); };
+				document.head.appendChild(s);
+			}
+
+			const s = document.createElement('script');
+			s.src = EXTERNAL_URL;
+			s.onload = proceed;
+			s.onerror = loadLocal;
+			document.head.appendChild(s);
+		}
+
+		document.addEventListener('DOMContentLoaded', chargerLogementsPuisInit);
 	})();
 
 	</script>
