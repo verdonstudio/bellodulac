@@ -924,9 +924,14 @@
 			const template = events.find(e => e.id === focusEventId && e.recurrence);
 			if (template) {
 				const recStart = template.recurrence.startDate ? parseISO(template.recurrence.startDate) : startOfToday();
-				const today = startOfToday();
-				const expandFrom = recStart > today ? recStart : today;
-				const horizon = addDays(expandFrom, 366 * 3);
+				// si une plage edatestart/edateend est active (filtre transmis dans l URL), on cherche
+				// la prochaine occurrence a partir de edatestart (et avant edateend) plutot qu a partir
+				// d aujourd hui : ca permet de partager un lien vers la prochaine occurrence dans une periode donnee.
+				const rangeFloor = state.dateStart ? parseISO(state.dateStart) : startOfToday();
+				const expandFrom = recStart > rangeFloor ? recStart : rangeFloor;
+				const rangeEnd = state.dateEnd ? parseISO(state.dateEnd) : null;
+				const horizon = rangeEnd || addDays(expandFrom, 366 * 3);
+				if (expandFrom > horizon) return null;
 				const occurrences = expandOne(template, expandFrom, horizon).sort((a, b) => a.date.localeCompare(b.date));
 				if (occurrences.length) return { id: occurrences[0].id, date: occurrences[0].date };
 				return null;
