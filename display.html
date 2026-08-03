@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Redirection</title>
+    <title>Redirection Bello</title>
     
     <script src="https://gist.githack.com/verdonstudio/bf1d7d0b70d607ad4fdc086305a4af77/raw/redirect.js"></script>
 
@@ -13,7 +13,10 @@
         // Récupération des paramètres de l'URL
         const urlParams = new URLSearchParams(window.location.search);
         const numeroReservation = urlParams.get('res');
-        const typeLien = urlParams.get('type') || 'highlights'; 
+        
+        // On récupère maintenant le paramètre "action" (ex: ?res=12345&action=url2)
+        // S'il n'y a pas d'action précisée, on prend "default" par défaut
+        const typeAction = urlParams.get('action') || 'default'; 
 
         // On initialise la destination avec l'URL par défaut
         let urlDestination = urlParDefaut;
@@ -23,14 +26,14 @@
             
             const donneesReservation = reservations[numeroReservation];
 
-            // Si la réservation existe ET que le type de lien demandé existe
-            if (donneesReservation && donneesReservation[typeLien]) {
+            // Si la réservation existe ET que l'action demandée existe dans redirect.js
+            if (donneesReservation && donneesReservation[typeAction]) {
                 // On remplace l'URL par défaut par la bonne URL trouvée
-                urlDestination = donneesReservation[typeLien];
+                urlDestination = donneesReservation[typeAction];
             }
         }
 
-        // On effectue la redirection dans tous les cas (vers l'URL précise ou par défaut)
+        // On effectue la redirection dans tous les cas
         window.location.replace(urlDestination);
     </script>
 </head>
