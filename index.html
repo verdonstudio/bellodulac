@@ -528,6 +528,51 @@
 		function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
 		function startOfToday() { const n = new Date(); n.setHours(0,0,0,0); return n; }
 
+			// Accepte, pour edatestart/edateend : l'ISO strict (AAAA-MM-JJ), une date en
+			// clair FR ou EN ("10 août 2026", "1er août 2026", "August 10, 2026",
+			// "10 August 2026"), ou une date numerique JJ/MM/AAAA. Retourne une chaine
+			// ISO normalisee ou null si le format n'est pas reconnu.
+			const MOIS_NOMS = {
+				janvier: 1, jan: 1, january: 1,
+				fevrier: 2, fev: 2, february: 2, feb: 2,
+				mars: 3, march: 3, mar: 3,
+				avril: 4, avr: 4, april: 4, apr: 4,
+				mai: 5, may: 5,
+				juin: 6, june: 6, jun: 6,
+				juillet: 7, juil: 7, july: 7, jul: 7,
+				aout: 8, aug: 8, august: 8,
+				septembre: 9, sept: 9, sep: 9, september: 9,
+				octobre: 10, oct: 10, october: 10,
+				novembre: 11, nov: 11, november: 11,
+				decembre: 12, dec: 12, december: 12,
+			};
+			function normalizeMoisKey(s) {
+				return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+			}
+			function parseFlexibleDate(raw) {
+				if (!raw) return null;
+				const str = raw.trim();
+				if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+				let m = str.match(/^(\d{1,2})(?:er|re|ème|eme|st|nd|rd|th)?\s+([a-zA-Zà-üÀ-Ü]+)\.?\s+(\d{4})$/);
+				if (m) {
+					const day = parseInt(m[1], 10);
+					const month = MOIS_NOMS[normalizeMoisKey(m[2])];
+					if (month && day >= 1 && day <= 31) return `${m[3]}-${pad2(month)}-${pad2(day)}`;
+				}
+				m = str.match(/^([a-zA-Zà-üÀ-Ü]+)\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})$/);
+				if (m) {
+					const month = MOIS_NOMS[normalizeMoisKey(m[1])];
+					const day = parseInt(m[2], 10);
+					if (month && day >= 1 && day <= 31) return `${m[3]}-${pad2(month)}-${pad2(day)}`;
+				}
+				m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+				if (m) {
+					const day = parseInt(m[1], 10), month = parseInt(m[2], 10);
+					if (month >= 1 && month <= 12 && day >= 1 && day <= 31) return `${m[3]}-${pad2(month)}-${pad2(day)}`;
+				}
+				return null;
+			}
+
 		// -------- URL params
 		function readUrlParams() {
 			const p = new URLSearchParams(window.location.search);
@@ -550,12 +595,13 @@
 			state.focusEvent = p.get('eevent') || null;
 			state.highlightEvent = p.get('highlight') === '1' || p.get('highlight') === 'true';
 
-			// plage de dates explicite (lien filtre a envoyer au client) : edatestart / edateend, format AAAA-MM-JJ
-			const isoDateRe = /^\d{4}-\d{2}-\d{2}$/;
+			// plage de dates explicite (lien filtre a envoyer au client) : edatestart / edateend.
+			// accepte l'ISO strict (AAAA-MM-JJ) ainsi que les dates en clair FR/EN
+			// ("10 août 2026", "August 10, 2026", ...) via parseFlexibleDate().
 			const rawStart = p.get('edatestart');
 			const rawEnd = p.get('edateend');
-			state.dateStart = (rawStart && isoDateRe.test(rawStart)) ? rawStart : null;
-			state.dateEnd = (rawEnd && isoDateRe.test(rawEnd)) ? rawEnd : null;
+			state.dateStart = parseFlexibleDate(rawStart);
+			state.dateEnd = parseFlexibleDate(rawEnd);
 			if (state.dateStart && state.dateEnd && state.dateStart > state.dateEnd) {
 				const tmp = state.dateStart; state.dateStart = state.dateEnd; state.dateEnd = tmp;
 			}
