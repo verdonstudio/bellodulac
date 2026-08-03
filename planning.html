@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirection Bello</title>
+    
+    <script src="https://gist.githack.com/verdonstudio/bf1d7d0b70d607ad4fdc086305a4af77/raw/redirect.js"></script>
+
+    <script>
+        // Récupération du paramètre "res" (ex: ?res=12345)
+        const urlParams = new URLSearchParams(window.location.search);
+        const numeroReservation = urlParams.get('res');
+
+        // Si le numéro existe ET que le fichier redirect.js a bien été chargé
+        if (numeroReservation && typeof reservations !== 'undefined') {
+            const urlDestination = reservations[numeroReservation];
+
+            // Si l'URL correspondante est trouvée, on redirige
+            if (urlDestination) {
+                window.location.replace(urlDestination);
+            }
+			else{
+				window.location.replace("https://bellodulac.vercel.app");
+			}
+        }
+    </script>
+</head>
+<body>
+    <!-- Aucun contenu à afficher -->
+</body>
+</html>
