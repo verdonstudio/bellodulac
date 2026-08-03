@@ -2,30 +2,38 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Redirection Bello</title>
+    <title>Redirection</title>
     
     <script src="https://gist.githack.com/verdonstudio/bf1d7d0b70d607ad4fdc086305a4af77/raw/redirect.js"></script>
 
     <script>
-        // Récupération du paramètre "res" (ex: ?res=12345)
+        // L'URL vers laquelle rediriger s'il n'y a pas de code ou s'il est introuvable
+        const urlParDefaut = "https://bellodulac.vercel.app";
+
+        // Récupération des paramètres de l'URL
         const urlParams = new URLSearchParams(window.location.search);
         const numeroReservation = urlParams.get('res');
+        const typeLien = urlParams.get('type') || 'highlights'; 
 
-        // Si le numéro existe ET que le fichier redirect.js a bien été chargé
+        // On initialise la destination avec l'URL par défaut
+        let urlDestination = urlParDefaut;
+
+        // Si un numéro est fourni et que le fichier de conf est bien chargé
         if (numeroReservation && typeof reservations !== 'undefined') {
-            const urlDestination = reservations[numeroReservation];
+            
+            const donneesReservation = reservations[numeroReservation];
 
-            // Si l'URL correspondante est trouvée, on redirige
-            if (urlDestination) {
-                window.location.replace(urlDestination);
+            // Si la réservation existe ET que le type de lien demandé existe
+            if (donneesReservation && donneesReservation[typeLien]) {
+                // On remplace l'URL par défaut par la bonne URL trouvée
+                urlDestination = donneesReservation[typeLien];
             }
-			else{
-				window.location.replace("https://bellodulac.vercel.app");
-			}
         }
+
+        // On effectue la redirection dans tous les cas (vers l'URL précise ou par défaut)
+        window.location.replace(urlDestination);
     </script>
 </head>
 <body>
-    <!-- Aucun contenu à afficher -->
 </body>
 </html>
