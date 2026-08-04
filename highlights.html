@@ -580,6 +580,10 @@
         const p = new URLSearchParams(state.passthrough);
         p.set('lang', state.lang);
         p.set('logement', state.logement);
+        // conserve la selection (evenements + visites POI) dans le lien retour, pour ne
+        // pas la perdre en repassant par index/panorama/evenements avant d'y revenir.
+        if (state.ids.length) p.set('ids', state.ids.map(encodeURIComponent).join(',')); else p.delete('ids');
+        if (state.visits.length) p.set('visits', state.visits.map(v => `${encodeURIComponent(v.poiId)}:${v.date}`).join(',')); else p.delete('visits');
         applyDateRangeParams(p);
         if (state.from === 'evenements') return `evenements.html?${p.toString()}`;
         if (state.from === 'panorama') return `panorama.html?${p.toString()}`;

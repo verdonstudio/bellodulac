@@ -425,7 +425,9 @@
 			editSelectedHl: null, // Set des __uid selectionnes pour generer le lien highlights.html
 			activeView: 'calendar', // 'calendar' | 'monthcal'
 			monthCalDate: null,    // 1er jour du mois affiche dans le calendrier mensuel
-			selectedHl: new Set()  // selection d'evenements (tous utilisateurs) pour generer un lien highlights.html
+			selectedHl: new Set(), // selection d'evenements (tous utilisateurs) pour generer un lien highlights.html
+			visitsPassthrough: null // visites POI deja choisies sur highlights.html (ids?visits=...), a ne pas perdre
+			                        // si on y retourne via "Voir ma selection" apres etre repasse par evenements.html
 		};
 
 		const I18N = {
@@ -623,6 +625,17 @@
 				state.monthCalDate = new Date(y, m - 1, 1);
 				state.activeView = 'monthcal';
 			}
+
+			// Selection deja constituee sur highlights.html (evenements + visites POI),
+			// transmise via ?ids=...&visits=... (ex: en revenant depuis highlights.html) :
+			// on la reprend pour ne pas l'ecraser si l'utilisateur ajoute encore des
+			// evenements ici avant de retourner sur "Voir ma selection".
+			const rawIds = p.get('ids');
+			if (rawIds) {
+				rawIds.split(',').map(s => decodeURIComponent(s.trim())).filter(Boolean)
+					.forEach(id => state.selectedHl.add(id));
+			}
+			state.visitsPassthrough = p.get('visits') || null;
 		}
 
 		function syncUrl() {
@@ -1087,6 +1100,10 @@
 			p.set('lang', state.lang);
 			p.set('logement', state.logementRaw);
 			p.set('ids', ids.map(encodeURIComponent).join(','));
+			// repropage les visites POI deja choisies sur highlights.html (state.selectedHl
+			// couvre deja les evenements grace a readUrlParams, mais les visites ne passent
+			// jamais par le state de cette page : sans ca, elles seraient perdues ici).
+			if (state.visitsPassthrough) p.set('visits', state.visitsPassthrough);
 			p.set('from', 'evenements');
 			buildEvenementsFilterParams().forEach((v, k) => p.set(k, v));
 			return `highlights.html?${p.toString()}`;
