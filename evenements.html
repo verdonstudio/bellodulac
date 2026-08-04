@@ -665,14 +665,17 @@
 			const url = window.location.pathname + '?' + p.toString() + window.location.hash;
 			try { history.replaceState(null, '', url); } catch (e) {}
 
-			// Bouton retour : conserve le contexte general (lang, logement) ainsi que la
-			// plage edatestart/edateend si elle est active, pour ne pas la perdre en
-			// repassant par index.html (ex: pour revenir ensuite sur evenements.html).
+			// Bouton retour : conserve le contexte general (lang, logement), la plage
+			// edatestart/edateend si elle est active, et la selection highlights en cours
+			// (evenements coches + visites POI deja choisies) pour ne rien perdre en
+			// repassant par index.html avant de revenir sur evenements.html ou highlights.html.
 			const backParams = new URLSearchParams();
 			backParams.set('lang', state.lang);
 			backParams.set('logement', state.logementRaw);
 			if (state.dateStart) backParams.set('edatestart', state.dateStart);
 			if (state.dateEnd) backParams.set('edateend', state.dateEnd);
+			if (state.selectedHl.size) backParams.set('ids', Array.from(state.selectedHl).map(encodeURIComponent).join(','));
+			if (state.visitsPassthrough) backParams.set('visits', state.visitsPassthrough);
 			$('#btn-back').href = `index.html?${backParams.toString()}`;
 
 			// Bouton Se loger : conserve la langue et le logement courants (valeur precise)
