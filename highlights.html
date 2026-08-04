@@ -200,8 +200,9 @@
                 <p id="poi-date-view-name" class="font-semibold text-[14px] text-[var(--c-ink)] min-w-0 truncate">—</p>
             </div>
             <label class="block text-[11px] font-bold uppercase tracking-wide text-[var(--c-muted)] mb-1" id="poi-date-view-label">Date de la visite</label>
-            <input id="poi-date-input" type="date" class="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg mb-4" />
-            <div class="flex items-center gap-2">
+            <input id="poi-date-input" type="date" class="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg" />
+            <p id="poi-date-hint" class="hidden text-[11px] text-[var(--c-muted)] mt-1.5 mb-2"></p>
+            <div class="flex items-center gap-2 mt-2.5">
                 <button id="btn-poi-date-back" type="button" class="btn-listing btn-listing-outline">Retour</button>
                 <button id="btn-poi-date-confirm" type="button" class="btn-listing btn-listing-primary">Ajouter</button>
             </div>
@@ -252,6 +253,13 @@
             searchPlaceholder: "Rechercher un point d'intérêt…", noPoiFound: "Aucun résultat.",
             visitDateLabel: "Date de la visite", back: "Retour", add: "Ajouter",
             pickDateAlert: "Choisissez une date.",
+            dateOutOfRangeAlert: "Choisissez une date dans la période de votre séjour.",
+            visitDateRangeHint: (start, end) => {
+                if (start && end) return `Entre le ${start} et le ${end}`;
+                if (start) return `À partir du ${start}`;
+                if (end) return `Jusqu'au ${end}`;
+                return '';
+            },
             addEvent: "Ajouter un évènement", modalTitleEvent: "Ajouter un évènement",
             searchEventPlaceholder: "Rechercher un évènement…",
             noEventFound: "Aucun évènement disponible sur cette période."
@@ -270,6 +278,13 @@
             searchPlaceholder: "Search for a point of interest…", noPoiFound: "No results.",
             visitDateLabel: "Visit date", back: "Back", add: "Add",
             pickDateAlert: "Pick a date.",
+            dateOutOfRangeAlert: "Pick a date within your stay's dates.",
+            visitDateRangeHint: (start, end) => {
+                if (start && end) return `Between ${start} and ${end}`;
+                if (start) return `From ${start}`;
+                if (end) return `Until ${end}`;
+                return '';
+            },
             addEvent: "Add an event", modalTitleEvent: "Add an event",
             searchEventPlaceholder: "Search for an event…",
             noEventFound: "No events available for this period."
@@ -910,6 +925,50 @@
         });
     }
 
+    // Formate une date ISO en "10 août" (jour + mois, sans annee) pour l'indice de plage
+    // sous le champ date de la modale "Ajouter une visite".
+    function formatShortDate(iso) {
+        const L = I18N[state.lang];
+        const d = parseISO(iso);
+        return `${d.getDate()} ${L.months[d.getMonth()]}`;
+    }
+
+    // Une visite doit tomber dans la periode edatestart/edateend si elle est active
+    // (sinon aucune contrainte : n'importe quelle date valide est acceptee).
+    function isVisitDateValid(dateStr) {
+        if (!dateStr) return false;
+        if (state.dateStart && dateStr < state.dateStart) return false;
+        if (state.dateEnd && dateStr > state.dateEnd) return false;
+        return true;
+    }
+
+    // Affiche/masque l'indice de plage ("Entre le 10 août et le 17 août") sous le champ,
+    // uniquement quand une plage edatestart/edateend est active.
+    function updateVisitDateHint() {
+        const hintEl = $('#poi-date-hint');
+        if (!hintEl) return;
+        if (state.dateStart || state.dateEnd) {
+            const L = I18N[state.lang];
+            const startLabel = state.dateStart ? formatShortDate(state.dateStart) : '';
+            const endLabel = state.dateEnd ? formatShortDate(state.dateEnd) : '';
+            hintEl.textContent = L.visitDateRangeHint(startLabel, endLabel);
+            hintEl.classList.remove('hidden');
+        } else {
+            hintEl.classList.add('hidden');
+        }
+    }
+
+    // Active/desactive le bouton "Ajouter" selon la validite de la date choisie, pour
+    // donner un retour immediat plutot que d'attendre le clic pour signaler un probleme.
+    function updateConfirmVisitState() {
+        const btn = $('#btn-poi-date-confirm');
+        if (!btn) return;
+        const valid = isVisitDateValid($('#poi-date-input').value);
+        btn.disabled = !valid;
+        btn.classList.toggle('opacity-50', !valid);
+        btn.classList.toggle('cursor-not-allowed', !valid);
+    }
+
     function selectPoiForVisit(poiId) {
         const poi = findPoi(poiId);
         if (!poi) return;
@@ -918,7 +977,17 @@
         const logo = (LOGO_DATA[logoFamily(state.logement)] || LOGO_DATA.salles).src;
         $('#poi-date-view-img').src = poi.img || logo;
         $('#poi-date-view-name').textContent = c.name;
-        $('#poi-date-input').value = toISO(new Date());
+
+        // Contraint le selecteur natif a la periode du sejour si elle est active, et
+        // propose par defaut la date de debut du sejour plutot qu'aujourd'hui.
+        const input = $('#poi-date-input');
+        if (state.dateStart) input.min = state.dateStart; else input.removeAttribute('min');
+        if (state.dateEnd) input.max = state.dateEnd; else input.removeAttribute('max');
+        input.value = state.dateStart || toISO(new Date());
+
+        updateVisitDateHint();
+        updateConfirmVisitState();
+
         $('#poi-modal-search-view').classList.add('hidden');
         $('#poi-modal-date-view').classList.remove('hidden');
     }
@@ -927,6 +996,7 @@
         if (!modalSelectedPoi) return;
         const date = $('#poi-date-input').value;
         if (!date) { window.alert(I18N[state.lang].pickDateAlert); return; }
+        if (!isVisitDateValid(date)) { window.alert(I18N[state.lang].dateOutOfRangeAlert); return; }
         state.visits.push({ poiId: modalSelectedPoi.id, date });
         closePoiModal();
         renderCards();
@@ -976,6 +1046,7 @@
                 $('#poi-modal-date-view').classList.add('hidden');
                 $('#poi-modal-search-view').classList.remove('hidden');
             });
+            $('#poi-date-input').addEventListener('input', updateConfirmVisitState);
             $('#btn-poi-date-confirm').addEventListener('click', confirmAddVisit);
         }
 
