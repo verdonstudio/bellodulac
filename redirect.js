@@ -23,7 +23,7 @@ const reservations = {
         "evenements": "evenements.html?lang=FR&logement=salles8&edatestart=2026-08-15&edateend=2026-08-21",
         "map": "index.html?lang=FR&logement=salles8&zoom=12&pos=43.77258%2C6.20831&edatestart=2026-08-15&edateend=2026-08-21",
         "highlights": "highlights.html?&edatestart=2026-08-15&edateend=2026-08-21&lang=FR&logement=salles8&ids=evt-79%2Cevt-80%2C1708PONEY%2Cevt-23%2C1808PATEVENT-SALLES%2Cevt-49%2Crec-boules-nocturnes-salles%2Crec-moustiers-nocturne-mercredi%2C1908ACCRONOCT%2Cevt-36%2C2008ASTRO%2C2008ASTROSOL%2C2108CINE%2Cevt-64b&from=evenements",
-        "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-08-15&edateend=2026-08-21"
+        "panorama": "panorama.html?lang=FR&logement=salles8&edatestart=2026-08-15&edateend=2026-08-21"
     },
     "default": {
         "evenements": "evenements.html",
@@ -31,5 +31,5 @@ const reservations = {
         "highlights": "highlights.html",
         "panorama": "panorama.html"
     }
-    
+
 };
