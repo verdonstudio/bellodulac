@@ -913,11 +913,26 @@
         $('#poi-modal-overlay').classList.add('hidden');
     }
 
+    // Categories utilitaires (parkings, commerces, pharmacie, logement...) exclues de la
+    // recherche "Ajouter une visite" : ce ne sont pas des points d'interet a visiter, elles
+    // n'ont donc rien a faire dans cette liste deroulante.
+    const POI_SEARCH_EXCLUDED_CATS = new Set([
+        'commerce', 'station', 'laverie', 'relais', 'ordures',
+        'parking_gratuit', 'parking_zonebleu', 'parking_payant',
+        'logement', 'toponyme', 'pharmacie'
+    ]);
+    function isPoiSearchable(poi) {
+        const cats = getPoiCats(poi);
+        if (!cats.length) return true;
+        return cats.some(c => !POI_SEARCH_EXCLUDED_CATS.has(c));
+    }
+
     function renderPoiSearchResults(query) {
         const list = $('#poi-search-results');
         const q = query.trim().toLowerCase();
         const logo = (LOGO_DATA[logoFamily(state.logement)] || LOGO_DATA.salles).src;
         const pois = (window.POIS || []).filter(p => {
+            if (!isPoiSearchable(p)) return false;
             const c = poiContent(p);
             const name = (c && c.name || '').toLowerCase();
             return !q || name.includes(q);
