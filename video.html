@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vidéo — Bell'O du Lac™ & Bell'Étoile™</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="analytics.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="pois.js"></script>
+
+    <style>
+        :root {
+            --c-bg:        #fdfbf7;
+            --c-ink:       #1e293b;
+            --c-primary:   #0284c7;
+            --c-border:    rgba(14, 165, 233, 0.1);
+        }
+        body { font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; background: #000; }
+        .font-display { font-family: 'Fraunces', Georgia, serif; }
+
+        /* Topbar avec effet verre trempé identique à l'accueil */
+        .topbar {
+            background-color: rgba(253, 251, 247, 0.85);
+            -webkit-backdrop-filter: saturate(200%) blur(24px);
+            backdrop-filter: saturate(200%) blur(24px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            z-index: 50;
+        }
+
+        /* Sélecteur de langue */
+        .chip { transition: all 0.2s ease; }
+        .chip:hover { background: #f0f9ff; transform: scale(1.02); }
+
+        /* Bouton Retour */
+        .btn-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 999px;
+            background: #f1f5f9; border: 1px solid rgba(0,0,0,0.05);
+            font-size: 12px; font-weight: 600; color: #334155;
+            transition: all 0.2s; text-decoration: none;
+        }
+        .btn-back:hover { background: #e2e8f0; color: #0f172a; }
+
+        /* Zone vidéo : on la pousse sous la topbar (56px = h-14) pour que le haut
+           de la vidéo ne soit plus masqué/rogné par le bandeau fixe */
+        #video-viewport {
+            margin-top: 56px;
+            height: calc(100dvh - 56px);
+        }
+    </style>
+</head>
+<body class="h-[100dvh] w-screen relative">
+
+    <header class="topbar fixed top-0 w-full">
+        <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+            <a id="btn-back" href="index.html" class="btn-back shrink-0 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                <span id="text-back">Retour</span>
+            </a>
+
+            <div class="flex items-center gap-2 min-w-0 flex-1 justify-center">
+                <img id="topbar-logo" src="https://bellodulac.netlify.app/images/bellodulac-logo.png" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+                <span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Mon Livret Verdon</span>
+            </div>
+
+            <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
+                <option value="FR">FR</option>
+                <option value="EN">EN</option>
+            </select>
+        </div>
+    </header>
+
+	<main id="video-viewport" class="relative w-full h-full bg-black flex items-center justify-center">
+        <!-- L'utilisation de object-contain garantit que la vidéo n'est jamais tronquée -->
+        <video id="main-video" class="w-full h-full object-contain" playsinline controls autoplay>
+            Votre navigateur ne supporte pas la lecture de vidéos.
+        </video>
+
+        <!-- Lecteur YouTube : n'est affiche/utilise que si ?youtube=... est fourni dans
+             l'URL (accepte un ID brut ou une URL complete youtube.com / youtu.be) -->
+        <iframe id="youtube-player" class="w-full h-full hidden" style="border:0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+
+        <!-- Ajout de l'ID "text-overlay" pour pouvoir mesurer sa taille -->
+        <div id="text-overlay" class="absolute bottom-20 sm:bottom-24 left-4 right-4 sm:left-8 sm:right-8 z-10 pointer-events-none transition-opacity duration-300">
+            <span id="video-badge" class="inline-block bg-[var(--c-primary)] text-white text-[10px] font-bold px-2.5 py-1 rounded-full mb-2 uppercase tracking-wide hidden">Vidéo</span>
+            <h1 id="video-title" class="font-display text-2xl sm:text-4xl font-semibold text-white leading-tight drop-shadow-md">—</h1>
+            <p id="video-desc" class="text-white/90 text-sm sm:text-base mt-2 drop-shadow flex items-start gap-1.5 max-w-2xl">
+                <svg class="shrink-0 mt-0.5 opacity-80" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <span id="video-desc-text">—</span>
+            </p>
+        </div>
+    </main>
+
+    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 z-40 pointer-events-none text-center text-white/30 text-[9px] font-medium tracking-wide whitespace-nowrap">
+        <span id="video-footer-text">© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés.</span>
+    </div>
+
+    <script>
+        // Logement par defaut : vient de logements.js (source de verite partagee), avec ce
+        // repli en dur au cas ou le fichier de config n'aurait pas pu etre charge du tout.
+        let DEFAULT_LISTING_ID = 'salles6';
+
+        const state = { lang: 'FR', logement: null, poiId: null, videoFile: null, youtubeId: null };
+
+        const I18N = {
+            FR: { back: "Retour", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Vidéo introuvable", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés. Marques déposées." },
+            EN: { back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Video not found", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. All rights reserved. Registered Trademarks." }
+        };
+
+        // Le titre en bas reste visible 5 secondes au chargement, puis s'efface.
+        // Une fois ce délai passé, il ne doit plus réapparaître (même en cas de resize/rotation).
+        const OVERLAY_DISPLAY_DURATION = 5000;
+        let overlayTimerExpired = false;
+
+        // Accepte soit un ID brut (ex: "i_t3fQhWf5c"), soit une URL complete
+        // (youtube.com/watch?v=..., youtu.be/..., youtube.com/embed/..., /shorts/...).
+        function extractYoutubeId(raw) {
+            if (!raw) return null;
+            const trimmed = raw.trim();
+            if (/^[\w-]{11}$/.test(trimmed)) return trimmed;
+            const patterns = [
+                /(?:v=|\/embed\/|\/shorts\/|youtu\.be\/)([\w-]{11})/
+            ];
+            for (const re of patterns) {
+                const m = trimmed.match(re);
+                if (m) return m[1];
+            }
+            return null;
+        }
+
+        function readUrlParams() {
+            const p = new URLSearchParams(window.location.search);
+            const rawLang = p.get('lang') || p.get('lng');
+            if (rawLang) state.lang = rawLang.toUpperCase();
+            if (p.get('poi')) state.poiId = p.get('poi');
+            if (p.get('video')) state.videoFile = p.get('video');
+            if (p.get('youtube')) state.youtubeId = extractYoutubeId(p.get('youtube'));
+
+            // Logement : accepte les alias habituels (logement/listing/l/id, comme index.html),
+            // sinon le logement par defaut fourni par logements.js (DEFAULT_LISTING_ID).
+            const rawLogement = p.get('logement') || p.get('listing') || p.get('l') || p.get('id');
+            state.logement = rawLogement || DEFAULT_LISTING_ID;
+
+            // Configuration dynamique du logo
+            const logoEl = document.getElementById('topbar-logo');
+            const logementLower = state.logement.toLowerCase();
+            if (logementLower.includes('moustiers') || logementLower.includes('etoile')) {
+                logoEl.src = 'https://bellodulac.netlify.app/images/bell-etoile-logo.png';
+                logoEl.classList.remove('hidden');
+            } else if (logementLower.includes('salles') || logementLower.includes('bello')) {
+                logoEl.src = 'https://bellodulac.netlify.app/images/bellodulac-logo.png';
+                logoEl.classList.remove('hidden');
+            }
+        }
+
+        function syncUrl() {
+            const p = new URLSearchParams(window.location.search);
+            ['lng', 'listing', 'l', 'id'].forEach(k => p.delete(k));
+            p.set('lang', state.lang);
+            p.set('logement', state.logement);
+            const url = window.location.pathname + '?' + p.toString() + window.location.hash;
+
+            // PROTECTION : Try...catch pour empêcher le crash rouge sur protocole "file:///"
+            try {
+                history.replaceState(null, '', url);
+            } catch (e) {
+                console.warn("Mise à jour URL bloquée en local (file://). Ouvrez via le serveur Python pour l'activer.");
+            }
+
+            // Configuration propre du lien de retour vers index.html : on repart de l'URL
+            // deja normalisee (lang + logement resolus) pour ne rien perdre au retour.
+            const backParams = new URLSearchParams(p.toString());
+            backParams.delete('video');
+            backParams.delete('youtube');
+            document.getElementById('btn-back').href = `index.html?${backParams.toString()}`;
+        }
+
+        // Fonction pour vérifier l'orientation ET la taille du bloc texte
+        function checkOverlaySize() {
+            const overlay = document.getElementById('text-overlay');
+            if (!overlay) return;
+
+            // Une fois les 5 secondes d'affichage écoulées, le titre reste masqué
+            if (overlayTimerExpired) {
+                overlay.style.opacity = '0';
+                return;
+            }
+
+            const overlayHeight = overlay.scrollHeight;
+            const screenHeight = window.innerHeight;
+            const screenWidth = window.innerWidth;
+
+            // On masque SI on est en mode portrait (hauteur > largeur)
+            // OU SI le bloc texte prend plus de 20% de l'écran
+			/*
+            if (screenHeight > screenWidth || overlayHeight > screenHeight * 0.20) {
+                overlay.style.opacity = '0';
+            } else {
+                overlay.style.opacity = '1';
+            }
+			*/
+        }
+
+        function applyI18n() {
+            document.getElementById('lang-select').value = state.lang;
+            document.getElementById('text-back').textContent = I18N[state.lang].back;
+            document.getElementById('label-title').textContent = I18N[state.lang].brand;
+            document.getElementById('video-footer-text').textContent = I18N[state.lang].footer_legal;
+
+            // Récupération des informations textuelles du POI (Nom et Description)
+            if (state.poiId && window.POIS) {
+                const poi = window.POIS.find(p => p.id === state.poiId);
+                if (poi) {
+                    const content = poi[state.lang.toLowerCase()] || poi.fr;
+                    document.getElementById('video-title').textContent = content.name;
+                    document.getElementById('video-desc-text').textContent = content.desc;
+                    document.getElementById('video-badge').classList.remove('hidden');
+                }
+            } else if (!state.videoFile && !state.youtubeId) {
+                document.getElementById('video-title').textContent = I18N[state.lang].error;
+                document.getElementById('video-desc-text').textContent = "";
+            }
+
+            // On vérifie la taille du texte après l'avoir injecté
+            checkOverlaySize();
+        }
+
+        function initVideo() {
+            const vidPlayer = document.getElementById('main-video');
+            const ytPlayer = document.getElementById('youtube-player');
+
+            if (state.youtubeId) {
+                // YouTube n'autorise l'autoplay avec son que si la video est mute au depart ;
+                // les controles restent disponibles pour reactiver le son.
+                // youtube-nocookie.com (au lieu de youtube.com) + referrerpolicy ci-dessus
+                // evitent l'erreur 153 ("Erreur de configuration du lecteur video") qui
+                // survient quand YouTube ne recoit pas de header Referer valide (notamment
+                // en ouvrant la page en local via file:// plutot que via http/https).
+                ytPlayer.src = `https://www.youtube-nocookie.com/embed/${state.youtubeId}?autoplay=1&mute=1&playsinline=1&rel=0`;
+                ytPlayer.classList.remove('hidden');
+                vidPlayer.classList.add('hidden');
+            } else if (state.videoFile) {
+                vidPlayer.src = `https://bellodulac.netlify.app/images/${state.videoFile}`;
+                vidPlayer.load();
+            }
+        }
+
+        function start() {
+            readUrlParams();
+            syncUrl();
+            applyI18n();
+            initVideo();
+
+            document.getElementById('lang-select').addEventListener('change', (e) => {
+                state.lang = e.target.value;
+                syncUrl();
+                applyI18n();
+            });
+
+            // On recalcule l'affichage du texte à chaque changement de taille/orientation
+            window.addEventListener('resize', checkOverlaySize);
+
+            // Le titre s'affiche pendant 5 secondes au chargement, puis disparaît
+            setTimeout(() => {
+                overlayTimerExpired = true;
+                checkOverlaySize();
+            }, OVERLAY_DISPLAY_DURATION);
+        }
+
+        // Chargement de logements.js (source de verite du logement par defaut), avec repli
+        // local si l'URL externe echoue (meme schema que pois.js/evenements.js) ; en dernier
+        // recours le DEFAULT_LISTING_ID code en dur ci-dessus reste utilise.
+        function chargerLogementsPuisDemarrer() {
+            function applyConfigAndStart() {
+                if (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) {
+                    DEFAULT_LISTING_ID = window.LOGEMENTS_DATA.default;
+                }
+                start();
+            }
+            if (window.LOGEMENTS_DATA) { applyConfigAndStart(); return; }
+
+            const EXTERNAL_URL = "logements.js";
+            const LOCAL_URL = "logements.js";
+
+            function loadLocal() {
+                const s = document.createElement('script');
+                s.src = LOCAL_URL;
+                s.onload = applyConfigAndStart;
+                s.onerror = () => { console.error("Impossible de charger logements.js"); applyConfigAndStart(); };
+                document.head.appendChild(s);
+            }
+
+            const s = document.createElement('script');
+            s.src = EXTERNAL_URL;
+            s.onload = applyConfigAndStart;
+            s.onerror = loadLocal;
+            document.head.appendChild(s);
+        }
+
+        document.addEventListener('DOMContentLoaded', chargerLogementsPuisDemarrer);
+    </script>
+</body>
+</html>

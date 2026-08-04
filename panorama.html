@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panorama 360° — Bell'O du Lac & Bell'Étoile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="analytics.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Demarre le telechargement de l'image panorama des que possible, en parallele
+         du reste (au lieu d'attendre que le script arrive jusqu'a la balise <img>) -->
+    <link rel="preload" as="image" href="https://bellodulac.netlify.app/images/panorama360.jpg">
+    <link rel="preload" as="image" href="https://bellodulac.netlify.app/images/panorama360_night.jpg">
+    
+    <script src="pois.js"></script>
+
+    <style>
+        :root {
+            --c-primary:   #0d8a9b;
+            --c-primary-soft: #e6f4f6;
+            --c-border:    #ecebe5;
+        }
+        body { font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; background: #000; }
+        
+        /* Conteneur principal du panorama */
+        #pano-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        #pano-wrapper:active { cursor: grabbing; }
+        
+        /* Ecran de chargement affiche tant que l'image panorama (lourde) n'est pas prete */
+        #pano-loader {
+            position: fixed; inset: 0; z-index: 80;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 14px; background: #000;
+            transition: opacity 0.3s ease;
+        }
+        #pano-loader.is-hidden { opacity: 0; pointer-events: none; }
+        .pano-spinner {
+            width: 44px; height: 44px;
+            border: 4px solid rgba(255,255,255,0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: pano-spin 0.8s linear infinite;
+        }
+        @keyframes pano-spin { to { transform: rotate(360deg); } }
+
+        /* Bandeau défilant */
+        #pano-scroller {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            will-change: transform;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0); 
+        }
+
+        /* Topbar */
+        .topbar { 
+            background-color: rgba(14, 165, 233, 0.35); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            transition: background-color 0.3s ease;
+        }
+        
+        .filter-bar { 
+            display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch;
+        }
+        .filter-bar::-webkit-scrollbar { display: none; }
+        .filter-btn {
+            display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 999px;
+            background: rgba(255, 255, 255, 0.9); border: 1.5px solid transparent;
+            font-size: 12px; font-weight: 600; color: #1f2937; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .filter-btn.is-active { color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .filter-btn__count { font-size: 10px; opacity: 0.85; }
+
+        /* Styles Mode Édition */
+        .edit-mode .poi-toaster { cursor: move; }
+        .edit-mode #pano-wrapper { cursor: crosshair; }
+        .edit-mode #pano-wrapper:active { cursor: crosshair; }
+
+        /* ==== MARQUEURS ==== */
+        .poi-marker-container { 
+            z-index: 30; 
+        }
+        .poi-marker-container.active { z-index: 60; }
+        
+        /* NOUVEAU: Le point survolé passe par dessus les autres */
+        .poi-marker-container:hover { z-index: 70; } 
+
+        .poi-logo-bubble {
+            width: 48px; height: 48px; border-radius: 50%; border: 3px solid white; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4); background: white; object-fit: contain; padding: 2px;
+            max-width: none !important;
+        }
+        
+        .poi-dot {
+            transition: transform 0.1s; 
+            transform-origin: center center;
+        }
+
+        /* --- Toponymes (lieux-dits) : même style que sur lac_backintime.html : texte + trait + point blancs --- */
+        .poi-topo-marker-pano {
+            position: absolute; left: 0; top: 0;
+            display: flex; flex-direction: column; align-items: center;
+            transform-origin: center bottom;
+            cursor: pointer;
+        }
+        .poi-topo-label-pano {
+            color: #ffffff; font-weight: 600; font-size: 13px; white-space: nowrap;
+            letter-spacing: 0.03em; text-shadow: 0 1px 3px rgba(0,0,0,0.85), 0 0 10px rgba(0,0,0,0.55);
+            margin-bottom: 4px;
+        }
+        .poi-topo-line-pano {
+            width: 2px; height: 16px; background: rgba(255,255,255,0.95);
+            box-shadow: 0 0 4px rgba(0,0,0,0.7);
+        }
+        .poi-topo-dot-pano {
+            width: 8px; height: 8px; border-radius: 50%; background: #ffffff;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.35), 0 0 6px rgba(0,0,0,0.8);
+            margin-top: -1px; transition: transform 0.2s;
+        }
+        .poi-topo-marker-pano:hover .poi-topo-dot-pano { transform: scale(1.3); }
+
+        /* NOUVEAU : Outils d'édition invisibles par défaut, visibles au survol */
+        .edit-tools {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 100;
+        }
+        .poi-marker-container:hover .edit-tools,
+        .poi-marker-container.active .edit-tools {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Lignes d'attache dynamiques (Haut / Bas) */
+        .poi-line {
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .poi-line.is-bottom { bottom: 14px; transform-origin: bottom; transform: scaleY(0); }
+        .poi-marker-container.active .poi-line.is-bottom { transform: scaleY(1); opacity: 1; }
+
+        .poi-line.is-top { top: 14px; transform-origin: top; transform: scaleY(0); }
+        .poi-marker-container.active .poi-line.is-top { transform: scaleY(1); opacity: 1; }
+
+        /* Toasters (Popups) dynamiques (Haut / Bas) */
+        .poi-toaster {
+            position: absolute; left: 50%;
+            opacity: 0; pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .poi-toaster.is-bottom { bottom: var(--offset); transform: translate(-50%, 15px) scale(0.9); }
+        .poi-marker-container.active .poi-toaster.is-bottom { transform: translate(-50%, 0) scale(1); opacity: 1; pointer-events: auto; }
+
+        .poi-toaster.is-top { top: var(--offset); transform: translate(-50%, -15px) scale(0.9); }
+        .poi-marker-container.active .poi-toaster.is-top { transform: translate(-50%, 0) scale(1); opacity: 1; pointer-events: auto; }
+
+        /* Design Popup */
+        .ov-popup { 
+            background: white; border-radius: 12px; width: 260px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(0,0,0,0.05); 
+            display: flex; flex-direction: column; overflow: hidden; 
+        }
+        .ov-popup__img { width: 100%; height: 130px; object-fit: cover; display: block; flex-shrink: 0; }
+        .ov-popup__placeholder { width: 100%; height: 70px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+        
+        .ov-popup__body { 
+            padding: 12px 14px 14px; 
+            display: flex; flex-direction: column; flex: 1; min-height: 0; 
+        }
+
+        .ov-popup__badge { 
+            display: inline-flex; align-items: center; font-size: 10px; font-weight: 600; 
+            padding: 4px 10px; border-radius: 999px; color: #fff; letter-spacing: 0.2px; white-space: nowrap; flex-shrink: 0; 
+        }
+        
+        .ov-popup__stars { color: #f59e0b; font-size: 11px; letter-spacing: 1px; flex-shrink: 0; }
+        .ov-popup__title {
+            font-family: 'Fraunces', Georgia, serif; font-size: 16px; font-weight: 700; margin: 0 0 4px; color: #1e293b; line-height: 1.2; flex-shrink: 0;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        
+        .ov-popup__desc {
+            font-size: 12px; line-height: 1.5; color: #475569; margin: 0 0 10px;
+            overflow-y: auto; flex: 1; min-height: 0; padding-right: 4px;
+            touch-action: pan-y; -webkit-overflow-scrolling: touch;
+        }
+        .ov-popup__desc::-webkit-scrollbar { width: 4px; }
+        .ov-popup__desc::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+        .ov-popup__desc::-webkit-scrollbar-track { background: transparent; }
+        
+        .ov-popup__links { display: flex; flex-wrap: wrap; gap: 6px; flex-shrink: 0; margin-top: auto; }
+        .ov-popup__link { display: inline-flex; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 8px; text-decoration: none; transition: transform 0.2s; }
+        .ov-popup__link:hover { transform: scale(1.02); }
+    </style>
+</head>
+<body id="body-tag">
+
+    <header class="topbar fixed top-0 left-0 w-full z-40 border-b border-white/20 shadow-sm">
+        <div class="max-w-6xl mx-auto px-3 py-2 min-h-[3.5rem] flex flex-wrap items-center justify-between gap-y-2 gap-x-4">
+            <h1 class="text-white font-bold text-sm md:text-lg drop-shadow-md flex items-center gap-2 flex-1 min-w-[200px]">
+                <img id="header-logo" src="" alt="Logo Logement" class="hidden h-8 w-8 md:h-10 md:w-10 object-contain bg-white rounded-full p-[2px] shadow-md" />
+                <span id="label-title">Panorama 360°</span>
+                <span id="mode-badge" class="hidden bg-red-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest text-white ml-2 shadow-lg shrink-0">Mode Édition</span>
+            </h1>
+
+            <div class="flex items-center gap-1.5 overflow-x-auto max-w-full [&::-webkit-scrollbar]:hidden" style="scrollbar-width: none; -webkit-overflow-scrolling: touch;">
+                
+                <span id="help-scale" class="hidden text-white/80 text-[10px] mr-2">Survolez un point pour l'éditer</span>
+
+                <a id="btn-back2d" href="index.html" class="flex items-center justify-center gap-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/30 px-3 py-1.5 rounded-full text-xs font-semibold transition shrink-0">
+                    🗺️ <span id="text-back2d">Retour Guide 2D</span>
+                </a>
+
+                <button id="btn-daynight" onclick="toggleDayNight()" class="flex items-center justify-center gap-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/30 px-3 py-1.5 rounded-full text-xs font-semibold transition shrink-0">
+                    <span id="icon-daynight">🌙</span> <span id="text-daynight">Nuit</span>
+                </button>
+
+                <a id="btn-selogers" href="logements.html" class="flex items-center justify-center gap-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/30 px-3 py-1.5 rounded-full text-xs font-semibold transition shrink-0">
+                    🏡 <span id="text-selogers">Se loger</span>
+                </a>
+
+                <select id="lang-select" class="bg-white/90 text-gray-800 text-xs font-bold px-3 py-1.5 rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm shrink-0">
+                    <option value="FR">FR</option>
+                    <option value="EN">EN</option>
+                </select>
+
+                <button id="btn-pause" onclick="togglePause()" class="flex items-center justify-center gap-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/30 px-3 py-1.5 rounded-full text-xs font-semibold transition shrink-0">
+                    <span id="icon-pause">⏸</span>
+                </button>
+
+                <button id="btn-save" onclick="savePois()" class="hidden bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg transition shrink-0">
+                    💾 <span class="hidden sm:inline">Sauvegarder</span>
+                </button>
+
+            </div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto px-3 pb-2">
+            <div id="filter-bar" class="filter-bar"></div>
+        </div>
+    </header>
+
+	<div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 pointer-events-none text-center text-white/40 text-[10px] font-medium drop-shadow-md tracking-wide whitespace-nowrap">
+        <span id="pano-footer-text">© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés.</span>
+    </div>
+
+    <div id="poi-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center backdrop-blur-sm p-4">
+        <div class="bg-white p-5 md:p-6 rounded-2xl shadow-2xl w-full max-w-[400px] max-h-[90vh] overflow-y-auto">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">📍 Placer un POI</h2>
+            
+            <div class="flex gap-4 mb-5 border-b border-gray-200 pb-2">
+                <button onclick="setModalTab('existing')" id="tab-existing" class="font-bold text-blue-600 border-b-2 border-blue-600 pb-1 -mb-[9px]">POI Existant</button>
+                <button onclick="setModalTab('new')" id="tab-new" class="font-medium text-gray-500 pb-1 hover:text-gray-800">Nouveau POI (Code)</button>
+            </div>
+
+            <div id="modal-existing">
+                <p class="text-xs text-gray-500 mb-2">Sélectionnez un point qui n'est pas encore sur le panorama :</p>
+                <select id="modal-select-poi" class="w-full border border-gray-300 p-2.5 rounded-lg mb-5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                <button onclick="addExistingPoi()" class="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition">Placer sur l'image</button>
+            </div>
+
+            <div id="modal-new" class="hidden">
+                <p class="text-xs text-gray-500 mb-2">Collez ici l'objet Javascript du POI :</p>
+                <textarea id="modal-new-code" class="w-full border border-gray-300 p-3 rounded-lg mb-4 h-40 font-mono text-[11px] leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500" spellcheck="false">{
+  id: "nouveau-poi", 
+  cat: "visite", 
+  coords: [43.0, 6.0], 
+  stars: 2,
+  img: "", 
+  fr: { name: "Nom du lieu", desc: "Description", url: "" },
+  en: { name: "Place name", desc: "Description", url: "" }
+}</textarea>
+                <button onclick="addNewPoi()" class="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition">Créer et Placer</button>
+            </div>
+
+            <button onclick="closeModal()" class="mt-3 w-full bg-gray-100 text-gray-700 font-semibold py-2.5 rounded-lg hover:bg-gray-200 transition">Annuler</button>
+        </div>
+    </div>
+
+
+    <div id="pano-loader">
+        <div class="pano-spinner"></div>
+        <span id="pano-loader-text" class="text-white/80 text-sm font-medium tracking-wide">Chargement du panorama…</span>
+    </div>
+
+    <div id="pano-wrapper">
+        <div id="pano-scroller">
+            <div class="flex h-full pointer-events-none" id="pano-layer">
+                <img src="https://bellodulac.netlify.app/images/panorama360.jpg" id="img-ref" class="h-full w-auto max-w-none block" alt="Panorama">
+                <img src="https://bellodulac.netlify.app/images/panorama360.jpg" id="img-clone" class="h-full w-auto max-w-none block -ml-[1px]" alt="Panorama Clone">
+            </div>
+            
+            <div id="markers-1" class="absolute top-0 left-0 h-full pointer-events-none"></div>
+            <div id="markers-2" class="absolute top-0 h-full pointer-events-none"></div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. CONFIGURATION GLOBALE
+        // ==========================================
+        const EDIT_MODE = new URLSearchParams(window.location.search).get('edit') === '1';
+
+        // Logement par defaut : vient de logements.js (source de verite partagee), avec ce
+        // repli en dur au cas ou le fichier de config n'aurait pas pu etre charge du tout.
+        let DEFAULT_LISTING_ID = 'salles6';
+
+        const state = {
+            lang: 'FR',
+            activeCats: new Set(['__all__']),
+            poiId: null,             
+            hasCenteredPoi: false,
+            traceId: null
+        };
+		
+		const I18N = {
+            FR: { 
+                title: "Panorama BelloduLac & BellEtoile", filter_all: "Tout voir", read_more: "En savoir plus", 
+                day: "Jour", night: "Nuit", play: "Lecture", pause: "Pause", back_2d: "Retour Guide 2D",
+                loading: "Chargement du panorama…", load_error: "Le panorama n'a pas pu se charger. Vérifiez votre connexion.",
+                footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés. Marques déposées.",
+                selogers: "Se loger"
+            },
+            EN: { 
+                title: "BelloduLac & BellEtoile Panorama", filter_all: "Show all", read_more: "Read more", 
+                day: "Day", night: "Night", play: "Play", pause: "Pause", back_2d: "Back to Guide",
+                loading: "Loading panorama…", load_error: "The panorama couldn't load. Please check your connection.",
+                footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. All rights reserved. Registered Trademarks.",
+                selogers: "Book a stay"
+            }
+        };
+
+        let isPaused = false; 
+        let isNightMode = false;
+        let draggedIndex = null;
+        let currentX = 0;
+        let isDraggingPano = false;
+
+        let baseScrollSpeed = 0.3; 
+        let scrollSpeed = baseScrollSpeed; 
+        
+        let pointerDownX = 0, pointerDownY = 0, dragStartPanoX = 0, targetPanoPos = null;
+        let lastDragX = 0, lastDragTime = 0, dragVelocity = 0;
+
+        const markers1 = document.getElementById('markers-1');
+        const markers2 = document.getElementById('markers-2');
+        const imgRef = document.getElementById('img-ref');
+        const scroller = document.getElementById('pano-scroller');
+
+        // ==========================================
+        // 2. PRÉPARATION DES POIS
+        // ==========================================
+        if (!window.POI_CATEGORIES) window.POI_CATEGORIES = {};
+        if (!window.POI_CATEGORIES.logement) {
+            window.POI_CATEGORIES.logement = { fr: "Nos Logements", en: "Our Stays", color: "#EA0000", emoji: "🏡" };
+        }
+
+        if (window.POIS) {
+            const defaultLogements = [
+                { id: "logement-moustiers", cat: "logement", coords: [43.84715, 6.22066], stars: 3, img: "https://bellodulac.netlify.app/images/moustiers-terrasse.jpg", fr: { name: "Bell'Étoile", desc: "Votre logement avec terrasse panoramique au cœur de Moustiers.", url: "index.html?logement=moustiers" }, en: { name: "Bell'Étoile", desc: "Your stay with a panoramic terrace in Moustiers.", url: "index.html?logement=moustiers" } },
+                { id: "logement-salles", cat: "logement", coords: [43.77267, 6.20780], stars: 3, img: "https://bellodulac.netlify.app/images/bello6-cover.jpg", fr: { name: "Bell'O du Lac", desc: "Votre logement à 400m du Lac de Sainte-Croix.", url: "index.html?logement=salles6" }, en: { name: "Bell'O du Lac", desc: "Your stay 400m from Lake Sainte-Croix.", url: "index.html?logement=salles6" } }
+            ];
+            defaultLogements.forEach(lg => {
+                if (!window.POIS.find(p => p.id === lg.id)) window.POIS.push(lg);
+            });
+        }
+
+        function readUrlParams() {
+            const p = new URLSearchParams(window.location.search);
+            if (p.get('lang')) state.lang = p.get('lang').toUpperCase();
+            state.traceId = p.get('trace') || null;
+            if (p.get('poi')) state.poiId = p.get('poi');
+            else if (state.traceId) {
+                state.poiId = state.traceId;
+                state.traceId = null;
+            }
+            
+            const rawCats = p.get('cat') || p.get('cats');
+            if (rawCats) state.activeCats = new Set(rawCats.split(',').map(c => c.trim()).filter(c => c));
+            
+            const logement = p.get('logement') || DEFAULT_LISTING_ID;
+            state.listingId = logement;
+            const logoEl = document.getElementById('header-logo');
+            if (logement.includes('moustiers')) {
+                logoEl.src = 'https://bellodulac.netlify.app/images/bell-etoile-logo.png';
+                logoEl.classList.remove('hidden');
+            } else if (logement.includes('salles') || logement.includes('bello')) {
+                logoEl.src = 'https://bellodulac.netlify.app/images/bellodulac-logo.png';
+                logoEl.classList.remove('hidden');
+            }
+        }
+
+        function syncUrl() {
+            const p = new URLSearchParams(window.location.search);
+            p.set('lang', state.lang);
+            
+            const logement = p.get('logement') || DEFAULT_LISTING_ID;
+            if (!p.has('logement')) p.set('logement', logement);
+
+            if (state.poiId) p.set('poi', state.poiId);
+            else p.delete('poi');
+
+            if (state.traceId) p.set('trace', state.traceId);
+            else p.delete('trace');
+            
+            if (state.activeCats) {
+                const catsArr = Array.from(state.activeCats);
+                if (!catsArr.includes('__all__') && catsArr.length > 0) p.set('cat', catsArr.join(','));
+                else p.delete('cat');
+            }
+
+            const url = window.location.pathname + '?' + p.toString() + window.location.hash;
+            history.replaceState(null, '', url);
+
+            const backBtn = document.getElementById('btn-back2d');
+            if (backBtn) backBtn.href = `index.html?${p.toString()}`;
+
+            // Bouton Se loger : conserve la langue et le logement courants (sans les autres parametres panorama)
+            const btnSeloger = document.getElementById('btn-selogers');
+            if (btnSeloger) {
+                const selogerParams = new URLSearchParams();
+                selogerParams.set('lang', state.lang);
+                selogerParams.set('logement', logement);
+                btnSeloger.href = `logements.html?${selogerParams.toString()}`;
+            }
+        }
+
+        // ==========================================
+        // 3. UI ET FILTRES
+        // ==========================================
+        function applyI18n() {
+            document.getElementById('label-title').textContent = I18N[state.lang].title;
+            document.getElementById('lang-select').value = state.lang;
+            document.getElementById('icon-pause').textContent = isPaused ? '▶️' : '⏸';
+            document.getElementById('icon-daynight').textContent = isNightMode ? '☀️' : '🌙';
+            document.getElementById('text-daynight').textContent = isNightMode ? I18N[state.lang].day : I18N[state.lang].night;
+            
+            const textBack = document.getElementById('text-back2d');
+            if (textBack) textBack.textContent = I18N[state.lang].back_2d;
+
+            const textSeloger = document.getElementById('text-selogers');
+            if (textSeloger) textSeloger.textContent = I18N[state.lang].selogers;
+			
+			const footerLegal = document.getElementById('pano-footer-text');
+            if (footerLegal) footerLegal.textContent = I18N[state.lang].footer_legal;
+
+            const loaderText = document.getElementById('pano-loader-text');
+            if (loaderText && !loaderText.dataset.errored) loaderText.textContent = I18N[state.lang].loading;
+        }
+
+        function buildFilters() {
+            const container = document.getElementById('filter-bar');
+            const counts = {};
+            (window.POIS || []).forEach(p => {
+                if (p.pano && p.pano.length >= 2) getPoiCats(p).forEach(key => { counts[key] = (counts[key] || 0) + 1; });
+            });
+
+            const allActive = state.activeCats.has('__all__');
+            let html = `<button class="filter-btn ${allActive ? 'is-active' : ''}" data-cat="__all__" style="${allActive ? 'background:#475569;border-color:#475569;' : ''}"><span>📍</span><span>${I18N[state.lang].filter_all}</span></button>`;
+            
+            Object.keys(window.POI_CATEGORIES).forEach(key => {
+                if (!counts[key]) return; 
+                const cat = window.POI_CATEGORIES[key];
+                const isActive = !allActive && state.activeCats.has(key);
+                const label = state.lang === 'EN' ? cat.en : cat.fr;
+                const style = isActive ? `background:${cat.color};border-color:${cat.color};` : '';
+                html += `<button class="filter-btn ${isActive ? 'is-active' : ''}" data-cat="${key}" style="${style}"><span>${cat.emoji}</span><span>${label}</span> <span class="filter-btn__count">(${counts[key]})</span></button>`;
+            });
+
+            container.innerHTML = html;
+
+            container.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const cat = e.currentTarget.dataset.cat;
+                    if (cat === '__all__') {
+                        state.activeCats.clear();
+                        state.activeCats.add('__all__');
+                    } else {
+                        state.activeCats.delete('__all__');
+                        if (state.activeCats.has(cat)) state.activeCats.delete(cat);
+                        else state.activeCats.add(cat);
+                        if (state.activeCats.size === 0) state.activeCats.add('__all__');
+                    }
+                    buildFilters();
+                    renderMarkers();
+					syncUrl();
+                });
+            });
+        }
+
+        // ==========================================
+        // 4. RENDU DES MARQUEURS
+        // ==========================================
+        function getPoiContent(poi) { return poi[state.lang.toLowerCase()] || poi.fr; }
+
+        // -------- Support multi-categories : poi.cat peut etre une chaine ("restaurant"),
+        // un tableau (["sportaquatique", "restaurant"]) ou une chaine separee par virgules.
+        // (Meme logique que index_R.html, pour un comportement identique carte 2D / panorama 360.)
+        function getPoiCats(poi) {
+            if (!poi || !poi.cat) return [];
+            if (Array.isArray(poi.cat)) return poi.cat.filter(Boolean);
+            return poi.cat.toString().split(',').map(c => c.trim()).filter(Boolean);
+        }
+        function getPoiPrimaryCat(poi) {
+            return getPoiCats(poi)[0] || null;
+        }
+        function poiHasCat(poi, key) {
+            return getPoiCats(poi).includes(key);
+        }
+
+        function resolvePoiUrl(url) {
+            if (!url) return '';
+            if (/^https?:\/\//i.test(url)) return url;
+            return (window.POI_BASE_URL || '') + url;
+        }
+
+        // Construit une URL vers index.html en conservant le logement et la langue courants,
+        // et en y ajoutant des paramètres additionnels (ex: poi, trace).
+        function buildIndexUrl(extraParams) {
+            const current = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams();
+            ['logement', 'listing', 'l', 'id', 'lang', 'lng', 'zoom', 'pos', 'position'].forEach(k => {
+                if (current.has(k)) params.set(k, current.get(k));
+            });
+            Object.entries(extraParams || {}).forEach(([k, v]) => params.set(k, v));
+            return 'index.html?' + params.toString();
+        }
+
+		function getPoiLinks(content, poi) {
+            const buildFullUrl = (rawUrl) => {
+                let finalUrl = resolvePoiUrl(rawUrl);
+                if (finalUrl.includes('.html')) {
+                    const linkParts = finalUrl.split('?');
+                    const baseUrl = linkParts[0];
+                    const linkParams = new URLSearchParams(linkParts[1] || '');
+                    const currentParams = new URLSearchParams(window.location.search);
+                    
+                    if (poi && poi.id) currentParams.set('poi', poi.id);
+                    
+                    for (const [key, value] of currentParams.entries()) {
+                        if (!linkParams.has(key)) linkParams.set(key, value);
+                    }
+                    finalUrl = baseUrl + '?' + linkParams.toString();
+                }
+                return finalUrl;
+            };
+
+            let links = [];
+            if (Array.isArray(content.links)) {
+                links = content.links.filter(l => l && l.url).map(l => ({ url: buildFullUrl(l.url), label: l.label || l.urlLabel || '' }));
+            } else {
+                for (let i = 1; i <= 10; i++) {
+                    const suffix = i === 1 ? '' : String(i);
+                    const u = content['url' + suffix];
+                    if (u) links.push({ url: buildFullUrl(u), label: content['urlLabel' + suffix] || '' });
+                }
+            }
+
+            if (poiHasCat(poi, 'logement')) {
+                links.forEach(l => {
+                    if (l.url.includes('moustiers')) l.url = buildFullUrl(`index.html?logement=moustiers&zoom=16&pos=43.84552,6.22135`);
+                    else if (l.url.includes('salles') || l.url.includes('bello')) l.url = buildFullUrl(`index.html?logement=salles6&zoom=14.5&pos=43.7721,6.21609`);
+                });
+            }
+            return links;
+        }
+
+        window.adjustScale = function(event, idx, delta) {
+            event.stopPropagation(); 
+            event.preventDefault();
+            if (window.POIS[idx]) {
+                let currentScale = typeof window.POIS[idx].scale === 'number' ? window.POIS[idx].scale : 1.0;
+                currentScale += delta;
+                currentScale = Math.max(0.3, Math.min(currentScale, 3.5)); // Limites de sécurité
+                window.POIS[idx].scale = parseFloat(currentScale.toFixed(2));
+                
+                document.querySelectorAll(`.poi-marker-container[data-index="${idx}"]`).forEach(el => {
+                    el.querySelector('.poi-dot').style.transform = `scale(${currentScale})`;
+                    el.querySelector('.scale-badge').textContent = `x${currentScale.toFixed(1)}`;
+                });
+            }
+        };
+
+        function renderMarkers() {
+            markers1.innerHTML = '';
+            markers2.innerHTML = '';
+            
+            const imgWidth = imgRef.clientWidth;
+            if (imgWidth === 0) return;
+
+            markers1.style.width = imgWidth + 'px';
+            markers2.style.width = imgWidth + 'px';
+            markers2.style.left = (imgWidth - 1) + 'px';
+
+            const allActive = state.activeCats.has('__all__');
+            const isMobile = window.innerWidth <= 768;
+            const viewportHeight = window.innerHeight;
+
+            // Mesure reelle du bandeau du haut (titre + barre de filtres) au lieu d'une
+            // constante fixe : sur mobile la barre de filtres peut agrandir le header
+            // bien au-dela de 110px, ce qui faussait le calcul de place disponible.
+            const topbarEl = document.querySelector('.topbar');
+            const headerSafeZoneMeasured = topbarEl ? (topbarEl.getBoundingClientRect().height + 14) : 110;
+
+            (window.POIS || []).forEach((poi, index) => {
+                if (!poi.pano || poi.pano.length < 2) return;
+                if (!allActive && !getPoiCats(poi).some(key => state.activeCats.has(key))) return; 
+
+                const xPos = Math.round((poi.pano[0] / 100) * imgWidth);
+                const yPos = poi.pano[1]; 
+                const content = getPoiContent(poi);
+                const poiCatKeys = getPoiCats(poi);
+                const poiCatDefs = poiCatKeys.map(key => window.POI_CATEGORIES[key]).filter(Boolean);
+                const catInfo = poiCatDefs[0] || {color: '#888', emoji: '📍', fr: '', en: ''};
+                const catLabel = state.lang === 'EN' ? catInfo.en : catInfo.fr;
+                
+                let labelHeights = isMobile ? [10, 20] : [15, 30, 45];
+                let labelZ = labelHeights[index % labelHeights.length];
+
+                const markerY = (yPos / 100) * viewportHeight;
+                const headerSafeZone = headerSafeZoneMeasured;
+                const bottomSafeZone = 30;  
+                
+                const spaceAbove = markerY - headerSafeZone; 
+                const spaceBelow = viewportHeight - markerY - bottomSafeZone; 
+                
+                let isTop = false; 
+                let availableSpace = spaceAbove;
+
+                if (spaceAbove < (labelZ + 250)) { 
+                    if (spaceBelow > spaceAbove) {
+                        isTop = true; 
+                        availableSpace = spaceBelow;
+                    } else {
+                        labelZ = 15; 
+                        availableSpace = spaceAbove;
+                    }
+                }
+                if (isTop && spaceBelow < (labelZ + 250)) {
+                    labelZ = 15; 
+                    availableSpace = spaceBelow;
+                }
+
+                const dirClass = isTop ? 'is-top' : 'is-bottom';
+
+                // --- NOUVEAU: Le bouton de suppression reçoit la classe edit-tools ---
+                let btnDelete = EDIT_MODE 
+                    ? `<button class="edit-tools btn-delete absolute -top-4 -right-4 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm shadow-md hover:bg-red-600 pointer-events-auto animate-none" data-index="${index}">×</button>` 
+                    : '';
+
+                let scaleVal = typeof poi.scale === 'number' ? poi.scale : 1.0; 
+
+                // --- NOUVEAU: Les boutons de taille reçoivent la classe edit-tools ---
+                let scaleBadgeHTML = EDIT_MODE 
+                    ? `<div class="edit-tools absolute -top-8 left-1/2 -translate-x-1/2 bg-black/80 text-white text-[10px] flex items-center gap-1.5 px-1 py-0.5 rounded pointer-events-auto shadow-lg">
+                         <button class="scale-btn hover:bg-white/30 px-1.5 rounded" onclick="window.adjustScale(event, ${index}, -0.1)">-</button>
+                         <span class="scale-badge font-mono tracking-wider pointer-events-none">x${scaleVal.toFixed(1)}</span>
+                         <button class="scale-btn hover:bg-white/30 px-1.5 rounded" onclick="window.adjustScale(event, ${index}, 0.1)">+</button>
+                       </div>` 
+                    : '';
+
+                // --- NOUVEAU: Badge indiquant qu'un tracé (chemin piéton) est défini pour ce POI ---
+                const editTraceCoords = poi.trace ? (Array.isArray(poi.trace) ? poi.trace : poi.trace.coords) : null;
+                const editTraceLogements = (poi.trace && !Array.isArray(poi.trace)) ? poi.trace.logements : null;
+                const hasTraceDefined = Array.isArray(editTraceCoords) && editTraceCoords.length > 1;
+                const traceScopeLabel = (Array.isArray(editTraceLogements) && editTraceLogements.length > 0)
+                    ? editTraceLogements.join(', ')
+                    : 'tous logements';
+                let traceBadgeHTML = (EDIT_MODE && hasTraceDefined)
+                    ? `<div class="edit-tools absolute -bottom-2 -right-2 bg-blue-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-md pointer-events-none" title="Tracé défini (${editTraceCoords.length} points) — ${traceScopeLabel}">🚶</div>`
+                    : '';
+
+                let bubbleHTML = '';
+                if (poiHasCat(poi, 'toponyme')) {
+                    bubbleHTML = `
+                        <div class="poi-topo-marker-pano" style="transform: translate(-50%, -100%) scale(${scaleVal});">
+                            <span class="poi-topo-label-pano">${content.name}</span>
+                            <span class="poi-topo-line-pano"></span>
+                            <span class="poi-topo-dot-pano poi-dot"></span>
+                        </div>
+                    `;
+                } else if (poiHasCat(poi, 'logement')) {
+                    let logoSrc = poi.id.includes('moustiers') ? 'https://bellodulac.netlify.app/images/bell-etoile-logo.png' : 'https://bellodulac.netlify.app/images/bellodulac-logo.png';
+                    bubbleHTML = `<img src="${logoSrc}" class="poi-dot absolute z-10 cursor-pointer poi-logo-bubble" style="left: -24px; top: -24px; transform: scale(${scaleVal});" alt="Logo"/>`;
+                } else {
+                    bubbleHTML = `<div class="poi-dot absolute w-7 h-7 flex items-center justify-center rounded-full border-[3px] border-white z-10 cursor-pointer text-[12px]" style="background: ${catInfo.color}; left: -14px; top: -14px; transform: scale(${scaleVal});">${catInfo.emoji}</div>`;
+                }
+
+                const links = getPoiLinks(content, poi);
+                const defaultLabel = I18N[state.lang].read_more;
+                // Si le POI a plusieurs categories, on affiche un badge pour chacune (sinon 1 seul, comme avant).
+                const badgesHtml = poiCatDefs.length
+                    ? poiCatDefs.map(c => {
+                        const label = state.lang === 'EN' ? c.en : c.fr;
+                        return `<span class="ov-popup__badge" style="background:${c.color}">${c.emoji} ${label}</span>`;
+                    }).join('')
+                    : `<span class="ov-popup__badge" style="background:${catInfo.color}">${catInfo.emoji} ${catLabel}</span>`;
+                const stars = poi.stars > 0 ? `<span class="ov-popup__stars">${'★'.repeat(poi.stars)}</span>` : '';
+                const placeholderHTML = `<div class="ov-popup__placeholder" style="background:${catInfo.color}22">${catInfo.emoji}</div>`;
+                const imgHTML = poi.img ? `<img class="ov-popup__img" src="${poi.img}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'ov-popup__placeholder\\' style=\\'background:${catInfo.color}22\\'></div>'" />` : placeholderHTML;
+                const traceLabel = state.lang === 'EN' ? 'Show the walking path' : 'Afficher le chemin';
+                const traceCoords = poi.trace ? (Array.isArray(poi.trace) ? poi.trace : poi.trace.coords) : null;
+                const traceLogements = (poi.trace && !Array.isArray(poi.trace)) ? poi.trace.logements : null;
+                const traceAllowedHere = !Array.isArray(traceLogements) || traceLogements.length === 0 || traceLogements.includes(state.listingId);
+                const traceLinkHtml = (Array.isArray(traceCoords) && traceCoords.length > 1 && traceAllowedHere)
+                    ? `<a class="ov-popup__link" href="${buildIndexUrl({ trace: poi.id })}" target="_self" style="color: white !important; background-color: ${catInfo.color} !important;">🚶 ${traceLabel}</a>`
+                    : '';
+                const linksHtml = (links.length || traceLinkHtml) ? `<div class="ov-popup__links">${traceLinkHtml}${links.map(l => `<a class="ov-popup__link" href="${l.url}" target="_self" style="color: white !important; background-color: ${catInfo.color} !important;">${l.label || defaultLabel} →</a>`).join('')}</div>` : '';
+
+                // Plancher de hauteur garantissant que l'image, le titre et TOUS les
+                // boutons restent visibles quoi qu'il arrive ; seule la description
+                // (qui a maintenant son propre scroll interne) absorbe le manque de place.
+                const nbButtons = links.length + (traceLinkHtml ? 1 : 0);
+                const buttonRows = nbButtons > 0 ? Math.ceil(nbButtons / 2) : 0;
+                const badgeRows = Math.max(1, Math.ceil((poiCatDefs.length || 1) / 2));
+                const chromeHeight = 26 /* padding body */ + (badgeRows * 24 + 4) /* badge(s) */ + 44 /* titre 2 lignes */
+                    + (poi.img ? 130 : 0) /* image */
+                    + (buttonRows > 0 ? (buttonRows * 34 + 6) : 0); /* boutons */
+                const popupMinFloor = Math.min(chromeHeight + 20, viewportHeight - 40);
+                const popupMaxHeight = Math.max(popupMinFloor, availableSpace - labelZ);
+
+                const toasterHTML = `
+                    <div class="poi-toaster ov-popup ${dirClass}" style="--offset: calc(14px + ${labelZ}px); max-height: ${popupMaxHeight}px;">
+                        ${imgHTML}
+                        <div class="ov-popup__body">
+                            <div class="flex items-center gap-1.5 shrink-0 mb-1.5 flex-wrap self-start">
+                                ${badgesHtml}
+                                ${stars}
+                            </div>
+                            <h3 class="ov-popup__title">${content.name}</h3>
+                            <div class="ov-popup__desc">${content.desc || ''}</div>
+                            ${linksHtml}
+                        </div>
+                    </div>
+                `;
+
+                const isActive = (poi.id === state.poiId) ? 'active' : '';
+
+                const markerHTML = `
+                    <div class="poi-marker-container absolute pointer-events-auto ${isActive}" style="left: ${xPos}px; top: ${yPos}%;" data-index="${index}">
+                        ${btnDelete}
+                        ${scaleBadgeHTML}
+                        ${traceBadgeHTML}
+                        ${bubbleHTML}
+                        <div class="poi-line absolute w-px bg-white/80 shadow-sm left-[0px] ${dirClass}" style="height: ${labelZ}px;"></div>
+                        ${toasterHTML}
+                    </div>
+                `;
+
+                markers1.insertAdjacentHTML('beforeend', markerHTML);
+                markers2.insertAdjacentHTML('beforeend', markerHTML);
+            });
+
+            if (state.poiId && !state.hasCenteredPoi) {
+                const targetIndex = window.POIS.findIndex(p => p.id === state.poiId);
+                if (targetIndex !== -1) {
+                    const targetPoi = window.POIS[targetIndex];
+                    
+                    if (targetPoi.pano && targetPoi.pano.length >= 2) {
+                        const xPos = Math.round((targetPoi.pano[0] / 100) * imgWidth);
+                        
+                        currentX = -(xPos - window.innerWidth / 2);
+                        currentX = currentX % imgWidth;
+                        if (currentX > 0) currentX -= imgWidth;
+
+                        isPaused = true;
+                        applyI18n();
+
+                        setTimeout(() => {
+                            document.querySelectorAll(`.poi-marker-container[data-index="${targetIndex}"]`).forEach(c => {
+                                c.classList.add('active');
+                            });
+                        }, 50);
+
+                        state.hasCenteredPoi = true; 
+                    }
+                }
+            }
+        }
+
+        // ==========================================
+        // 5. ANIMATION PANORAMA AVEC INERTIE
+        // ==========================================
+        function animate() {
+            if (!isPaused && !isDraggingPano && draggedIndex === null) {
+                scrollSpeed += (baseScrollSpeed - scrollSpeed) * 0.05;
+                currentX -= scrollSpeed;
+            }
+            const imgWidth = imgRef.clientWidth;
+            if (imgWidth > 0) {
+                if (currentX <= -imgWidth) currentX += imgWidth;
+                if (currentX > 0) currentX -= imgWidth;
+                scroller.style.transform = `translate3d(${currentX}px, 0, 0)`;
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // ==========================================
+        // 6. GESTION DU DRAG ET DES CLICS
+        // ==========================================
+        const wrapper = document.getElementById('pano-wrapper');
+
+        wrapper.addEventListener('pointerdown', handlePointerDown);
+        window.addEventListener('pointermove', handlePointerMove);
+        window.addEventListener('pointerup', handlePointerUp);
+        window.addEventListener('pointercancel', handlePointerUp);
+
+        window.addEventListener('click', (e) => {
+            if (EDIT_MODE && e.target.closest('.poi-toaster')) e.preventDefault();
+        }, true);
+
+        window.deletePoi = function(idx, event) {
+            event.stopPropagation(); event.preventDefault();
+            if (confirm(`Retirer ce point du panorama ? (Il restera dans la base de données)`)) {
+                delete window.POIS[idx].pano;
+                renderMarkers();
+            }
+        };
+
+        function handlePointerDown(e) {
+            if (e.target.classList.contains('btn-delete')) {
+                const idx = parseInt(e.target.dataset.index);
+                window.deletePoi(idx, e);
+                return;
+            }
+
+            if (e.target.closest('.scale-btn')) return;
+
+            pointerDownX = e.clientX;
+            pointerDownY = e.clientY;
+
+            const toaster = e.target.closest('.poi-toaster');
+            if (toaster) {
+                // Un doigt pose dans le popup (description, boutons...) ne doit jamais
+                // declencher un drag du panorama : sinon impossible de scroller la
+                // description ou d'appuyer sur un lien sur mobile.
+                if (EDIT_MODE) {
+                    e.preventDefault();
+                    const container = toaster.closest('.poi-marker-container');
+                    draggedIndex = parseInt(container.dataset.index);
+                    e.stopPropagation();
+                }
+                return;
+            }
+
+            isDraggingPano = true;
+            dragStartPanoX = e.clientX - currentX;
+
+            lastDragX = e.clientX;
+            lastDragTime = performance.now();
+            dragVelocity = 0;
+        }
+
+        function handlePointerMove(e) {
+            if (draggedIndex !== null) {
+                if (e.cancelable) e.preventDefault();
+                const scrollerRect = scroller.getBoundingClientRect();
+                const imgWidth = imgRef.clientWidth;
+                
+                let newX = e.clientX - scrollerRect.left;
+                newX = newX % imgWidth;
+                if(newX < 0) newX += imgWidth;
+                
+                const newY_percent = (e.clientY / window.innerHeight) * 100;
+
+                document.querySelectorAll(`.poi-marker-container[data-index="${draggedIndex}"]`).forEach(el => {
+                    el.style.left = newX + 'px';
+                    el.style.top = newY_percent + '%';
+                });
+                return;
+            }
+
+            if (isDraggingPano) {
+                let currentPointerX = e.clientX;
+                let currentTime = performance.now();
+                let dt = currentTime - lastDragTime;
+                
+                if (dt > 0) dragVelocity = (currentPointerX - lastDragX) / dt; 
+                
+                lastDragX = currentPointerX;
+                lastDragTime = currentTime;
+                currentX = currentPointerX - dragStartPanoX;
+            }
+        }
+
+        function handlePointerUp(e) {
+            if (e.target.closest('.scale-btn')) return; 
+
+            const diffX = Math.abs(e.clientX - pointerDownX);
+            const diffY = Math.abs(e.clientY - pointerDownY);
+
+            if (draggedIndex !== null) {
+                const scrollerRect = scroller.getBoundingClientRect();
+                const imgWidth = imgRef.clientWidth;
+                let newX = e.clientX - scrollerRect.left;
+                newX = newX % imgWidth;
+                if(newX < 0) newX += imgWidth;
+                
+                const newY_percent = (e.clientY / window.innerHeight) * 100;
+                const newX_percent = (newX / imgWidth) * 100;
+
+                window.POIS[draggedIndex].pano = [parseFloat(newX_percent.toFixed(3)), parseFloat(newY_percent.toFixed(3))];
+                draggedIndex = null;
+                renderMarkers(); 
+            } 
+            else if (diffX < 5 && diffY < 5) {
+                const toasterClick = e.target.closest('.poi-toaster');
+                const container = e.target.closest('.poi-marker-container');
+
+                if (container && !toasterClick) {
+                    const isAlreadyActive = container.classList.contains('active');
+                    
+                    document.querySelectorAll('.poi-marker-container.active').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    if (!isAlreadyActive) {
+                        container.classList.add('active');
+                        const idx = parseInt(container.dataset.index);
+                        if (!isNaN(idx) && window.POIS[idx]) {
+                            state.poiId = window.POIS[idx].id;
+                            if (window.BDLAnalytics) {
+                                const poiForTrack = window.POIS[idx];
+                                const contentForTrack = poiForTrack[state.lang ? state.lang.toLowerCase() : 'fr'] || poiForTrack.fr;
+                                window.BDLAnalytics.trackPoi(poiForTrack.id, contentForTrack && contentForTrack.name, getPoiCats(poiForTrack).join(','));
+                            }
+                        }
+                    } else {
+                        state.poiId = null;
+                    }
+                    if (state.traceId && state.traceId !== state.poiId) {
+                        state.traceId = null;
+                    }
+                    syncUrl(); 
+                } 
+                else if (EDIT_MODE && e.target.closest('#pano-wrapper') && !container) {
+                    const scrollerRect = scroller.getBoundingClientRect();
+                    const imgWidth = imgRef.clientWidth;
+                    let clickedX = e.clientX - scrollerRect.left;
+                    clickedX = clickedX % imgWidth;
+                    if(clickedX < 0) clickedX += imgWidth;
+                    
+                    targetPanoPos = [
+                        parseFloat(((clickedX / imgWidth) * 100).toFixed(3)),
+                        parseFloat(((e.clientY / window.innerHeight) * 100).toFixed(3))
+                    ];
+                    openModal();
+                }
+                else if (!container) {
+                    let wasActive = document.querySelectorAll('.poi-marker-container.active').length > 0;
+                    document.querySelectorAll('.poi-marker-container.active').forEach(c => c.classList.remove('active'));
+                    if (wasActive) {
+                        state.poiId = null;
+                        if (state.traceId) state.traceId = null;
+                        syncUrl(); 
+                    }
+                }
+            }
+
+            if (isDraggingPano && diffX >= 5) {
+                const deltaX = e.clientX - pointerDownX;
+                baseScrollSpeed = (deltaX < 0) ? 0.3 : -0.3; 
+
+                let timeSinceLastMove = performance.now() - lastDragTime;
+                if (timeSinceLastMove > 50) dragVelocity = 0; 
+
+                if (Math.abs(dragVelocity) > 0.1) {
+                    scrollSpeed = -dragVelocity * 15; 
+                } else {
+                    scrollSpeed = baseScrollSpeed;    
+                }
+
+                if (isPaused) togglePause();
+            }
+
+            isDraggingPano = false;
+        }
+
+        // ==========================================
+        // 7. GESTION DU MODAL ET SAUVEGARDE
+        // ==========================================
+        function openModal() {
+            document.getElementById('poi-modal').classList.remove('hidden');
+            const select = document.getElementById('modal-select-poi');
+            select.innerHTML = '<option value="">-- Choisir un POI existant --</option>';
+            window.POIS.forEach((poi, index) => {
+                if (!poi.pano) { 
+                    const name = poi.fr ? poi.fr.name : poi.id;
+                    const traceCoords = poi.trace ? (Array.isArray(poi.trace) ? poi.trace : poi.trace.coords) : null;
+                    const traceFlag = (Array.isArray(traceCoords) && traceCoords.length > 1) ? ' 🚶' : '';
+                    select.innerHTML += `<option value="${index}">${name} (${getPoiCats(poi).join(', ')})${traceFlag}</option>`;
+                }
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('poi-modal').classList.add('hidden');
+            targetPanoPos = null;
+        }
+
+        function setModalTab(tab) {
+            const btnExisting = document.getElementById('tab-existing'), btnNew = document.getElementById('tab-new');
+            const divExisting = document.getElementById('modal-existing'), divNew = document.getElementById('modal-new');
+            if (tab === 'existing') {
+                btnExisting.className = 'font-bold text-blue-600 border-b-2 border-blue-600 pb-1 -mb-[9px]';
+                btnNew.className = 'font-medium text-gray-500 pb-1 hover:text-gray-800';
+                divExisting.classList.remove('hidden'); divNew.classList.add('hidden');
+            } else {
+                btnNew.className = 'font-bold text-blue-600 border-b-2 border-blue-600 pb-1 -mb-[9px]';
+                btnExisting.className = 'font-medium text-gray-500 pb-1 hover:text-gray-800';
+                divNew.classList.remove('hidden'); divExisting.classList.add('hidden');
+            }
+        }
+
+        function addExistingPoi() {
+            const select = document.getElementById('modal-select-poi');
+            if (select.value === "") return alert("Veuillez sélectionner un POI.");
+            window.POIS[parseInt(select.value)].pano = targetPanoPos;
+            closeModal(); renderMarkers();
+        }
+
+        function addNewPoi() {
+            const codeRaw = document.getElementById('modal-new-code').value;
+            try {
+                const newPoi = eval('(' + codeRaw + ')');
+                if (!newPoi.id || !newPoi.cat) throw new Error("L'objet doit contenir un 'id' et un 'cat'.");
+                newPoi.pano = targetPanoPos;
+                window.POIS.push(newPoi);
+                closeModal(); renderMarkers();
+            } catch (err) { alert("Erreur Javascript :\n" + err.message); }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            applyI18n(); 
+        }
+
+        function toggleDayNight() {
+            isNightMode = !isNightMode;
+            
+            const newSrc = isNightMode ? 'https://bellodulac.netlify.app/images/panorama360_night.jpg' : 'https://bellodulac.netlify.app/images/panorama360.jpg';
+            document.getElementById('img-ref').src = newSrc;
+            
+            const cloneImg = document.getElementById('img-clone');
+            if(cloneImg) cloneImg.src = newSrc;
+            
+            const topbarEl = document.querySelector('.topbar');
+            if (topbarEl) {
+                topbarEl.style.backgroundColor = isNightMode ? 'transparent' : 'rgba(14, 165, 233, 0.35)';
+            }
+            
+            applyI18n(); 
+        }
+
+		function savePois() {
+            let content = "/* ==========================================================================\n";
+            content += "   pois.js — Fichier de base de données des POIs\n";
+            content += "   - 'pano: [x%, y%]' et 'scale' gèrent le placement sur le panorama 360.\n";
+            content += "   - 'backintime: [x%, y%]' gère le placement sur le comparateur avant/après.\n";
+            content += "   - 'trace: { ... }' affiche un chemin piéton sur la carte 2D de l'accueil.\n";
+            content += "   ========================================================================== */\n\n";
+            
+            content += `window.POI_BASE_URL = "${window.POI_BASE_URL || ''}";\n\n`;
+            if (window.POI_CATEGORIES) content += `window.POI_CATEGORIES = ${JSON.stringify(window.POI_CATEGORIES, null, 2)};\n\n`;
+            if (window.POI_STAR_LABELS) content += `window.POI_STAR_LABELS = ${JSON.stringify(window.POI_STAR_LABELS, null, 2)};\n\n`;
+            if (window.POIS) content += `window.POIS = ${JSON.stringify(window.POIS, null, 2)};\n`;
+
+            const blob = new Blob([content], { type: "application/javascript" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = "pois.js";
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            alert("✅ Fichier pois.js mis à jour et sauvegardé !");
+        }
+
+        // Masque l'ecran de chargement une fois l'image panorama prete (ou signale une erreur)
+        function hidePanoLoader() {
+            const loader = document.getElementById('pano-loader');
+            if (loader) loader.classList.add('is-hidden');
+        }
+        function showPanoLoadError() {
+            const loader = document.getElementById('pano-loader');
+            const spinner = loader && loader.querySelector('.pano-spinner');
+            const text = document.getElementById('pano-loader-text');
+            if (spinner) spinner.style.display = 'none';
+            if (text) {
+                text.dataset.errored = '1';
+                text.textContent = I18N[state.lang].load_error;
+            }
+        }
+
+        // ==========================================
+        // 8. INITIALISATION
+        // ==========================================
+        function startPanorama() {
+            document.getElementById('lang-select').addEventListener('change', (e) => {
+                state.lang = e.target.value;
+                syncUrl(); applyI18n(); buildFilters(); renderMarkers();
+            });
+
+            readUrlParams();
+            syncUrl();
+            applyI18n();
+            buildFilters();
+
+            if (EDIT_MODE) {
+                document.getElementById('btn-save').classList.remove('hidden');
+                document.getElementById('mode-badge').classList.remove('hidden');
+                document.getElementById('help-scale').classList.remove('hidden');
+            }
+
+            if (imgRef.complete) {
+                renderMarkers(); animate(); hidePanoLoader();
+            } else {
+                imgRef.onload = () => { renderMarkers(); animate(); hidePanoLoader(); };
+                imgRef.onerror = showPanoLoadError;
+            }
+
+            window.addEventListener('resize', renderMarkers);
+        }
+
+        // Chargement de logements.js (source de verite du logement par defaut), avec repli
+        // local si l'URL externe echoue (meme schema que pois.js/evenements.js) ; en dernier
+        // recours le DEFAULT_LISTING_ID code en dur ci-dessus reste utilise.
+        function chargerLogementsPuisDemarrer() {
+            function applyConfigAndStart() {
+                if (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) {
+                    DEFAULT_LISTING_ID = window.LOGEMENTS_DATA.default;
+                }
+                startPanorama();
+            }
+            if (window.LOGEMENTS_DATA) { applyConfigAndStart(); return; }
+
+            const EXTERNAL_URL = "logements.js";
+            const LOCAL_URL = "logements.js";
+
+            function loadLocal() {
+                const s = document.createElement('script');
+                s.src = LOCAL_URL;
+                s.onload = applyConfigAndStart;
+                s.onerror = () => { console.error("Impossible de charger logements.js"); applyConfigAndStart(); };
+                document.head.appendChild(s);
+            }
+
+            const s = document.createElement('script');
+            s.src = EXTERNAL_URL;
+            s.onload = applyConfigAndStart;
+            s.onerror = loadLocal;
+            document.head.appendChild(s);
+        }
+
+        chargerLogementsPuisDemarrer();
+
+    </script>
+</body>
+</html>

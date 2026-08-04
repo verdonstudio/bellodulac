@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nos logements — Bell'O du Lac™ & Bell'Étoile™</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --c-bg:        #fdfbf7;
+        --c-ink:       #1e293b;
+        --c-muted:     #64748b;
+        --c-primary:   #0284c7;
+        --c-primary-2: #0369a1;
+        --c-primary-soft: #f0f9ff;
+        --c-border:    rgba(14, 165, 233, 0.1);
+        --c-card:      #ffffff;
+        --c-accent:    #fbbf24;
+    }
+    html, body {
+        background: linear-gradient(180deg, #fdfbf7 0%, #fff7ed 100%);
+        min-height: 100vh;
+    }
+    body { font-family: 'Inter', sans-serif; margin: 0; color: var(--c-ink); }
+    .font-display { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+    .topbar {
+        background-color: rgba(253, 251, 247, 0.85);
+        -webkit-backdrop-filter: saturate(200%) blur(24px);
+        backdrop-filter: saturate(200%) blur(24px);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        z-index: 50;
+    }
+    .chip { transition: all 0.2s ease; }
+    .chip:hover { background: var(--c-primary-soft); transform: scale(1.02); }
+
+    .btn-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 999px;
+        background: #f1f5f9; border: 1px solid rgba(0,0,0,0.05);
+        font-size: 12px; font-weight: 600; color: #334155;
+        transition: all 0.2s; text-decoration: none;
+    }
+    .btn-back:hover { background: #e2e8f0; color: #0f172a; }
+
+    #content { margin-top: 56px; padding-bottom: 48px; }
+
+    .card {
+        background: var(--c-card); border: 1px solid var(--c-border); border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(2,132,199,0.05); overflow: hidden;
+        transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(2,132,199,0.10); }
+
+    .listing-img { width: 100%; height: 220px; object-fit: cover; display: block; }
+
+    .listing-rating { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--c-ink); }
+    .listing-rating svg { width: 13px; height: 13px; fill: currentColor; }
+    .listing-reviews { color: var(--c-muted); font-weight: 500; }
+
+    .btn-listing {
+        display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+        font-size: 13px; font-weight: 700; padding: 9px 16px; border-radius: 999px;
+        text-decoration: none; transition: all 0.2s ease; white-space: nowrap;
+    }
+    .btn-listing-primary { background: var(--c-primary); color: #fff; }
+    .btn-listing-primary:hover { background: var(--c-primary-2); }
+    .btn-listing-outline { background: #fff; color: var(--c-primary); border: 1.5px solid var(--c-primary); }
+    .btn-listing-outline:hover { background: var(--c-primary-soft); }
+</style>
+</head>
+<body>
+
+<header class="topbar fixed top-0 w-full">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+        <a id="btn-back" href="index.html" class="btn-back shrink-0 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <span id="text-back">Retour</span>
+        </a>
+
+        <div class="flex items-center gap-2 min-w-0 flex-1 justify-center">
+            <img id="topbar-logo" src="https://bellodulac.netlify.app/images/bellodulac-logo.png" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+            <span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Nos logements</span>
+        </div>
+
+        <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
+            <option value="FR">FR</option>
+            <option value="EN">EN</option>
+        </select>
+    </div>
+</header>
+
+<main id="content" class="max-w-5xl mx-auto px-4">
+
+    <div class="mt-6 mb-6">
+        <h1 id="page-title" class="text-2xl sm:text-3xl font-bold font-display text-[var(--c-ink)]">Nos logements dans le Verdon</h1>
+        <p id="page-subtitle" class="text-sm text-[var(--c-muted)] mt-1">Découvrez nos annonces et réservez directement sur Airbnb.</p>
+    </div>
+
+    <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+    <p id="footer-note" class="text-[11px] text-[var(--c-muted)] text-center mt-10 mb-2 px-4">Programme susceptible de modifications.</p>
+    <p class="text-[10px] text-[var(--c-muted)]/70 text-center pb-6">© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés. Marques déposées.</p>
+
+</main>
+
+<script>
+(function () {
+    const state = { lang: 'FR', logement: null };
+
+    // Les 3 annonces publiees (le studio n'est volontairement pas repris ici) proviennent
+    // desormais de logements.js (source de verite partagee avec index/panorama/evenements).
+    // room = id Airbnb (page annonce publique) ; host_contact reprend le lien
+    // "contact_host" deja utilise sur index.html pour chaque logement.
+    let LISTINGS = [];
+    function buildListingsFromConfig() {
+        const data = (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings) || {};
+        LISTINGS = Object.values(data).sort((a, b) => (a.order || 0) - (b.order || 0));
+    }
+
+    const I18N = {
+        FR: {
+            back: "Retour", label: "Nos logements",
+            pageTitle: "Nos logements dans le Verdon",
+            pageSubtitle: "Découvrez nos annonces et réservez directement sur Airbnb.",
+            viewListing: "Voir l'annonce", contactHost: "Contacter l'hôte",
+            reviewsSuffix: (n) => `${n} avis`,
+            footerNote: "",
+        },
+        EN: {
+            back: "Back", label: "Our stays",
+            pageTitle: "Our stays in the Verdon",
+            pageSubtitle: "Discover our listings and book directly on Airbnb.",
+            viewListing: "View listing", contactHost: "Contact the host",
+            reviewsSuffix: (n) => `${n} reviews`,
+            footerNote: "",
+        }
+    };
+
+    const $ = (sel) => document.querySelector(sel);
+
+    function readUrlParams() {
+        const p = new URLSearchParams(window.location.search);
+        if (p.get('lang')) state.lang = p.get('lang').toUpperCase();
+        state.logement = p.get('logement') || null;
+    }
+
+    function starIcon() {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="m15.1 1.58-4.13 8.88-9.86 1.27a1 1 0 0 0-.54 1.74l7.3 6.57-1.97 9.85a1 1 0 0 0 1.48 1.06l8.62-5 8.63 5a1 1 0 0 0 1.48-1.06l-1.97-9.85 7.3-6.57a1 1 0 0 0-.55-1.73l-9.86-1.28-4.12-8.88a1 1 0 0 0-1.82 0z"/></svg>';
+    }
+
+    function renderListings() {
+        const L = I18N[state.lang];
+        const grid = $('#listings-grid');
+        grid.innerHTML = LISTINGS.map(item => `
+            <div class="card">
+                <img class="listing-img" src="${item.cover}" alt="${item.title[state.lang]}" loading="lazy" />
+                <div class="p-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <img src="${item.logo}" alt="" class="w-6 h-6 rounded-full object-cover ring-1 ring-[var(--c-border)]" />
+                        <h2 class="font-display font-semibold text-[16px] text-[var(--c-ink)]">${item.title[state.lang]}</h2>
+                    </div>
+                    <p class="text-[12.5px] text-[var(--c-primary)] font-semibold">${item.place[state.lang]}</p>
+                    <p class="text-[13px] text-[var(--c-muted)] mt-1.5 leading-snug">${item.desc[state.lang]}</p>
+                    <div class="listing-rating mt-2.5">
+                        ${starIcon()}
+                        <span>${item.rating.toString().replace('.', ',')}</span>
+                        <span class="listing-reviews">· ${L.reviewsSuffix(item.reviews)}</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <a class="btn-listing btn-listing-primary" href="https://www.airbnb.fr/rooms/${item.room}" target="_blank" rel="noopener">${L.viewListing}</a>
+                        <a class="btn-listing btn-listing-outline" href="${item.host_contact}" target="_blank" rel="noopener">${L.contactHost}</a>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Retrouve l'annonce (avec son logo) correspondant au logement courant, en tolerant
+    // aussi bien un identifiant precis (salles6/salles8/moustiers) qu'une valeur coarse
+    // (salles/moustiers, telle que transmise par evenements.html).
+    function findListing(raw) {
+        if (!raw) return null;
+        const key = raw.toLowerCase();
+        if (key.includes('moustiers') || key.includes('etoile')) return LISTINGS.find(l => l.id === 'moustiers') || null;
+        if (key.includes('salles8') || key.includes('8p') || key.includes('bello8')) return LISTINGS.find(l => l.id === 'salles8') || null;
+        if (key.includes('salles') || key.includes('bello')) return LISTINGS.find(l => l.id === 'salles6') || null;
+        return null;
+    }
+
+    function applyI18n() {
+        const L = I18N[state.lang];
+        $('#lang-select').value = state.lang;
+        $('#text-back').textContent = L.back;
+        $('#label-title').textContent = L.label;
+        $('#page-title').textContent = L.pageTitle;
+        $('#page-subtitle').textContent = L.pageSubtitle;
+        $('#footer-note').textContent = L.footerNote;
+        document.documentElement.lang = state.lang.toLowerCase();
+
+        const topbarLogo = $('#topbar-logo');
+        const matched = findListing(state.logement);
+        if (matched) {
+            topbarLogo.src = matched.logo;
+            topbarLogo.classList.remove('hidden');
+        } else {
+            topbarLogo.classList.add('hidden');
+        }
+    }
+
+    function syncUrl() {
+        const p = new URLSearchParams(window.location.search);
+        p.set('lang', state.lang);
+        if (state.logement) p.set('logement', state.logement); else p.delete('logement');
+        const url = window.location.pathname + '?' + p.toString();
+        try { history.replaceState(null, '', url); } catch (e) {}
+        const backParams = new URLSearchParams();
+        backParams.set('lang', state.lang);
+        if (state.logement) backParams.set('logement', state.logement);
+        $('#btn-back').href = `index.html?${backParams.toString()}`;
+    }
+
+    function render() {
+        applyI18n();
+        renderListings();
+    }
+
+    function start() {
+        buildListingsFromConfig();
+        readUrlParams();
+        render();
+        syncUrl();
+
+        $('#lang-select').addEventListener('change', (e) => {
+            state.lang = e.target.value;
+            render();
+            syncUrl();
+        });
+    }
+
+    // Chargement de logements.js (source de verite des 3 logements), avec repli
+    // local si l'URL externe echoue (meme schema que pois.js/evenements.js).
+    function chargerLogements() {
+        if (window.LOGEMENTS_DATA) { start(); return; }
+        const EXTERNAL_URL = "logements.js";
+        const LOCAL_URL = "logements.js";
+
+        function loadLocal() {
+            const s = document.createElement('script');
+            s.src = LOCAL_URL;
+            s.onload = start;
+            s.onerror = () => { console.error("Impossible de charger logements.js"); start(); };
+            document.head.appendChild(s);
+        }
+
+        const s = document.createElement('script');
+        s.src = EXTERNAL_URL;
+        s.onload = start;
+        s.onerror = loadLocal;
+        document.head.appendChild(s);
+    }
+
+    document.addEventListener('DOMContentLoaded', chargerLogements);
+})();
+</script>
+</body>
+</html>

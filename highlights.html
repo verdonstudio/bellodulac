@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Votre programme — Bell'O du Lac™ & Bell'Étoile™</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="analytics.js"></script>
+<script src="pois.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --c-bg:        #fdfbf7;
+        --c-ink:       #1e293b;
+        --c-muted:     #64748b;
+        --c-primary:   #0284c7;
+        --c-primary-2: #0369a1;
+        --c-primary-soft: #f0f9ff;
+        --c-border:    rgba(14, 165, 233, 0.1);
+        --c-card:      #ffffff;
+        --c-accent:    #fbbf24;
+    }
+    html, body {
+        background: linear-gradient(180deg, #fdfbf7 0%, #fff7ed 100%);
+        min-height: 100vh;
+    }
+    body { font-family: 'Inter', sans-serif; margin: 0; color: var(--c-ink); }
+    .font-display { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+    .topbar {
+        background-color: rgba(253, 251, 247, 0.85);
+        -webkit-backdrop-filter: saturate(200%) blur(24px);
+        backdrop-filter: saturate(200%) blur(24px);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        z-index: 50;
+    }
+    .chip { transition: all 0.2s ease; }
+    .chip:hover { background: var(--c-primary-soft); transform: scale(1.02); }
+
+    .btn-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 999px;
+        background: #f1f5f9; border: 1px solid rgba(0,0,0,0.05);
+        font-size: 12px; font-weight: 600; color: #334155;
+        transition: all 0.2s; text-decoration: none;
+    }
+    .btn-back:hover { background: #e2e8f0; color: #0f172a; }
+
+    #content { margin-top: 56px; padding-bottom: 48px; }
+
+    .card {
+        position: relative;
+        background: var(--c-card); border: 1px solid var(--c-border); border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(2,132,199,0.05); overflow: hidden;
+        transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(2,132,199,0.10); }
+
+    .hl-remove-btn {
+        position: absolute; top: 8px; right: 8px; z-index: 5;
+        width: 26px; height: 26px; border-radius: 999px; border: none;
+        background: rgba(255,255,255,0.92); color: #334155;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+        transition: all 0.15s ease;
+    }
+    .hl-remove-btn:hover { background: #fff; color: #dc2626; }
+
+    .hl-share-btn {
+        position: absolute; top: 8px; right: 40px; z-index: 5;
+        width: 26px; height: 26px; border-radius: 999px; border: none;
+        background: rgba(255,255,255,0.92); color: #334155;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+        transition: all 0.15s ease;
+    }
+    .hl-share-btn:hover { background: #fff; color: var(--c-primary); }
+
+    .btn-listing { border: none; cursor: pointer; }
+
+    .poi-result-item {
+        display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px;
+        cursor: pointer; transition: background 0.15s ease;
+    }
+    .poi-result-item:hover { background: var(--c-primary-soft); }
+    .poi-result-img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #eee; }
+    .poi-result-name { font-size: 13px; font-weight: 600; color: var(--c-ink); }
+    .event-result-date { font-size: 11px; color: var(--c-muted); margin-top: 1px; }
+
+    .hl-media {
+        height: 220px; background: var(--c-primary-soft);
+        display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .hl-media-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hl-media-img.is-logo {
+        width: 96px; height: 96px; object-fit: contain; border-radius: 999px;
+        background: #fff; padding: 10px; box-shadow: 0 2px 8px rgba(2,132,199,0.15);
+    }
+
+    .hl-date-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: #eef2f7; color: var(--c-ink); font-size: 12.5px; font-weight: 600;
+        padding: 6px 12px; border-radius: 10px; margin-bottom: 10px;
+    }
+    .hl-date-badge svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--c-muted); }
+
+    .hl-category { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--c-muted); margin: 0 0 4px; }
+
+    .hl-title { font-size: 16px; font-weight: 700; margin: 0 0 6px; font-family: 'Fraunces', Georgia, serif; line-height: 1.3; }
+    .hl-title a { color: var(--c-ink); text-decoration: none; }
+    .hl-title a:hover { color: var(--c-primary); }
+
+    .hl-place { display: flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--c-muted); font-weight: 600; margin: 0; }
+    .hl-place svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    #empty-state { display: none; text-align: center; padding: 40px 16px; color: var(--c-muted); font-size: 14px; }
+    #empty-state.visible { display: block; }
+</style>
+</head>
+<body>
+
+<header class="topbar fixed top-0 w-full">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+        <a id="btn-back" href="index.html" class="btn-back shrink-0 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <span id="text-back">Retour</span>
+        </a>
+
+        <div class="flex items-center gap-2 min-w-0 flex-1 justify-center">
+            <img id="topbar-logo" src="https://bellodulac.netlify.app/images/bellodulac-logo.png" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+            <span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Votre programme</span>
+        </div>
+
+        <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
+            <option value="FR">FR</option>
+            <option value="EN">EN</option>
+        </select>
+    </div>
+</header>
+
+<main id="content" class="max-w-5xl mx-auto px-4">
+
+    <div class="mt-6 mb-6 flex flex-wrap items-start justify-between gap-3">
+        <div>
+            <h1 id="page-title" class="text-2xl sm:text-3xl font-bold font-display text-[var(--c-ink)]">Votre programme</h1>
+            <p id="page-subtitle" class="text-sm text-[var(--c-muted)] mt-1">Une sélection d'évènements à ne pas manquer pendant votre séjour.</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+            <button id="btn-add-event" type="button" class="btn-listing btn-listing-outline">
+                <span>➕</span><span id="btn-add-event-label">Ajouter un évènement</span>
+            </button>
+            <button id="btn-add-visit" type="button" class="btn-listing btn-listing-outline">
+                <span>➕</span><span id="btn-add-visit-label">Ajouter une visite</span>
+            </button>
+            <button id="btn-copy-page-link" type="button" class="btn-listing btn-listing-primary">
+                <span>🔗</span><span id="btn-copy-page-link-label">Copier le lien</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="highlights-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    <p id="empty-state">—</p>
+
+    <p class="text-[10px] text-[var(--c-muted)]/70 text-center pb-6 mt-10">© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés. Marques déposées.</p>
+
+</main>
+
+<div id="event-modal-overlay" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
+    <div id="event-modal" class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[80vh] flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-border)]">
+            <h3 id="event-modal-title" class="font-display font-semibold text-[15px]">Ajouter un évènement</h3>
+            <button id="btn-event-modal-close" type="button" class="text-[var(--c-muted)] hover:text-[var(--c-ink)] text-xl leading-none">&times;</button>
+        </div>
+        <div class="p-3">
+            <input id="event-search-input" type="text" placeholder="Rechercher un évènement…" class="w-full text-sm px-3 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]" />
+        </div>
+        <div id="event-search-results" class="overflow-y-auto px-2 pb-3" style="max-height:50vh;"></div>
+    </div>
+</div>
+
+<div id="poi-modal-overlay" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
+    <div id="poi-modal" class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[80vh] flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-border)]">
+            <h3 id="poi-modal-title" class="font-display font-semibold text-[15px]">Ajouter une visite</h3>
+            <button id="btn-poi-modal-close" type="button" class="text-[var(--c-muted)] hover:text-[var(--c-ink)] text-xl leading-none">&times;</button>
+        </div>
+
+        <div id="poi-modal-search-view" class="flex flex-col overflow-hidden">
+            <div class="p-3">
+                <input id="poi-search-input" type="text" placeholder="Rechercher un point d'intérêt…" class="w-full text-sm px-3 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--c-primary)]" />
+            </div>
+            <div id="poi-search-results" class="overflow-y-auto px-2 pb-3" style="max-height:50vh;"></div>
+        </div>
+
+        <div id="poi-modal-date-view" class="hidden p-4">
+            <div class="flex items-center gap-3 mb-4">
+                <img id="poi-date-view-img" src="" alt="" class="w-14 h-14 rounded-xl object-cover shrink-0" style="background:var(--c-primary-soft);" />
+                <p id="poi-date-view-name" class="font-semibold text-[14px] text-[var(--c-ink)] min-w-0 truncate">—</p>
+            </div>
+            <label class="block text-[11px] font-bold uppercase tracking-wide text-[var(--c-muted)] mb-1" id="poi-date-view-label">Date de la visite</label>
+            <input id="poi-date-input" type="date" class="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg mb-4" />
+            <div class="flex items-center gap-2">
+                <button id="btn-poi-date-back" type="button" class="btn-listing btn-listing-outline">Retour</button>
+                <button id="btn-poi-date-confirm" type="button" class="btn-listing btn-listing-primary">Ajouter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const state = { lang: 'FR', logement: 'salles', ids: [], visits: [] };
+
+    const LOGO_DATA = {
+        moustiers: { src: "https://bellodulac.netlify.app/images/bell-etoile-logo.png" },
+        salles:    { src: "https://bellodulac.netlify.app/images/bellodulac-logo.png" }
+    };
+
+    // Alias reconnus pour le logement, alignes sur ceux d'index.html (LISTING_ALIASES) :
+    // on conserve la valeur precise (salles6/salles8/moustiers) dans l'URL/state.logement
+    // pour que le retour vers index.html/panorama.html retrouve le bon logement exact ;
+    // seul le choix du LOGO affiche est simplifie en 2 familles via logoFamily().
+    const LISTING_ALIASES = {
+        moustiers: 'moustiers', moustier: 'moustiers',
+        'bell-etoile': 'moustiers', belletoile: 'moustiers', etoile: 'moustiers',
+        salles6: 'salles6', 'salles-6': 'salles6', 'salles6p': 'salles6', 'salles-6p': 'salles6', bello6: 'salles6', 'bello-6': 'salles6',
+        salles8: 'salles8', 'salles-8': 'salles8', 'salles8p': 'salles8', 'salles-8p': 'salles8', bello8: 'salles8', 'bello-8': 'salles8',
+        salles: 'salles6'
+    };
+    function resolveLogement(raw) {
+        const key = (raw || '').toString().trim().toLowerCase().replace(/[_\s]+/g, '-');
+        return LISTING_ALIASES[key] || 'salles6';
+    }
+    function logoFamily(logement) {
+        return (logement || '').includes('moustiers') ? 'moustiers' : 'salles';
+    }
+
+    const I18N = {
+        FR: {
+            back: "Retour", label: "Votre programme",
+            pageTitle: "Votre programme",
+            pageSubtitle: "Une sélection d'évènements à ne pas manquer pendant votre séjour.",
+            noEvents: "Aucun évènement à afficher.",
+            months: ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
+            dateWithTime: (day, month, time) => `Le ${day} ${month} - ${time}`,
+            dateNoTime: (day, month) => `Le ${day} ${month}`,
+            addVisit: "Ajouter une visite", copyLink: "Copier le lien", linkCopied: "Lien copié !",
+            removeCard: "Retirer", modalTitle: "Ajouter une visite",
+            shareCard: "Copier le lien de cette carte",
+            searchPlaceholder: "Rechercher un point d'intérêt…", noPoiFound: "Aucun résultat.",
+            visitDateLabel: "Date de la visite", back: "Retour", add: "Ajouter",
+            pickDateAlert: "Choisissez une date.",
+            addEvent: "Ajouter un évènement", modalTitleEvent: "Ajouter un évènement",
+            searchEventPlaceholder: "Rechercher un évènement…",
+            noEventFound: "Aucun évènement disponible sur cette période."
+        },
+        EN: {
+            back: "Back", label: "Your selection",
+            pageTitle: "Your selection",
+            pageSubtitle: "A selection of events not to miss during your stay.",
+            noEvents: "No events to display.",
+            months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+            dateWithTime: (day, month, time) => `${month} ${day} - ${time}`,
+            dateNoTime: (day, month) => `${month} ${day}`,
+            addVisit: "Add a visit", copyLink: "Copy link", linkCopied: "Link copied!",
+            removeCard: "Remove", modalTitle: "Add a visit",
+            shareCard: "Copy this card's link",
+            searchPlaceholder: "Search for a point of interest…", noPoiFound: "No results.",
+            visitDateLabel: "Visit date", back: "Back", add: "Add",
+            pickDateAlert: "Pick a date.",
+            addEvent: "Add an event", modalTitleEvent: "Add an event",
+            searchEventPlaceholder: "Search for an event…",
+            noEventFound: "No events available for this period."
+        }
+    };
+
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+    // texte localisé : accepte une chaine simple, ou un objet {FR, EN}
+    const t = (val) => {
+        if (val == null) return '';
+        if (typeof val === 'object') return val[state.lang] || val.FR || val.EN || '';
+        return val;
+    };
+
+    // -------- petit moteur de recurrence, identique a celui d'evenements.html --------
+    const WEEKDAY_CODES = ['sun','mon','tue','wed','thu','fri','sat'];
+
+    function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+    function toISO(d) { return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+    function parseISO(str) {
+        const [y, m, d] = str.split('-').map(Number);
+        return new Date(y, m - 1, d);
+    }
+    function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
+    function startOfToday() { const n = new Date(); n.setHours(0,0,0,0); return n; }
+
+    // Accepte, pour edatestart/edateend : l'ISO strict (AAAA-MM-JJ), une date en
+    // clair FR ou EN ("10 août 2026", "1er août 2026", "August 10, 2026",
+    // "10 August 2026"), ou une date numerique JJ/MM/AAAA. Retourne une chaine
+    // ISO normalisee ou null si le format n'est pas reconnu.
+    const MOIS_NOMS = {
+        janvier: 1, jan: 1, january: 1,
+        fevrier: 2, fev: 2, february: 2, feb: 2,
+        mars: 3, march: 3, mar: 3,
+        avril: 4, avr: 4, april: 4, apr: 4,
+        mai: 5, may: 5,
+        juin: 6, june: 6, jun: 6,
+        juillet: 7, juil: 7, july: 7, jul: 7,
+        aout: 8, aug: 8, august: 8,
+        septembre: 9, sept: 9, sep: 9, september: 9,
+        octobre: 10, oct: 10, october: 10,
+        novembre: 11, nov: 11, november: 11,
+        decembre: 12, dec: 12, december: 12,
+    };
+    function normalizeMoisKey(s) {
+        return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+    function parseFlexibleDate(raw) {
+        if (!raw) return null;
+        const str = raw.trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+        let m = str.match(/^(\d{1,2})(?:er|re|ème|eme|st|nd|rd|th)?\s+([a-zA-Zà-üÀ-Ü]+)\.?\s+(\d{4})$/);
+        if (m) {
+            const day = parseInt(m[1], 10);
+            const month = MOIS_NOMS[normalizeMoisKey(m[2])];
+            if (month && day >= 1 && day <= 31) return `${m[3]}-${pad2(month)}-${pad2(day)}`;
+        }
+        m = str.match(/^([a-zA-Zà-üÀ-Ü]+)\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})$/);
+        if (m) {
+            const month = MOIS_NOMS[normalizeMoisKey(m[1])];
+            const day = parseInt(m[2], 10);
+            if (month && day >= 1 && day <= 31) return `${m[3]}-${pad2(month)}-${pad2(day)}`;
+        }
+        m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+        if (m) {
+            const day = parseInt(m[1], 10), month = parseInt(m[2], 10);
+            if (month >= 1 && month <= 12 && day >= 1 && day <= 31) return `${m[3]}-${pad2(month)}-${pad2(day)}`;
+        }
+        return null;
+    }
+    function startOfWeekMonday(d) {
+        const r = new Date(d);
+        r.setDate(r.getDate() - ((r.getDay() + 6) % 7));
+        return r;
+    }
+
+    function makeInstance(tpl, date) {
+        const clone = Object.assign({}, tpl);
+        delete clone.recurrence;
+        clone.date = toISO(date);
+        clone.id = `${tpl.id}__${clone.date}`;
+        clone.recurring = true;
+        return clone;
+    }
+
+    function expandOne(tpl, rangeStart, rangeEnd) {
+        const rec = tpl.recurrence;
+        if (!rec) return [];
+        const recStart = rec.startDate ? parseISO(rec.startDate) : new Date(2000, 0, 1);
+        const recEnd = rec.endDate ? parseISO(rec.endDate) : null;
+
+        const from = recStart > rangeStart ? recStart : rangeStart;
+        const to = recEnd && recEnd < rangeEnd ? recEnd : rangeEnd;
+        if (from > to) return [];
+
+        const interval = Math.max(1, rec.interval || 1);
+        const out = [];
+
+        if (rec.freq === 'daily') {
+            let cur = new Date(recStart);
+            while (cur < from) cur = addDays(cur, interval);
+            while (cur <= to) {
+                if (cur >= from) out.push(makeInstance(tpl, cur));
+                cur = addDays(cur, interval);
+            }
+        } else if (rec.freq === 'weekly') {
+            const codes = (rec.byDay && rec.byDay.length ? rec.byDay : [WEEKDAY_CODES[recStart.getDay()]])
+                .map(d => d.toLowerCase().slice(0, 3));
+            const dayIdxs = new Set(codes.map(c => WEEKDAY_CODES.indexOf(c)).filter(i => i >= 0));
+            const recWeekStart = startOfWeekMonday(recStart);
+
+            let cur = new Date(from);
+            while (cur <= to) {
+                if (cur >= recStart && dayIdxs.has(cur.getDay())) {
+                    const weeksSince = Math.round((startOfWeekMonday(cur) - recWeekStart) / (7 * 86400000));
+                    if (weeksSince >= 0 && weeksSince % interval === 0) {
+                        out.push(makeInstance(tpl, cur));
+                    }
+                }
+                cur = addDays(cur, 1);
+            }
+        } else if (rec.freq === 'monthly') {
+            const dom = rec.byMonthDay || recStart.getDate();
+            let m = new Date(recStart.getFullYear(), recStart.getMonth(), dom);
+            let monthCount = 0;
+            while (m <= to) {
+                if (m >= from && m >= recStart && monthCount % interval === 0) {
+                    out.push(makeInstance(tpl, m));
+                }
+                monthCount++;
+                m = new Date(recStart.getFullYear(), recStart.getMonth() + monthCount * interval, dom);
+            }
+        }
+
+        return out;
+    }
+
+    // -------- plage de dates active pour "Ajouter un évènement" --------
+    // Meme regle que sur evenements.html (computeRange) : une plage explicite
+    // edatestart/edateend (transmise dans l'URL) prime ; a defaut, on part d'aujourd'hui
+    // et on affiche les daysAhead prochains jours (valeur venant de window.EVENTS_DATA.config,
+    // avec repli sur 7 si absente).
+    function computeActiveRange() {
+        const data = window.EVENTS_DATA;
+        const daysAhead = (data && data.config && data.config.daysAhead) || 7;
+        const start = state.dateStart ? parseISO(state.dateStart) : startOfToday();
+        const end = state.dateEnd ? parseISO(state.dateEnd) : addDays(start, daysAhead - 1);
+        return { start, end };
+    }
+
+    // Identifiant a utiliser pour tester/marquer la selection d'un evenement : l'id du
+    // modele pour une occurrence recurrente (meme convention que highlightIdFor() dans
+    // evenements.html, qui n'enregistre jamais l'id d'une occurrence precise dans la
+    // selection, seulement celui du modele), l'id tel quel pour un evenement ponctuel.
+    function baseEventId(evt) {
+        return evt.recurring ? evt.id.split('__')[0] : evt.id;
+    }
+
+    // Construit la liste des evenements disponibles sur la plage active (evenements
+    // ponctuels dans la plage, et un representant -- la 1ere occurrence dans la plage --
+    // par modele recurrent), en excluant ceux deja presents dans la selection courante
+    // (state.ids, qui contient l'id du modele pour un recurrent : cf. baseEventId()).
+    function computeAvailableEvents() {
+        const data = window.EVENTS_DATA;
+        if (!data) return [];
+        const { start, end } = computeActiveRange();
+        const events = data.events || [];
+        const out = [];
+        events.forEach(e => {
+            if (state.ids.includes(baseEventId(e))) return; // deja selectionne (via l'URL/evenements.html)
+            if (e.recurrence) {
+                const occurrences = expandOne(e, start, end);
+                if (occurrences.length) out.push(occurrences[0]);
+            } else if (e.date) {
+                const d = parseISO(e.date);
+                if (d >= start && d <= end) out.push(e);
+            }
+        });
+        return out.sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    // -------- resolution d'un identifiant d'evenement vers l'occurrence a afficher --------
+    // Meme logique que resolveHighlightTarget() dans evenements.html : identifiant exact
+    // (evenement ponctuel), sinon modele recurrent -> toute premiere occurrence a partir de
+    // sa date de debut, sinon identifiant deja suffixe d'une occurrence precise.
+    function resolveEvent(data, focusEventId) {
+        if (!focusEventId) return null;
+        const events = data.events || [];
+
+        const direct = events.find(e => e.id === focusEventId && e.date);
+        if (direct) return direct;
+
+        const template = events.find(e => e.id === focusEventId && e.recurrence);
+        if (template) {
+            const recStart = template.recurrence.startDate ? parseISO(template.recurrence.startDate) : startOfToday();
+            // si une plage edatestart/edateend est active (transmise dans l'URL), on cherche la
+            // prochaine occurrence a partir de edatestart (et avant edateend) plutot qu'a partir
+            // d'aujourd'hui : ca permet de partager un lien vers la prochaine occurrence dans une periode donnee.
+            const rangeFloor = state.dateStart ? parseISO(state.dateStart) : startOfToday();
+            const expandFrom = recStart > rangeFloor ? recStart : rangeFloor;
+            const rangeEnd = state.dateEnd ? parseISO(state.dateEnd) : null;
+            const horizon = rangeEnd || addDays(expandFrom, 366 * 3);
+            if (expandFrom > horizon) return null;
+            const occurrences = expandOne(template, expandFrom, horizon).sort((a, b) => a.date.localeCompare(b.date));
+            if (occurrences.length) return occurrences[0];
+            return null;
+        }
+
+        const parentTpl = events.find(e => e.recurrence && focusEventId.startsWith(e.id + '__'));
+        if (parentTpl) {
+            const dateStr = focusEventId.slice(parentTpl.id.length + 2);
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                const found = expandOne(parentTpl, parseISO(dateStr), parseISO(dateStr)).find(o => o.id === focusEventId);
+                if (found) return found;
+            }
+        }
+
+        return null;
+    }
+
+    function eventUrl(evt) {
+        if (evt.url) return evt.url;
+        const q = encodeURIComponent(`${evt.place || ''}, ${t(evt.title)}`);
+        return `https://www.google.com/search?q=${q}`;
+    }
+
+    // Lien vers la fiche du POI sur la carte interactive (index.html), en conservant
+    // le logement et la langue courants — meme convention que panorama.html/index.html.
+    function poiIndexUrl(poi) {
+        const p = new URLSearchParams();
+        p.set('logement', state.logement);
+        p.set('lang', state.lang);
+        p.set('poi', poi.id);
+        return `index.html?${p.toString()}`;
+    }
+
+    function catLabel(data, evt) {
+        const cd = (data.categories || []).find(c => c.id === evt.cat);
+        return cd ? t(cd.label) : (evt.cat || '');
+    }
+
+    function formatDateBadge(iso, timeVal) {
+        const L = I18N[state.lang];
+        const d = parseISO(iso);
+        const month = L.months[d.getMonth()];
+        const day = d.getDate();
+        const timeStr = t(timeVal);
+        return timeStr ? L.dateWithTime(day, month, timeStr) : L.dateNoTime(day, month);
+    }
+
+    function calendarIcon() {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>';
+    }
+    function pinIcon() {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+    }
+
+    function readUrlParams() {
+        const p = new URLSearchParams(window.location.search);
+        if (p.get('lang')) state.lang = p.get('lang').toUpperCase();
+        state.logement = resolveLogement(p.get('logement'));
+
+        const rawIds = p.get('ids') || p.get('id') || p.get('eventids') || '';
+        state.ids = rawIds.split(',').map(s => s.trim()).filter(Boolean);
+
+        const rawVisits = p.get('visits') || '';
+        state.visits = rawVisits.split(',').map(pair => {
+            const [poiId, date] = pair.split(':');
+            return (poiId && date) ? { poiId: decodeURIComponent(poiId), date: date.trim() } : null;
+        }).filter(Boolean);
+
+        // Page d'origine (evenements.html / panorama.html / index.html) : determine ou ramene
+        // le bouton "Retour", et permet de restituer les parametres propres a cette page
+        // (filtres d'evenements, poi/trace de panorama-index, etc.) qui ne sont pas geres ici.
+        const fromRaw = (p.get('from') || 'index').toLowerCase();
+        state.from = ['evenements', 'panorama', 'index'].includes(fromRaw) ? fromRaw : 'index';
+
+        // plage de dates explicite (edatestart/edateend, transmise depuis evenements.html) :
+        // utilisee par resolveEvent() pour situer "la prochaine occurrence" dans cette periode
+        // plutot qu'a partir d'aujourd'hui.
+        const rawStart = p.get('edatestart');
+        const rawEnd = p.get('edateend');
+        state.dateStart = parseFlexibleDate(rawStart);
+        state.dateEnd = parseFlexibleDate(rawEnd);
+        if (state.dateStart && state.dateEnd && state.dateStart > state.dateEnd) {
+            const tmp = state.dateStart; state.dateStart = state.dateEnd; state.dateEnd = tmp;
+        }
+
+        const managed = new Set(['lang', 'logement', 'ids', 'id', 'eventids', 'visits', 'from', 'edatestart', 'edateend']);
+        state.passthrough = new URLSearchParams();
+        p.forEach((v, k) => { if (!managed.has(k)) state.passthrough.set(k, v); });
+    }
+
+    // Construit l'URL du bouton "Retour" vers la page d'origine (evenements.html sur Vercel,
+    // ou panorama.html/index.html sur Netlify), en conservant lang/logement et tous les
+    // parametres propres a cette page captes a l'arrivee sur highlights.html.
+    // Ecrit (ou retire) edatestart/edateend sur un URLSearchParams a partir de la forme
+    // normalisee ISO (state.dateStart/state.dateEnd), pour eviter de re-propager la forme
+    // brute recue a l'arrivee ("10 août 2026", %-encodee ou non) dans les liens generes.
+    function applyDateRangeParams(p) {
+        if (state.dateStart) p.set('edatestart', state.dateStart); else p.delete('edatestart');
+        if (state.dateEnd) p.set('edateend', state.dateEnd); else p.delete('edateend');
+    }
+
+    function buildBackUrl() {
+        const p = new URLSearchParams(state.passthrough);
+        p.set('lang', state.lang);
+        p.set('logement', state.logement);
+        applyDateRangeParams(p);
+        if (state.from === 'evenements') return `evenements.html?${p.toString()}`;
+        if (state.from === 'panorama') return `panorama.html?${p.toString()}`;
+        return `index.html?${p.toString()}`;
+    }
+
+    function syncUrl() {
+        const p = new URLSearchParams(window.location.search);
+        p.set('lang', state.lang);
+        p.set('logement', state.logement);
+        if (state.ids.length) p.set('ids', state.ids.map(encodeURIComponent).join(',')); else p.delete('ids');
+        if (state.visits.length) p.set('visits', state.visits.map(v => `${encodeURIComponent(v.poiId)}:${v.date}`).join(',')); else p.delete('visits');
+        applyDateRangeParams(p);
+        const url = window.location.pathname + '?' + p.toString();
+        try { history.replaceState(null, '', url); } catch (e) {}
+
+        $('#btn-back').href = buildBackUrl();
+    }
+
+    function buildCurrentPageUrl() {
+        const p = new URLSearchParams(state.passthrough);
+        p.set('lang', state.lang);
+        p.set('logement', state.logement);
+        if (state.ids.length) p.set('ids', state.ids.map(encodeURIComponent).join(','));
+        if (state.visits.length) p.set('visits', state.visits.map(v => `${encodeURIComponent(v.poiId)}:${v.date}`).join(','));
+        if (state.from && state.from !== 'index') p.set('from', state.from);
+        applyDateRangeParams(p);
+        return `${window.location.origin}${window.location.pathname}?${p.toString()}`;
+    }
+
+    function fallbackCopyText(text, cb) {
+        try {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            const ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            cb(ok);
+        } catch (e) {
+            cb(false);
+        }
+    }
+
+    function copyPageLink() {
+        const url = buildCurrentPageUrl();
+        const label = $('#btn-copy-page-link-label');
+        const original = label ? label.textContent : '';
+        const done = (ok) => {
+            if (!label) return;
+            label.textContent = ok ? I18N[state.lang].linkCopied : '⚠️';
+            setTimeout(() => { label.textContent = original; }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => done(true)).catch(() => fallbackCopyText(url, done));
+        } else {
+            fallbackCopyText(url, done);
+        }
+    }
+
+    // -------- points d'interet (pois.js) : recherche rapide + ajout d'une visite --------
+    function getPoiCats(poi) {
+        if (!poi || !poi.cat) return [];
+        if (Array.isArray(poi.cat)) return poi.cat.filter(Boolean);
+        return poi.cat.toString().split(',').map(c => c.trim()).filter(Boolean);
+    }
+    function getPoiPrimaryCat(poi) { return getPoiCats(poi)[0] || null; }
+    function poiCategoryInfo(poi) {
+        const key = getPoiPrimaryCat(poi);
+        const cd = key && window.POI_CATEGORIES && window.POI_CATEGORIES[key];
+        if (!cd) return null;
+        return { label: state.lang === 'EN' ? cd.en : cd.fr, emoji: cd.emoji, color: cd.color };
+    }
+    function findPoi(poiId) {
+        return (window.POIS || []).find(p => p.id === poiId);
+    }
+    function poiContent(poi) {
+        return poi[state.lang.toLowerCase()] || poi.fr;
+    }
+
+    function applyI18n() {
+        const L = I18N[state.lang];
+        $('#lang-select').value = state.lang;
+        $('#text-back').textContent = L.back;
+        $('#label-title').textContent = L.label;
+        $('#page-title').textContent = L.pageTitle;
+        $('#page-subtitle').textContent = L.pageSubtitle;
+        $('#empty-state').textContent = L.noEvents;
+        $('#btn-add-visit-label').textContent = L.addVisit;
+        $('#btn-copy-page-link-label').textContent = L.copyLink;
+        $('#poi-modal-title').textContent = L.modalTitle;
+        $('#poi-search-input').placeholder = L.searchPlaceholder;
+        $('#poi-date-view-label').textContent = L.visitDateLabel;
+        $('#btn-poi-date-back').textContent = L.back;
+        $('#btn-poi-date-confirm').textContent = L.add;
+
+        const topbarLogo = $('#topbar-logo');
+        topbarLogo.src = (LOGO_DATA[logoFamily(state.logement)] || LOGO_DATA.salles).src;
+        topbarLogo.classList.remove('hidden');
+        document.documentElement.lang = state.lang.toLowerCase();
+    }
+
+    function buildEventShareUrl(id) {
+        const p = new URLSearchParams();
+        p.set('lang', state.lang);
+        p.set('logement', state.logement);
+        p.set('ids', encodeURIComponent(id));
+        return `${window.location.origin}${window.location.pathname}?${p.toString()}`;
+    }
+
+    function buildVisitShareUrl(visit) {
+        const p = new URLSearchParams();
+        p.set('lang', state.lang);
+        p.set('logement', state.logement);
+        p.set('visits', `${encodeURIComponent(visit.poiId)}:${visit.date}`);
+        return `${window.location.origin}${window.location.pathname}?${p.toString()}`;
+    }
+
+    function flashShareBtn(btn, ok) {
+        if (!btn) return;
+        const original = btn.textContent;
+        btn.textContent = ok ? '✅' : '⚠️';
+        setTimeout(() => { btn.textContent = original; }, 1200);
+    }
+
+    function copyCardLink(url, btn) {
+        const done = (ok) => flashShareBtn(btn, ok);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => done(true)).catch(() => fallbackCopyText(url, done));
+        } else {
+            fallbackCopyText(url, done);
+        }
+    }
+
+    function renderCards() {
+        const data = window.EVENTS_DATA;
+        const grid = $('#highlights-grid');
+        const empty = $('#empty-state');
+        const L = I18N[state.lang];
+        const logo = (LOGO_DATA[logoFamily(state.logement)] || LOGO_DATA.salles).src;
+        const items = [];
+
+        if (data) {
+            state.ids.forEach(id => {
+                const evt = resolveEvent(data, id);
+                if (!evt) return;
+                const hasImg = !!evt.img;
+                const imgSrc = hasImg ? evt.img : logo;
+                items.push({
+                    date: evt.date,
+                    html: `
+                    <div class="card">
+                        <button type="button" class="hl-remove-btn" data-kind="event" data-key="${id}" title="${L.removeCard}" aria-label="${L.removeCard}">✕</button>
+                        <button type="button" class="hl-share-btn" data-share-kind="event" data-share-id="${id}" title="${L.shareCard}" aria-label="${L.shareCard}">🔗</button>
+                        <div class="hl-media">
+                            <img class="hl-media-img${hasImg ? '' : ' is-logo'}" src="${imgSrc}" alt="" loading="lazy" />
+                        </div>
+                        <div class="p-4">
+                            <div class="hl-date-badge">${calendarIcon()}<span>${formatDateBadge(evt.date, evt.time)}</span></div>
+                            <p class="hl-category">${catLabel(data, evt)}</p>
+                            <h2 class="hl-title"><a href="${eventUrl(evt)}" target="_blank" rel="noopener">${t(evt.title)}</a></h2>
+                            ${evt.place ? `<p class="hl-place">${pinIcon()}<span>${evt.place}</span></p>` : ''}
+                        </div>
+                    </div>
+                `});
+            });
+        }
+
+        state.visits.forEach((visit, idx) => {
+            const poi = findPoi(visit.poiId);
+            if (!poi) return;
+            const content = poiContent(poi);
+            const hasImg = !!poi.img;
+            const imgSrc = hasImg ? poi.img : logo;
+            const catInfo = poiCategoryInfo(poi);
+            items.push({
+                date: visit.date,
+                html: `
+                <div class="card">
+                    <button type="button" class="hl-remove-btn" data-kind="visit" data-index="${idx}" title="${L.removeCard}" aria-label="${L.removeCard}">✕</button>
+                    <button type="button" class="hl-share-btn" data-share-kind="visit" data-share-index="${idx}" title="${L.shareCard}" aria-label="${L.shareCard}">🔗</button>
+                    <div class="hl-media">
+                        <img class="hl-media-img${hasImg ? '' : ' is-logo'}" src="${imgSrc}" alt="" loading="lazy" />
+                    </div>
+                    <div class="p-4">
+                        <div class="hl-date-badge">${calendarIcon()}<span>${formatDateBadge(visit.date, null)}</span></div>
+                        <p class="hl-category">${catInfo ? catInfo.label : ''}</p>
+                        <h2 class="hl-title"><a href="${poiIndexUrl(poi)}" target="_blank" rel="noopener">${content.name}</a></h2>
+                    </div>
+                </div>
+            `});
+        });
+
+        if (!items.length) {
+            grid.innerHTML = '';
+            empty.classList.add('visible');
+            return;
+        }
+
+        // Toujours trie par date croissante (les evenements recurrents sont deja resolus
+        // a leur prochaine occurrence a venir par resolveEvent, jamais une date passee).
+        items.sort((a, b) => a.date.localeCompare(b.date));
+
+        empty.classList.remove('visible');
+        grid.innerHTML = items.map(it => it.html).join('');
+
+        grid.querySelectorAll('.hl-share-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (btn.dataset.shareKind === 'event') {
+                    copyCardLink(buildEventShareUrl(btn.dataset.shareId), btn);
+                } else {
+                    const visit = state.visits[Number(btn.dataset.shareIndex)];
+                    if (visit) copyCardLink(buildVisitShareUrl(visit), btn);
+                }
+            });
+        });
+    }
+
+    function render() {
+        applyI18n();
+        renderCards();
+    }
+
+    // -------- modale "Ajouter un évènement" : liste des évènements disponibles sur la
+    // période active (edatestart/edateend, ou daysAhead a partir d'aujourd'hui) --------
+    function openEventModal() {
+        $('#event-search-input').value = '';
+        renderEventSearchResults('');
+        $('#event-modal-overlay').classList.remove('hidden');
+        setTimeout(() => $('#event-search-input').focus(), 50);
+    }
+
+    function closeEventModal() {
+        $('#event-modal-overlay').classList.add('hidden');
+    }
+
+    function renderEventSearchResults(query) {
+        const list = $('#event-search-results');
+        const data = window.EVENTS_DATA;
+        const q = query.trim().toLowerCase();
+        const available = computeAvailableEvents().filter(evt => {
+            const title = t(evt.title).toLowerCase();
+            const place = (evt.place || '').toLowerCase();
+            return !q || title.includes(q) || place.includes(q);
+        }).slice(0, 60);
+
+        if (!available.length) {
+            list.innerHTML = `<p class="text-xs text-[var(--c-muted)] text-center py-6">${I18N[state.lang].noEventFound}</p>`;
+            return;
+        }
+
+        list.innerHTML = available.map(evt => {
+            const logo = (LOGO_DATA[logoFamily(state.logement)] || LOGO_DATA.salles).src;
+            const img = evt.img || logo;
+            return `<div class="poi-result-item" data-event-id="${baseEventId(evt)}">
+                <img class="poi-result-img" src="${img}" alt="" loading="lazy" />
+                <div class="min-w-0">
+                    <div class="poi-result-name truncate">${t(evt.title)}</div>
+                    <div class="event-result-date truncate">${formatDateBadge(evt.date, evt.time)}${evt.place ? ' · ' + evt.place : ''}</div>
+                </div>
+            </div>`;
+        }).join('');
+
+        $$('.poi-result-item', list).forEach(item => {
+            item.addEventListener('click', () => addEventFromSearch(item.dataset.eventId));
+        });
+    }
+
+    function addEventFromSearch(eventId) {
+        if (!state.ids.includes(eventId)) state.ids.push(eventId);
+        closeEventModal();
+        renderCards();
+        syncUrl();
+    }
+
+    // -------- modale "Ajouter une visite" : recherche rapide + choix d'une date --------
+    let modalSelectedPoi = null;
+
+    function openPoiModal() {
+        modalSelectedPoi = null;
+        $('#poi-search-input').value = '';
+        $('#poi-modal-search-view').classList.remove('hidden');
+        $('#poi-modal-date-view').classList.add('hidden');
+        renderPoiSearchResults('');
+        $('#poi-modal-overlay').classList.remove('hidden');
+        setTimeout(() => $('#poi-search-input').focus(), 50);
+    }
+
+    function closePoiModal() {
+        $('#poi-modal-overlay').classList.add('hidden');
+    }
+
+    function renderPoiSearchResults(query) {
+        const list = $('#poi-search-results');
+        const q = query.trim().toLowerCase();
+        const logo = (LOGO_DATA[logoFamily(state.logement)] || LOGO_DATA.salles).src;
+        const pois = (window.POIS || []).filter(p => {
+            const c = poiContent(p);
+            const name = (c && c.name || '').toLowerCase();
+            return !q || name.includes(q);
+        }).slice(0, 40);
+
+        if (!pois.length) {
+            list.innerHTML = `<p class="text-xs text-[var(--c-muted)] text-center py-6">${I18N[state.lang].noPoiFound}</p>`;
+            return;
+        }
+
+        list.innerHTML = pois.map(p => {
+            const c = poiContent(p);
+            const img = p.img || logo;
+            return `<div class="poi-result-item" data-poi-id="${p.id}">
+                <img class="poi-result-img" src="${img}" alt="" loading="lazy" />
+                <div class="min-w-0"><div class="poi-result-name truncate">${c.name}</div></div>
+            </div>`;
+        }).join('');
+
+        $$('.poi-result-item', list).forEach(item => {
+            item.addEventListener('click', () => selectPoiForVisit(item.dataset.poiId));
+        });
+    }
+
+    function selectPoiForVisit(poiId) {
+        const poi = findPoi(poiId);
+        if (!poi) return;
+        modalSelectedPoi = poi;
+        const c = poiContent(poi);
+        const logo = (LOGO_DATA[logoFamily(state.logement)] || LOGO_DATA.salles).src;
+        $('#poi-date-view-img').src = poi.img || logo;
+        $('#poi-date-view-name').textContent = c.name;
+        $('#poi-date-input').value = toISO(new Date());
+        $('#poi-modal-search-view').classList.add('hidden');
+        $('#poi-modal-date-view').classList.remove('hidden');
+    }
+
+    function confirmAddVisit() {
+        if (!modalSelectedPoi) return;
+        const date = $('#poi-date-input').value;
+        if (!date) { window.alert(I18N[state.lang].pickDateAlert); return; }
+        state.visits.push({ poiId: modalSelectedPoi.id, date });
+        closePoiModal();
+        renderCards();
+        syncUrl();
+    }
+
+    function init() {
+        readUrlParams();
+
+        function start() {
+            render();
+            syncUrl();
+
+            $('#lang-select').addEventListener('change', (e) => {
+                state.lang = e.target.value;
+                render();
+                syncUrl();
+            });
+
+            $('#highlights-grid').addEventListener('click', (e) => {
+                const btn = e.target.closest('.hl-remove-btn');
+                if (!btn) return;
+                if (btn.dataset.kind === 'event') {
+                    state.ids = state.ids.filter(id => id !== btn.dataset.key);
+                } else if (btn.dataset.kind === 'visit') {
+                    state.visits.splice(parseInt(btn.dataset.index, 10), 1);
+                }
+                renderCards();
+                syncUrl();
+            });
+
+            $('#btn-add-event').addEventListener('click', openEventModal);
+            $('#btn-event-modal-close').addEventListener('click', closeEventModal);
+            $('#event-modal-overlay').addEventListener('click', (e) => {
+                if (e.target.id === 'event-modal-overlay') closeEventModal();
+            });
+            $('#event-search-input').addEventListener('input', (e) => renderEventSearchResults(e.target.value));
+
+            $('#btn-add-visit').addEventListener('click', openPoiModal);
+            $('#btn-copy-page-link').addEventListener('click', copyPageLink);
+            $('#btn-poi-modal-close').addEventListener('click', closePoiModal);
+            $('#poi-modal-overlay').addEventListener('click', (e) => {
+                if (e.target.id === 'poi-modal-overlay') closePoiModal();
+            });
+            $('#poi-search-input').addEventListener('input', (e) => renderPoiSearchResults(e.target.value));
+            $('#btn-poi-date-back').addEventListener('click', () => {
+                $('#poi-modal-date-view').classList.add('hidden');
+                $('#poi-modal-search-view').classList.remove('hidden');
+            });
+            $('#btn-poi-date-confirm').addEventListener('click', confirmAddVisit);
+        }
+
+        if (window.EVENTS_DATA) {
+            start();
+        } else {
+            const EXTERNAL_URL = "evenements.js";
+            const LOCAL_URL = "evenements.js";
+
+            function loadLocal() {
+                const s = document.createElement('script');
+                s.src = LOCAL_URL;
+                s.onload = start;
+                s.onerror = () => console.error("Impossible de charger evenements.js");
+                document.head.appendChild(s);
+            }
+
+            if (EXTERNAL_URL) {
+                const s = document.createElement('script');
+                s.src = EXTERNAL_URL;
+                s.onload = start;
+                s.onerror = loadLocal;
+                document.head.appendChild(s);
+            } else {
+                loadLocal();
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>

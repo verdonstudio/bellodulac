@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Galerie — Bell'O du Lac™ & Bell'Étoile™</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="analytics.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="pois.js"></script>
+
+    <style>
+        :root {
+            --c-bg:        #fdfbf7;
+            --c-ink:       #1e293b;
+            --c-primary:   #0284c7;
+            --c-border:    rgba(14, 165, 233, 0.1);
+        }
+        body { font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; background: #0E0E0E; }
+        .font-display { font-family: 'Fraunces', Georgia, serif; }
+
+        /* Topbar avec effet verre trempé identique à l'accueil */
+        .topbar {
+            background-color: rgba(253, 251, 247, 0.85);
+            -webkit-backdrop-filter: saturate(200%) blur(24px);
+            backdrop-filter: saturate(200%) blur(24px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            z-index: 50;
+        }
+
+        /* Sélecteur de langue */
+        .chip { transition: all 0.2s ease; }
+        .chip:hover { background: #f0f9ff; transform: scale(1.02); }
+
+        /* Bouton Retour */
+        .btn-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 999px;
+            background: #f1f5f9; border: 1px solid rgba(0,0,0,0.05);
+            font-size: 12px; font-weight: 600; color: #334155;
+            transition: all 0.2s; text-decoration: none;
+        }
+        .btn-back:hover { background: #e2e8f0; color: #0f172a; }
+
+        /* Conteneur principal du Carrousel */
+        #slider-container {
+            width: 100%; height: 100dvh;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        #carousel-img {
+            max-width: 100%; max-height: 100%;
+            object-fit: contain;
+            transition: opacity 0.3s ease;
+            user-select: none;
+        }
+
+        /* Boutons de Navigation */
+        .nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white; width: 48px; height: 48px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; z-index: 40; transition: all 0.2s ease;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-50%) scale(1.05); }
+        .nav-btn:active { transform: translateY(-50%) scale(0.95); }
+        #btn-prev { left: 16px; }
+        #btn-next { right: 16px; }
+
+        @media (max-width: 640px) {
+            .nav-btn { width: 40px; height: 40px; }
+            #btn-prev { left: 8px; }
+            #btn-next { right: 8px; }
+        }
+
+        /* Incrustation de la Marque (Filigrane) */
+        .brand-overlay {
+            position: absolute; top: 70px; right: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+            border-radius: 12px; padding: 10px;
+            display: flex; flex-direction: column; align-items: center;
+            pointer-events: none; z-index: 40;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .brand-logo { width: 60px; height: 60px; object-fit: contain; }
+        .brand-text { color: white; font-size: 11px; font-weight: 600; margin-top: 4px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px; text-align: center;}
+
+        @media (max-width: 640px) {
+            .brand-overlay { top: 64px; right: 12px; padding: 8px; border-radius: 10px; }
+            .brand-logo { width: 45px; height: 45px; }
+            .brand-text { font-size: 9px; }
+        }
+
+        /* Indicateur numérique (Compteur) */
+        #counter {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.4);
+            -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+            color: white; font-size: 13px; font-weight: 600; letter-spacing: 1px;
+            padding: 6px 16px; border-radius: 999px; z-index: 40;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Titre de l'image / POI au besoin */
+        #gallery-title {
+            position: absolute; bottom: 70px; left: 16px; right: 16px;
+            text-align: center; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            font-size: 18px; z-index: 40; pointer-events: none;
+        }
+
+        /* Animation de chargement */
+        .loader {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+    </style>
+</head>
+<body class="h-[100dvh] w-screen relative bg-[#0E0E0E]">
+
+    <header class="topbar fixed top-0 w-full">
+        <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+            <a id="btn-back" href="index.html" class="btn-back shrink-0 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                <span id="text-back">Retour</span>
+            </a>
+
+            <div class="flex items-center gap-2 min-w-0 flex-1 justify-center">
+                <img id="topbar-logo" src="https://bellodulac.netlify.app/images/bellodulac-logo.png" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+                <span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Galerie Photos</span>
+            </div>
+
+            <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
+                <option value="FR">FR</option>
+                <option value="EN">EN</option>
+            </select>
+        </div>
+    </header>
+
+    <main id="slider-container">
+        <div id="loader" class="loader"></div>
+        <img id="carousel-img" src="" alt="Galerie" style="display: none;">
+
+        <button id="btn-prev" class="nav-btn hidden" aria-label="Précédent">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button id="btn-next" class="nav-btn hidden" aria-label="Suivant">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+
+        <div id="brand-overlay" class="brand-overlay hidden">
+            <img id="brand-logo" class="brand-logo" src="" alt="Logo">
+            <span id="brand-text" class="brand-text"></span>
+        </div>
+
+        <h2 id="gallery-title" class="font-display font-semibold hidden"></h2>
+        <div id="counter" class="hidden">1 / 1</div>
+    </main>
+
+    <script>
+        // Logement par defaut : vient de logements.js (source de verite partagee), avec ce
+        // repli en dur au cas ou le fichier de config n'aurait pas pu etre charge du tout.
+        let DEFAULT_LISTING_ID = 'salles6';
+
+        const state = {
+            lang: 'FR',
+            logement: null,
+            folder: '',
+            files: [],
+            poiId: null,
+            currentIndex: 0
+        };
+
+        const I18N = {
+            FR: { back: "Retour", brand: "Bell'O du Lac™ & Bell'Étoile™", defaultTitle: "Galerie" },
+            EN: { back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", defaultTitle: "Gallery" }
+        };
+
+        const LOGO_DATA = {
+            moustiers: { src: "https://bellodulac.netlify.app/images/bell-etoile-logo.png", name: "Bell'Étoile" },
+            salles:    { src: "https://bellodulac.netlify.app/images/bellodulac-logo.png", name: "Bell'O du Lac" }
+        };
+
+        // La galerie ne distingue que 2 familles de logo (comme evenements.html), meme si
+        // le logement precis (salles6/salles8/moustiers) est conserve dans l'URL/state.logement.
+        function logoFamily(raw) {
+            return (raw || '').toLowerCase().includes('moustiers') ? 'moustiers' : 'salles';
+        }
+
+        function readUrlParams() {
+            const p = new URLSearchParams(window.location.search);
+            const rawLang = p.get('lang') || p.get('lng');
+            if (rawLang) state.lang = rawLang.toUpperCase();
+
+            const rawLogement = p.get('logement') || p.get('listing') || p.get('l') || p.get('id');
+            state.logement = rawLogement || DEFAULT_LISTING_ID;
+
+            state.folder = p.get('folder') || '';
+            state.poiId = p.get('poi');
+
+            const filesParam = p.get('files');
+            const countParam = p.get('count');
+
+            if (filesParam) {
+                state.files = filesParam.split(',').map(f => f.trim()).filter(f => f);
+            } else if (countParam) {
+                const count = parseInt(countParam, 10);
+                if (count > 0) {
+                    for (let i = 1; i <= count; i++) {
+                        state.files.push(`${i}.jpg`);
+                    }
+                }
+            } else if (p.get('image')) {
+                state.files = [p.get('image')];
+            }
+        }
+
+        function syncUrl() {
+            // Récupère la totalité des paramètres actuels de l'URL pour ne rien perdre (zoom, pos, cat, pin, poi...)
+            const p = new URLSearchParams(window.location.search);
+            ['lng', 'listing', 'l', 'id'].forEach(k => p.delete(k));
+            p.set('lang', state.lang);
+            p.set('logement', state.logement);
+
+            const url = window.location.pathname + '?' + p.toString() + window.location.hash;
+            try { history.replaceState(null, '', url); } catch (e) {}
+
+            // Construction propre des paramètres pour index.html
+            const backParams = new URLSearchParams(p.toString());
+
+            // On supprime uniquement l'affichage lié au contenu multimédia de la galerie
+            backParams.delete('folder');
+            backParams.delete('files');
+            backParams.delete('count');
+            backParams.delete('image');
+
+            // Tous les autres paramètres du plan sont conservés intacts pour le retour
+            document.getElementById('btn-back').href = `index.html?${backParams.toString()}`;
+        }
+
+        function applyI18nAndBrand() {
+            // Textes basiques
+            document.getElementById('lang-select').value = state.lang;
+            document.getElementById('text-back').textContent = I18N[state.lang].back;
+            document.getElementById('label-title').textContent = I18N[state.lang].defaultTitle;
+
+            // Titre personnalisé via pois.js si applicable
+            if (state.poiId && window.POIS) {
+                const poi = window.POIS.find(p => p.id === state.poiId);
+                if (poi) {
+                    const content = poi[state.lang.toLowerCase()] || poi.fr;
+                    document.getElementById('label-title').textContent = content.name;
+                    const titleEl = document.getElementById('gallery-title');
+                    titleEl.textContent = content.name;
+                    titleEl.classList.remove('hidden');
+                }
+            }
+
+            // Configuration Logo Topbar
+            const brand = LOGO_DATA[logoFamily(state.logement)];
+            const logoEl = document.getElementById('topbar-logo');
+            logoEl.src = brand.src;
+            logoEl.classList.remove('hidden');
+
+            // Configuration Logo Incrustation (Filigrane)
+            document.getElementById('brand-logo').src = brand.src;
+            document.getElementById('brand-text').textContent = brand.name;
+            document.getElementById('brand-overlay').classList.remove('hidden');
+        }
+
+        function updateImage() {
+            const imgEl = document.getElementById('carousel-img');
+            const loader = document.getElementById('loader');
+            const counter = document.getElementById('counter');
+
+            if (state.files.length === 0) {
+                loader.style.display = 'none';
+                return;
+            }
+
+            loader.style.display = 'block';
+            imgEl.style.opacity = 0;
+
+            const fileName = state.files[state.currentIndex];
+            let imagePath = `https://bellodulac.netlify.app/images/`;
+            if (state.folder) imagePath += `${state.folder}/`;
+            imagePath += fileName;
+
+            imgEl.src = imagePath;
+
+            imgEl.onload = () => {
+                loader.style.display = 'none';
+                imgEl.style.display = 'block';
+                imgEl.style.opacity = 1;
+            };
+
+            imgEl.onerror = () => {
+                loader.style.display = 'none';
+                console.error("Impossible de charger le fichier image : " + imagePath);
+            }
+
+            // Gestion de l'affichage adaptatif (Carrousel VS Image seule)
+            if (state.files.length > 1) {
+                counter.textContent = `${state.currentIndex + 1} / ${state.files.length}`;
+                counter.classList.remove('hidden');
+                document.getElementById('btn-prev').classList.remove('hidden');
+                document.getElementById('btn-next').classList.remove('hidden');
+            } else {
+                counter.classList.add('hidden');
+                document.getElementById('btn-prev').classList.add('hidden');
+                document.getElementById('btn-next').classList.add('hidden');
+            }
+        }
+
+        function nextImage() {
+            if (state.files.length <= 1) return;
+            state.currentIndex = (state.currentIndex + 1) % state.files.length;
+            updateImage();
+        }
+
+        function prevImage() {
+            if (state.files.length <= 1) return;
+            state.currentIndex = (state.currentIndex - 1 + state.files.length) % state.files.length;
+            updateImage();
+        }
+
+        function start() {
+            readUrlParams();
+            syncUrl(); // Initialisation immédiate de l'URL et du bouton retour
+            applyI18nAndBrand();
+            updateImage();
+
+            // Écouteur pour le changement dynamique de langue
+            document.getElementById('lang-select').addEventListener('change', (e) => {
+                state.lang = e.target.value;
+                syncUrl(); // Réactualise l'URL et reconstruit proprement le bouton retour
+                applyI18nAndBrand();
+            });
+
+            // Actions clics carrousel
+            document.getElementById('btn-next').addEventListener('click', nextImage);
+            document.getElementById('btn-prev').addEventListener('click', prevImage);
+
+            // Commandes clavier
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') nextImage();
+                if (e.key === 'ArrowLeft') prevImage();
+            });
+
+            // Commandes tactiles (Swipe Mobile)
+            let touchstartX = 0;
+            let touchendX = 0;
+            const slider = document.getElementById('slider-container');
+
+            slider.addEventListener('touchstart', e => {
+                touchstartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            slider.addEventListener('touchend', e => {
+                touchendX = e.changedTouches[0].screenX;
+                if (state.files.length > 1) {
+                    if (touchendX < touchstartX - 40) nextImage();
+                    if (touchendX > touchstartX + 40) prevImage();
+                }
+            }, { passive: true });
+        }
+
+        // Chargement de logements.js (source de verite du logement par defaut), avec repli
+        // local si l'URL externe echoue (meme schema que pois.js/evenements.js) ; en dernier
+        // recours le DEFAULT_LISTING_ID code en dur ci-dessus reste utilise.
+        function chargerLogementsPuisDemarrer() {
+            function applyConfigAndStart() {
+                if (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) {
+                    DEFAULT_LISTING_ID = window.LOGEMENTS_DATA.default;
+                }
+                start();
+            }
+            if (window.LOGEMENTS_DATA) { applyConfigAndStart(); return; }
+
+            const EXTERNAL_URL = "logements.js";
+            const LOCAL_URL = "logements.js";
+
+            function loadLocal() {
+                const s = document.createElement('script');
+                s.src = LOCAL_URL;
+                s.onload = applyConfigAndStart;
+                s.onerror = () => { console.error("Impossible de charger logements.js"); applyConfigAndStart(); };
+                document.head.appendChild(s);
+            }
+
+            const s = document.createElement('script');
+            s.src = EXTERNAL_URL;
+            s.onload = applyConfigAndStart;
+            s.onerror = loadLocal;
+            document.head.appendChild(s);
+        }
+
+        document.addEventListener('DOMContentLoaded', chargerLogementsPuisDemarrer);
+    </script>
+</body>
+</html>

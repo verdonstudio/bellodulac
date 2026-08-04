@@ -16,16 +16,10 @@
     function gtag() { window.dataLayer.push(arguments); }
     window.gtag = gtag;
     gtag('js', new Date());
-    // Le site est reparti sur deux domaines (evenements.html sur Vercel, le reste sur
-    // Netlify) : sans ce parametre, GA4 traiterait chaque passage de l'un a l'autre
-    // (ex: bouton "Retour") comme une nouvelle session issue d'un site externe.
-    // Ceci double la config faite dans l'interface GA4 (Flux de donnees > Configurer
-    // vos domaines) pour ne pas dependre uniquement d'un reglage fait a la main.
-    gtag('config', GA_MEASUREMENT_ID, {
-        linker: {
-            domains: ['bellodulac.vercel.app', 'bellodulac.netlify.app']
-        }
-    });
+    // Le site est desormais entierement sur un seul domaine (toutes les pages sont
+    // deployees ensemble depuis le meme repo) : plus besoin de config de "linker"
+    // multi-domaines pour GA4, la navigation interne reste dans une seule session.
+    gtag('config', GA_MEASUREMENT_ID);
 
     function pageType() {
         let file = (location.pathname.split('/').pop() || 'index.html').split('?')[0];

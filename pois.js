@@ -198,7 +198,7 @@ window.POIS = [
       6.138114
     ],
     "stars": 2,
-    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/153/45/29765017.jpg",
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/153/45/29765017.jpg",
     "fr": {
       "name": "Soirée apéritif à la ferme",
       "desc": "Profitez d'une soirée conviviale avec un apéritif de produits locaux. Au programme : visite guidée, nourrissage des animaux, rencontre avec les daims et échanges chaleureux sur la vie paysanne.",
@@ -225,7 +225,7 @@ window.POIS = [
       43.77538,6.21202
     ],
     "stars": 2,
-    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/mini/6908_1_2.jpg",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/mini/6908_1_2.jpg",
     "fr": {
       "name": "Mini Golf du Verdon",
       "desc": "Parcours de mini-golf de 16 trous ombragé à l'entrée des Salles-sur-Verdon. Idéal pour une activité ludique en famille ou entre amis à deux pas du lac de Sainte-Croix.",
@@ -393,7 +393,7 @@ window.POIS = [
       6.20466
     ],
     "stars": 2,
-    "img": "images/trottinverdon_salles.jpg",
+    "img": "https://bellodulac.netlify.app/images/trottinverdon_salles.jpg",
     "fr": {
       "name": "Trottinette électrique tout-terrain",
       "desc": "Balade guidée en trott'élec tout-terrain autour du lac de Sainte-Croix, au départ de la base nautique des Salles-sur-Verdon. Deux parcours : « Autour du Lac » (2h, dès 12 ans, 50€) ou « Sur les hauteurs du Lac » avec apéro au coucher de soleil (dès 14 ans, 70€).",
@@ -433,7 +433,7 @@ window.POIS = [
     "cat": "parking_gratuit",
     "coords": [43.84545, 6.2212],
     "stars": 1,
-    "img": "images/parking-lerins-gratuit.jpg",
+    "img": "https://bellodulac.netlify.app/images/parking-lerins-gratuit.jpg",
     "fr": {
       "name": "Avenue de Lérins",
       "desc": "Parking gratuit (30 places). Quelques places le long de l'avenue en redescendant jusqu'à la pharmacie.",
@@ -480,7 +480,7 @@ window.POIS = [
       6.218819618225098
     ],
     "stars": 1,
-    "img": "images/parking_maire.jpg",
+    "img": "https://bellodulac.netlify.app/images/parking_maire.jpg",
     "fr": {
       "name": "Parking de La Maïre",
       "desc": "Type : Parking gratuit. Situé au rond-point en bas de la route D952. Plus éloigné du village, idéal pour un covoiturage ou un départ de randonnée.",
@@ -560,7 +560,7 @@ window.POIS = [
       43.84451, 6.22186
     ],
     "stars": 1,
-    "img": "images/parking-calade-tempesta.png",
+    "img": "https://bellodulac.netlify.app/images/parking-calade-tempesta.png",
     "fr": {
       "name": "Parking Calade Tempesta",
       "desc": "Parking gratuit le long de la rue (53 places)",
@@ -626,7 +626,7 @@ window.POIS = [
       6.2195668932092705
     ],
     "stars": 1,
-    "img": "images/parking-riez-gratuit1.png",
+    "img": "https://bellodulac.netlify.app/images/parking-riez-gratuit1.png",
     "fr": {
       "name": "Petit Parking Route de Riez",
       "desc": "Type : Parking gratuit. Quelques places le long de la route. À environ 15 min à pied du centre, il évite les embouteillages l'été. Navette petit train disponible en haute saison.",
@@ -710,7 +710,7 @@ window.POIS = [
       6.219373439174599
     ],
     "stars": 1,
-    "img": "images/parking-riez-gratuit2.jpg",
+    "img": "https://bellodulac.netlify.app/images/parking-riez-gratuit2.jpg",
     "fr": {
       "name": "Parking du stade",
       "desc": "Parking gratuit (3 places).Le long de la route. À environ 15 min à pied du centre, il évite les embouteillages l'été. Navette petit train disponible en haute saison.",
@@ -790,7 +790,7 @@ window.POIS = [
       6.220455765724182
     ],
     "stars": 1,
-    "img": "images/parking_3places.jpg",
+    "img": "https://bellodulac.netlify.app/images/parking_3places.jpg",
     "fr": {
       "name": "Parking 3 places",
       "desc": "Type : Parking gratuit.Le long de la route. Seulement 3 places à proximité immédiate du logement.",
@@ -825,7 +825,7 @@ window.POIS = [
       6.221252381801606
     ],
     "stars": 1,
-    "img": "images/parking-lerins-zonebleu.png",
+    "img": "https://bellodulac.netlify.app/images/parking-lerins-zonebleu.png",
     "fr": {
       "name": "Avenue de Lérins",
       "desc": "Type : Parking gratuit limité à 1H. Quelques places le long de l'avenue, juste après les emplacements réservés au petit train.",
@@ -880,7 +880,7 @@ window.POIS = [
       6.220764219760896
     ],
     "stars": 1,
-    "img": "images/depose_minute_15mins.jpg",
+    "img": "https://bellodulac.netlify.app/images/depose_minute_15mins.jpg",
     "fr": {
       "name": "Dépose minute",
       "desc": "Type : Parking gratuit 15 minutes. Pour déposer et charger les bagages et les courses.",
@@ -902,7 +902,7 @@ window.POIS = [
       6.221351623535157
     ],
     "stars": 1,
-    "img": "images/pont-zonebleu.jpg",
+    "img": "https://bellodulac.netlify.app/images/pont-zonebleu.jpg",
     "fr": {
       "name": "Dépose minute",
       "desc": "Type : Parking gratuit 30 minutes. toute l'année, tous les jours de 10h à 19h, durée de stationnement 30mn, stationnement interdit sauf livraisons, tous les jours de 6h à 10h.",
@@ -944,7 +944,7 @@ window.POIS = [
       6.221083402633667
     ],
     "stars": 1,
-    "img": "images/parking-magnant-haut.jpg",
+    "img": "https://bellodulac.netlify.app/images/parking-magnant-haut.jpg",
     "fr": {
       "name": "Parking Magnant Haut et bas",
       "desc": "Type : Payant derrière et devant le Proxy.",
@@ -1024,7 +1024,7 @@ window.POIS = [
       6.222601466302039
     ],
     "stars": 1,
-    "img": "images/parking-haut-moustiers.jpg",
+    "img": "https://bellodulac.netlify.app/images/parking-haut-moustiers.jpg",
     "fr": {
       "name": "Parking haut Moustiers",
       "desc": "Type : Parking payant.",
@@ -1088,7 +1088,7 @@ window.POIS = [
       6.203927993774415
     ],
     "stars": 3,
-    "img": "images/lac_costebelle.jpg",
+    "img": "https://bellodulac.netlify.app/images/lac_costebelle.jpg",
     "fr": {
       "name": "Ile de Costebelle",
       "desc": "En paddle ou en kayak découvrez la mystérieuse île de Costebelle en forme de coeur! Arrétez-vous sur une de ses plages pour pique-niquer",
@@ -1115,7 +1115,7 @@ window.POIS = [
       6.214672923088074
     ],
     "stars": 1,
-    "img": "images/moustiers-station.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers-station.jpg",
     "fr": {
       "name": "TotalEnergies Contact",
       "desc": "Quartier St Jean, Quartier Saint-Jean, 792 Rte de Riez, 04360 Moustiers-Sainte-Marie, France",
@@ -1142,7 +1142,7 @@ window.POIS = [
       6.217902302742004
     ],
     "stars": 1,
-    "img": "images/salles-station.jpg",
+    "img": "https://bellodulac.netlify.app/images/salles-station.jpg",
     "fr": {
       "name": "TotalEnergies Contact",
       "desc": "D957, 83630 Les Salles-sur-Verdon",
@@ -1169,7 +1169,7 @@ window.POIS = [
       6.2175
     ],
     "stars": 1,
-    "img": "images/relais/1.jpg",
+    "img": "https://bellodulac.netlify.app/images/relais/1.jpg",
     "fr": {
       "name": "Mondial Relais",
       "desc": "D957, 83630 Les Salles-sur-Verdon",
@@ -1212,7 +1212,7 @@ window.POIS = [
       6.21764
     ],
     "stars": 1,
-    "img": "images/salles-laverie.png",
+    "img": "https://bellodulac.netlify.app/images/salles-laverie.png",
     "fr": {
       "name": "Laverie automatique Wash me",
       "desc": "D957, 83630 Les Salles-sur-Verdon",
@@ -1255,7 +1255,7 @@ window.POIS = [
       6.09025
     ],
     "stars": 1,
-    "img": "images/riez-laverie.jpg",
+    "img": "https://bellodulac.netlify.app/images/riez-laverie.jpg",
     "fr": {
       "name": "Laverie automatique Wash me",
       "desc": "Route de Digne Quartier Samson, 04500 Riez",
@@ -1298,7 +1298,7 @@ window.POIS = [
       6.219457983970643
     ],
     "stars": 1,
-    "img": "images/aups-station.png",
+    "img": "https://bellodulac.netlify.app/images/aups-station.png",
     "fr": {
       "name": "TotalEnergies Contact",
       "desc": "Za Des Uchanes Route de Salernes, Rte de Sillans, 83630 Aups",
@@ -1325,7 +1325,7 @@ window.POIS = [
       6.090250611305238
     ],
     "stars": 1,
-    "img": "images/riez-station.png",
+    "img": "https://bellodulac.netlify.app/images/riez-station.png",
     "fr": {
       "name": "Intermarché station-service Riez",
       "desc": "Route de Digne Quartier Samson, 04500 Riez",
@@ -1352,7 +1352,7 @@ window.POIS = [
       6.221314072608949
     ],
     "stars": 1,
-    "img": "images/moustiers-commerce.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers-commerce.jpg",
     "fr": {
       "name": "Proxi aux Magnans",
       "desc": "Quartier St Jean, Quartier Saint-Jean, 792 Rte de Riez, 04360 Moustiers-Sainte-Marie, France",
@@ -1434,7 +1434,7 @@ window.POIS = [
       6.221512556076051
     ],
     "stars": 1,
-    "img": "images/moustiers-commerce2.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers-commerce2.jpg",
     "fr": {
       "name": "Proxi Super Village",
       "desc": "8 Rue de la Diane, 04360 Moustiers-Sainte-Marie",
@@ -1478,7 +1478,7 @@ window.POIS = [
       6.21772
     ],
     "stars": 1,
-    "img": "images/salles-commerce.jpg",
+    "img": "https://bellodulac.netlify.app/images/salles-commerce.jpg",
     "fr": {
       "name": "ORAPI MARKET",
       "desc": "D957, 83630 Les Salles-sur-Verdon",
@@ -1578,7 +1578,7 @@ window.POIS = [
       6.211465001106262
     ],
     "stars": 1,
-    "img": "images/salles-commerce2.jpg",
+    "img": "https://bellodulac.netlify.app/images/salles-commerce2.jpg",
     "fr": {
       "name": "Proxi",
       "desc": "2 Bd de la Tuilière, 83630 Les Salles-sur-Verdon",
@@ -1638,7 +1638,7 @@ window.POIS = [
       6.218969821929932
     ],
     "stars": 1,
-    "img": "images/aups-commerce.jpg",
+    "img": "https://bellodulac.netlify.app/images/aups-commerce.jpg",
     "fr": {
       "name": "Intermarché SUPER Aups",
       "desc": "Za Des Uchanes Route de Salernes, Rte de Sillans, 83630 Aups",
@@ -1665,7 +1665,7 @@ window.POIS = [
       6.090119183063508
     ],
     "stars": 1,
-    "img": "images/riez-commerce.png",
+    "img": "https://bellodulac.netlify.app/images/riez-commerce.png",
     "fr": {
       "name": "Intermarché CONTACT Riez",
       "desc": "Route de Digne Quartier Samson, 04500 Riez",
@@ -1692,7 +1692,7 @@ window.POIS = [
       6.22127652168274
     ],
     "stars": 2,
-    "img": "images/moustiers-parapente.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers-parapente.jpg",
     "fr": {
       "name": "Parapente au-dessus du Verdon",
       "desc": "Vol biplace au-dessus du lac Sainte-Croix et des Gorges. Décollage depuis Aiguines, dès 6 ans, avril à octobre.",
@@ -1719,7 +1719,7 @@ window.POIS = [
       6.221308708190919
     ],
     "stars": 2,
-    "img": "images/moustiers-rafting.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers-rafting.jpg",
     "fr": {
       "name": "Rafting dans le Verdon",
       "desc": "Descente sportive en rafting depuis Castellane. Rapides classe II à IV selon la saison.",
@@ -1741,7 +1741,7 @@ window.POIS = [
       6.211218237876893
     ],
     "stars": 2,
-    "img": "images/salles-rafting.jpg",
+    "img": "https://bellodulac.netlify.app/images/salles-rafting.jpg",
     "fr": {
       "name": "Rafting dans le Verdon",
       "desc": "Descente sportive en rafting depuis Castellane. Rapides classe II à IV selon la saison.",
@@ -1763,7 +1763,7 @@ window.POIS = [
       6.34898
     ],
     "stars": 2,
-    "img": "images/sentier-blanc-martel.jpg",
+    "img": "https://bellodulac.netlify.app/images/sentier-blanc-martel.jpg",
     "fr": {
       "name": "Rando : Sentier Blanc-Martel",
       "desc": "14 km au fond du canyon. Tunnels, échelles, vues plongeantes — un des plus beaux sentiers de France.",
@@ -1809,7 +1809,7 @@ window.POIS = [
       6.325
     ],
     "stars": 2,
-    "img": "images/rando_imbus.jpg",
+    "img": "https://bellodulac.netlify.app/images/rando_imbus.jpg",
     "fr": {
       "name": "Rando : Sentier de l'Imbut",
       "desc": "Randonnée engagée au fond du canyon. Passages câblés, mains courantes et descente vers le Styx. 🚫 Attention : actuellement fermée par arrêté.",
@@ -1831,7 +1831,7 @@ window.POIS = [
       6.038532257080078
     ],
     "stars": 2,
-    "img": "images/quinson-rando.jpg",
+    "img": "https://bellodulac.netlify.app/images/quinson-rando.jpg",
     "fr": {
       "name": "Rando : Sentier du Garde Canal",
       "desc": "Sur l'ancien sentier du garde canal, vous aurez le privilège de pénétrer les basses gorges du Verdon pour rejoindre la chapelle de Sainte-Maxime.",
@@ -1874,7 +1874,7 @@ window.POIS = [
       6.039627674142737
     ],
     "stars": 3,
-    "img": "images/quinson-canoe.jpg",
+    "img": "https://bellodulac.netlify.app/images/quinson-canoe.jpg",
     "fr": {
       "name": "Location Nautic Verdon",
       "desc": "Remontée en canoë-kayak depuis le Pont du Quinson à Esparron. Coucher de soleil inoubliable.",
@@ -1917,7 +1917,7 @@ window.POIS = [
       5.9671854972839355
     ],
     "stars": 2,
-    "img": "images/plage-esparron.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-esparron.jpg",
     "fr": {
       "name": "Lac d'Esparron",
       "desc": "Petit lac sauvage en aval des basses Gorges. Calanques d'eau douce, kayak et baignade tranquille.",
@@ -1944,7 +1944,7 @@ window.POIS = [
       6.002
     ],
     "stars": 2,
-    "img": "images/valensole_lavande.jpg",
+    "img": "https://bellodulac.netlify.app/images/valensole_lavande.jpg",
     "fr": {
       "name": "Plateau de Valensole",
       "desc": "Champs de lavande à perte de vue, floraison début juillet. Distilleries, miel et huile d'olive.",
@@ -1971,7 +1971,7 @@ window.POIS = [
       6.135
     ],
     "stars": 2,
-    "img": "images/baudinard-rando.jpg",
+    "img": "https://bellodulac.netlify.app/images/baudinard-rando.jpg",
     "fr": {
       "name": "Rando : Gorges de Baudinard",
       "desc": "Canyon secret, lac turquoise et barrage de Sainte-Croix. Hors des sentiers battus.",
@@ -1998,7 +1998,7 @@ window.POIS = [
       6.224269866943359
     ],
     "stars": 3,
-    "img": "images/moustiers_chapelle.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers_chapelle.jpg",
     "fr": {
       "name": "Rando : Visite guidée intéractive",
       "desc": "Deux parcours d'1h30 : un pour les enfants, un pour les adultes avec 15 points d'intérêt en vidéo.",
@@ -2041,7 +2041,7 @@ window.POIS = [
       6.225793361663819
     ],
     "stars": 1,
-    "img": "images/moustiers-velo.png",
+    "img": "https://bellodulac.netlify.app/images/moustiers-velo.png",
     "fr": {
       "name": "Vélo électriques : location de vélos électriques",
       "desc": "Location de vélos électriques à Moustiers-Sainte-Marie.",
@@ -2068,7 +2068,7 @@ window.POIS = [
       6.185040470155619
     ],
     "stars": 2,
-    "img": "images/cascade-sillan.jpg",
+    "img": "https://bellodulac.netlify.app/images/cascade-sillan.jpg",
     "fr": {
       "name": "Sillan la cascade",
       "desc": "Sillans-la-Cascade est un village du Var situé à seulement 9 km de Aups, aux portes du parc régional du Verdon. Sa principale curiosité est sa cascade, une superbe cascade de 44 mètres de haut, où la Bresque, se jette dans une magnifique bassin d’un vert bleu rappelant le Verdon. ",
@@ -2090,7 +2090,7 @@ window.POIS = [
       6.036880016326905
     ],
     "stars": 2,
-    "img": "images/quinson_musee.jpg",
+    "img": "https://bellodulac.netlify.app/images/quinson_musee.jpg",
     "fr": {
       "name": "Musées de Préhistoire à Quinson",
       "desc": "Musées de Préhistoire à Quinson: Prenez quelques minutes pour découvrir l'un des plus grands musées de Préhistoire d'Europe, situé à Quinson",
@@ -2117,7 +2117,7 @@ window.POIS = [
       6.221477687358856
     ],
     "stars": 2,
-    "img": "images/musee_faience.jpg",
+    "img": "https://bellodulac.netlify.app/images/musee_faience.jpg",
     "fr": {
       "name": "Faïence & ateliers d'artisans",
       "desc": "Flânez dans les ruelles pour découvrir les ateliers et le Musée de la Faïence de Moustiers.",
@@ -2176,7 +2176,7 @@ window.POIS = [
       6.225546598434449
     ],
     "stars": 3,
-    "img": "images/moustiers-etoile.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers-etoile.jpg",
     "fr": {
       "name": "L'étoile suspendue de Moustiers",
       "desc": "La célèbre étoile dorée suspendue entre les deux falaises au-dessus du village.",
@@ -2203,7 +2203,7 @@ window.POIS = [
       6.221550107002259
     ],
     "stars": 2,
-    "img": "images/marche_moustiers.jpg",
+    "img": "https://bellodulac.netlify.app/images/marche_moustiers.jpg",
     "fr": {
       "name": "Marché de Moustiers",
       "desc": "Marché hebdomadaire le vendredi de 8h à 12h30",
@@ -2249,7 +2249,7 @@ window.POIS = [
       6.2087345123291025
     ],
     "stars": 3,
-    "img": "images/marche_verdon.jpg",
+    "img": "https://bellodulac.netlify.app/images/marche_verdon.jpg",
     "fr": {
       "name": "Grand Marché des Salles sur Verdon",
       "desc": "Marché hebdomadaire le jeudi de 8h à 12h30",
@@ -2291,7 +2291,7 @@ window.POIS = [
       6.221737861633301
     ],
     "stars": 2,
-    "img": "images/aups-accrobranche.jpg",
+    "img": "https://bellodulac.netlify.app/images/aups-accrobranche.jpg",
     "fr": {
       "name": "Accrobranche au Verdon",
       "desc": "Parcours aventure dans les arbres près du lac Sainte-Croix. Tyroliennes, ponts de singe, parcours enfants et adultes.",
@@ -2313,7 +2313,7 @@ window.POIS = [
       6.20530128479004
     ],
     "stars": 3,
-    "img": "images/plage_margaridon.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage_margaridon.jpg",
     "fr": {
       "name": "Plage de Margaridon",
       "desc": "Base nautique complète : voile, kayak, paddle, pédalo. Plage surveillée en été.",
@@ -2430,7 +2430,7 @@ window.POIS = [
       6.233131434934004
     ],
     "stars": 3,
-    "img": "images/plage-chabassole.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-chabassole.jpg",
     "fr": {
       "name": "Plage de Chabassole",
       "desc": "Base nautique : kayak, paddle, pédalo. Plage surveillée en été.",
@@ -2457,7 +2457,7 @@ window.POIS = [
       6.20809
     ],
     "stars": 3,
-    "img": "images/plage_costebelle/1.png",
+    "img": "https://bellodulac.netlify.app/images/plage_costebelle/1.png",
     "fr": {
       "name": "Plage Costebelle",
       "desc": "Plage familiale avec jeux et plateforme flottante pour plonger en haute saison et location de matériel. Plage surveillée en été.",
@@ -2570,7 +2570,7 @@ window.POIS = [
       6.208562850952149
     ],
     "stars": 3,
-    "img": "images/plage-verdon-loisir.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-verdon-loisir.jpg",
     "fr": {
       "name": "Base nautique Verdon Loisir",
       "desc": "Base nautique complète : voile, kayak, paddle, pédalo. Plage surveillée en été.",
@@ -2673,7 +2673,7 @@ window.POIS = [
       6.154017448425293
     ],
     "stars": 2,
-    "img": "images/plage-sainte-croix-du-verdon.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-sainte-croix-du-verdon.jpg",
     "fr": {
       "name": "Plage du village de Sainte-Croix",
       "desc": "Plage du village de Sainte-Croix-du-Verdon, à l'extrémité ouest du lac. Eaux turquoise, cadre paisible.",
@@ -2700,7 +2700,7 @@ window.POIS = [
       6.1771488189697275
     ],
     "stars": 2,
-    "img": "images/plage-bauduen.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-bauduen.jpg",
     "fr": {
       "name": "Plage de Bauduen",
       "desc": "Grande plage aménagée côté Var du lac Sainte-Croix. Port de plaisance, location de bateaux.",
@@ -2727,7 +2727,7 @@ window.POIS = [
       6.245459318161012
     ],
     "stars": 3,
-    "img": "images/plage-galetas.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-galetas.jpg",
     "fr": {
       "name": "Plage du Galetas",
       "desc": "Plage aménagée avec baignade surveillée (juil-août). Canoës, pédalos, bateaux électriques.",
@@ -2754,7 +2754,7 @@ window.POIS = [
       6.037218861795549
     ],
     "stars": 2,
-    "img": "images/plage-quinson.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-quinson.jpg",
     "fr": {
       "name": "Montmeyan plage",
       "desc": "Grande plage aménagée à côté du pont de Quinson.",
@@ -2781,7 +2781,7 @@ window.POIS = [
       6.387080679395402
     ],
     "stars": 2,
-    "img": "images/artuby-saut.jpg",
+    "img": "https://bellodulac.netlify.app/images/artuby-saut.jpg",
     "fr": {
       "name": "Saut à l'élastique",
       "desc": "Le plus haut pont d'Europe : 182 m d'adrénaline vous attendent lors de votre saut en élastique.",
@@ -2803,7 +2803,7 @@ window.POIS = [
       6.248624324798585
     ],
     "stars": 3,
-    "img": "images/plage-gorges.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-gorges.jpg",
     "fr": {
       "name": "MYC Plage - Location de Pédalos",
       "desc": "Remontée en canoë-kayak depuis le Pont du Galetas dans les gorges. Coucher de soleil inoubliable.",
@@ -2830,7 +2830,7 @@ window.POIS = [
       6.246886253356934
     ],
     "stars": 3,
-    "img": "images/plage-gorges2.png",
+    "img": "https://bellodulac.netlify.app/images/plage-gorges2.png",
     "fr": {
       "name": "Base nautique de l’Étoile",
       "desc": "Remontée en canoë-kayak depuis le Pont du Galetas dans les gorges.Réservez votre bateau électrique, pédalo ou canoë en ligne",
@@ -2857,7 +2857,7 @@ window.POIS = [
       6.090223789215088
     ],
     "stars": 2,
-    "img": "images/plage-artignosc.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-artignosc.jpg",
     "fr": {
       "name": "Base Nautique d´Artignosc",
       "desc": "Location de canoë-kayak depuis la plage d’Artignosc",
@@ -2884,7 +2884,7 @@ window.POIS = [
       6.243630051612855
     ],
     "stars": 3,
-    "img": "images/aiguines_orientation.jpg",
+    "img": "https://bellodulac.netlify.app/images/aiguines_orientation.jpg",
     "fr": {
       "name": "Aiguines: Table d'orientation",
       "desc": "Point de vue sur les collines du haut-var depuis la table d'orientation en céramique avec un banc à l'ombre.",
@@ -2911,7 +2911,7 @@ window.POIS = [
       6.241390407085419
     ],
     "stars": 3,
-    "img": "images/aiguines-chateau.jpeg",
+    "img": "https://bellodulac.netlify.app/images/aiguines-chateau.jpeg",
     "fr": {
       "name": "Aiguines",
       "desc": "Village perché face au lac Sainte-Croix. Château Renaissance, ruelles fleuries, tourneurs sur bois et porte des gorges.",
@@ -3498,7 +3498,7 @@ window.POIS = [
       6.222624225600245
     ],
     "stars": 2,
-    "img": "images/rando-courchon.jpg",
+    "img": "https://bellodulac.netlify.app/images/rando-courchon.jpg",
     "fr": {
       "name": "Rando : Baisse de Courchon (920 m)",
       "desc": "Boucle depuis Moustiers par le Ravin de Notre-Dame. Chapelle, grotte et voie romaine. Attention, du fait de sa dangerosité, cet itinéraire est très vivement déconseillé aux jeunes enfants.",
@@ -3520,7 +3520,7 @@ window.POIS = [
       6.433200838941296
     ],
     "stars": 2,
-    "img": "images/rando-rougon.jpg",
+    "img": "https://bellodulac.netlify.app/images/rando-rougon.jpg",
     "fr": {
       "name": "Rando : Boucle de Rougon aux vautours",
       "desc": "Circuit depuis Rougon pour observer les vautours fauves. Panorama sur le Point Sublime. Départ depuis l'arrêt de bus Rougon Carajuan",
@@ -3542,7 +3542,7 @@ window.POIS = [
       6.219126880110792
     ],
     "stars": 2,
-    "img": "images/trail-moustiers.jpg",
+    "img": "https://bellodulac.netlify.app/images/trail-moustiers.jpg",
     "fr": {
       "name": "Trail depuis Moustiers",
       "desc": "Plusieurs trails sur Moustiers. Départ et parking à l'entrée du village, sur la route de Riez.",
@@ -3569,7 +3569,7 @@ window.POIS = [
       6.208983819548171
     ],
     "stars": 3,
-    "img": "images/running-salles.jpg",
+    "img": "https://bellodulac.netlify.app/images/running-salles.jpg",
     "fr": {
       "name": "Trail depuis les Salles sur Verdon",
       "desc": "Plusieurs trails sur les Salles sur Verdon. Départ depuis le centre du village",
@@ -3596,7 +3596,7 @@ window.POIS = [
       6.20834
     ],
     "stars": 3,
-    "img": "images/rando-salles.jpg",
+    "img": "https://bellodulac.netlify.app/images/rando-salles.jpg",
     "fr": {
       "name": "Randonnée aux Salles sur Verdon",
       "desc": "Randonnée familiale au bord du lac des Salles sur Verdon",
@@ -3623,7 +3623,7 @@ window.POIS = [
       6.20897
     ],
     "stars": 3,
-    "img": "images/tri-salles.jpg",
+    "img": "https://bellodulac.netlify.app/images/tri-salles.jpg",
     "fr": {
       "name": "Tri selectif les Salles sur Verdon",
       "desc": "Tri selectif les Salles sur Verdon: 19 Rue Pierre Blanche Les Salles-sur-Verdon 83630. 🍾Verre ♻️Plastique 📰Papier  ⚙️Métaux",
@@ -3732,7 +3732,7 @@ window.POIS = [
       6.21253
     ],
     "stars": 3,
-    "img": "images/rando-salles4.jpg",
+    "img": "https://bellodulac.netlify.app/images/rando-salles4.jpg",
     "fr": {
       "name": "Randonnée entre les Salles sur Verdon et Aiguines",
       "desc": "Boucle entre les Salles sur Verdon et Aiguines. Départ des Salles sur Verdon ou d'Aiguines",
@@ -3775,7 +3775,7 @@ window.POIS = [
       6.21547
     ],
     "stars": 2,
-    "img": "images/salles-equitation.jpg",
+    "img": "https://bellodulac.netlify.app/images/salles-equitation.jpg",
     "fr": {
       "name": "Balade à cheval aux Salles sur Verdon",
       "desc": "balades équestres à la journée au départ de Salles-sur-Verdon, au cœur des paysages préservés du Lac de Sainte-Croix. Accompagné d’un guide passionné, vous explorez à cheval des sentiers sauvages, crêtes panoramiques et berges turquoise typiques des Gorges du Verdon.",
@@ -3802,7 +3802,7 @@ window.POIS = [
       6.208471655845643
     ],
     "stars": 2,
-    "img": "images/vtt-salles.jpg",
+    "img": "https://bellodulac.netlify.app/images/vtt-salles.jpg",
     "fr": {
       "name": "VTT – Salles sur Verdon",
       "desc": "250 km de circuits balisés FFC autour du lac et des gorges. Cross-country, enduro, VAE. Tous niveaux.",
@@ -3829,7 +3829,7 @@ window.POIS = [
       6.221027076244355
     ],
     "stars": 2,
-    "img": "images/vtt-moustiers.jpg",
+    "img": "https://bellodulac.netlify.app/images/vtt-moustiers.jpg",
     "fr": {
       "name": "VTT – Moustiers",
       "desc": "250 km de circuits balisés FFC autour du lac et des gorges. Cross-country, enduro, VAE. Tous niveaux.",
@@ -3856,7 +3856,7 @@ window.POIS = [
       6.37333631515503
     ],
     "stars": 3,
-    "img": "images/crete-belvedere.jpg",
+    "img": "https://bellodulac.netlify.app/images/crete-belvedere.jpg",
     "fr": {
       "name": "La Route des Crêtes",
       "desc": "La mythique route des crêtes et le Belvédère de la Dent d'Aire.",
@@ -3878,7 +3878,7 @@ window.POIS = [
       6.22078
     ],
     "stars": 3,
-    "img": "images/moustiers-terrasse.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers-terrasse.jpg",
     "fr": {
       "name": "Bell'Étoile (Moustiers)",
       "desc": "Votre logement",
@@ -3912,7 +3912,7 @@ window.POIS = [
       6.208356320858003
     ],
     "stars": 3,
-    "img": "images/bello6-cover.jpg",
+    "img": "https://bellodulac.netlify.app/images/bello6-cover.jpg",
     "fr": {
       "name": "Bell'O du Lac (Les Salles)",
       "desc": "Votre logement",
@@ -3946,7 +3946,7 @@ window.POIS = [
       6.21375
     ],
     "stars": 2,
-    "img": "images/salles-tennis.jpg",
+    "img": "https://bellodulac.netlify.app/images/salles-tennis.jpg",
     "fr": {
       "name": "Aire multisports",
       "desc": "Terrains de tennis/basket gratuit 7/7 de 8h à 21h",
@@ -4019,7 +4019,7 @@ window.POIS = [
       6.20946
     ],
     "stars": 2,
-    "img": "images/salles-petanque.jpg",
+    "img": "https://bellodulac.netlify.app/images/salles-petanque.jpg",
     "fr": {
       "name": "Terrains de pétanque",
       "desc": "Terrains de pétanque aux Salles sur Verdon",
@@ -4061,7 +4061,7 @@ window.POIS = [
       6.22377
     ],
     "stars": 2,
-    "img": "images/aups-marche.jpg",
+    "img": "https://bellodulac.netlify.app/images/aups-marche.jpg",
     "fr": {
       "name": "Marché Aups",
       "desc": "Marché tous les mercredi et samedi",
@@ -4086,7 +4086,7 @@ window.POIS = [
       6.20873
     ],
     "stars": 3,
-    "img": "images/salles_panorama.jpeg",
+    "img": "https://bellodulac.netlify.app/images/salles_panorama.jpeg",
     "fr": {
       "name": "Panorama Îles de Costebelle",
       "desc": "Splendide vue du lac et de l'île de Costebelle",
@@ -4152,7 +4152,7 @@ window.POIS = [
       6.20458
     ],
     "stars": 3,
-    "img": "images/salles-surfcenter.png",
+    "img": "https://bellodulac.netlify.app/images/salles-surfcenter.png",
     "fr": {
       "name": "Surf center",
       "desc": "Location nautique, snack, glaces et concerts",
@@ -4275,7 +4275,7 @@ window.POIS = [
       6.25826
     ],
     "stars": 3,
-    "img": "images/cascade_saintmaurin.png",
+    "img": "https://bellodulac.netlify.app/images/cascade_saintmaurin.png",
     "fr": {
       "name": "Cascade Saint Maurin",
       "desc": "Superbe cascade à voir en remontant les gorges du Verdon",
@@ -4318,7 +4318,7 @@ window.POIS = [
       6.24933
     ],
     "stars": 2,
-    "img": "images/pont-galetas.png",
+    "img": "https://bellodulac.netlify.app/images/pont-galetas.png",
     "fr": {
       "name": "Pont du Galetas",
       "desc": "Situé à l'entrée de la remontée des Gorges du Verdon, le pont du Galetas offre une vue exceptionnelle sur le lac!",
@@ -4353,7 +4353,7 @@ window.POIS = [
       6.20028
     ],
     "stars": 3,
-    "img": "images/lessalles/ancien.jpg",
+    "img": "https://bellodulac.netlify.app/images/lessalles/ancien.jpg",
     "fr": {
       "name": "📍Ancien village",
       "desc": "Découvrez l'évolution des Salles-sur-Verdon au cours des dernières décennie dans une animation...",
@@ -4400,7 +4400,7 @@ window.POIS = [
       6.20028
     ],
     "stars": 3,
-    "img": "images/lessalles/ancien.jpg",
+    "img": "https://bellodulac.netlify.app/images/lessalles/ancien.jpg",
     "fr": {
       "name": "📍Ancien village",
       "desc": "Découvrez l'évolution des Salles-sur-Verdon au cours des dernières décennie dans une animation...",
@@ -4451,7 +4451,7 @@ window.POIS = [
       6.22143
     ],
     "stars": 3,
-    "img": "images/moustiers/ancien.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers/ancien.jpg",
     "fr": {
       "name": "📍Moustiers",
       "desc": "Découvrez l'évolution du village au cours des dernières décennie dans une animation...",
@@ -4511,7 +4511,7 @@ window.POIS = [
       6.2047
     ],
     "stars": 3,
-    "img": "images/lac_vallee.jpg",
+    "img": "https://bellodulac.netlify.app/images/lac_vallee.jpg",
     "fr": {
       "name": "📍Vallée du Verdon",
       "desc": "Découvrez la vallée avant la création du lac dans une animation...",
@@ -4564,7 +4564,7 @@ window.POIS = [
       0
     ],
     "stars": 3,
-    "img": "images/moustiers-terrasse.jpg",
+    "img": "https://bellodulac.netlify.app/images/moustiers-terrasse.jpg",
     "fr": {
       "name": "Bell'Étoile",
       "desc": "Position du logement par rapport au lac."
@@ -4591,7 +4591,7 @@ window.POIS = [
       43.7746,
       6.2114
     ],
-    "img": "images/pont_aiguines.jpg",
+    "img": "https://bellodulac.netlify.app/images/pont_aiguines.jpg",
     "fr": {
       "name": "📍Pont d'Aiguines",
       "desc": "Decouvrez l'ancien pont d'Aiguines, englouti lors de la mise en eau du lac de Sainte-Croix en 1974. Par temps sec, ses vestiges refont parfois surface.",
@@ -4631,7 +4631,7 @@ window.POIS = [
       0
     ],
     "stars": 3,
-    "img": "images/bello6-cover.jpg",
+    "img": "https://bellodulac.netlify.app/images/bello6-cover.jpg",
     "fr": {
       "name": "Bell'O du Lac",
       "desc": "Position du logement par rapport au lac."
@@ -4657,7 +4657,7 @@ window.POIS = [
       43.77493,
       6.21103
     ],
-    "img": "images/salles_verdon.jpg",
+    "img": "https://bellodulac.netlify.app/images/salles_verdon.jpg",
     "fr": {
       "name": "📍Salles sur Verdon",
       "desc": "Le village des Salles-sur-Verdon est idéalement situé, sur les rives du lac de Sainte-Croix et à proximité des Gorges du Verdon.",
@@ -4705,7 +4705,7 @@ window.POIS = [
       6.1771488189697275
     ],
     "stars": 2,
-    "img": "images/bauduen.png",
+    "img": "https://bellodulac.netlify.app/images/bauduen.png",
     "fr": {
       "name": "📍Bauduen",
       "desc": "Grande plage aménagée côté Var du lac Sainte-Croix. Port de plaisance, location de bateaux."
@@ -4724,7 +4724,7 @@ window.POIS = [
       6.1771488189697275
     ],
     "stars": 2,
-    "img": "images/plage-bauduen.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-bauduen.jpg",
     "fr": {
       "name": "📍Bauduen",
       "desc": "Grande plage aménagée côté Var du lac Sainte-Croix. Port de plaisance, location de bateaux.",
@@ -4754,7 +4754,7 @@ window.POIS = [
       43.76010700609544,
       6.154017448425293
     ],
-    "img": "images/saintecroix.png",
+    "img": "https://bellodulac.netlify.app/images/saintecroix.png",
     "fr": {
       "name": "📍Sainte-Croix-du-Verdon",
       "desc": "Plage du village de Sainte-Croix-du-Verdon, à l'extrémité ouest du lac. Eaux turquoise, cadre paisible."
@@ -4781,7 +4781,7 @@ window.POIS = [
       43.76010700609544,
       6.154017448425293
     ],
-    "img": "images/sainte_croix.jpg",
+    "img": "https://bellodulac.netlify.app/images/sainte_croix.jpg",
     "fr": {
       "name": "📍Sainte-Croix-du-Verdon",
       "desc": "Plage du village de Sainte-Croix-du-Verdon, à l'extrémité ouest du lac. Eaux turquoise, cadre paisible.",
@@ -4812,7 +4812,7 @@ window.POIS = [
       0,
       0
     ],
-    "img": "images/pont_saintecroix.jpg",
+    "img": "https://bellodulac.netlify.app/images/pont_saintecroix.jpg",
     "fr": {
       "name": "📍Pont de Sainte-Croix",
       "desc": "Deuxième pont situé juste avant le barrage permettant de traverser le lac entre Baudinard et Sainte-Croix-du-Verdon",
@@ -4839,7 +4839,7 @@ window.POIS = [
       0,
       0
     ],
-    "img": "images/gorges_baudinard.jpg",
+    "img": "https://bellodulac.netlify.app/images/gorges_baudinard.jpg",
     "fr": {
       "name": "📍Gorges de Baudinard",
       "desc": "Situées entre le lac de Quinson et le barrage du lac de Sainte-Croix, son canyon étroit est entouré de falaises impressionnantes plongeant tout droit dans l’eau turquoise.",
@@ -4870,7 +4870,7 @@ window.POIS = [
       0,
       0
     ],
-    "img": "images/lac_montpezat.png",
+    "img": "https://bellodulac.netlify.app/images/lac_montpezat.png",
     "fr": {
       "name": "📍Lac de Montpezat",
       "desc": "Ce lac offre une expérience intime avec la nature, idéale pour les amateurs de tranquillité et d'activités en plein air",
@@ -4902,7 +4902,7 @@ window.POIS = [
       6.090223789215088
     ],
     "stars": 2,
-    "img": "images/plage-artignosc.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-artignosc.jpg",
     "fr": {
       "name": "📍Lac d'Artignosc",
       "desc": "Location de canoë-kayak depuis la plage d’Artignosc",
@@ -4932,7 +4932,7 @@ window.POIS = [
     "coords": [
       43.69401,6.03751
     ],
-    "img": "images/quinson.png",
+    "img": "https://bellodulac.netlify.app/images/quinson.png",
     "fr": {
       "name": "📍Quinson",
       "desc": "Grande plage aménagée à côté du pont de Quinson.",
@@ -4950,7 +4950,7 @@ window.POIS = [
       43.69390328311974,
       6.037218861795549
     ],
-    "img": "images/plage-quinson.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-quinson.jpg",
     "fr": {
       "name": "📍Quinson",
       "desc": "Grande plage aménagée à côté du pont de Quinson.",
@@ -5005,7 +5005,7 @@ window.POIS = [
       43.73637930389275,
       5.9671854972839355
     ],
-    "img": "images/plage-esparron.jpg",
+    "img": "https://bellodulac.netlify.app/images/plage-esparron.jpg",
     "fr": {
       "name": "📍Lac d'Esparron",
       "desc": "Petit lac sauvage en aval des basses Gorges. Calanques d'eau douce, kayak et baignade tranquille.",
@@ -5036,7 +5036,7 @@ window.POIS = [
       43.69479634538052,
       6.039627674142737
     ],
-    "img": "images/quinson-rando.jpg",
+    "img": "https://bellodulac.netlify.app/images/quinson-rando.jpg",
     "fr": {
       "name": "📍Basses Gorges",
       "desc": "Remontée en canoë-kayak depuis le Pont du Quinson à Esparron ou randonnée sur l'ancien sentier du garde canal",
@@ -5098,7 +5098,7 @@ window.POIS = [
     "coords": [
       43.77614,6.24221
     ],
-    "img": "images/aiguines.png",
+    "img": "https://bellodulac.netlify.app/images/aiguines.png",
     "fr": {
       "name": "📍Aiguines",
       "desc": "Point de vue sur les collines du haut-var depuis la table d'orientation en céramique avec un banc à l'ombre."
@@ -5116,7 +5116,7 @@ window.POIS = [
       43.776906952666536,
       6.243630051612855
     ],
-    "img": "images/aiguines_orientation.jpg",
+    "img": "https://bellodulac.netlify.app/images/aiguines_orientation.jpg",
     "fr": {
       "name": "📍Aiguines",
       "desc": "Point de vue sur les collines du haut-var depuis la table d'orientation en céramique avec un banc à l'ombre.",
@@ -5147,7 +5147,7 @@ window.POIS = [
       43.79591,
       6.25826
     ],
-    "img": "images/cascade_saintmaurin.png",
+    "img": "https://bellodulac.netlify.app/images/cascade_saintmaurin.png",
     "fr": {
       "name": "📍Gorges",
       "desc": "Superbe cascade à voir en remontant les gorges du Verdon",
@@ -5194,7 +5194,7 @@ window.POIS = [
       0,
       0
     ],
-	"img": "images/barrage_saintecroix.jpg",
+	"img": "https://bellodulac.netlify.app/images/barrage_saintecroix.jpg",
 	"fr": {
       "name": "📍Barrage de Sainte-Croix",
       "desc": "Barrage hydroélectrique construit entre 1971 et 1974. Sa construction a donné naissance au lac de Sainte-Croix, la quatrième retenue artificielle de France métropolitaine la plus vaste",
@@ -5234,7 +5234,7 @@ window.POIS = [
       0,
       0
     ],
-    "img": "images/barrage_quinson.jpg",
+    "img": "https://bellodulac.netlify.app/images/barrage_quinson.jpg",
     "fr": {
       "name": "📍Barrage de Quinson",
       "desc": "Mis en service en 1975, il a une fonction de production électrique et anciennement d'irrigation ",
@@ -5266,7 +5266,7 @@ window.POIS = [
       6.203927993774415
     ],
     "stars": 3,
-    "img": "images/lac_costebelle.jpg",
+    "img": "https://bellodulac.netlify.app/images/lac_costebelle.jpg",
     "fr": {
       "name": "📍Île de Costebelle",
       "desc": "En paddle ou en kayak découvrez la mystérieuse île de Costebelle en forme de coeur! Arrétez-vous sur une de ses plages pour pique-niquer",
@@ -5295,7 +5295,7 @@ window.POIS = [
     "cat": "visite",
     "coords": [43.73778, 6.34455],
     "stars": 2,
-    "img": "images/falaise_cavaliers.png",
+    "img": "https://bellodulac.netlify.app/images/falaise_cavaliers.png",
     "fr": {
       "name": "Falaise des Cavaliers",
       "desc": "Halte majeure de la Corniche Sublime : à-pics vertigineux, spot réputé d'escalade, et point de départ de randonnées vers les gorges (sentiers de l'Imbut et Vidal). Bon endroit pour une pause pique-nique face au canyon.",
@@ -5314,7 +5314,7 @@ window.POIS = [
     "cat": "visite",
     "coords": [43.794246, 6.398025],
     "stars": 3,
-    "img": "images/point_sublime.jpg",
+    "img": "https://bellodulac.netlify.app/images/point_sublime.jpg",
     "fr": {
       "name": "Point Sublime",
       "desc": "L'un des belvédères les plus photographiés du Grand Canyon du Verdon, juste sous le village perché de Rougon : vue plongeante sur l'entrée des gorges et le Couloir Samson. Grand parking (payant en saison) et l'Auberge du Point Sublime juste à côté pour un verre face au paysage.",
@@ -5336,7 +5336,7 @@ window.POIS = [
       6.431388
     ],
     "stars": 2,
-    "img": "images/rafting-explor-verdon.jpg",
+    "img": "https://bellodulac.netlify.app/images/rafting-explor-verdon.jpg",
     "fr": {
       "name": "Haute Provence Outdoor - Rafting Famille",
       "desc": "Type : Rafting. Parcours découverte dans les Gorges du Verdon, idéal pour les familles et les débutants. Le rendez-vous est au Camping Huttopia de Castellane. ⚠️ Attention : Soumis aux lâchers d'eau EDF. En juillet/août : uniquement les mardis et vendredis. Mai/juin/septembre : confirmation 24h à l'avance (en cas de fermeture : report, aqua rando ou canoë proposés).",
@@ -5355,7 +5355,7 @@ window.POIS = [
     "cat": "visite",
     "coords": [43.73930, 6.38114],
     "stars": 3,
-    "img": "images/balcon_mescla.png",
+    "img": "https://bellodulac.netlify.app/images/balcon_mescla.png",
     "fr": {
       "name": "Balcons de la Mescla",
       "desc": "Sur la Corniche Sublime (rive gauche), deux belvédères surplombant de 250 m le confluent du Verdon et de l'Artuby (« Mescla » = mélange en provençal). Accessible en voiture ou via un petit détour depuis le sentier Blanc-Martel.",
@@ -5374,7 +5374,7 @@ window.POIS = [
     "cat": "sportaquatique",
     "coords": [43.75846,6.15338],
     "stars": 2,
-    "img": "images/lacloc-sainte-croix.jpg",
+    "img": "https://bellodulac.netlify.app/images/lacloc-sainte-croix.jpg",
     "fr": {
       "name": "Lac-Loc Sainte-Croix-du-Verdon",
       "desc": "Type : Location nautique. Spécialiste depuis plus de 20 ans, situé au pied du village de Sainte-Croix-du-Verdon. Canoës, kayaks, pédalos et bateaux électriques, snack sur place (ouvert d'avril à septembre).",
@@ -5393,7 +5393,7 @@ window.POIS = [
     "cat": "sportaquatique",
     "coords": [43.75778,6.15266],
     "stars": 2,
-    "img": "images/petit_port.jpeg",
+    "img": "https://bellodulac.netlify.app/images/petit_port.jpeg",
     "fr": {
       "name": "Le Petit Port",
       "desc": "Type : Location nautique. Au village de Sainte-Croix-du-Verdon : pédalos et bateaux électriques sans permis (4 et 6 places) pour naviguer sur le lac émeraude.",
@@ -5412,7 +5412,7 @@ window.POIS = [
     "cat": "sportaquatique",
     "coords": [43.73211,6.17792],
     "stars": 1,
-    "img": "images/playa-location.jpg",
+    "img": "https://bellodulac.netlify.app/images/playa-location.jpg",
     "fr": {
       "name": "La Playa Location",
       "desc": "Type : Location nautique. Bateaux électriques, pédalos, paddles, kayaks et canoës pour rejoindre le Grand Canyon ou les criques secrètes du lac de Sainte-Croix.",
@@ -5431,7 +5431,7 @@ window.POIS = [
     "cat": "sportaquatique",
     "coords": [43.73257,6.17979],
     "stars": 1,
-    "img": "images/alize-bauduen.jpg",
+    "img": "https://bellodulac.netlify.app/images/alize-bauduen.jpg",
     "fr": {
       "name": "Alizé Electronic - Stand de Bauduen",
       "desc": "Type : Location de bateaux électriques sans permis, au départ du village de Bauduen. Pilotage facile, accessible à tous. Circuits suggérés : villages et barrage (2h), plages et île de Costebelle (3h), ou grand canyon jusqu'au Pont du Galetas (5-6h).",
@@ -5453,7 +5453,7 @@ window.POIS = [
       6.1729196
     ],
     "stars": 2,
-    "img": "images/l-o-a-la-bouche.jpg",
+    "img": "https://bellodulac.netlify.app/images/l-o-a-la-bouche.jpg",
     "fr": {
       "name": "L'O à la Bouche",
       "desc": "Type : Restauration. Situé dans le quartier des Aires à Bauduen, ce restaurant offre un cadre très agréable pour déjeuner ou dîner avec une belle vue surplombant le lac de Sainte-Croix.",
@@ -5475,7 +5475,7 @@ window.POIS = [
       6.2093239
     ],
     "stars": 1,
-    "img": "images/boulangerie_salles.jpg",
+    "img": "https://bellodulac.netlify.app/images/boulangerie_salles.jpg",
     "fr": {
       "name": "Boulangerie des Salles-sur-Verdon",
       "desc": "Type : Boulangerie / Pâtisserie. Située au cœur du village, idéale pour acheter votre pain frais, vos viennoiseries pour le petit-déjeuner ou de quoi préparer vos pique-niques avant de partir en balade.",
@@ -5523,7 +5523,7 @@ window.POIS = [
       43.77231,6.20815
     ],
     "stars": 3,
-    "img": "images/auberge_salles.png",
+    "img": "https://bellodulac.netlify.app/images/auberge_salles.png",
     "fr": {
       "name": "L'Auberge des Salles",
       "desc": "Type : Restauration. Testé plusieurs fois en famille. Accès immédiat à gauche en sortant du jardin. Probablement la plus belle vue du lac, bon rapport qualité/prix.",
@@ -5555,7 +5555,7 @@ window.POIS = [
       43.77434,6.2094
     ],
     "stars": 3,
-    "img": "images/fringale_salles.jpg",
+    "img": "https://bellodulac.netlify.app/images/fringale_salles.jpg",
     "fr": {
       "name": "La Fringale",
       "desc": "Type : Restauration. Les meilleurs burgers du coin pour les amateurs. Un peu cher mais très bon !",
@@ -5604,7 +5604,7 @@ window.POIS = [
       6.2101495
     ],
     "stars": 2,
-    "img": "images/plancha_salles.png",
+    "img": "https://bellodulac.netlify.app/images/plancha_salles.png",
     "fr": {
       "name": "La Plancha",
       "desc": "Type : Restauration. Un peu en retrait dans le village. Cuisine au feu de bois, plus haut de gamme.",
@@ -5655,7 +5655,7 @@ window.POIS = [
       43.77449,6.20904
     ],
     "stars": 3,
-    "img": "images/cotelac_salles.jpg",
+    "img": "https://bellodulac.netlify.app/images/cotelac_salles.jpg",
     "fr": {
       "name": "Le Côté Lac",
       "desc": "Type : Restauration. Recommandé par les voisins. À environ 100m à droite. Vue superbe sur le lac, gamme au-dessus.",
@@ -5702,7 +5702,7 @@ window.POIS = [
       43.77414,6.20928
     ],
     "stars": 2,
-    "img": "images/chenevert_salles.png",
+    "img": "https://bellodulac.netlify.app/images/chenevert_salles.png",
     "fr": {
       "name": "Le Chêne Vert",
       "desc": "Type : Restauration. Testé plusieurs fois en famille. À environ 100m à droite en sortant du jardin.",
@@ -5749,7 +5749,7 @@ window.POIS = [
       43.7814,6.21307
     ],
     "stars": 1,
-    "img": "images/escale_salles.png	",
+    "img": "https://bellodulac.netlify.app/images/escale_salles.png	",
     "fr": {
       "name": "L'Escale du Verdon",
       "desc": "Snack Karaoké recommandé par nos voisins au camping municipale les Ruisses.",
@@ -5960,7 +5960,7 @@ window.POIS = [
       43.84324,6.22143
     ],
     "stars": 3,
-    "img": "images/lesmagnans_moustiers.png",
+    "img": "https://bellodulac.netlify.app/images/lesmagnans_moustiers.png",
     "fr": {
       "name": "Les Magnans",
       "desc": "Notre restaurant préféré à Moustiers. Un peu excentré à l'entrée du village.",
@@ -6036,7 +6036,7 @@ window.POIS = [
       43.84682,6.22177
     ],
     "stars": 2,
-    "img": "images/cascade_moustiers.jpg",
+    "img": "https://bellodulac.netlify.app/images/cascade_moustiers.jpg",
     "fr": {
       "name": "La Cascade",
       "desc": "Un cadre exceptionnel bercé par le bruit de la cascade au cœur du village de Moustiers-Sainte-Marie. Idéal pour un repas rafraîchissant dans un décor typique.",
@@ -6079,7 +6079,7 @@ window.POIS = [
       43.84717,6.22051
     ],
     "stars": 1,
-    "img": "images/partdesanges_moustiers.jpg",
+    "img": "https://bellodulac.netlify.app/images/partdesanges_moustiers.jpg",
     "fr": {
       "name": "La Part des Anges",
       "desc": "Type : Restauration. Une belle adresse pour se restaurer au cœur de Moustiers-Sainte-Marie.",
@@ -6111,7 +6111,7 @@ window.POIS = [
       43.847,6.22131
     ],
     "stars": 1,
-    "img": "images/tacosmistral_moustiers.png",
+    "img": "https://bellodulac.netlify.app/images/tacosmistral_moustiers.png",
     "fr": {
       "name": "Tacos Mistral",
       "desc": "Type : Restauration rapide. Spécialités de tacos pour manger sur le pouce à Moustiers.",
@@ -6153,7 +6153,7 @@ window.POIS = [
       6.2208514
     ],
     "stars": 2,
-    "img": "images/lefour_moustiers.png",
+    "img": "https://bellodulac.netlify.app/images/lefour_moustiers.png",
     "fr": {
       "name": "Le Four",
       "desc": "Pizzeria au centre du village, cet établissement propose de délicieuses pizzas cuites au feu de bois à emporter ou à consommer sur place.",
@@ -6232,7 +6232,7 @@ window.POIS = [
       43.77939,6.09411
     ],
     "stars": 2,
-    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/83/127/8814419.jpg",
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/83/127/8814419.jpg",
     "fr": {
       "name": "📍Montagnac-Montpezat",
       "desc": "Village discret au-dessus du lac de Montpezat. Egalement connu pour sa production de truffes (« Montagnac La Truffe »).",
@@ -6274,7 +6274,7 @@ window.POIS = [
       43.7740913,
       6.217424
     ],
-    "img": "images/pizzeria_ermitage.jpg",
+    "img": "https://bellodulac.netlify.app/images/pizzeria_ermitage.jpg",
     "fr": {
       "name": "Pizzeria de l'Ermitage",
       "desc": "Pizzeria à emporter ou sur place, au sein de l'Hôtel l'Ermitage. Pâte faite maison. Ouvert de mi-mars à fin octobre, tous les jours sauf le mardi, de 12h à 14h et de 19h à 21h.",
