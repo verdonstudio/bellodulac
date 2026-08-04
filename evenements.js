@@ -2241,6 +2241,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-08-21",
+      "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/120/222/22732408.png",
       "url": "https://www.restaurant-chez-nous.fr/"
     },
     {
