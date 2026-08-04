@@ -198,7 +198,7 @@ window.POIS = [
       6.138114
     ],
     "stars": 2,
-    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/153/45/29765017.jpg",
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/153/45/29765017.jpg",
     "fr": {
       "name": "Soirée apéritif à la ferme",
       "desc": "Profitez d'une soirée conviviale avec un apéritif de produits locaux. Au programme : visite guidée, nourrissage des animaux, rencontre avec les daims et échanges chaleureux sur la vie paysanne.",
@@ -225,7 +225,7 @@ window.POIS = [
       43.77538,6.21202
     ],
     "stars": 2,
-    "img": "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/mini/6908_1_2.jpg",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/mini/6908_1_2.jpg",
     "fr": {
       "name": "Mini Golf du Verdon",
       "desc": "Parcours de mini-golf de 16 trous ombragé à l'entrée des Salles-sur-Verdon. Idéal pour une activité ludique en famille ou entre amis à deux pas du lac de Sainte-Croix.",
@@ -6232,7 +6232,7 @@ window.POIS = [
       43.77939,6.09411
     ],
     "stars": 2,
-    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/83/127/8814419.jpg",
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/83/127/8814419.jpg",
     "fr": {
       "name": "📍Montagnac-Montpezat",
       "desc": "Village discret au-dessus du lac de Montpezat. Egalement connu pour sa production de truffes (« Montagnac La Truffe »).",

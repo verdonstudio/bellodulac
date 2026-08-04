@@ -205,7 +205,7 @@ window.EVENTS_DATA = {
           "wed"
         ]
       },
-      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/153/45/29765017.jpg",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/153/45/29765017.jpg",
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/soiree-aperitif-a-la-ferme-roumoules-fr-6660076"
   },    
     
@@ -311,7 +311,7 @@ window.EVENTS_DATA = {
       "rating": 1,
       "logement": "both",
       "date": "2026-08-03",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22863_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22863_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22863-concours-de-petanque.html"
     },
     {
@@ -388,7 +388,7 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-07-08",
-	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22882_2_1.jpg",
+	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22882-les-nocturnes-d-accro-verdon.html"
     },
     {
@@ -408,7 +408,7 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-07-15",
-	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22882_2_1.jpg",
+	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22882-les-nocturnes-d-accro-verdon.html"
     },
     {
@@ -428,7 +428,7 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-07-22",
-	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22882_2_1.jpg",
+	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22882-les-nocturnes-d-accro-verdon.html"
     },
     {
@@ -448,7 +448,7 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-07-29",
-	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22882_2_1.jpg",
+	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22882-les-nocturnes-d-accro-verdon.html"
     },
     {
@@ -468,7 +468,7 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-05",
-	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22882_2_1.jpg",
+	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22882-les-nocturnes-d-accro-verdon.html"
     },
     {
@@ -488,7 +488,7 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-12",
-	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22882_2_1.jpg",
+	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22882-les-nocturnes-d-accro-verdon.html"
     },
     {
@@ -508,7 +508,7 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-19",
-	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22882_2_1.jpg",
+	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22882-les-nocturnes-d-accro-verdon.html"
     },
     {
@@ -700,7 +700,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-07-21",
       "logement": "both",
-	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/31/219/22731551.jpg",
+	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/31/219/22731551.jpg",
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/soirees-avec-dj-patevent-les-salles-sur-verdon-fr-3625525/"
     },
     {
@@ -723,7 +723,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-07-21",
       "logement": "both",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22643_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22643_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22643-concerts-at-surf-center.html"
     },
     {
@@ -784,7 +784,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-07-22",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://www.visitvar.fr/fiche/soirees-astronomie-avec-astro-verdon-6971390"
     },
     {
@@ -820,7 +820,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-07-23",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/soirees-astronomie-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -843,7 +843,7 @@ window.EVENTS_DATA = {
       "rating": 1,
       "date": "2026-07-23",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/journees-solaires-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -1010,7 +1010,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-07-24",
       "logement": "both",
-	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/230/94/41836262-diaporama.png",
+	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/94/41836262-diaporama.png",
       "url": "https://www.moustiers.fr/fiche/soiree-blind-test-et-karaoke-a-la-brasserie-du-petit-lac-4/"
     },
     {
@@ -1279,7 +1279,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-07-28",
       "logement": "both",
-	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/31/219/22731551.jpg",
+	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/31/219/22731551.jpg",
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/soirees-avec-dj-patevent-les-salles-sur-verdon-fr-3625525/"
     },
     {
@@ -1480,7 +1480,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-07-31",
       "logement": "both",
-	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/230/94/41836262-diaporama.png",
+	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/94/41836262-diaporama.png",
       "url": "https://www.moustiers.fr/https://www.moustiers.fr/fiche/soiree-blind-test-et-karaoke-a-la-brasserie-du-petit-lac-2//soiree-blind-test-et-karaoke-a-la-brasserie-du-petit-lac-4/"
     },
     {
@@ -1541,7 +1541,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-01",
       "logement": "both",
-	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/190/65/22757822.jpg",
+	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/190/65/22757822.jpg",
       "url": "https://scenesdusud.fr/spectacle/concert-de-the-midnight-steppers-les-salles-sur-verdon-2026-08-01"
     },
     {
@@ -1579,7 +1579,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-02",
       "logement": "both",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22860_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22860_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22860-bal-avec--jetto-animation-.html"
     },
     {
@@ -1599,7 +1599,7 @@ window.EVENTS_DATA = {
       "favorite": true,
       "rating": 3,
       "date": "2026-08-03",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22663_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22663_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22663-balades-a-poney.html"
     },
     {
@@ -1619,7 +1619,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-04",
       "logement": "both",
-	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/31/219/22731551.jpg",
+	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/31/219/22731551.jpg",
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/soirees-avec-dj-patevent-les-salles-sur-verdon-fr-3625525/"
     },
     {
@@ -1682,7 +1682,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-04",
       "logement": "both",
-	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/230/94/41836262-diaporama.png",
+	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/94/41836262-diaporama.png",
       "url": "https://www.moustiers.fr/fiche/soiree-blind-test-et-karaoke-a-la-brasserie-du-petit-lac-8/"
     },
     {
@@ -1705,7 +1705,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-06",
       "logement": "both",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22643_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22643_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22643-concerts-at-surf-center.html"
     },
     {
@@ -1728,7 +1728,7 @@ window.EVENTS_DATA = {
       "rating": 1,
       "date": "2026-08-06",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/journees-solaires-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -1748,7 +1748,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-06",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/soirees-astronomie-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -1787,7 +1787,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-07",
       "logement": "both",
-	  "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/92/75/31148892.jpg",
+	  "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/92/75/31148892.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22648-concerts-de-l--etoile-.html"
     },
     {
@@ -1810,7 +1810,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-07",
       "logement": "both",
-	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/109/183/41989997-diaporama.png",
+	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/109/183/41989997-diaporama.png",
       "url": "https://www.moustiers.fr/fiche/cinema-en-plein-air-vaina-la-legende-du-bout-du-monde/"
     },
     {
@@ -1829,7 +1829,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-08-08",
-	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22678_2_1.jpg",
+	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22678_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22678-fete-d-ete---feu-d-artifice-et-bal-concert.html"
     },
     {
@@ -1848,7 +1848,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-08-08",
-	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22656_2_1.jpg",
+	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22656_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22656-concerts-de--legends-of-love-and-light-.html"
     },
     {
@@ -1868,7 +1868,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-08",
       "logement": "both",
-	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22685_2_1.jpg",
+	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22685_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22685-back-stage-en-concert.html"
     },
     {
@@ -1912,7 +1912,7 @@ window.EVENTS_DATA = {
       "favorite": true,
       "rating": 3,
       "date": "2026-08-10",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22663_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22663_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22663-balades-a-poney.html"
     },
     {
@@ -1932,7 +1932,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-11",
       "logement": "both",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22659_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22659_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22659-soiree-avec-dj-sax-bonifay-event.html"
     },
     {
@@ -1952,7 +1952,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-11",
       "logement": "both",
-	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/230/94/41836262-diaporama.png",
+	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/94/41836262-diaporama.png",
       "url": "https://www.moustiers.fr/fiche/soiree-blind-test-et-karaoke-a-la-brasserie-du-petit-lac-7/"
     },
     {
@@ -2014,7 +2014,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-13",
       "logement": "both",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22643_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22643_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22643-concerts-at-surf-center.html"
     },
     {
@@ -2057,7 +2057,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-14",
       "logement": "both",
-	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22510_2_1.jpg",
+	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22510_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22510-fete-d-ete.html"
     },
     {
@@ -2080,7 +2080,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-14",
       "logement": "both",
-	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/161/183/41990049-diaporama.png",
+	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/161/183/41990049-diaporama.png",
       "url": "https://www.moustiers.fr/fiche/cinema-en-plein-air-lodyssee/"
     },
     {
@@ -2100,7 +2100,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-15",
       "logement": "both",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22649_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22649_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22649-bals-du-village.html"
     },
     {
@@ -2119,7 +2119,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-08-16",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://www.astroverdon.fr/"
     },
     {
@@ -2139,7 +2139,7 @@ window.EVENTS_DATA = {
       "favorite": true,
       "rating": 3,
       "date": "2026-08-17",
-	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/https://bellodulac.netlify.app/images/APIDAE/maxi/22663_2_1.jpg",
+	  "img":"https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22663_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22663-balades-a-poney.html"
     },
     {
@@ -2159,7 +2159,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-18",
       "logement": "both",
-	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/31/219/22731551.jpg",
+	  "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/31/219/22731551.jpg",
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/soirees-avec-dj-patevent-les-salles-sur-verdon-fr-3625525/"
     },
     {
@@ -2179,7 +2179,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-18",
       "logement": "both",
-	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/230/94/41836262-diaporama.png",
+	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/94/41836262-diaporama.png",
       "url": "https://www.moustiers.fr/fiche/soiree-blind-test-et-karaoke-a-la-brasserie-du-petit-lac-6/"
     },
     {
@@ -2202,7 +2202,7 @@ window.EVENTS_DATA = {
       "rating": 1,
       "date": "2026-08-20",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/journees-solaires-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -2222,7 +2222,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-20",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/soirees-astronomie-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -2263,7 +2263,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-21",
       "logement": "both",
-	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/220/183/41990108-diaporama.png",
+	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/220/183/41990108-diaporama.png",
       "url": "https://www.moustiers.fr/fiche/cinema-en-plein-air-spiderman-brand-new-day/"
     },
     {
@@ -2324,7 +2324,7 @@ window.EVENTS_DATA = {
       "rating": 1,
       "date": "2026-08-27",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/journees-solaires-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -2344,7 +2344,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-27",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/soirees-astronomie-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -2461,7 +2461,7 @@ window.EVENTS_DATA = {
       "rating": 1,
       "date": "2026-09-03",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/journees-solaires-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -2481,7 +2481,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-09-03",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/soirees-astronomie-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -2501,7 +2501,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-09-05",
       "logement": "both",
-	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/https://bellodulac.netlify.app/images/230/94/41836262-diaporama.png",
+	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/94/41836262-diaporama.png",
       "url": "https://www.moustiers.fr/fiche/soiree-blind-test-et-karaoke-a-la-brasserie-du-petit-lac-9/"
     },
     {
@@ -2542,7 +2542,7 @@ window.EVENTS_DATA = {
       "rating": 1,
       "date": "2026-09-10",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/journees-solaires-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
@@ -2562,7 +2562,7 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-09-10",
       "logement": "both",
-      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/https://bellodulac.netlify.app/images/189/2/41091773.jpg",
+      "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
       "url": "https://scenesdusud.fr/spectacle/soirees-astronomie-avec-astro-evasion-les-salles-sur-verdon-2026-07-16"
     },
     {
