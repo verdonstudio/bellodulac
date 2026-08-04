@@ -29,7 +29,8 @@ const reservations = {
         "evenements": "evenements.html",
         "map": "index.html",
         "highlights": "highlights.html",
-        "panorama": "panorama.html"
+        "panorama": "panorama.html",
+        "parking" : "logement=moustiers&lang=FR&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1"
     }
 
 };
