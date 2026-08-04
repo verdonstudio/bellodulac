@@ -31,4 +31,5 @@ const reservations = {
         "highlights": "highlights.html",
         "panorama": "panorama.html"
     }
+    
 };
