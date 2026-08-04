@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Visualisation de Parcours</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #0E0E0E; color: #1A1A1A; -webkit-font-smoothing: antialiased;
+}
+
+/* ───── Layout Principal ─────────────────────────────────────────────── */
+.app { display: flex; flex-direction: column; height: 100dvh; }
+
+/* ───── Header ───────────────────────────────────────────────────────── */
+.header {
+  background: #0E0E0E; color: #FAFAFA; padding: 18px 24px 16px;
+  flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;
+}
+.header__left { display: flex; flex-direction: column; gap: 14px; width: 100%; flex: 1; }
+.header__top { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; width: 100%; }
+
+.title-block { display: flex; align-items: center; gap: 14px; width: calc(100% - 95px); }
+.header-logo-img { width: 42px; height: 42px; object-fit: contain; border-radius: 50%; background: white; border: 1px solid rgba(255,255,255,0.12); padding: 2px; flex-shrink: 0; }
+.title-text-wrap { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.header__title { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.header__subtitle { font-size: 13px; color: rgba(250,250,250,0.55); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+
+/* Sélecteur de langue */
+.lang-toggle { display: flex; gap: 4px; background: #1A1A1A; padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); }
+.lang-btn { background: transparent; color: #888; border: none; font-size: 11px; font-weight: 700; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.2s; font-family: inherit;}
+.lang-btn.active { background: #FAFAFA; color: #0E0E0E; }
+
+.gpx-dl-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #1A1A1A; color: #FAFAFA;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 6px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; font-family: inherit;
+  cursor: pointer; transition: background 0.2s;
+}
+.gpx-dl-btn:hover { background: #2A2A2A; }
+.gpx-dl-btn svg { flex-shrink: 0; }
+.header__actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.stats { display: flex; gap: 28px; flex-wrap: wrap; }
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.stat__label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(250,250,250,0.5); }
+.stat__value { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; color: #FAFAFA; }
+.stat__value .unit { font-size: 13px; font-weight: 500; color: rgba(250,250,250,0.55); margin-left: 2px; }
+.stat--accent .stat__value { color: #FC4C02; }
+
+/* ───── Commandes Mode Édition ───────────────────────────────────────── */
+.edit-controls { display: none; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
+.btn {
+  background: #1A1A1A; color: #FAFAFA; border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: background 150ms; font-family: inherit;
+}
+.btn:hover { background: #333; }
+.btn--active { background: #FC4C02; border-color: #FC4C02; color: #FFF; }
+.btn--export { background: #21A179; border-color: #21A179; color: #FFF; }
+
+/* Popup Édition */
+.edit-popup { color: #1A1A1A; font-family: 'Inter', sans-serif; font-size: 12px; min-width: 240px; max-width: 320px;}
+.edit-popup label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 11px;}
+.edit-popup input { width: 100%; padding: 5px; border: 1px solid #CCC; border-radius: 4px; margin-top: 2px; font-family: monospace; font-size: 11px; background: #FFF; color: #000; -webkit-appearance: none;}
+.edit-popup .flex-row { display: flex; gap: 6px; }
+.edit-popup .flex-row > div { flex: 1; }
+.edit-popup .popup-actions { display: flex; gap: 6px; margin-top: 12px; }
+.edit-popup button { flex: 1; padding: 6px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; color: white; font-size: 11px;}
+.edit-popup .save-btn { background: #21A179; }
+.edit-popup .view-btn { background: #3B82F6; }
+.edit-popup .delete-btn { background: #DC2626; }
+
+/* ───── Map & Chart ──────────────────────────────────────────────────── */
+#map { flex: 1; width: 100%; background: #DDD; position: relative; }
+.leaflet-interactive { filter: drop-shadow(0 0 1.5px rgba(0,0,0,0.4)); }
+
+#chart-container {
+  height: 140px; flex-shrink: 0; background: #0E0E0E;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 10px 16px 4px 16px; position: relative;
+}
+canvas#elevation-chart { width: 100% !important; height: 100% !important; }
+
+/* ───── Marqueurs ────────────────────────────────────────────────────── */
+.photo-marker {
+  width: 52px; height: 52px; border-radius: 50%; border: 3px solid white;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.08);
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+  cursor: pointer; transition: transform 140ms cubic-bezier(.2,.7,.3,1.4); position: relative;
+}
+.photo-marker:hover { transform: scale(1.18); z-index: 1000 !important; box-shadow: 0 6px 18px rgba(0,0,0,0.45), 0 0 0 2px #FC4C02; }
+.photo-marker.is-dragging { transform: scale(1.18); box-shadow: 0 6px 18px rgba(0,0,0,0.45), 0 0 0 2px #21A179; transition: none; opacity: 0.9;}
+.photo-marker__num {
+  position: absolute; bottom: -4px; right: -4px; background: #FC4C02; color: white;
+  font-family: 'Inter Tight', sans-serif; font-size: 10px; font-weight: 700;
+  width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid white;
+}
+
+.custom-poi-marker {
+  width: 42px; height: 42px; background: white; border-radius: 50%;
+  border: 3px solid #0d8a9b;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  cursor: pointer; transition: transform 140ms;
+}
+.custom-poi-marker img { width: 80%; height: 80%; object-fit: contain; }
+.custom-poi-marker:hover { transform: scale(1.15); z-index: 1000 !important; }
+.custom-poi-marker.is-dragging { transform: scale(1.15); border-color: #21A179; opacity: 0.9; }
+
+.endpoint-marker { width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+.endpoint-marker--start { background: #21A179; }
+.endpoint-marker--end   { background: #1A1A1A; }
+
+/* ───── Styles Popup Viewer Livret (POIs) ────────────────────────────── */
+.leaflet-custom-ov-popup .leaflet-popup-content-wrapper { padding: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+.leaflet-custom-ov-popup .leaflet-popup-content { margin: 0; width: 260px !important; }
+.ov-popup { font-family: 'Inter', sans-serif; background: #FFF; color: #1e293b;}
+.ov-popup__logo-wrap { border-bottom: 2px solid #F1F5F9; display: flex; align-items: center; justify-content: center; padding: 12px 0; background: #F8FAFC;}
+.ov-popup__logo { height: 50px; width: auto; max-width: 80%; object-fit: contain; display: block; }
+.ov-popup__body { padding: 14px; }
+.ov-popup__badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 999px; color: #fff; letter-spacing: 0.2px; margin-bottom: 6px; background: #EA0000; }
+.ov-popup__title { font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: 700; margin: 0 0 4px; color: #1e293b; line-height: 1.2; }
+.ov-popup__desc { font-size: 13px; line-height: 1.4; color: #475569; margin: 0; }
+
+/* ───── Lightbox ────────────────────────────────────────────────────── */
+.lightbox {
+  position: fixed; inset: 0; background: rgba(8,8,8,0.96); z-index: 10000;
+  display: none; align-items: center; justify-content: center; padding: 32px;
+}
+.lightbox.is-open { display: flex; }
+.lightbox-content-wrapper { position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }
+.lightbox__img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); user-select: none; }
+
+/* FILIGRANE FIXÉ EN HAUT À DROITE */
+.lightbox-brand-overlay {
+  position: absolute;
+  top: 16px; 
+  right: 16px;
+  bottom: auto; 
+  background: rgba(0, 0, 0, 0.15); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  border-radius: 16px; padding: 10px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.2);
+  display: flex; flex-direction: column; align-items: center; pointer-events: none;
+}
+.lightbox-brand-logo { width: 80px; height: 80px; object-fit: contain; display: block; }
+.lightbox-brand-text { color: white; font-size: 11px; font-weight: 600; letter-spacing: 0.025em; text-align: center; margin-top: 4px; font-family: 'Inter Tight', sans-serif;}
+
+.lightbox__nav, .lightbox__close {
+  position: absolute; background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.12); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 120ms; font-size: 18px; z-index: 100;
+}
+.lightbox__nav:hover, .lightbox__close:hover { background: rgba(255,255,255,0.18); }
+/* Bouton fermé à gauche pour ne pas chevaucher le logo en haut à droite */
+.lightbox__close { top: 20px; left: 20px; right: auto; } 
+.lightbox__prev  { left: 20px;  top: 50%; transform: translateY(-50%); }
+.lightbox__next  { right: 20px; top: 50%; transform: translateY(-50%); }
+.lightbox__counter { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.7); font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; }
+
+/* ───── TOASTER INDÉPENDANT ─────────────────────────────────────────── */
+.toast-msg {
+  position: fixed; bottom: 30px; left: 50%;
+  background: #21A179; color: #FFF; padding: 12px 24px; border-radius: 30px;
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 99999;
+  pointer-events: none;
+  /* État initial caché (sera géré dynamiquement par le JS) */
+  transform: translate(-50%, 100px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+}
+
+/* ───── RESPONSIVE MOBILE ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .header { padding: 14px 16px 12px; }
+  .header__top { justify-content: space-between; margin-bottom: 12px; align-items: center;}
+  .title-block { gap: 10px; width: calc(100% - 85px); }
+  .header-logo-img { width: 36px; height: 36px; }
+  .header__title { font-size: 18px; line-height: 1.1;}
+  .header__subtitle { font-size: 11px; }
+  
+  .stats { gap: 14px; width: 100%; justify-content: space-between; margin-bottom: 10px; }
+  .stat__value { font-size: 18px; }
+  .stat__label { font-size: 9px; }
+  
+  .edit-controls { width: 100%; justify-content: stretch; }
+  .btn { flex: 1; text-align: center; font-size: 11px; padding: 10px 4px; }
+
+  .photo-marker { width: 44px; height: 44px; }
+  #chart-container { height: 110px; padding: 8px 8px 4px 8px;}
+  
+  .lightbox { padding: 8px; }
+  .lightbox__nav, .lightbox__close { width: 38px; height: 38px; }
+  .lightbox__close { top: 12px; left: 12px; right: auto; } 
+  .lightbox__prev  { left: 8px; }
+  .lightbox__next  { right: 8px; }
+  
+  /* FILIGRANE MOBILE HAUT À DROITE */
+  .lightbox-brand-overlay { top: 12px; right: 12px; bottom: auto; padding: 8px; border-radius: 12px; }
+  .lightbox-brand-logo { width: 64px; height: 64px; }
+  .lightbox-brand-text { font-size: 10px; }
+  .toast-msg { bottom: 20px; font-size: 12px; padding: 10px 20px;}
+}
+
+.loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 13px; color: #6B7280; text-align: center; z-index: 1000; background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 8px;}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="header">
+    <div class="header__left">
+      <div class="header__top">
+        <div class="title-block">
+          <img id="header-logo" class="header-logo-img" src="" alt="Logo" style="display: none;">
+          <div class="title-text-wrap">
+            <h1 class="header__title" id="title"></h1>
+            <span class="header__subtitle" id="subtitle"></span>
+          </div>
+        </div>
+        
+        <div class="header__actions">
+          <button id="btn-download-gpx" class="gpx-dl-btn" type="button">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M7.25 1.5v7.69L4.78 6.72 3.72 7.78 8 12.06l4.28-4.28-1.06-1.06-2.47 2.47V1.5h-1.5zM3 13.5v1h10v-1H3z"/>
+            </svg>
+            <span>GPX</span>
+          </button>
+          <div class="lang-toggle">
+            <button id="btn-fr" class="lang-btn">FR</button>
+            <button id="btn-en" class="lang-btn">EN</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats" id="stats"></div>
+      
+      <div class="edit-controls" id="edit-controls-panel">
+        <button id="toggle-edit-mode" class="btn"></button>
+        <button id="add-poi-btn" class="btn" style="display: none;"></button>
+        <button id="add-photo-btn" class="btn" style="display: none;"></button>
+        <button id="export-config-btn" class="btn btn--export" style="display: none;"></button>
+      </div>
+    </div>
+  </header>
+
+  <div id="map"><div class="loader" id="loader-msg">Chargement...</div></div>
+  
+  <div id="chart-container">
+    <canvas id="elevation-chart"></canvas>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox__close" id="lb-close">✕</button>
+  <button class="lightbox__nav lightbox__prev" id="lb-prev">‹</button>
+  <button class="lightbox__nav lightbox__next" id="lb-next">›</button>
+  <div class="lightbox__counter" id="lb-counter"></div>
+  
+  <div class="lightbox-content-wrapper">
+    <img class="lightbox__img" id="lb-img" alt="">
+    <div id="lightbox-overlay" class="lightbox-brand-overlay" style="display: none;">
+      <img id="lightbox-brand-logo" class="lightbox-brand-logo" src="" alt="Logo">
+      <p id="lightbox-brand-text" class="lightbox-brand-text"></p>
+    </div>
+  </div>
+  
+  <div class="lightbox__caption" id="lb-caption"></div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="config_rando_quinson.js"></script>
+
+<script src="https://gist.githack.com/verdonstudio/cbce09474a884073e91b5b64db5ec180/raw/analytics.js"></script>
+
+<script>
+window.addEventListener('DOMContentLoaded', async function () {
+  const cfg = window.PARCOURS_CONFIG || { title: "Marche", track: {}, basemap: "voyager", photos: [], pois: [], editMode: false };
+  
+  const T = {
+    fr: { 
+      dist: 'Distance', time: 'Durée', elev: 'Dénivelé', photos: 'Photos', 
+      editOn: 'Activer Édition', editOff: 'Quitter Édition', addPhoto: '+ Photo', addPoi: '+ Info (POI)', export: 'Exporter',
+      save: 'Valider', view: 'Agrandir', del: 'Suppr.',
+      errGpx: "Erreur : Tracé GPX introuvable. Copiez le XML en bas du fichier.",
+      copied: "Code copié avec succès !", copyErr: "Erreur de copie (voir console)",
+      dlGpx: "Télécharger le fichier GPX"
+    },
+    en: { 
+      dist: 'Distance', time: 'Time', elev: 'Elevation', photos: 'Photos', 
+      editOn: 'Enable Edit', editOff: 'Exit Edit', addPhoto: '+ Photo', addPoi: '+ Info (POI)', export: 'Export',
+      save: 'Save', view: 'View', del: 'Delete',
+      errGpx: "Error: GPX track not found. Paste XML at the bottom.",
+      copied: "Code successfully copied!", copyErr: "Copy error (see console)",
+      dlGpx: "Download GPX file"
+    }
+  };
+
+  const LOGO_DATA = {
+    moustiers: { src: "images/bell-etoile-logo.png", name: "Bell'Étoile" },
+    salles6: { src: "images/bellodulac-logo.png", name: "Bell'O du Lac" },
+    salles8: { src: "images/bellodulac-logo.png", name: "Bell'O du Lac" }
+  };
+
+  // Chargement de logements.js (source de verite du logement par defaut) avant de lire
+  // les parametres d'URL, avec repli local si l'URL externe echoue (meme schema que
+  // pois.js/evenements.js) ; en dernier recours le repli en dur 'moustiers' est utilise.
+  let DEFAULT_LISTING_ID = 'moustiers';
+  await new Promise((resolve) => {
+    function applyConfig() {
+      if (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) DEFAULT_LISTING_ID = window.LOGEMENTS_DATA.default;
+      resolve();
+    }
+    if (window.LOGEMENTS_DATA) { applyConfig(); return; }
+    const EXTERNAL_URL = "https://gist.githack.com/verdonstudio/096afae141a34a87c8dfb495fde10f0e/raw/logements.js";
+    const LOCAL_URL = "logements.js";
+    function loadLocal() {
+      const s = document.createElement('script');
+      s.src = LOCAL_URL;
+      s.onload = applyConfig;
+      s.onerror = () => { console.error("Impossible de charger logements.js"); applyConfig(); };
+      document.head.appendChild(s);
+    }
+    const s = document.createElement('script');
+    s.src = EXTERNAL_URL;
+    s.onload = applyConfig;
+    s.onerror = loadLocal;
+    document.head.appendChild(s);
+  });
+
+  // ───── PARAMÈTRES URL ─────────────────────────────
+  const urlParams = new URLSearchParams(window.location.search);
+  let currentLang = 'fr';
+  if ((urlParams.get('lang') || urlParams.get('lng') || '').toLowerCase() === 'en') currentLang = 'en';
+
+  let currentLogement = DEFAULT_LISTING_ID;
+  const logementParam = urlParams.get('logement') || urlParams.get('listing') || urlParams.get('l') || urlParams.get('id');
+  if (logementParam) {
+    const rawLog = logementParam.toLowerCase().trim();
+    if (rawLog.includes('salles6') || rawLog.includes('6p')) currentLogement = 'salles6';
+    else if (rawLog.includes('salles8') || rawLog.includes('8p')) currentLogement = 'salles8';
+    else if (rawLog.includes('moustiers') || rawLog.includes('etoile')) currentLogement = 'moustiers';
+  }
+
+  let isEditMode = false;
+  let photosState = JSON.parse(JSON.stringify(cfg.photos || []));
+  let poisState = JSON.parse(JSON.stringify(cfg.pois || [])); 
+  
+  let photoMarkersLayer = L.featureGroup();
+  let poiMarkersLayer = L.featureGroup();
+  let latestResolvedPhotos = [];
+  let totalDistKm = 0, durMs = null, dPlus = 0;
+
+  // ───── TOASTER INFAILLIBLE (Création d'élément dynamique à chaque clic)
+  function showToast(msg, isError = false) {
+    // On crée un tout nouvel élément div
+    const toast = document.createElement('div');
+    toast.className = 'toast-msg';
+    toast.textContent = msg;
+    toast.style.background = isError ? '#DC2626' : '#21A179';
+    
+    // On l'ajoute dans la page
+    document.getElementById('toast-container').appendChild(toast);
+
+    // Une frame plus tard, on lance l'animation d'apparition
+    requestAnimationFrame(() => {
+      toast.style.transform = 'translate(-50%, 0)';
+      toast.style.opacity = '1';
+    });
+
+    // Au bout de 3 secondes, on l'anime vers le bas, puis on le détruit
+    setTimeout(() => {
+      toast.style.transform = 'translate(-50%, 100px)';
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
+
+  document.getElementById('btn-fr').addEventListener('click', () => { setLang('fr'); syncUrlParams(); });
+  document.getElementById('btn-en').addEventListener('click', () => { setLang('en'); syncUrlParams(); });
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`btn-${lang}`).classList.add('active');
+    updateTexts();
+  }
+
+  function syncUrlParams() {
+    const p = new URLSearchParams(window.location.search);
+    ['lng', 'listing', 'l'].forEach(k => p.delete(k));
+    p.set('logement', currentLogement);
+    p.set('lang', currentLang.toUpperCase());
+    window.history.replaceState(null, '', window.location.pathname + '?' + p.toString());
+  }
+
+  function applyLogos() {
+    const brand = LOGO_DATA[currentLogement] || LOGO_DATA.moustiers;
+    const headerLogo = document.getElementById('header-logo');
+    if (headerLogo) { headerLogo.src = brand.src; headerLogo.style.display = 'inline-block'; }
+    
+    const lbOverlay = document.getElementById('lightbox-overlay');
+    const lbBrandLogo = document.getElementById('lightbox-brand-logo');
+    const lbBrandText = document.getElementById('lightbox-brand-text');
+    if (lbOverlay && lbBrandLogo && lbBrandText) {
+      lbBrandLogo.src = brand.src;
+      lbBrandText.textContent = brand.name;
+      lbOverlay.style.display = 'flex';
+    }
+  }
+
+  function updateTexts() {
+    const t = cfg.title; const s = cfg.subtitle;
+    document.getElementById('title').textContent = (typeof t === 'object' ? (t[currentLang] || t.fr || t.en) : t) || '';
+    document.getElementById('subtitle').textContent = (typeof s === 'object' ? (s[currentLang] || s.fr || s.en) : s) || '';
+
+    const btnEdit = document.getElementById('toggle-edit-mode');
+    if(btnEdit) btnEdit.textContent = isEditMode ? T[currentLang].editOff : T[currentLang].editOn;
+    document.getElementById('add-photo-btn').textContent = T[currentLang].addPhoto;
+    document.getElementById('add-poi-btn').textContent = T[currentLang].addPoi;
+    document.getElementById('export-config-btn').textContent = T[currentLang].export;
+
+    const btnGpx = document.getElementById('btn-download-gpx');
+    if (btnGpx) btnGpx.title = T[currentLang].dlGpx;
+
+    renderStats();
+    if(isEditMode) { renderPhotos(); renderPois(); }
+    else { renderPois(); }
+  }
+
+  function renderStats() {
+    if (cfg.showStats === false) return;
+    const fmtTime = ms => {
+      if (!ms) return '—';
+      const s = Math.floor(ms/1000), h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
+      return h > 0 ? `${h}<span class="unit">h</span>${String(m).padStart(2,'0')}` : `${m}<span class="unit">min</span>`;
+    };
+    const statsData = [
+      { label: T[currentLang].dist, value: totalDistKm.toFixed(2), unit: 'km', accent: true },
+      { label: T[currentLang].time, value: fmtTime(durMs), unit: '' },
+      { label: T[currentLang].elev, value: Math.round(dPlus), unit: 'm' },
+      { label: T[currentLang].photos, value: photosState.length, unit: '', id: 'stat-photo-count' }
+    ];
+    document.getElementById('stats').innerHTML = statsData.map(st => `
+      <div class="stat ${st.accent ? 'stat--accent' : ''}" ${st.id ? `id="${st.id}"` : ''}>
+        <span class="stat__label">${st.label}</span>
+        <span class="stat__value">${st.value}${st.unit ? `<span class="unit">${st.unit}</span>` : ''}</span>
+      </div>
+    `).join('');
+  }
+
+  if (cfg.editMode === true) { document.getElementById('edit-controls-panel').style.display = 'flex'; }
+
+  // ───── MAP SETUP (Correction de l'Erreur Leaflet) ───────────────────
+  const BASEMAPS = {
+    voyager: { url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', attribution: '&copy; OSM' },
+    positron: { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attribution: '&copy; OSM' },
+    topo: { url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', attribution: '&copy; OSM', maxZoom: 17 },
+    osm: { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: '&copy; OSM' }
+  };
+  const bm = BASEMAPS[cfg.basemap] || BASEMAPS.voyager;
+
+  // On donne un center et zoom par défaut pour éviter le plantage d'animation avant le fitBounds
+  const map = L.map('map', { 
+    center: [43.847, 6.22], 
+    zoom: 12, 
+    zoomControl: true, 
+    attributionControl: true, 
+    scrollWheelZoom: true, 
+    maxZoom: 24 
+  });
+  
+  L.tileLayer(bm.url, { attribution: bm.attribution, maxZoom: 24, maxNativeZoom: bm.maxZoom || 19, subdomains: bm.url.includes('opentopomap') ? 'abc' : 'abcd' }).addTo(map);
+  
+  photoMarkersLayer.addTo(map);
+  poiMarkersLayer.addTo(map);
+
+  // ───── LECTURE GPX INLINE ───────────────────────────────────────────
+  let gpxText = "";
+  const inlineEl = document.getElementById('gpx-inline');
+  
+  if (inlineEl && inlineEl.textContent.trim().length > 10) { gpxText = inlineEl.textContent; } 
+  else { document.getElementById('loader-msg').innerHTML = `<b style="color:#DC2626;">${T[currentLang].errGpx}</b>`; setLang(currentLang); return; }
+
+  // ───── BOUTON TÉLÉCHARGEMENT GPX ────────────────────────────────────
+  function slugify(str) {
+    return (str || 'parcours')
+      .toString()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+  document.getElementById('btn-download-gpx').addEventListener('click', () => {
+    const t = cfg.title;
+    const titleStr = (typeof t === 'object' ? (t[currentLang] || t.fr || t.en) : t) || 'parcours';
+    const blob = new Blob([gpxText.trim()], { type: 'application/gpx+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = slugify(titleStr) + '.gpx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 100);
+    if (window.BDLAnalytics) window.BDLAnalytics.trackGpx(titleStr);
+  });
+
+  const xml = new DOMParser().parseFromString(gpxText.trim(), 'text/xml');
+  const trkpts = [...xml.querySelectorAll('trkpt')].map(el => ({
+    lat: parseFloat(el.getAttribute('lat')), lng: parseFloat(el.getAttribute('lon')),
+    ele: parseFloat(el.querySelector('ele')?.textContent || '0'), time: el.querySelector('time')?.textContent
+  }));
+
+  if (trkpts.length < 2) return;
+  document.getElementById('loader-msg')?.remove();
+
+  const R = 6371000;
+  const toRad = d => d * Math.PI / 180;
+  function hav(a, b) {
+    const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+    const s = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(s));
+  }
+
+  let cumul = [0];
+  for (let i = 1; i < trkpts.length; i++) cumul.push(cumul[i-1] + hav(trkpts[i-1], trkpts[i]));
+  const totalDist = cumul[cumul.length-1];
+  
+  totalDistKm = totalDist / 1000;
+  if (trkpts[0].time && trkpts[trkpts.length-1].time) durMs = new Date(trkpts[trkpts.length-1].time) - new Date(trkpts[0].time);
+  for (let i = 1; i < trkpts.length; i++) {
+    const d = trkpts[i].ele - trkpts[i-1].ele;
+    if (d > 0) dPlus += d;
+  }
+
+  setLang(currentLang); applyLogos(); syncUrlParams();
+
+  const latlngs = trkpts.map(p => [p.lat, p.lng]);
+  L.polyline(latlngs, { color: 'white', weight: (cfg.track?.weight || 4) + 4, opacity: 0.5 }).addTo(map);
+  L.polyline(latlngs, { color: cfg.track?.color || '#FC4C02', weight: cfg.track?.weight || 4, opacity: cfg.track?.opacity || 0.9, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+  
+  // FitBounds sans animation pour éviter les conflits au chargement
+  map.fitBounds(L.latLngBounds(latlngs), { padding: [40, 40], animate: false });
+  setTimeout(() => map.invalidateSize(), 200);
+
+  // ───── GRAPHIQUE ÉLÉVATION ──────────────────────────────────────────
+  const hoverMarker = L.circleMarker([0,0], { radius: 6, color: 'white', fillColor: '#0066FF', fillOpacity: 1, weight: 2, interactive: false, pane: 'markerPane' });
+  const chartLabels = cumul.map(d => (d / 1000).toFixed(1)); 
+  const chartData = trkpts.map(p => p.ele);                  
+  const ctx = document.getElementById('elevation-chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: chartLabels,
+      datasets: [{ label: 'Elev', data: chartData, borderColor: '#71717A', backgroundColor: 'rgba(113, 113, 122, 0.2)', fill: true, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4, tension: 0.1 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', displayColors: false, callbacks: { title: (i) => `${i[0].label} km`, label: (i) => `${Math.round(i.raw)} m` } } },
+      scales: { x: { grid: { display: false, drawBorder: false }, ticks: { color: 'rgba(255,255,255,0.4)', maxTicksLimit: 8, callback: function(v) { return this.getLabelForValue(v) + ' km'; } } }, y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: 'rgba(255,255,255,0.4)', maxTicksLimit: 5 } } },
+      onHover: (e, activeElements) => { if (activeElements.length > 0) { const idx = activeElements[0].index; hoverMarker.setLatLng(latlngs[idx]); if (!map.hasLayer(hoverMarker)) hoverMarker.addTo(map); } else { hoverMarker.remove(); } }
+    }
+  });
+
+  // ───── GESTION DES POIS (Pastilles Infos) ──────────────────────────
+  function renderPois() {
+    poiMarkersLayer.clearLayers();
+    poisState.forEach((poi, idx) => {
+      const latlng = [poi.lat || 0, poi.lng || 0];
+      const logoUrl = poi.logo || LOGO_DATA[currentLogement]?.src || 'images/bell-etoile-logo.png';
+      
+      const html = `<div class="custom-poi-marker"><img src="${logoUrl}" alt="POI"></div>`;
+      const m = L.marker(latlng, {
+        draggable: isEditMode,
+        icon: L.divIcon({ className: '', html, iconSize: [42, 42], iconAnchor: [21, 21] }),
+        zIndexOffset: 500
+      });
+
+      m.on('dragstart', function(e) { e.target.getElement().querySelector('.custom-poi-marker').classList.add('is-dragging'); });
+      m.on('dragend', function(e) {
+        e.target.getElement().querySelector('.custom-poi-marker').classList.remove('is-dragging');
+        const newPos = e.target.getLatLng();
+        poisState[idx].lat = parseFloat(newPos.lat.toFixed(6));
+        poisState[idx].lng = parseFloat(newPos.lng.toFixed(6));
+        if(isEditMode) renderPois();
+      });
+
+      m.on('click', (e) => {
+        // Empêche Leaflet de toggler un popup éventuellement bindé sur le marker.
+        // On crée nous-mêmes un popup neuf à chaque clic via L.popup().openOn(map),
+        // ce qui ferme proprement le précédent et garantit un affichage à chaque clic.
+        L.DomEvent.stopPropagation(e);
+
+        if (isEditMode) {
+          const popupHtml = `
+            <div class="edit-popup">
+              <label>Logo URL: <input type="text" id="ep-logo-${idx}" value="${poi.logo || ''}"></label>
+              <div class="flex-row">
+                <div><label>Badge FR: <input type="text" id="ep-bfr-${idx}" value="${poi.badgeFr || ''}"></label></div>
+                <div><label>Badge EN: <input type="text" id="ep-ben-${idx}" value="${poi.badgeEn || ''}"></label></div>
+              </div>
+              <div class="flex-row">
+                <div><label>Titre FR: <input type="text" id="ep-tfr-${idx}" value="${poi.titleFr || ''}"></label></div>
+                <div><label>Titre EN: <input type="text" id="ep-ten-${idx}" value="${poi.titleEn || ''}"></label></div>
+              </div>
+              <div class="flex-row">
+                <div><label>Desc FR: <input type="text" id="ep-dfr-${idx}" value="${poi.descFr || ''}"></label></div>
+                <div><label>Desc EN: <input type="text" id="ep-den-${idx}" value="${poi.descEn || ''}"></label></div>
+              </div>
+              <div class="popup-actions">
+                <button class="save-btn" onclick="window.savePoiEdit(${idx})">${T[currentLang].save}</button>
+                <button class="delete-btn" onclick="window.deletePoi(${idx})">${T[currentLang].del}</button>
+              </div>
+            </div>
+          `;
+          L.popup({ minWidth: 260, closeButton: false, keepInView: true })
+            .setLatLng(m.getLatLng())
+            .setContent(popupHtml)
+            .openOn(map);
+        } else {
+          const badge = currentLang === 'en' ? (poi.badgeEn || poi.badgeFr) : (poi.badgeFr || poi.badgeEn);
+          const title = currentLang === 'en' ? (poi.titleEn || poi.titleFr) : (poi.titleFr || poi.titleEn);
+          const desc  = currentLang === 'en' ? (poi.descEn || poi.descFr)   : (poi.descFr || poi.descEn);
+          const logoBlock = logoUrl ? `<div class="ov-popup__logo-wrap"><img src="${logoUrl}" alt="" class="ov-popup__logo"></div>` : '';
+
+          const viewerHtml = `
+            <div class="ov-popup">
+              ${logoBlock}
+              <div class="ov-popup__body">
+                ${badge ? `<span class="ov-popup__badge">${badge}</span>` : ''}
+                ${title ? `<h3 class="ov-popup__title">${title}</h3>` : ''}
+                ${desc  ? `<p class="ov-popup__desc">${desc}</p>` : ''}
+              </div>
+            </div>
+          `;
+          L.popup({ className: 'leaflet-custom-ov-popup' })
+            .setLatLng(m.getLatLng())
+            .setContent(viewerHtml)
+            .openOn(map);
+          if (window.BDLAnalytics) window.BDLAnalytics.trackPoi('poi-' + idx, title, 'rando_poi');
+        }
+      });
+      poiMarkersLayer.addLayer(m);
+    });
+  }
+
+  window.savePoiEdit = function(idx) {
+    poisState[idx].logo = document.getElementById(`ep-logo-${idx}`).value;
+    poisState[idx].badgeFr = document.getElementById(`ep-bfr-${idx}`).value;
+    poisState[idx].badgeEn = document.getElementById(`ep-ben-${idx}`).value;
+    poisState[idx].titleFr = document.getElementById(`ep-tfr-${idx}`).value;
+    poisState[idx].titleEn = document.getElementById(`ep-ten-${idx}`).value;
+    poisState[idx].descFr = document.getElementById(`ep-dfr-${idx}`).value;
+    poisState[idx].descEn = document.getElementById(`ep-den-${idx}`).value;
+    map.closePopup(); renderPois();
+  };
+
+  window.deletePoi = function(idx) {
+    if(confirm("Confirmer la suppression de cette information ?")) { poisState.splice(idx, 1); map.closePopup(); renderPois(); }
+  };
+
+  document.getElementById('add-poi-btn').addEventListener('click', function() {
+    const center = map.getCenter();
+    poisState.push({
+      lat: parseFloat(center.lat.toFixed(6)), lng: parseFloat(center.lng.toFixed(6)),
+      logo: LOGO_DATA[currentLogement]?.src || "images/bell-etoile-logo.png",
+      badgeFr: "🏡 Votre séjour", badgeEn: "🏡 Your stay",
+      titleFr: "Titre Info", titleEn: "Info Title",
+      descFr: "Description...", descEn: "Description..."
+    });
+    renderPois();
+    setTimeout(() => { const layers = poiMarkersLayer.getLayers(); layers[layers.length - 1].fire('click'); }, 120);
+  });
+
+  // ───── GESTION DES PHOTOS ──────────────────────────────
+  function posAtFraction(f) {
+    const targetDist = Math.max(0, Math.min(1, f)) * totalDist;
+    let i = 1;
+    while (i < cumul.length && cumul[i] < targetDist) i++;
+    if (i >= cumul.length) return latlngs[latlngs.length - 1];
+    const segLen = cumul[i] - cumul[i-1];
+    const t = segLen > 0 ? (targetDist - cumul[i-1]) / segLen : 0;
+    const a = trkpts[i-1], b = trkpts[i];
+    return [a.lat + (b.lat - a.lat) * t, a.lng + (b.lng - a.lng) * t];
+  }
+
+  function renderPhotos() {
+    photoMarkersLayer.clearLayers();
+    
+    let resolvedList = photosState.map((p, idx) => {
+      let pos;
+      if (p.lat != null && p.lng != null) pos = [p.lat, p.lng];
+      else if (p.km != null) pos = posAtFraction((p.km * 1000) / totalDist);
+      else if (p.position != null) pos = posAtFraction(p.position);
+      else {
+        const n = photosState.filter(x => x.lat == null && x.km == null && x.position == null).length;
+        let autoIdx = 0;
+        for (let i = 0; i <= idx; i++) {
+          const pp = photosState[i];
+          if (pp.lat == null && pp.km == null && pp.position == null) { if (i === idx) break; autoIdx++; }
+        }
+        pos = posAtFraction(n > 1 ? 0.05 + (autoIdx / (n - 1)) * 0.9 : 0.5);
+      }
+
+      let bestIdx = 0, bestD = Infinity;
+      for (let i = 0; i < trkpts.length; i++) {
+        const d = hav({lat: pos[0], lng: pos[1]}, trkpts[i]);
+        if (d < bestD) { bestD = d; bestIdx = i; }
+      }
+      return { ...p, pos, trackIdx: bestIdx, originalIndex: idx };
+    });
+
+    resolvedList.sort((a, b) => a.trackIdx - b.trackIdx);
+    latestResolvedPhotos = resolvedList.map((p, idx) => ({ ...p, num: idx + 1 }));
+
+    latestResolvedPhotos.forEach((p, idx) => {
+      const html = `<div class="photo-marker" style="background-image:url('${p.src}')"><div class="photo-marker__num">${p.num}</div></div>`;
+      const m = L.marker(p.pos, {
+        draggable: isEditMode,
+        icon: L.divIcon({ className: '', html, iconSize: [52, 52], iconAnchor: [26, 26] }),
+        zIndexOffset: p.num * 10
+      });
+
+      m.on('dragstart', function(e) { e.target.getElement().querySelector('.photo-marker').classList.add('is-dragging'); });
+      m.on('dragend', function(e) {
+        e.target.getElement().querySelector('.photo-marker').classList.remove('is-dragging');
+        const newPos = e.target.getLatLng();
+        photosState[p.originalIndex].lat = parseFloat(newPos.lat.toFixed(6));
+        photosState[p.originalIndex].lng = parseFloat(newPos.lng.toFixed(6));
+        delete photosState[p.originalIndex].km; delete photosState[p.originalIndex].position;
+        if(isEditMode) renderPhotos();
+      });
+
+      m.on('click', (e) => {
+        if (isEditMode) {
+          L.DomEvent.stopPropagation(e);
+          const currentLat = photosState[p.originalIndex].lat || p.pos[0];
+          const currentLng = photosState[p.originalIndex].lng || p.pos[1];
+          const popupHtml = `
+            <div class="edit-popup">
+              <label>URL Image: <input type="text" id="edit-src-${p.originalIndex}" value="${p.src}"></label>
+              <label>Lat: <input type="number" step="any" id="edit-lat-${p.originalIndex}" value="${currentLat}"></label>
+              <label>Lng: <input type="number" step="any" id="edit-lng-${p.originalIndex}" value="${currentLng}"></label>
+              <div class="popup-actions">
+                <button class="save-btn" onclick="window.savePhotoEdit(${p.originalIndex})">${T[currentLang].save}</button>
+                <button class="view-btn" onclick="window.previewPhoto(${idx})">${T[currentLang].view}</button>
+                <button class="delete-btn" onclick="window.deletePhoto(${p.originalIndex})">${T[currentLang].del}</button>
+              </div>
+            </div>
+          `;
+          L.popup({ minWidth: 220, closeButton: false, keepInView: true })
+            .setLatLng(m.getLatLng())
+            .setContent(popupHtml)
+            .openOn(map);
+        } else {
+          openLightbox(idx, latestResolvedPhotos);
+          if (window.BDLAnalytics) window.BDLAnalytics.trackPoi('photo-' + p.originalIndex, 'Photo ' + p.num, 'rando_photo');
+        }
+      });
+      photoMarkersLayer.addLayer(m);
+    });
+
+    const statEl = document.getElementById('stat-photo-count');
+    if(statEl) statEl.querySelector('.stat__value').textContent = photosState.length;
+  }
+
+  window.savePhotoEdit = function(idx) {
+    photosState[idx].src = document.getElementById(`edit-src-${idx}`).value;
+    photosState[idx].lat = parseFloat(document.getElementById(`edit-lat-${idx}`).value);
+    photosState[idx].lng = parseFloat(document.getElementById(`edit-lng-${idx}`).value);
+    delete photosState[idx].km; delete photosState[idx].position;
+    map.closePopup(); renderPhotos();
+  };
+
+  window.previewPhoto = function(idx) { openLightbox(idx, latestResolvedPhotos); };
+
+  window.deletePhoto = function(idx) {
+    if(confirm("Confirmer la suppression ?")) { photosState.splice(idx, 1); map.closePopup(); renderPhotos(); }
+  };
+
+  document.getElementById('add-photo-btn').addEventListener('click', function() {
+    const center = map.getCenter();
+    photosState.push({ src: "data/photos/01.jpg", lat: parseFloat(center.lat.toFixed(6)), lng: parseFloat(center.lng.toFixed(6)) });
+    renderPhotos();
+    setTimeout(() => { const layers = photoMarkersLayer.getLayers(); layers[layers.length - 1].fire('click'); }, 120);
+  });
+
+  // ───── GESTION DE L'ÉDITION ET EXPORT ─────────────────────────────
+  document.getElementById('toggle-edit-mode').addEventListener('click', function(e) {
+    isEditMode = !isEditMode;
+    if (isEditMode) {
+      e.target.classList.add("btn--active");
+      document.getElementById('add-photo-btn').style.display = "inline-block";
+      document.getElementById('add-poi-btn').style.display = "inline-block";
+      document.getElementById('export-config-btn').style.display = "inline-block";
+    } else {
+      e.target.classList.remove("btn--active");
+      document.getElementById('add-photo-btn').style.display = "none";
+      document.getElementById('add-poi-btn').style.display = "none";
+      document.getElementById('export-config-btn').style.display = "none";
+    }
+    updateTexts();
+    map.closePopup(); renderPhotos(); renderPois();
+  });
+
+  document.getElementById('export-config-btn').addEventListener('click', function() {
+    const photoLines = latestResolvedPhotos.map(p => {
+      let parts = [`src: "${p.src}"`];
+      if (p.lat != null && p.lng != null) parts.push(`lat: ${p.lat}`, `lng: ${p.lng}`);
+      else if (p.km != null) parts.push(`km: ${p.km}`);
+      else if (p.position != null) parts.push(`position: ${p.position}`);
+      if (p.caption) parts.push(`caption: "${p.caption.replace(/"/g, '\\"')}"`);
+      return `    { ${parts.join(', ')} }`;
+    });
+    
+    const poiLines = poisState.map(p => {
+      let parts = [];
+      if (p.lat != null && p.lng != null) parts.push(`lat: ${p.lat}`, `lng: ${p.lng}`);
+      if (p.logo) parts.push(`logo: "${p.logo.replace(/"/g, '\\"')}"`);
+      if (p.badgeFr) parts.push(`badgeFr: "${p.badgeFr.replace(/"/g, '\\"')}"`);
+      if (p.badgeEn) parts.push(`badgeEn: "${p.badgeEn.replace(/"/g, '\\"')}"`);
+      if (p.titleFr) parts.push(`titleFr: "${p.titleFr.replace(/"/g, '\\"')}"`);
+      if (p.titleEn) parts.push(`titleEn: "${p.titleEn.replace(/"/g, '\\"')}"`);
+      if (p.descFr) parts.push(`descFr: "${p.descFr.replace(/"/g, '\\"')}"`);
+      if (p.descEn) parts.push(`descEn: "${p.descEn.replace(/"/g, '\\"')}"`);
+      return `    { ${parts.join(', ')} }`;
+    });
+    
+    const configStr = `  photos: [\n${photoLines.join(',\n')}\n  ],\n\n  pois: [\n${poiLines.join(',\n')}\n  ]`;
+    
+    const el = document.createElement('textarea'); 
+    el.value = configStr; 
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el); 
+    el.select();
+    
+    try { 
+      document.execCommand('copy'); 
+      showToast(T[currentLang].copied); 
+    } catch(e) { 
+      showToast(T[currentLang].copyErr, true); 
+      console.log(configStr); 
+    }
+    document.body.removeChild(el);
+  });
+
+  // ───── LIGHTBOX ───────────────────────────────────────────────────
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img'), lbCap = document.getElementById('lb-caption'), lbCount = document.getElementById('lb-counter');
+  let lbIdx = 0, currentResolved = [];
+
+  function openLightbox(idx, resolvedArr) {
+    lbIdx = idx; currentResolved = resolvedArr; updateLightbox();
+    lb.classList.add('is-open'); document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() { lb.classList.remove('is-open'); document.body.style.overflow = ''; }
+  function updateLightbox() {
+    if(!currentResolved[lbIdx]) return;
+    const p = currentResolved[lbIdx];
+    lbImg.src = p.src; lbImg.alt = p.caption || `Photo ${p.num}`;
+    lbCount.textContent = `${lbIdx + 1} / ${currentResolved.length}`;
+    if (p.caption) { lbCap.textContent = p.caption; lbCap.classList.add('has-content'); }
+    else { lbCap.classList.remove('has-content'); }
+  }
+  function next() { lbIdx = (lbIdx + 1) % currentResolved.length; updateLightbox(); }
+  function prev() { lbIdx = (lbIdx - 1 + currentResolved.length) % currentResolved.length; updateLightbox(); }
+
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  document.getElementById('lb-next').addEventListener('click', next);
+  document.getElementById('lb-prev').addEventListener('click', prev);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('is-open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+  // Lancement
+  renderPhotos();
+  renderPois();
+});
+</script>
+
+<script type="application/gpx+xml" id="gpx-inline">
+
+
+
+
+
+
+
+
+
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx version="1.1" creator="Visorando" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<metadata>
+  <name>Les Basses Gorges du Verdon</name>
+  <link href="https://www.visorando.com/randonnee-les-basses-gorges-du-verdon/">
+    <text>https://www.visorando.com/randonnee-les-basses-gorges-du-verdon/</text>
+  </link>
+</metadata><wpt lat="43.697759" lon="6.038656">
+  <ele>362</ele>
+  <time>2026-06-25T17:29:23.000Z</time>
+  <name>Parking dans Quinson</name>
+  <type>GENERIC</type>
+</wpt><wpt lat="43.693462" lon="6.035102">
+  <ele>373</ele>
+  <time>2026-06-25T17:44:52.000Z</time>
+  <name>Départ de la randonnée balisée</name>
+  <type>GENERIC</type>
+</wpt><wpt lat="43.70147" lon="6.024688">
+  <ele>369</ele>
+  <time>2026-06-25T18:19:15.000Z</time>
+  <name>La Draille des Vaches : tout droit</name>
+  <type>GENERIC</type>
+</wpt><wpt lat="43.700908" lon="6.012045">
+  <ele>448</ele>
+  <time>2026-06-25T19:31:15.000Z</time>
+  <name>Bifurcation à gauche</name>
+  <type>GENERIC</type>
+</wpt><wpt lat="43.70168" lon="6.01176">
+  <ele>467</ele>
+  <time>2026-06-25T19:36:02.000Z</time>
+  <name>Bifurcation Chapelle Sainte-Maxime</name>
+  <type>GENERIC</type>
+</wpt><wpt lat="43.702237" lon="6.007667">
+  <ele>494</ele>
+  <time>2026-06-25T19:48:19.000Z</time>
+  <name>Chapelle Sainte-Maxime</name>
+  <type>GENERIC</type>
+</wpt><wpt lat="43.69749" lon="6.02258">
+  <ele>537</ele>
+  <time>2026-06-25T20:29:47.000Z</time>
+  <name> Carrefour de la Draille des Vaches</name>
+  <type>GENERIC</type>
+</wpt><wpt lat="43.692216" lon="6.037863">
+  <ele>374</ele>
+  <time>2026-06-25T21:22:10.000Z</time>
+  <name>Sentier parallèle à la D13</name>
+  <type>GENERIC</type>
+</wpt><wpt lat="43.697735" lon="6.038661">
+  <ele>362</ele>
+  <time>2026-06-25T21:40:28.000Z</time>
+  <name>Parking dans Quinson</name>
+  <type>GENERIC</type>
+</wpt><trk>
+  <name>Les Basses Gorges du Verdon</name>
+  <trkseg>
+    <trkpt lat="43.697759" lon="6.038656">
+      <ele>362</ele>
+      <time>2026-06-25T17:29:23.000Z</time>
+    </trkpt>
+    <trkpt lat="43.69703" lon="6.038534">
+      <ele>361</ele>
+      <time>2026-06-25T17:30:47.000Z</time>
+    </trkpt>
+    <trkpt lat="43.696068" lon="6.039089">
+      <ele>361</ele>
+      <time>2026-06-25T17:32:46.000Z</time>
+    </trkpt>
+    <trkpt lat="43.695892" lon="6.038151">
+      <ele>361</ele>
+      <time>2026-06-25T17:34:06.000Z</time>
+    </trkpt>
+    <trkpt lat="43.696073" lon="6.037277">
+      <ele>364</ele>
+      <time>2026-06-25T17:35:52.000Z</time>
+    </trkpt>
+    <trkpt lat="43.695578" lon="6.036241">
+      <ele>360</ele>
+      <time>2026-06-25T17:37:35.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694933" lon="6.035739">
+      <ele>360</ele>
+      <time>2026-06-25T17:39:00.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694452" lon="6.034751">
+      <ele>365</ele>
+      <time>2026-06-25T17:41:30.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693982" lon="6.034816">
+      <ele>365</ele>
+      <time>2026-06-25T17:42:24.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693631" lon="6.035113">
+      <ele>366</ele>
+      <time>2026-06-25T17:43:21.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693462" lon="6.035102">
+      <ele>373</ele>
+      <time>2026-06-25T17:44:52.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693679" lon="6.03485">
+      <ele>379</ele>
+      <time>2026-06-25T17:46:26.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693872" lon="6.034661">
+      <ele>383</ele>
+      <time>2026-06-25T17:47:34.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693766" lon="6.034403">
+      <ele>385</ele>
+      <time>2026-06-25T17:48:19.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693682" lon="6.033996">
+      <ele>370</ele>
+      <time>2026-06-25T17:48:54.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693756" lon="6.033862">
+      <ele>364</ele>
+      <time>2026-06-25T17:49:08.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693647" lon="6.033443">
+      <ele>358</ele>
+      <time>2026-06-25T17:49:45.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693613" lon="6.032805">
+      <ele>369</ele>
+      <time>2026-06-25T17:52:31.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693566" lon="6.03222">
+      <ele>364</ele>
+      <time>2026-06-25T17:53:20.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693663" lon="6.032107">
+      <ele>369</ele>
+      <time>2026-06-25T17:54:26.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693775" lon="6.031474">
+      <ele>360</ele>
+      <time>2026-06-25T17:55:20.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693946" lon="6.031201">
+      <ele>372</ele>
+      <time>2026-06-25T17:57:53.000Z</time>
+    </trkpt>
+    <trkpt lat="43.69421" lon="6.030385">
+      <ele>373</ele>
+      <time>2026-06-25T17:59:17.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694594" lon="6.029903">
+      <ele>368</ele>
+      <time>2026-06-25T18:00:16.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694776" lon="6.029699">
+      <ele>370</ele>
+      <time>2026-06-25T18:01:03.000Z</time>
+    </trkpt>
+    <trkpt lat="43.69497" lon="6.029581">
+      <ele>370</ele>
+      <time>2026-06-25T18:01:27.000Z</time>
+    </trkpt>
+    <trkpt lat="43.695257" lon="6.029559">
+      <ele>365</ele>
+      <time>2026-06-25T18:02:00.000Z</time>
+    </trkpt>
+    <trkpt lat="43.695532" lon="6.029388">
+      <ele>369</ele>
+      <time>2026-06-25T18:03:16.000Z</time>
+    </trkpt>
+    <trkpt lat="43.695768" lon="6.029103">
+      <ele>365</ele>
+      <time>2026-06-25T18:03:52.000Z</time>
+    </trkpt>
+    <trkpt lat="43.696165" lon="6.028272">
+      <ele>363</ele>
+      <time>2026-06-25T18:05:14.000Z</time>
+    </trkpt>
+    <trkpt lat="43.696626" lon="6.027451">
+      <ele>368</ele>
+      <time>2026-06-25T18:07:31.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697324" lon="6.026491">
+      <ele>366</ele>
+      <time>2026-06-25T18:09:24.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697964" lon="6.025643">
+      <ele>371</ele>
+      <time>2026-06-25T18:11:57.000Z</time>
+    </trkpt>
+    <trkpt lat="43.698453" lon="6.025273">
+      <ele>371</ele>
+      <time>2026-06-25T18:13:01.000Z</time>
+    </trkpt>
+    <trkpt lat="43.699258" lon="6.024919">
+      <ele>372</ele>
+      <time>2026-06-25T18:14:48.000Z</time>
+    </trkpt>
+    <trkpt lat="43.699942" lon="6.024914">
+      <ele>373</ele>
+      <time>2026-06-25T18:16:17.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700881" lon="6.024914">
+      <ele>370</ele>
+      <time>2026-06-25T18:18:05.000Z</time>
+    </trkpt>
+    <trkpt lat="43.70147" lon="6.024688">
+      <ele>369</ele>
+      <time>2026-06-25T18:19:15.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701812" lon="6.024045">
+      <ele>367</ele>
+      <time>2026-06-25T18:20:21.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701973" lon="6.023245">
+      <ele>367</ele>
+      <time>2026-06-25T18:21:30.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701905" lon="6.022789">
+      <ele>365</ele>
+      <time>2026-06-25T18:22:09.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701725" lon="6.022387">
+      <ele>368</ele>
+      <time>2026-06-25T18:23:19.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701525" lon="6.021577">
+      <ele>365</ele>
+      <time>2026-06-25T18:24:30.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701284" lon="6.020493">
+      <ele>361</ele>
+      <time>2026-06-25T18:26:04.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701261" lon="6.019957">
+      <ele>360</ele>
+      <time>2026-06-25T18:26:48.000Z</time>
+    </trkpt>
+    <trkpt lat="43.7014" lon="6.019109">
+      <ele>371</ele>
+      <time>2026-06-25T18:29:53.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701556" lon="6.018637">
+      <ele>368</ele>
+      <time>2026-06-25T18:30:36.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701478" lon="6.017039">
+      <ele>367</ele>
+      <time>2026-06-25T18:32:49.000Z</time>
+    </trkpt>
+    <trkpt lat="43.7014" lon="6.01617">
+      <ele>364</ele>
+      <time>2026-06-25T18:34:01.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701455" lon="6.015365">
+      <ele>377</ele>
+      <time>2026-06-25T18:37:22.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701765" lon="6.014485">
+      <ele>362</ele>
+      <time>2026-06-25T18:38:43.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702463" lon="6.013477">
+      <ele>372</ele>
+      <time>2026-06-25T18:42:21.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702671" lon="6.012752">
+      <ele>374</ele>
+      <time>2026-06-25T18:43:46.000Z</time>
+    </trkpt>
+    <trkpt lat="43.703006" lon="6.011792">
+      <ele>364</ele>
+      <time>2026-06-25T18:45:14.000Z</time>
+    </trkpt>
+    <trkpt lat="43.703161" lon="6.010805">
+      <ele>368</ele>
+      <time>2026-06-25T18:47:19.000Z</time>
+    </trkpt>
+    <trkpt lat="43.703099" lon="6.00984">
+      <ele>370</ele>
+      <time>2026-06-25T18:49:00.000Z</time>
+    </trkpt>
+    <trkpt lat="43.70372" lon="6.00764">
+      <ele>370</ele>
+      <time>2026-06-25T18:52:15.000Z</time>
+    </trkpt>
+    <trkpt lat="43.704409" lon="6.006766">
+      <ele>375</ele>
+      <time>2026-06-25T18:54:53.000Z</time>
+    </trkpt>
+    <trkpt lat="43.704526" lon="6.006138">
+      <ele>363</ele>
+      <time>2026-06-25T18:55:47.000Z</time>
+    </trkpt>
+    <trkpt lat="43.704487" lon="6.005655">
+      <ele>374</ele>
+      <time>2026-06-25T18:58:20.000Z</time>
+    </trkpt>
+    <trkpt lat="43.704207" lon="6.005328">
+      <ele>375</ele>
+      <time>2026-06-25T18:59:12.000Z</time>
+    </trkpt>
+    <trkpt lat="43.703409" lon="6.005763">
+      <ele>382</ele>
+      <time>2026-06-25T19:02:02.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702944" lon="6.005248">
+      <ele>388</ele>
+      <time>2026-06-25T19:04:12.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702603" lon="6.004937">
+      <ele>390</ele>
+      <time>2026-06-25T19:05:19.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702246" lon="6.005022">
+      <ele>393</ele>
+      <time>2026-06-25T19:06:31.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701699" lon="6.005854">
+      <ele>402</ele>
+      <time>2026-06-25T19:09:37.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701435" lon="6.006466">
+      <ele>405</ele>
+      <time>2026-06-25T19:11:07.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700923" lon="6.007292">
+      <ele>412</ele>
+      <time>2026-06-25T19:13:49.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700954" lon="6.007721">
+      <ele>414</ele>
+      <time>2026-06-25T19:14:45.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701164" lon="6.007978">
+      <ele>420</ele>
+      <time>2026-06-25T19:16:19.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701482" lon="6.008193">
+      <ele>421</ele>
+      <time>2026-06-25T19:17:10.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701552" lon="6.008429">
+      <ele>423</ele>
+      <time>2026-06-25T19:17:52.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701598" lon="6.008665">
+      <ele>426</ele>
+      <time>2026-06-25T19:18:43.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701505" lon="6.009062">
+      <ele>430</ele>
+      <time>2026-06-25T19:19:59.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701296" lon="6.009309">
+      <ele>430</ele>
+      <time>2026-06-25T19:20:30.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700504" lon="6.009041">
+      <ele>440</ele>
+      <time>2026-06-25T19:23:46.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700326" lon="6.00918">
+      <ele>437</ele>
+      <time>2026-06-25T19:24:09.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700225" lon="6.009481">
+      <ele>438</ele>
+      <time>2026-06-25T19:24:47.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700311" lon="6.010028">
+      <ele>440</ele>
+      <time>2026-06-25T19:25:54.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700791" lon="6.01051">
+      <ele>443</ele>
+      <time>2026-06-25T19:27:33.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701071" lon="6.01094">
+      <ele>448</ele>
+      <time>2026-06-25T19:29:12.000Z</time>
+    </trkpt>
+    <trkpt lat="43.70114" lon="6.011412">
+      <ele>446</ele>
+      <time>2026-06-25T19:29:52.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701102" lon="6.011776">
+      <ele>447</ele>
+      <time>2026-06-25T19:30:33.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700908" lon="6.012045">
+      <ele>448</ele>
+      <time>2026-06-25T19:31:15.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701245" lon="6.011916">
+      <ele>449</ele>
+      <time>2026-06-25T19:32:05.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701528" lon="6.011766">
+      <ele>464</ele>
+      <time>2026-06-25T19:35:14.000Z</time>
+    </trkpt>
+    <trkpt lat="43.70168" lon="6.01176">
+      <ele>467</ele>
+      <time>2026-06-25T19:36:02.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701839" lon="6.011599">
+      <ele>461</ele>
+      <time>2026-06-25T19:36:25.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701912" lon="6.011369">
+      <ele>461</ele>
+      <time>2026-06-25T19:36:46.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701955" lon="6.011181">
+      <ele>458</ele>
+      <time>2026-06-25T19:37:02.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701959" lon="6.010929">
+      <ele>458</ele>
+      <time>2026-06-25T19:37:23.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701978" lon="6.010473">
+      <ele>457</ele>
+      <time>2026-06-25T19:38:01.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701963" lon="6.009835">
+      <ele>466</ele>
+      <time>2026-06-25T19:40:26.000Z</time>
+    </trkpt>
+    <trkpt lat="43.70199" lon="6.009427">
+      <ele>469</ele>
+      <time>2026-06-25T19:41:31.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702029" lon="6.009116">
+      <ele>471</ele>
+      <time>2026-06-25T19:42:18.000Z</time>
+    </trkpt>
+    <trkpt lat="43.70211" lon="6.008713">
+      <ele>475</ele>
+      <time>2026-06-25T19:43:34.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702242" lon="6.008161">
+      <ele>484</ele>
+      <time>2026-06-25T19:45:55.000Z</time>
+    </trkpt>
+    <trkpt lat="43.70225" lon="6.007941">
+      <ele>491</ele>
+      <time>2026-06-25T19:47:25.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702237" lon="6.007667">
+      <ele>494</ele>
+      <time>2026-06-25T19:48:19.000Z</time>
+    </trkpt>
+    <trkpt lat="43.7023" lon="6.008054">
+      <ele>486</ele>
+      <time>2026-06-25T19:48:52.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702269" lon="6.008284">
+      <ele>478</ele>
+      <time>2026-06-25T19:49:11.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702222" lon="6.008467">
+      <ele>476</ele>
+      <time>2026-06-25T19:49:27.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702149" lon="6.00874">
+      <ele>474</ele>
+      <time>2026-06-25T19:49:51.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702071" lon="6.009159">
+      <ele>470</ele>
+      <time>2026-06-25T19:50:27.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702029" lon="6.009432">
+      <ele>468</ele>
+      <time>2026-06-25T19:50:50.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702009" lon="6.009829">
+      <ele>464</ele>
+      <time>2026-06-25T19:51:23.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702025" lon="6.010494">
+      <ele>455</ele>
+      <time>2026-06-25T19:52:18.000Z</time>
+    </trkpt>
+    <trkpt lat="43.702001" lon="6.010934">
+      <ele>455</ele>
+      <time>2026-06-25T19:52:55.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701994" lon="6.011186">
+      <ele>456</ele>
+      <time>2026-06-25T19:53:26.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701967" lon="6.011412">
+      <ele>457</ele>
+      <time>2026-06-25T19:53:55.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701881" lon="6.011648">
+      <ele>459</ele>
+      <time>2026-06-25T19:54:37.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701683" lon="6.01183">
+      <ele>466</ele>
+      <time>2026-06-25T19:56:16.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701618" lon="6.012415">
+      <ele>469</ele>
+      <time>2026-06-25T19:57:36.000Z</time>
+    </trkpt>
+    <trkpt lat="43.701424" lon="6.013021">
+      <ele>478</ele>
+      <time>2026-06-25T20:00:03.000Z</time>
+    </trkpt>
+    <trkpt lat="43.700477" lon="6.014475">
+      <ele>499</ele>
+      <time>2026-06-25T20:06:21.000Z</time>
+    </trkpt>
+    <trkpt lat="43.699631" lon="6.015961">
+      <ele>517</ele>
+      <time>2026-06-25T20:12:03.000Z</time>
+    </trkpt>
+    <trkpt lat="43.699392" lon="6.016749">
+      <ele>512</ele>
+      <time>2026-06-25T20:13:14.000Z</time>
+    </trkpt>
+    <trkpt lat="43.699361" lon="6.017253">
+      <ele>514</ele>
+      <time>2026-06-25T20:14:16.000Z</time>
+    </trkpt>
+    <trkpt lat="43.699609" lon="6.017768">
+      <ele>516</ele>
+      <time>2026-06-25T20:15:28.000Z</time>
+    </trkpt>
+    <trkpt lat="43.699562" lon="6.018305">
+      <ele>522</ele>
+      <time>2026-06-25T20:17:14.000Z</time>
+    </trkpt>
+    <trkpt lat="43.699066" lon="6.018659">
+      <ele>528</ele>
+      <time>2026-06-25T20:19:20.000Z</time>
+    </trkpt>
+    <trkpt lat="43.69829" lon="6.018627">
+      <ele>535</ele>
+      <time>2026-06-25T20:22:01.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697805" lon="6.018815">
+      <ele>541</ele>
+      <time>2026-06-25T20:24:00.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697642" lon="6.019136">
+      <ele>541</ele>
+      <time>2026-06-25T20:24:32.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697836" lon="6.019265">
+      <ele>540</ele>
+      <time>2026-06-25T20:24:57.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697774" lon="6.019984">
+      <ele>540</ele>
+      <time>2026-06-25T20:25:57.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697821" lon="6.020488">
+      <ele>538</ele>
+      <time>2026-06-25T20:26:39.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697627" lon="6.021508">
+      <ele>539</ele>
+      <time>2026-06-25T20:28:17.000Z</time>
+    </trkpt>
+    <trkpt lat="43.69749" lon="6.02258">
+      <ele>537</ele>
+      <time>2026-06-25T20:29:47.000Z</time>
+    </trkpt>
+    <trkpt lat="43.696607" lon="6.023197">
+      <ele>539</ele>
+      <time>2026-06-25T20:32:01.000Z</time>
+    </trkpt>
+    <trkpt lat="43.696106" lon="6.023417">
+      <ele>540</ele>
+      <time>2026-06-25T20:33:11.000Z</time>
+    </trkpt>
+    <trkpt lat="43.695676" lon="6.023734">
+      <ele>542</ele>
+      <time>2026-06-25T20:34:27.000Z</time>
+    </trkpt>
+    <trkpt lat="43.6954" lon="6.024029">
+      <ele>542</ele>
+      <time>2026-06-25T20:35:07.000Z</time>
+    </trkpt>
+    <trkpt lat="43.695059" lon="6.024136">
+      <ele>543</ele>
+      <time>2026-06-25T20:35:57.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694857" lon="6.024415">
+      <ele>543</ele>
+      <time>2026-06-25T20:36:30.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694842" lon="6.024619">
+      <ele>542</ele>
+      <time>2026-06-25T20:36:47.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694749" lon="6.024726">
+      <ele>542</ele>
+      <time>2026-06-25T20:37:01.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694283" lon="6.025016">
+      <ele>543</ele>
+      <time>2026-06-25T20:38:10.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693694" lon="6.025359">
+      <ele>545</ele>
+      <time>2026-06-25T20:39:44.000Z</time>
+    </trkpt>
+    <trkpt lat="43.692876" lon="6.026502">
+      <ele>544</ele>
+      <time>2026-06-25T20:41:57.000Z</time>
+    </trkpt>
+    <trkpt lat="43.692519" lon="6.026813">
+      <ele>544</ele>
+      <time>2026-06-25T20:42:45.000Z</time>
+    </trkpt>
+    <trkpt lat="43.692201" lon="6.027532">
+      <ele>544</ele>
+      <time>2026-06-25T20:43:55.000Z</time>
+    </trkpt>
+    <trkpt lat="43.691309" lon="6.028411">
+      <ele>544</ele>
+      <time>2026-06-25T20:46:00.000Z</time>
+    </trkpt>
+    <trkpt lat="43.690723" lon="6.028921">
+      <ele>544</ele>
+      <time>2026-06-25T20:47:19.000Z</time>
+    </trkpt>
+    <trkpt lat="43.689919" lon="6.029382">
+      <ele>543</ele>
+      <time>2026-06-25T20:48:59.000Z</time>
+    </trkpt>
+    <trkpt lat="43.689776" lon="6.029715">
+      <ele>542</ele>
+      <time>2026-06-25T20:49:31.000Z</time>
+    </trkpt>
+    <trkpt lat="43.689757" lon="6.030064">
+      <ele>540</ele>
+      <time>2026-06-25T20:50:00.000Z</time>
+    </trkpt>
+    <trkpt lat="43.689457" lon="6.030511">
+      <ele>540</ele>
+      <time>2026-06-25T20:50:50.000Z</time>
+    </trkpt>
+    <trkpt lat="43.689303" lon="6.031174">
+      <ele>541</ele>
+      <time>2026-06-25T20:51:58.000Z</time>
+    </trkpt>
+    <trkpt lat="43.689074" lon="6.031748">
+      <ele>542</ele>
+      <time>2026-06-25T20:53:03.000Z</time>
+    </trkpt>
+    <trkpt lat="43.688962" lon="6.032204">
+      <ele>542</ele>
+      <time>2026-06-25T20:53:43.000Z</time>
+    </trkpt>
+    <trkpt lat="43.688919" lon="6.032703">
+      <ele>540</ele>
+      <time>2026-06-25T20:54:25.000Z</time>
+    </trkpt>
+    <trkpt lat="43.688795" lon="6.033272">
+      <ele>538</ele>
+      <time>2026-06-25T20:55:14.000Z</time>
+    </trkpt>
+    <trkpt lat="43.688512" lon="6.033459">
+      <ele>537</ele>
+      <time>2026-06-25T20:55:50.000Z</time>
+    </trkpt>
+    <trkpt lat="43.688108" lon="6.033588">
+      <ele>537</ele>
+      <time>2026-06-25T20:56:37.000Z</time>
+    </trkpt>
+    <trkpt lat="43.68756" lon="6.033995">
+      <ele>534</ele>
+      <time>2026-06-25T20:57:48.000Z</time>
+    </trkpt>
+    <trkpt lat="43.687069" lon="6.034329">
+      <ele>533</ele>
+      <time>2026-06-25T20:58:51.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686673" lon="6.034693">
+      <ele>532</ele>
+      <time>2026-06-25T20:59:45.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686731" lon="6.035321">
+      <ele>529</ele>
+      <time>2026-06-25T21:00:37.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686727" lon="6.035691">
+      <ele>526</ele>
+      <time>2026-06-25T21:01:08.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686537" lon="6.035814">
+      <ele>524</ele>
+      <time>2026-06-25T21:01:32.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686809" lon="6.036158">
+      <ele>519</ele>
+      <time>2026-06-25T21:02:14.000Z</time>
+    </trkpt>
+    <trkpt lat="43.687066" lon="6.036216">
+      <ele>517</ele>
+      <time>2026-06-25T21:02:44.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686661" lon="6.036544">
+      <ele>511</ele>
+      <time>2026-06-25T21:03:38.000Z</time>
+    </trkpt>
+    <trkpt lat="43.687208" lon="6.037">
+      <ele>499</ele>
+      <time>2026-06-25T21:04:51.000Z</time>
+    </trkpt>
+    <trkpt lat="43.687069" lon="6.037247">
+      <ele>495</ele>
+      <time>2026-06-25T21:05:17.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686827" lon="6.037514">
+      <ele>489</ele>
+      <time>2026-06-25T21:05:52.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686312" lon="6.037445">
+      <ele>483</ele>
+      <time>2026-06-25T21:06:51.000Z</time>
+    </trkpt>
+    <trkpt lat="43.685839" lon="6.038024">
+      <ele>473</ele>
+      <time>2026-06-25T21:08:03.000Z</time>
+    </trkpt>
+    <trkpt lat="43.685991" lon="6.038222">
+      <ele>469</ele>
+      <time>2026-06-25T21:08:27.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686332" lon="6.038092">
+      <ele>463</ele>
+      <time>2026-06-25T21:09:08.000Z</time>
+    </trkpt>
+    <trkpt lat="43.686545" lon="6.038346">
+      <ele>459</ele>
+      <time>2026-06-25T21:09:40.000Z</time>
+    </trkpt>
+    <trkpt lat="43.687073" lon="6.038432">
+      <ele>455</ele>
+      <time>2026-06-25T21:10:41.000Z</time>
+    </trkpt>
+    <trkpt lat="43.687473" lon="6.038196">
+      <ele>454</ele>
+      <time>2026-06-25T21:11:31.000Z</time>
+    </trkpt>
+    <trkpt lat="43.687251" lon="6.038636">
+      <ele>443</ele>
+      <time>2026-06-25T21:12:15.000Z</time>
+    </trkpt>
+    <trkpt lat="43.688267" lon="6.0384">
+      <ele>430</ele>
+      <time>2026-06-25T21:14:13.000Z</time>
+    </trkpt>
+    <trkpt lat="43.688748" lon="6.038496">
+      <ele>424</ele>
+      <time>2026-06-25T21:15:09.000Z</time>
+    </trkpt>
+    <trkpt lat="43.689354" lon="6.038314">
+      <ele>413</ele>
+      <time>2026-06-25T21:16:20.000Z</time>
+    </trkpt>
+    <trkpt lat="43.690052" lon="6.038218">
+      <ele>405</ele>
+      <time>2026-06-25T21:17:40.000Z</time>
+    </trkpt>
+    <trkpt lat="43.690471" lon="6.037778">
+      <ele>397</ele>
+      <time>2026-06-25T21:18:40.000Z</time>
+    </trkpt>
+    <trkpt lat="43.691115" lon="6.037842">
+      <ele>389</ele>
+      <time>2026-06-25T21:19:54.000Z</time>
+    </trkpt>
+    <trkpt lat="43.691433" lon="6.038046">
+      <ele>385</ele>
+      <time>2026-06-25T21:20:34.000Z</time>
+    </trkpt>
+    <trkpt lat="43.691968" lon="6.037992">
+      <ele>379</ele>
+      <time>2026-06-25T21:21:35.000Z</time>
+    </trkpt>
+    <trkpt lat="43.692069" lon="6.037821">
+      <ele>378</ele>
+      <time>2026-06-25T21:21:53.000Z</time>
+    </trkpt>
+    <trkpt lat="43.692216" lon="6.037863">
+      <ele>374</ele>
+      <time>2026-06-25T21:22:10.000Z</time>
+    </trkpt>
+    <trkpt lat="43.692603" lon="6.037364">
+      <ele>374</ele>
+      <time>2026-06-25T21:23:11.000Z</time>
+    </trkpt>
+    <trkpt lat="43.692992" lon="6.036673">
+      <ele>373</ele>
+      <time>2026-06-25T21:24:24.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693256" lon="6.035686">
+      <ele>371</ele>
+      <time>2026-06-25T21:25:51.000Z</time>
+    </trkpt>
+    <trkpt lat="43.693644" lon="6.035149">
+      <ele>366</ele>
+      <time>2026-06-25T21:26:54.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694055" lon="6.034838">
+      <ele>362</ele>
+      <time>2026-06-25T21:27:48.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694418" lon="6.034762">
+      <ele>365</ele>
+      <time>2026-06-25T21:29:01.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694968" lon="6.035787">
+      <ele>360</ele>
+      <time>2026-06-25T21:30:47.000Z</time>
+    </trkpt>
+    <trkpt lat="43.694968" lon="6.035765">
+      <ele>360</ele>
+      <time>2026-06-25T21:30:49.000Z</time>
+    </trkpt>
+    <trkpt lat="43.6956" lon="6.036271">
+      <ele>360</ele>
+      <time>2026-06-25T21:32:13.000Z</time>
+    </trkpt>
+    <trkpt lat="43.696043" lon="6.037217">
+      <ele>363</ele>
+      <time>2026-06-25T21:34:17.000Z</time>
+    </trkpt>
+    <trkpt lat="43.6959" lon="6.038139">
+      <ele>361</ele>
+      <time>2026-06-25T21:35:35.000Z</time>
+    </trkpt>
+    <trkpt lat="43.696035" lon="6.039074">
+      <ele>361</ele>
+      <time>2026-06-25T21:36:54.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697031" lon="6.038516">
+      <ele>362</ele>
+      <time>2026-06-25T21:39:07.000Z</time>
+    </trkpt>
+    <trkpt lat="43.697735" lon="6.038661">
+      <ele>362</ele>
+      <time>2026-06-25T21:40:28.000Z</time>
+    </trkpt>
+  </trkseg>
+</trk></gpx>
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

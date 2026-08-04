@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Visualisation de Parcours</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #0E0E0E; color: #1A1A1A; -webkit-font-smoothing: antialiased;
+}
+
+/* ───── Layout Principal ─────────────────────────────────────────────── */
+.app { display: flex; flex-direction: column; height: 100dvh; }
+
+/* ───── Header ───────────────────────────────────────────────────────── */
+.header {
+  background: #0E0E0E; color: #FAFAFA; padding: 18px 24px 16px;
+  flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;
+}
+.header__left { display: flex; flex-direction: column; gap: 14px; width: 100%; flex: 1; }
+.header__top { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; width: 100%; }
+
+.title-block { display: flex; align-items: center; gap: 14px; width: calc(100% - 95px); }
+.header-logo-img { width: 42px; height: 42px; object-fit: contain; border-radius: 50%; background: white; border: 1px solid rgba(255,255,255,0.12); padding: 2px; flex-shrink: 0; }
+.title-text-wrap { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.header__title { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.header__subtitle { font-size: 13px; color: rgba(250,250,250,0.55); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+
+/* Sélecteur de langue */
+.lang-toggle { display: flex; gap: 4px; background: #1A1A1A; padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); }
+.lang-btn { background: transparent; color: #888; border: none; font-size: 11px; font-weight: 700; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.2s; font-family: inherit;}
+.lang-btn.active { background: #FAFAFA; color: #0E0E0E; }
+
+.gpx-dl-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #1A1A1A; color: #FAFAFA;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 6px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; font-family: inherit;
+  cursor: pointer; transition: background 0.2s;
+}
+.gpx-dl-btn:hover { background: #2A2A2A; }
+.gpx-dl-btn svg { flex-shrink: 0; }
+.header__actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.stats { display: flex; gap: 28px; flex-wrap: wrap; }
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.stat__label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(250,250,250,0.5); }
+.stat__value { font-family: 'Inter Tight', sans-serif; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; color: #FAFAFA; }
+.stat__value .unit { font-size: 13px; font-weight: 500; color: rgba(250,250,250,0.55); margin-left: 2px; }
+.stat--accent .stat__value { color: #FC4C02; }
+
+/* ───── Commandes Mode Édition ───────────────────────────────────────── */
+.edit-controls { display: none; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
+.btn {
+  background: #1A1A1A; color: #FAFAFA; border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: background 150ms; font-family: inherit;
+}
+.btn:hover { background: #333; }
+.btn--active { background: #FC4C02; border-color: #FC4C02; color: #FFF; }
+.btn--export { background: #21A179; border-color: #21A179; color: #FFF; }
+
+/* Popup Édition */
+.edit-popup { color: #1A1A1A; font-family: 'Inter', sans-serif; font-size: 12px; min-width: 240px; max-width: 320px;}
+.edit-popup label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 11px;}
+.edit-popup input { width: 100%; padding: 5px; border: 1px solid #CCC; border-radius: 4px; margin-top: 2px; font-family: monospace; font-size: 11px; background: #FFF; color: #000; -webkit-appearance: none;}
+.edit-popup .flex-row { display: flex; gap: 6px; }
+.edit-popup .flex-row > div { flex: 1; }
+.edit-popup .popup-actions { display: flex; gap: 6px; margin-top: 12px; }
+.edit-popup button { flex: 1; padding: 6px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; color: white; font-size: 11px;}
+.edit-popup .save-btn { background: #21A179; }
+.edit-popup .view-btn { background: #3B82F6; }
+.edit-popup .delete-btn { background: #DC2626; }
+
+/* ───── Map & Chart ──────────────────────────────────────────────────── */
+#map { flex: 1; width: 100%; background: #DDD; position: relative; }
+.leaflet-interactive { filter: drop-shadow(0 0 1.5px rgba(0,0,0,0.4)); }
+
+#chart-container {
+  height: 140px; flex-shrink: 0; background: #0E0E0E;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 10px 16px 4px 16px; position: relative;
+}
+canvas#elevation-chart { width: 100% !important; height: 100% !important; }
+
+/* ───── Marqueurs ────────────────────────────────────────────────────── */
+.photo-marker {
+  width: 52px; height: 52px; border-radius: 50%; border: 3px solid white;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.08);
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+  cursor: pointer; transition: transform 140ms cubic-bezier(.2,.7,.3,1.4); position: relative;
+}
+.photo-marker:hover { transform: scale(1.18); z-index: 1000 !important; box-shadow: 0 6px 18px rgba(0,0,0,0.45), 0 0 0 2px #FC4C02; }
+.photo-marker.is-dragging { transform: scale(1.18); box-shadow: 0 6px 18px rgba(0,0,0,0.45), 0 0 0 2px #21A179; transition: none; opacity: 0.9;}
+.photo-marker__num {
+  position: absolute; bottom: -4px; right: -4px; background: #FC4C02; color: white;
+  font-family: 'Inter Tight', sans-serif; font-size: 10px; font-weight: 700;
+  width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid white;
+}
+
+.custom-poi-marker {
+  width: 42px; height: 42px; background: white; border-radius: 50%;
+  border: 3px solid #0d8a9b;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  cursor: pointer; transition: transform 140ms;
+}
+.custom-poi-marker img { width: 80%; height: 80%; object-fit: contain; }
+.custom-poi-marker:hover { transform: scale(1.15); z-index: 1000 !important; }
+.custom-poi-marker.is-dragging { transform: scale(1.15); border-color: #21A179; opacity: 0.9; }
+
+.endpoint-marker { width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+.endpoint-marker--start { background: #21A179; }
+.endpoint-marker--end   { background: #1A1A1A; }
+
+/* ───── Styles Popup Viewer Livret (POIs) ────────────────────────────── */
+.leaflet-custom-ov-popup .leaflet-popup-content-wrapper { padding: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+.leaflet-custom-ov-popup .leaflet-popup-content { margin: 0; width: 260px !important; }
+.ov-popup { font-family: 'Inter', sans-serif; background: #FFF; color: #1e293b;}
+.ov-popup__logo-wrap { border-bottom: 2px solid #F1F5F9; display: flex; align-items: center; justify-content: center; padding: 12px 0; background: #F8FAFC;}
+.ov-popup__logo { height: 50px; width: auto; max-width: 80%; object-fit: contain; display: block; }
+.ov-popup__body { padding: 14px; }
+.ov-popup__badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 999px; color: #fff; letter-spacing: 0.2px; margin-bottom: 6px; background: #EA0000; }
+.ov-popup__title { font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: 700; margin: 0 0 4px; color: #1e293b; line-height: 1.2; }
+.ov-popup__desc { font-size: 13px; line-height: 1.4; color: #475569; margin: 0; }
+
+/* ───── Lightbox ────────────────────────────────────────────────────── */
+.lightbox {
+  position: fixed; inset: 0; background: rgba(8,8,8,0.96); z-index: 10000;
+  display: none; align-items: center; justify-content: center; padding: 32px;
+}
+.lightbox.is-open { display: flex; }
+.lightbox-content-wrapper { position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }
+.lightbox__img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); user-select: none; }
+
+/* FILIGRANE FIXÉ EN HAUT À DROITE */
+.lightbox-brand-overlay {
+  position: absolute;
+  top: 16px; 
+  right: 16px;
+  bottom: auto; 
+  background: rgba(0, 0, 0, 0.15); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  border-radius: 16px; padding: 10px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.2);
+  display: flex; flex-direction: column; align-items: center; pointer-events: none;
+}
+.lightbox-brand-logo { width: 80px; height: 80px; object-fit: contain; display: block; }
+.lightbox-brand-text { color: white; font-size: 11px; font-weight: 600; letter-spacing: 0.025em; text-align: center; margin-top: 4px; font-family: 'Inter Tight', sans-serif;}
+
+.lightbox__nav, .lightbox__close {
+  position: absolute; background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.12); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 120ms; font-size: 18px; z-index: 100;
+}
+.lightbox__nav:hover, .lightbox__close:hover { background: rgba(255,255,255,0.18); }
+/* Bouton fermé à gauche pour ne pas chevaucher le logo en haut à droite */
+.lightbox__close { top: 20px; left: 20px; right: auto; } 
+.lightbox__prev  { left: 20px;  top: 50%; transform: translateY(-50%); }
+.lightbox__next  { right: 20px; top: 50%; transform: translateY(-50%); }
+.lightbox__counter { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.7); font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; }
+
+/* ───── TOASTER INDÉPENDANT ─────────────────────────────────────────── */
+.toast-msg {
+  position: fixed; bottom: 30px; left: 50%;
+  background: #21A179; color: #FFF; padding: 12px 24px; border-radius: 30px;
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 99999;
+  pointer-events: none;
+  /* État initial caché (sera géré dynamiquement par le JS) */
+  transform: translate(-50%, 100px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+}
+
+/* ───── RESPONSIVE MOBILE ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .header { padding: 14px 16px 12px; }
+  .header__top { justify-content: space-between; margin-bottom: 12px; align-items: center;}
+  .title-block { gap: 10px; width: calc(100% - 85px); }
+  .header-logo-img { width: 36px; height: 36px; }
+  .header__title { font-size: 18px; line-height: 1.1;}
+  .header__subtitle { font-size: 11px; }
+  
+  .stats { gap: 14px; width: 100%; justify-content: space-between; margin-bottom: 10px; }
+  .stat__value { font-size: 18px; }
+  .stat__label { font-size: 9px; }
+  
+  .edit-controls { width: 100%; justify-content: stretch; }
+  .btn { flex: 1; text-align: center; font-size: 11px; padding: 10px 4px; }
+
+  .photo-marker { width: 44px; height: 44px; }
+  #chart-container { height: 110px; padding: 8px 8px 4px 8px;}
+  
+  .lightbox { padding: 8px; }
+  .lightbox__nav, .lightbox__close { width: 38px; height: 38px; }
+  .lightbox__close { top: 12px; left: 12px; right: auto; } 
+  .lightbox__prev  { left: 8px; }
+  .lightbox__next  { right: 8px; }
+  
+  /* FILIGRANE MOBILE HAUT À DROITE */
+  .lightbox-brand-overlay { top: 12px; right: 12px; bottom: auto; padding: 8px; border-radius: 12px; }
+  .lightbox-brand-logo { width: 64px; height: 64px; }
+  .lightbox-brand-text { font-size: 10px; }
+  .toast-msg { bottom: 20px; font-size: 12px; padding: 10px 20px;}
+}
+
+.loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 13px; color: #6B7280; text-align: center; z-index: 1000; background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 8px;}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="header">
+    <div class="header__left">
+      <div class="header__top">
+        <div class="title-block">
+          <img id="header-logo" class="header-logo-img" src="" alt="Logo" style="display: none;">
+          <div class="title-text-wrap">
+            <h1 class="header__title" id="title"></h1>
+            <span class="header__subtitle" id="subtitle"></span>
+          </div>
+        </div>
+        
+        <div class="header__actions">
+          <button id="btn-download-gpx" class="gpx-dl-btn" type="button">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M7.25 1.5v7.69L4.78 6.72 3.72 7.78 8 12.06l4.28-4.28-1.06-1.06-2.47 2.47V1.5h-1.5zM3 13.5v1h10v-1H3z"/>
+            </svg>
+            <span>GPX</span>
+          </button>
+          <div class="lang-toggle">
+            <button id="btn-fr" class="lang-btn">FR</button>
+            <button id="btn-en" class="lang-btn">EN</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats" id="stats"></div>
+      
+      <div class="edit-controls" id="edit-controls-panel">
+        <button id="toggle-edit-mode" class="btn"></button>
+        <button id="add-poi-btn" class="btn" style="display: none;"></button>
+        <button id="add-photo-btn" class="btn" style="display: none;"></button>
+        <button id="export-config-btn" class="btn btn--export" style="display: none;"></button>
+      </div>
+    </div>
+  </header>
+
+  <div id="map"><div class="loader" id="loader-msg">Chargement...</div></div>
+  
+  <div id="chart-container">
+    <canvas id="elevation-chart"></canvas>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox__close" id="lb-close">✕</button>
+  <button class="lightbox__nav lightbox__prev" id="lb-prev">‹</button>
+  <button class="lightbox__nav lightbox__next" id="lb-next">›</button>
+  <div class="lightbox__counter" id="lb-counter"></div>
+  
+  <div class="lightbox-content-wrapper">
+    <img class="lightbox__img" id="lb-img" alt="">
+    <div id="lightbox-overlay" class="lightbox-brand-overlay" style="display: none;">
+      <img id="lightbox-brand-logo" class="lightbox-brand-logo" src="" alt="Logo">
+      <p id="lightbox-brand-text" class="lightbox-brand-text"></p>
+    </div>
+  </div>
+  
+  <div class="lightbox__caption" id="lb-caption"></div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="config_rando_aiguines.js"></script>
+
+<script src="https://gist.githack.com/verdonstudio/cbce09474a884073e91b5b64db5ec180/raw/analytics.js"></script>
+
+<script>
+window.addEventListener('DOMContentLoaded', async function () {
+  const cfg = window.PARCOURS_CONFIG || { title: "Marche", track: {}, basemap: "voyager", photos: [], pois: [], editMode: false };
+  
+  const T = {
+    fr: { 
+      dist: 'Distance', time: 'Durée', elev: 'Dénivelé', photos: 'Photos', 
+      editOn: 'Activer Édition', editOff: 'Quitter Édition', addPhoto: '+ Photo', addPoi: '+ Info (POI)', export: 'Exporter',
+      save: 'Valider', view: 'Agrandir', del: 'Suppr.',
+      errGpx: "Erreur : Tracé GPX introuvable. Copiez le XML en bas du fichier.",
+      copied: "Code copié avec succès !", copyErr: "Erreur de copie (voir console)",
+      dlGpx: "Télécharger le fichier GPX"
+    },
+    en: { 
+      dist: 'Distance', time: 'Time', elev: 'Elevation', photos: 'Photos', 
+      editOn: 'Enable Edit', editOff: 'Exit Edit', addPhoto: '+ Photo', addPoi: '+ Info (POI)', export: 'Export',
+      save: 'Save', view: 'View', del: 'Delete',
+      errGpx: "Error: GPX track not found. Paste XML at the bottom.",
+      copied: "Code successfully copied!", copyErr: "Copy error (see console)",
+      dlGpx: "Download GPX file"
+    }
+  };
+
+  const LOGO_DATA = {
+    moustiers: { src: "images/bell-etoile-logo.png", name: "Bell'Étoile" },
+    salles6: { src: "images/bellodulac-logo.png", name: "Bell'O du Lac" },
+    salles8: { src: "images/bellodulac-logo.png", name: "Bell'O du Lac" }
+  };
+
+  // Chargement de logements.js (source de verite du logement par defaut) avant de lire
+  // les parametres d'URL, avec repli local si l'URL externe echoue (meme schema que
+  // pois.js/evenements.js) ; en dernier recours le repli en dur 'moustiers' est utilise.
+  let DEFAULT_LISTING_ID = 'moustiers';
+  await new Promise((resolve) => {
+    function applyConfig() {
+      if (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) DEFAULT_LISTING_ID = window.LOGEMENTS_DATA.default;
+      resolve();
+    }
+    if (window.LOGEMENTS_DATA) { applyConfig(); return; }
+    const EXTERNAL_URL = "https://gist.githack.com/verdonstudio/096afae141a34a87c8dfb495fde10f0e/raw/logements.js";
+    const LOCAL_URL = "logements.js";
+    function loadLocal() {
+      const s = document.createElement('script');
+      s.src = LOCAL_URL;
+      s.onload = applyConfig;
+      s.onerror = () => { console.error("Impossible de charger logements.js"); applyConfig(); };
+      document.head.appendChild(s);
+    }
+    const s = document.createElement('script');
+    s.src = EXTERNAL_URL;
+    s.onload = applyConfig;
+    s.onerror = loadLocal;
+    document.head.appendChild(s);
+  });
+
+  // ───── PARAMÈTRES URL ─────────────────────────────
+  const urlParams = new URLSearchParams(window.location.search);
+  let currentLang = 'fr';
+  if ((urlParams.get('lang') || urlParams.get('lng') || '').toLowerCase() === 'en') currentLang = 'en';
+
+  let currentLogement = DEFAULT_LISTING_ID;
+  const logementParam = urlParams.get('logement') || urlParams.get('listing') || urlParams.get('l') || urlParams.get('id');
+  if (logementParam) {
+    const rawLog = logementParam.toLowerCase().trim();
+    if (rawLog.includes('salles6') || rawLog.includes('6p')) currentLogement = 'salles6';
+    else if (rawLog.includes('salles8') || rawLog.includes('8p')) currentLogement = 'salles8';
+    else if (rawLog.includes('moustiers') || rawLog.includes('etoile')) currentLogement = 'moustiers';
+  }
+
+  let isEditMode = false;
+  let photosState = JSON.parse(JSON.stringify(cfg.photos || []));
+  let poisState = JSON.parse(JSON.stringify(cfg.pois || [])); 
+  
+  let photoMarkersLayer = L.featureGroup();
+  let poiMarkersLayer = L.featureGroup();
+  let latestResolvedPhotos = [];
+  let totalDistKm = 0, durMs = null, dPlus = 0;
+
+  // ───── TOASTER INFAILLIBLE (Création d'élément dynamique à chaque clic)
+  function showToast(msg, isError = false) {
+    // On crée un tout nouvel élément div
+    const toast = document.createElement('div');
+    toast.className = 'toast-msg';
+    toast.textContent = msg;
+    toast.style.background = isError ? '#DC2626' : '#21A179';
+    
+    // On l'ajoute dans la page
+    document.getElementById('toast-container').appendChild(toast);
+
+    // Une frame plus tard, on lance l'animation d'apparition
+    requestAnimationFrame(() => {
+      toast.style.transform = 'translate(-50%, 0)';
+      toast.style.opacity = '1';
+    });
+
+    // Au bout de 3 secondes, on l'anime vers le bas, puis on le détruit
+    setTimeout(() => {
+      toast.style.transform = 'translate(-50%, 100px)';
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
+
+  document.getElementById('btn-fr').addEventListener('click', () => { setLang('fr'); syncUrlParams(); });
+  document.getElementById('btn-en').addEventListener('click', () => { setLang('en'); syncUrlParams(); });
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`btn-${lang}`).classList.add('active');
+    updateTexts();
+  }
+
+  function syncUrlParams() {
+    const p = new URLSearchParams(window.location.search);
+    ['lng', 'listing', 'l'].forEach(k => p.delete(k));
+    p.set('logement', currentLogement);
+    p.set('lang', currentLang.toUpperCase());
+    window.history.replaceState(null, '', window.location.pathname + '?' + p.toString());
+  }
+
+  function applyLogos() {
+    const brand = LOGO_DATA[currentLogement] || LOGO_DATA.moustiers;
+    const headerLogo = document.getElementById('header-logo');
+    if (headerLogo) { headerLogo.src = brand.src; headerLogo.style.display = 'inline-block'; }
+    
+    const lbOverlay = document.getElementById('lightbox-overlay');
+    const lbBrandLogo = document.getElementById('lightbox-brand-logo');
+    const lbBrandText = document.getElementById('lightbox-brand-text');
+    if (lbOverlay && lbBrandLogo && lbBrandText) {
+      lbBrandLogo.src = brand.src;
+      lbBrandText.textContent = brand.name;
+      lbOverlay.style.display = 'flex';
+    }
+  }
+
+  function updateTexts() {
+    const t = cfg.title; const s = cfg.subtitle;
+    document.getElementById('title').textContent = (typeof t === 'object' ? (t[currentLang] || t.fr || t.en) : t) || '';
+    document.getElementById('subtitle').textContent = (typeof s === 'object' ? (s[currentLang] || s.fr || s.en) : s) || '';
+
+    const btnEdit = document.getElementById('toggle-edit-mode');
+    if(btnEdit) btnEdit.textContent = isEditMode ? T[currentLang].editOff : T[currentLang].editOn;
+    document.getElementById('add-photo-btn').textContent = T[currentLang].addPhoto;
+    document.getElementById('add-poi-btn').textContent = T[currentLang].addPoi;
+    document.getElementById('export-config-btn').textContent = T[currentLang].export;
+
+    const btnGpx = document.getElementById('btn-download-gpx');
+    if (btnGpx) btnGpx.title = T[currentLang].dlGpx;
+
+    renderStats();
+    if(isEditMode) { renderPhotos(); renderPois(); }
+    else { renderPois(); }
+  }
+
+  function renderStats() {
+    if (cfg.showStats === false) return;
+    const fmtTime = ms => {
+      if (!ms) return '—';
+      const s = Math.floor(ms/1000), h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
+      return h > 0 ? `${h}<span class="unit">h</span>${String(m).padStart(2,'0')}` : `${m}<span class="unit">min</span>`;
+    };
+    const statsData = [
+      { label: T[currentLang].dist, value: totalDistKm.toFixed(2), unit: 'km', accent: true },
+      { label: T[currentLang].time, value: fmtTime(durMs), unit: '' },
+      { label: T[currentLang].elev, value: Math.round(dPlus), unit: 'm' },
+      { label: T[currentLang].photos, value: photosState.length, unit: '', id: 'stat-photo-count' }
+    ];
+    document.getElementById('stats').innerHTML = statsData.map(st => `
+      <div class="stat ${st.accent ? 'stat--accent' : ''}" ${st.id ? `id="${st.id}"` : ''}>
+        <span class="stat__label">${st.label}</span>
+        <span class="stat__value">${st.value}${st.unit ? `<span class="unit">${st.unit}</span>` : ''}</span>
+      </div>
+    `).join('');
+  }
+
+  if (cfg.editMode === true) { document.getElementById('edit-controls-panel').style.display = 'flex'; }
+
+  // ───── MAP SETUP (Correction de l'Erreur Leaflet) ───────────────────
+  const BASEMAPS = {
+    voyager: { url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', attribution: '&copy; OSM' },
+    positron: { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attribution: '&copy; OSM' },
+    topo: { url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', attribution: '&copy; OSM', maxZoom: 17 },
+    osm: { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: '&copy; OSM' }
+  };
+  const bm = BASEMAPS[cfg.basemap] || BASEMAPS.voyager;
+
+  // On donne un center et zoom par défaut pour éviter le plantage d'animation avant le fitBounds
+  const map = L.map('map', { 
+    center: [43.847, 6.22], 
+    zoom: 12, 
+    zoomControl: true, 
+    attributionControl: true, 
+    scrollWheelZoom: true, 
+    maxZoom: 24 
+  });
+  
+  L.tileLayer(bm.url, { attribution: bm.attribution, maxZoom: 24, maxNativeZoom: bm.maxZoom || 19, subdomains: bm.url.includes('opentopomap') ? 'abc' : 'abcd' }).addTo(map);
+  
+  photoMarkersLayer.addTo(map);
+  poiMarkersLayer.addTo(map);
+
+  // ───── LECTURE GPX INLINE ───────────────────────────────────────────
+  let gpxText = "";
+  const inlineEl = document.getElementById('gpx-inline');
+  
+  if (inlineEl && inlineEl.textContent.trim().length > 10) { gpxText = inlineEl.textContent; } 
+  else { document.getElementById('loader-msg').innerHTML = `<b style="color:#DC2626;">${T[currentLang].errGpx}</b>`; setLang(currentLang); return; }
+
+  // ───── BOUTON TÉLÉCHARGEMENT GPX ────────────────────────────────────
+  function slugify(str) {
+    return (str || 'parcours')
+      .toString()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+  document.getElementById('btn-download-gpx').addEventListener('click', () => {
+    const t = cfg.title;
+    const titleStr = (typeof t === 'object' ? (t[currentLang] || t.fr || t.en) : t) || 'parcours';
+    const blob = new Blob([gpxText.trim()], { type: 'application/gpx+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = slugify(titleStr) + '.gpx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 100);
+    if (window.BDLAnalytics) window.BDLAnalytics.trackGpx(titleStr);
+  });
+
+  const xml = new DOMParser().parseFromString(gpxText.trim(), 'text/xml');
+  const trkpts = [...xml.querySelectorAll('trkpt')].map(el => ({
+    lat: parseFloat(el.getAttribute('lat')), lng: parseFloat(el.getAttribute('lon')),
+    ele: parseFloat(el.querySelector('ele')?.textContent || '0'), time: el.querySelector('time')?.textContent
+  }));
+
+  if (trkpts.length < 2) return;
+  document.getElementById('loader-msg')?.remove();
+
+  const R = 6371000;
+  const toRad = d => d * Math.PI / 180;
+  function hav(a, b) {
+    const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+    const s = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(s));
+  }
+
+  let cumul = [0];
+  for (let i = 1; i < trkpts.length; i++) cumul.push(cumul[i-1] + hav(trkpts[i-1], trkpts[i]));
+  const totalDist = cumul[cumul.length-1];
+  
+  totalDistKm = totalDist / 1000;
+  if (trkpts[0].time && trkpts[trkpts.length-1].time) durMs = new Date(trkpts[trkpts.length-1].time) - new Date(trkpts[0].time);
+  for (let i = 1; i < trkpts.length; i++) {
+    const d = trkpts[i].ele - trkpts[i-1].ele;
+    if (d > 0) dPlus += d;
+  }
+
+  setLang(currentLang); applyLogos(); syncUrlParams();
+
+  const latlngs = trkpts.map(p => [p.lat, p.lng]);
+  L.polyline(latlngs, { color: 'white', weight: (cfg.track?.weight || 4) + 4, opacity: 0.5 }).addTo(map);
+  L.polyline(latlngs, { color: cfg.track?.color || '#FC4C02', weight: cfg.track?.weight || 4, opacity: cfg.track?.opacity || 0.9, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+  
+  // FitBounds sans animation pour éviter les conflits au chargement
+  map.fitBounds(L.latLngBounds(latlngs), { padding: [40, 40], animate: false });
+  setTimeout(() => map.invalidateSize(), 200);
+
+  // ───── GRAPHIQUE ÉLÉVATION ──────────────────────────────────────────
+  const hoverMarker = L.circleMarker([0,0], { radius: 6, color: 'white', fillColor: '#0066FF', fillOpacity: 1, weight: 2, interactive: false, pane: 'markerPane' });
+  const chartLabels = cumul.map(d => (d / 1000).toFixed(1)); 
+  const chartData = trkpts.map(p => p.ele);                  
+  const ctx = document.getElementById('elevation-chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: chartLabels,
+      datasets: [{ label: 'Elev', data: chartData, borderColor: '#71717A', backgroundColor: 'rgba(113, 113, 122, 0.2)', fill: true, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4, tension: 0.1 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', displayColors: false, callbacks: { title: (i) => `${i[0].label} km`, label: (i) => `${Math.round(i.raw)} m` } } },
+      scales: { x: { grid: { display: false, drawBorder: false }, ticks: { color: 'rgba(255,255,255,0.4)', maxTicksLimit: 8, callback: function(v) { return this.getLabelForValue(v) + ' km'; } } }, y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: 'rgba(255,255,255,0.4)', maxTicksLimit: 5 } } },
+      onHover: (e, activeElements) => { if (activeElements.length > 0) { const idx = activeElements[0].index; hoverMarker.setLatLng(latlngs[idx]); if (!map.hasLayer(hoverMarker)) hoverMarker.addTo(map); } else { hoverMarker.remove(); } }
+    }
+  });
+
+  // ───── GESTION DES POIS (Pastilles Infos) ──────────────────────────
+  function renderPois() {
+    poiMarkersLayer.clearLayers();
+    poisState.forEach((poi, idx) => {
+      const latlng = [poi.lat || 0, poi.lng || 0];
+      const logoUrl = poi.logo || LOGO_DATA[currentLogement]?.src || 'images/bell-etoile-logo.png';
+      
+      const html = `<div class="custom-poi-marker"><img src="${logoUrl}" alt="POI"></div>`;
+      const m = L.marker(latlng, {
+        draggable: isEditMode,
+        icon: L.divIcon({ className: '', html, iconSize: [42, 42], iconAnchor: [21, 21] }),
+        zIndexOffset: 500
+      });
+
+      m.on('dragstart', function(e) { e.target.getElement().querySelector('.custom-poi-marker').classList.add('is-dragging'); });
+      m.on('dragend', function(e) {
+        e.target.getElement().querySelector('.custom-poi-marker').classList.remove('is-dragging');
+        const newPos = e.target.getLatLng();
+        poisState[idx].lat = parseFloat(newPos.lat.toFixed(6));
+        poisState[idx].lng = parseFloat(newPos.lng.toFixed(6));
+        if(isEditMode) renderPois();
+      });
+
+      m.on('click', (e) => {
+        // Empêche Leaflet de toggler un popup éventuellement bindé sur le marker.
+        // On crée nous-mêmes un popup neuf à chaque clic via L.popup().openOn(map),
+        // ce qui ferme proprement le précédent et garantit un affichage à chaque clic.
+        L.DomEvent.stopPropagation(e);
+
+        if (isEditMode) {
+          const popupHtml = `
+            <div class="edit-popup">
+              <label>Logo URL: <input type="text" id="ep-logo-${idx}" value="${poi.logo || ''}"></label>
+              <div class="flex-row">
+                <div><label>Badge FR: <input type="text" id="ep-bfr-${idx}" value="${poi.badgeFr || ''}"></label></div>
+                <div><label>Badge EN: <input type="text" id="ep-ben-${idx}" value="${poi.badgeEn || ''}"></label></div>
+              </div>
+              <div class="flex-row">
+                <div><label>Titre FR: <input type="text" id="ep-tfr-${idx}" value="${poi.titleFr || ''}"></label></div>
+                <div><label>Titre EN: <input type="text" id="ep-ten-${idx}" value="${poi.titleEn || ''}"></label></div>
+              </div>
+              <div class="flex-row">
+                <div><label>Desc FR: <input type="text" id="ep-dfr-${idx}" value="${poi.descFr || ''}"></label></div>
+                <div><label>Desc EN: <input type="text" id="ep-den-${idx}" value="${poi.descEn || ''}"></label></div>
+              </div>
+              <div class="popup-actions">
+                <button class="save-btn" onclick="window.savePoiEdit(${idx})">${T[currentLang].save}</button>
+                <button class="delete-btn" onclick="window.deletePoi(${idx})">${T[currentLang].del}</button>
+              </div>
+            </div>
+          `;
+          L.popup({ minWidth: 260, closeButton: false, keepInView: true })
+            .setLatLng(m.getLatLng())
+            .setContent(popupHtml)
+            .openOn(map);
+        } else {
+          const badge = currentLang === 'en' ? (poi.badgeEn || poi.badgeFr) : (poi.badgeFr || poi.badgeEn);
+          const title = currentLang === 'en' ? (poi.titleEn || poi.titleFr) : (poi.titleFr || poi.titleEn);
+          const desc  = currentLang === 'en' ? (poi.descEn || poi.descFr)   : (poi.descFr || poi.descEn);
+          const logoBlock = logoUrl ? `<div class="ov-popup__logo-wrap"><img src="${logoUrl}" alt="" class="ov-popup__logo"></div>` : '';
+
+          const viewerHtml = `
+            <div class="ov-popup">
+              ${logoBlock}
+              <div class="ov-popup__body">
+                ${badge ? `<span class="ov-popup__badge">${badge}</span>` : ''}
+                ${title ? `<h3 class="ov-popup__title">${title}</h3>` : ''}
+                ${desc  ? `<p class="ov-popup__desc">${desc}</p>` : ''}
+              </div>
+            </div>
+          `;
+          L.popup({ className: 'leaflet-custom-ov-popup' })
+            .setLatLng(m.getLatLng())
+            .setContent(viewerHtml)
+            .openOn(map);
+          if (window.BDLAnalytics) window.BDLAnalytics.trackPoi('poi-' + idx, title, 'rando_poi');
+        }
+      });
+      poiMarkersLayer.addLayer(m);
+    });
+  }
+
+  window.savePoiEdit = function(idx) {
+    poisState[idx].logo = document.getElementById(`ep-logo-${idx}`).value;
+    poisState[idx].badgeFr = document.getElementById(`ep-bfr-${idx}`).value;
+    poisState[idx].badgeEn = document.getElementById(`ep-ben-${idx}`).value;
+    poisState[idx].titleFr = document.getElementById(`ep-tfr-${idx}`).value;
+    poisState[idx].titleEn = document.getElementById(`ep-ten-${idx}`).value;
+    poisState[idx].descFr = document.getElementById(`ep-dfr-${idx}`).value;
+    poisState[idx].descEn = document.getElementById(`ep-den-${idx}`).value;
+    map.closePopup(); renderPois();
+  };
+
+  window.deletePoi = function(idx) {
+    if(confirm("Confirmer la suppression de cette information ?")) { poisState.splice(idx, 1); map.closePopup(); renderPois(); }
+  };
+
+  document.getElementById('add-poi-btn').addEventListener('click', function() {
+    const center = map.getCenter();
+    poisState.push({
+      lat: parseFloat(center.lat.toFixed(6)), lng: parseFloat(center.lng.toFixed(6)),
+      logo: LOGO_DATA[currentLogement]?.src || "images/bell-etoile-logo.png",
+      badgeFr: "🏡 Votre séjour", badgeEn: "🏡 Your stay",
+      titleFr: "Titre Info", titleEn: "Info Title",
+      descFr: "Description...", descEn: "Description..."
+    });
+    renderPois();
+    setTimeout(() => { const layers = poiMarkersLayer.getLayers(); layers[layers.length - 1].fire('click'); }, 120);
+  });
+
+  // ───── GESTION DES PHOTOS ──────────────────────────────
+  function posAtFraction(f) {
+    const targetDist = Math.max(0, Math.min(1, f)) * totalDist;
+    let i = 1;
+    while (i < cumul.length && cumul[i] < targetDist) i++;
+    if (i >= cumul.length) return latlngs[latlngs.length - 1];
+    const segLen = cumul[i] - cumul[i-1];
+    const t = segLen > 0 ? (targetDist - cumul[i-1]) / segLen : 0;
+    const a = trkpts[i-1], b = trkpts[i];
+    return [a.lat + (b.lat - a.lat) * t, a.lng + (b.lng - a.lng) * t];
+  }
+
+  function renderPhotos() {
+    photoMarkersLayer.clearLayers();
+    
+    let resolvedList = photosState.map((p, idx) => {
+      let pos;
+      if (p.lat != null && p.lng != null) pos = [p.lat, p.lng];
+      else if (p.km != null) pos = posAtFraction((p.km * 1000) / totalDist);
+      else if (p.position != null) pos = posAtFraction(p.position);
+      else {
+        const n = photosState.filter(x => x.lat == null && x.km == null && x.position == null).length;
+        let autoIdx = 0;
+        for (let i = 0; i <= idx; i++) {
+          const pp = photosState[i];
+          if (pp.lat == null && pp.km == null && pp.position == null) { if (i === idx) break; autoIdx++; }
+        }
+        pos = posAtFraction(n > 1 ? 0.05 + (autoIdx / (n - 1)) * 0.9 : 0.5);
+      }
+
+      let bestIdx = 0, bestD = Infinity;
+      for (let i = 0; i < trkpts.length; i++) {
+        const d = hav({lat: pos[0], lng: pos[1]}, trkpts[i]);
+        if (d < bestD) { bestD = d; bestIdx = i; }
+      }
+      return { ...p, pos, trackIdx: bestIdx, originalIndex: idx };
+    });
+
+    resolvedList.sort((a, b) => a.trackIdx - b.trackIdx);
+    latestResolvedPhotos = resolvedList.map((p, idx) => ({ ...p, num: idx + 1 }));
+
+    latestResolvedPhotos.forEach((p, idx) => {
+      const html = `<div class="photo-marker" style="background-image:url('${p.src}')"><div class="photo-marker__num">${p.num}</div></div>`;
+      const m = L.marker(p.pos, {
+        draggable: isEditMode,
+        icon: L.divIcon({ className: '', html, iconSize: [52, 52], iconAnchor: [26, 26] }),
+        zIndexOffset: p.num * 10
+      });
+
+      m.on('dragstart', function(e) { e.target.getElement().querySelector('.photo-marker').classList.add('is-dragging'); });
+      m.on('dragend', function(e) {
+        e.target.getElement().querySelector('.photo-marker').classList.remove('is-dragging');
+        const newPos = e.target.getLatLng();
+        photosState[p.originalIndex].lat = parseFloat(newPos.lat.toFixed(6));
+        photosState[p.originalIndex].lng = parseFloat(newPos.lng.toFixed(6));
+        delete photosState[p.originalIndex].km; delete photosState[p.originalIndex].position;
+        if(isEditMode) renderPhotos();
+      });
+
+      m.on('click', (e) => {
+        if (isEditMode) {
+          L.DomEvent.stopPropagation(e);
+          const currentLat = photosState[p.originalIndex].lat || p.pos[0];
+          const currentLng = photosState[p.originalIndex].lng || p.pos[1];
+          const popupHtml = `
+            <div class="edit-popup">
+              <label>URL Image: <input type="text" id="edit-src-${p.originalIndex}" value="${p.src}"></label>
+              <label>Lat: <input type="number" step="any" id="edit-lat-${p.originalIndex}" value="${currentLat}"></label>
+              <label>Lng: <input type="number" step="any" id="edit-lng-${p.originalIndex}" value="${currentLng}"></label>
+              <div class="popup-actions">
+                <button class="save-btn" onclick="window.savePhotoEdit(${p.originalIndex})">${T[currentLang].save}</button>
+                <button class="view-btn" onclick="window.previewPhoto(${idx})">${T[currentLang].view}</button>
+                <button class="delete-btn" onclick="window.deletePhoto(${p.originalIndex})">${T[currentLang].del}</button>
+              </div>
+            </div>
+          `;
+          L.popup({ minWidth: 220, closeButton: false, keepInView: true })
+            .setLatLng(m.getLatLng())
+            .setContent(popupHtml)
+            .openOn(map);
+        } else {
+          openLightbox(idx, latestResolvedPhotos);
+          if (window.BDLAnalytics) window.BDLAnalytics.trackPoi('photo-' + p.originalIndex, 'Photo ' + p.num, 'rando_photo');
+        }
+      });
+      photoMarkersLayer.addLayer(m);
+    });
+
+    const statEl = document.getElementById('stat-photo-count');
+    if(statEl) statEl.querySelector('.stat__value').textContent = photosState.length;
+  }
+
+  window.savePhotoEdit = function(idx) {
+    photosState[idx].src = document.getElementById(`edit-src-${idx}`).value;
+    photosState[idx].lat = parseFloat(document.getElementById(`edit-lat-${idx}`).value);
+    photosState[idx].lng = parseFloat(document.getElementById(`edit-lng-${idx}`).value);
+    delete photosState[idx].km; delete photosState[idx].position;
+    map.closePopup(); renderPhotos();
+  };
+
+  window.previewPhoto = function(idx) { openLightbox(idx, latestResolvedPhotos); };
+
+  window.deletePhoto = function(idx) {
+    if(confirm("Confirmer la suppression ?")) { photosState.splice(idx, 1); map.closePopup(); renderPhotos(); }
+  };
+
+  document.getElementById('add-photo-btn').addEventListener('click', function() {
+    const center = map.getCenter();
+    photosState.push({ src: "data/photos/01.jpg", lat: parseFloat(center.lat.toFixed(6)), lng: parseFloat(center.lng.toFixed(6)) });
+    renderPhotos();
+    setTimeout(() => { const layers = photoMarkersLayer.getLayers(); layers[layers.length - 1].fire('click'); }, 120);
+  });
+
+  // ───── GESTION DE L'ÉDITION ET EXPORT ─────────────────────────────
+  document.getElementById('toggle-edit-mode').addEventListener('click', function(e) {
+    isEditMode = !isEditMode;
+    if (isEditMode) {
+      e.target.classList.add("btn--active");
+      document.getElementById('add-photo-btn').style.display = "inline-block";
+      document.getElementById('add-poi-btn').style.display = "inline-block";
+      document.getElementById('export-config-btn').style.display = "inline-block";
+    } else {
+      e.target.classList.remove("btn--active");
+      document.getElementById('add-photo-btn').style.display = "none";
+      document.getElementById('add-poi-btn').style.display = "none";
+      document.getElementById('export-config-btn').style.display = "none";
+    }
+    updateTexts();
+    map.closePopup(); renderPhotos(); renderPois();
+  });
+
+  document.getElementById('export-config-btn').addEventListener('click', function() {
+    const photoLines = latestResolvedPhotos.map(p => {
+      let parts = [`src: "${p.src}"`];
+      if (p.lat != null && p.lng != null) parts.push(`lat: ${p.lat}`, `lng: ${p.lng}`);
+      else if (p.km != null) parts.push(`km: ${p.km}`);
+      else if (p.position != null) parts.push(`position: ${p.position}`);
+      if (p.caption) parts.push(`caption: "${p.caption.replace(/"/g, '\\"')}"`);
+      return `    { ${parts.join(', ')} }`;
+    });
+    
+    const poiLines = poisState.map(p => {
+      let parts = [];
+      if (p.lat != null && p.lng != null) parts.push(`lat: ${p.lat}`, `lng: ${p.lng}`);
+      if (p.logo) parts.push(`logo: "${p.logo.replace(/"/g, '\\"')}"`);
+      if (p.badgeFr) parts.push(`badgeFr: "${p.badgeFr.replace(/"/g, '\\"')}"`);
+      if (p.badgeEn) parts.push(`badgeEn: "${p.badgeEn.replace(/"/g, '\\"')}"`);
+      if (p.titleFr) parts.push(`titleFr: "${p.titleFr.replace(/"/g, '\\"')}"`);
+      if (p.titleEn) parts.push(`titleEn: "${p.titleEn.replace(/"/g, '\\"')}"`);
+      if (p.descFr) parts.push(`descFr: "${p.descFr.replace(/"/g, '\\"')}"`);
+      if (p.descEn) parts.push(`descEn: "${p.descEn.replace(/"/g, '\\"')}"`);
+      return `    { ${parts.join(', ')} }`;
+    });
+    
+    const configStr = `  photos: [\n${photoLines.join(',\n')}\n  ],\n\n  pois: [\n${poiLines.join(',\n')}\n  ]`;
+    
+    const el = document.createElement('textarea'); 
+    el.value = configStr; 
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el); 
+    el.select();
+    
+    try { 
+      document.execCommand('copy'); 
+      showToast(T[currentLang].copied); 
+    } catch(e) { 
+      showToast(T[currentLang].copyErr, true); 
+      console.log(configStr); 
+    }
+    document.body.removeChild(el);
+  });
+
+  // ───── LIGHTBOX ───────────────────────────────────────────────────
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img'), lbCap = document.getElementById('lb-caption'), lbCount = document.getElementById('lb-counter');
+  let lbIdx = 0, currentResolved = [];
+
+  function openLightbox(idx, resolvedArr) {
+    lbIdx = idx; currentResolved = resolvedArr; updateLightbox();
+    lb.classList.add('is-open'); document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() { lb.classList.remove('is-open'); document.body.style.overflow = ''; }
+  function updateLightbox() {
+    if(!currentResolved[lbIdx]) return;
+    const p = currentResolved[lbIdx];
+    lbImg.src = p.src; lbImg.alt = p.caption || `Photo ${p.num}`;
+    lbCount.textContent = `${lbIdx + 1} / ${currentResolved.length}`;
+    if (p.caption) { lbCap.textContent = p.caption; lbCap.classList.add('has-content'); }
+    else { lbCap.classList.remove('has-content'); }
+  }
+  function next() { lbIdx = (lbIdx + 1) % currentResolved.length; updateLightbox(); }
+  function prev() { lbIdx = (lbIdx - 1 + currentResolved.length) % currentResolved.length; updateLightbox(); }
+
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  document.getElementById('lb-next').addEventListener('click', next);
+  document.getElementById('lb-prev').addEventListener('click', prev);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('is-open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+  // Lancement
+  renderPhotos();
+  renderPois();
+});
+</script>
+
+<script type="application/gpx+xml" id="gpx-inline">
+
+
+
+
+
+
+
+
+
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="EditGPX">
+  <metadata>
+    <name>Boucle Aiguines Les Salles</name>
+  </metadata>
+  <trk>
+    <name><![CDATA[Vers Les Salles_1]]></name>
+    <desc><![CDATA[]]></desc>
+    <extensions>
+      <line xmlns="http://www.topografix.com/GPX/gpx_style/0/2">
+        <color>0000FF</color>
+        <width>4</width>
+      </line>
+    </extensions>
+    <trkseg>
+
+      <trkpt lat="43.771284" lon="6.213082">
+        <ele>493.9</ele>
+      </trkpt>
+      <trkpt lat="43.771311" lon="6.212932">
+        <ele>493.8</ele>
+      </trkpt>
+      <trkpt lat="43.771460" lon="6.212600">
+        <ele>495.4</ele>
+      </trkpt>
+      <trkpt lat="43.771479" lon="6.212546">
+        <ele>495.7</ele>
+      </trkpt>
+      <trkpt lat="43.771379" lon="6.212524">
+        <ele>494</ele>
+      </trkpt>
+      <trkpt lat="43.771368" lon="6.212522">
+        <ele>493.9</ele>
+      </trkpt>
+      <trkpt lat="43.771175" lon="6.212404">
+        <ele>493.2</ele>
+      </trkpt>
+      <trkpt lat="43.771159" lon="6.211857">
+        <ele>492.9</ele>
+      </trkpt>
+      <trkpt lat="43.771190" lon="6.210827">
+        <ele>491.1</ele>
+      </trkpt>
+      <trkpt lat="43.771105" lon="6.210108">
+        <ele>487.5</ele>
+      </trkpt>
+      <trkpt lat="43.770930" lon="6.209099">
+        <ele>482</ele>
+      </trkpt>
+      <trkpt lat="43.770496" lon="6.208756">
+        <ele>481.2</ele>
+      </trkpt>
+      <trkpt lat="43.769845" lon="6.209056">
+        <ele>480.4</ele>
+      </trkpt>
+      <trkpt lat="43.769675" lon="6.209357">
+        <ele>481</ele>
+      </trkpt>
+      <trkpt lat="43.769303" lon="6.210322">
+        <ele>477.8</ele>
+      </trkpt>
+      <trkpt lat="43.768993" lon="6.211116">
+        <ele>477.5</ele>
+      </trkpt>
+      <trkpt lat="43.768916" lon="6.212082">
+        <ele>478.2</ele>
+      </trkpt>
+      <trkpt lat="43.768823" lon="6.212490">
+        <ele>476.8</ele>
+      </trkpt>
+      <trkpt lat="43.769272" lon="6.213090">
+        <ele>477.7</ele>
+      </trkpt>
+      <trkpt lat="43.769567" lon="6.213477">
+        <ele>478.7</ele>
+      </trkpt>
+      <trkpt lat="43.769830" lon="6.214206">
+        <ele>479</ele>
+      </trkpt>
+      <trkpt lat="43.770186" lon="6.214335">
+        <ele>479.7</ele>
+      </trkpt>
+      <trkpt lat="43.770171" lon="6.214528">
+        <ele>479.9</ele>
+      </trkpt>
+      <trkpt lat="43.769954" lon="6.214678">
+        <ele>479.6</ele>
+      </trkpt>
+      <trkpt lat="43.769985" lon="6.215193">
+        <ele>480</ele>
+      </trkpt>
+      <trkpt lat="43.769737" lon="6.215215">
+        <ele>479.8</ele>
+      </trkpt>
+      <trkpt lat="43.769427" lon="6.215537">
+        <ele>480</ele>
+      </trkpt>
+      <trkpt lat="43.769210" lon="6.215408">
+        <ele>480</ele>
+      </trkpt>
+      <trkpt lat="43.768835" lon="6.215622">
+        <ele>480</ele>
+      </trkpt>
+      <trkpt lat="43.768246" lon="6.215633">
+        <ele>479.1</ele>
+      </trkpt>
+      <trkpt lat="43.767936" lon="6.215601">
+        <ele>479.5</ele>
+      </trkpt>
+      <trkpt lat="43.767680" lon="6.215504">
+        <ele>479.8</ele>
+      </trkpt>
+      <trkpt lat="43.766952" lon="6.215161">
+        <ele>479.6</ele>
+      </trkpt>
+      <trkpt lat="43.766565" lon="6.214764">
+        <ele>479.2</ele>
+      </trkpt>
+      <trkpt lat="43.766208" lon="6.214496">
+        <ele>479.6</ele>
+      </trkpt>
+      <trkpt lat="43.765976" lon="6.214024">
+        <ele>479.2</ele>
+      </trkpt>
+      <trkpt lat="43.765805" lon="6.213949">
+        <ele>479.3</ele>
+      </trkpt>
+      <trkpt lat="43.765418" lon="6.214346">
+        <ele>481.1</ele>
+      </trkpt>
+      <trkpt lat="43.765333" lon="6.214303">
+        <ele>481.3</ele>
+      </trkpt>
+      <trkpt lat="43.765100" lon="6.214110">
+        <ele>480.9</ele>
+      </trkpt>
+      <trkpt lat="43.764783" lon="6.214120">
+        <ele>482.3</ele>
+      </trkpt>
+      <trkpt lat="43.764457" lon="6.213895">
+        <ele>482.9</ele>
+      </trkpt>
+      <trkpt lat="43.764302" lon="6.213648">
+        <ele>482.2</ele>
+      </trkpt>
+      <trkpt lat="43.763961" lon="6.213305">
+        <ele>481.9</ele>
+      </trkpt>
+      <trkpt lat="43.763535" lon="6.213015">
+        <ele>481.9</ele>
+      </trkpt>
+      <trkpt lat="43.762993" lon="6.212618">
+        <ele>481.7</ele>
+      </trkpt>
+      <trkpt lat="43.763070" lon="6.212404">
+        <ele>480.9</ele>
+      </trkpt>
+      <trkpt lat="43.763404" lon="6.211449">
+        <ele>477.5</ele>
+      </trkpt>
+      <trkpt lat="43.762714" lon="6.211213">
+        <ele>478.9</ele>
+      </trkpt>
+      <trkpt lat="43.762466" lon="6.211084">
+        <ele>478.5</ele>
+      </trkpt>
+      <trkpt lat="43.762334" lon="6.211170">
+        <ele>478.7</ele>
+      </trkpt>
+      <trkpt lat="43.762187" lon="6.211492">
+        <ele>480.2</ele>
+      </trkpt>
+      <trkpt lat="43.762017" lon="6.211674">
+        <ele>481</ele>
+      </trkpt>
+      <trkpt lat="43.761676" lon="6.211814">
+        <ele>481.5</ele>
+      </trkpt>
+      <trkpt lat="43.761497" lon="6.211588">
+        <ele>480.5</ele>
+      </trkpt>
+      <trkpt lat="43.761141" lon="6.211438">
+        <ele>480.3</ele>
+      </trkpt>
+      <trkpt lat="43.760901" lon="6.211556">
+        <ele>480.4</ele>
+      </trkpt>
+      <trkpt lat="43.760785" lon="6.211535">
+        <ele>479.3</ele>
+      </trkpt>
+      <trkpt lat="43.760537" lon="6.211782">
+        <ele>478.3</ele>
+      </trkpt>
+      <trkpt lat="43.760265" lon="6.212039">
+        <ele>476.9</ele>
+      </trkpt>
+      <trkpt lat="43.759986" lon="6.212575">
+        <ele>477.4</ele>
+      </trkpt>
+      <trkpt lat="43.759855" lon="6.213080">
+        <ele>477.9</ele>
+      </trkpt>
+      <trkpt lat="43.759746" lon="6.213799">
+        <ele>478.2</ele>
+      </trkpt>
+      <trkpt lat="43.759630" lon="6.214238">
+        <ele>477.9</ele>
+      </trkpt>
+      <trkpt lat="43.759622" lon="6.214646">
+        <ele>479.7</ele>
+      </trkpt>
+      <trkpt lat="43.759537" lon="6.214893">
+        <ele>479.3</ele>
+      </trkpt>
+      <trkpt lat="43.759452" lon="6.214786">
+        <ele>477.4</ele>
+      </trkpt>
+      <trkpt lat="43.759483" lon="6.214528">
+        <ele>476.9</ele>
+      </trkpt>
+      <trkpt lat="43.759421" lon="6.214528">
+        <ele>476.2</ele>
+      </trkpt>
+      <trkpt lat="43.759312" lon="6.214732">
+        <ele>476.1</ele>
+      </trkpt>
+      <trkpt lat="43.758826" lon="6.214877">
+        <ele>475.7</ele>
+      </trkpt>
+      <trkpt lat="43.758559" lon="6.214850">
+        <ele>476</ele>
+      </trkpt>
+      <trkpt lat="43.758435" lon="6.214877">
+        <ele>476</ele>
+      </trkpt>
+      <trkpt lat="43.758323" lon="6.214845">
+        <ele>476.2</ele>
+      </trkpt>
+      <trkpt lat="43.758210" lon="6.214609">
+        <ele>478.2</ele>
+      </trkpt>
+      <trkpt lat="43.758129" lon="6.214512">
+        <ele>479.7</ele>
+      </trkpt>
+      <trkpt lat="43.757985" lon="6.214421">
+        <ele>483.1</ele>
+      </trkpt>
+      <trkpt lat="43.757931" lon="6.214367">
+        <ele>485</ele>
+      </trkpt>
+      <trkpt lat="43.757930" lon="6.214370">
+        <ele>485</ele>
+      </trkpt>
+      <trkpt lat="43.757910" lon="6.214400">
+        <ele>485.3</ele>
+      </trkpt>
+      <trkpt lat="43.757600" lon="6.215040">
+        <ele>489.9</ele>
+      </trkpt>
+      <trkpt lat="43.757490" lon="6.215300">
+        <ele>491.2</ele>
+      </trkpt>
+      <trkpt lat="43.757180" lon="6.216050">
+        <ele>495.3</ele>
+      </trkpt>
+      <trkpt lat="43.757180" lon="6.216440">
+        <ele>496.4</ele>
+      </trkpt>
+      <trkpt lat="43.757180" lon="6.217000">
+        <ele>499</ele>
+      </trkpt>
+      <trkpt lat="43.757130" lon="6.217210">
+        <ele>500.7</ele>
+      </trkpt>
+      <trkpt lat="43.757040" lon="6.217670">
+        <ele>501.4</ele>
+      </trkpt>
+      <trkpt lat="43.756900" lon="6.218040">
+        <ele>504.1</ele>
+      </trkpt>
+      <trkpt lat="43.756830" lon="6.218270">
+        <ele>505.3</ele>
+      </trkpt>
+      <trkpt lat="43.756860" lon="6.218780">
+        <ele>506.2</ele>
+      </trkpt>
+      <trkpt lat="43.756710" lon="6.219110">
+        <ele>509.5</ele>
+      </trkpt>
+      <trkpt lat="43.756580" lon="6.219360">
+        <ele>511.6</ele>
+      </trkpt>
+      <trkpt lat="43.756450" lon="6.219440">
+        <ele>512.5</ele>
+      </trkpt>
+      <trkpt lat="43.756330" lon="6.219460">
+        <ele>513.1</ele>
+      </trkpt>
+      <trkpt lat="43.756240" lon="6.219460">
+        <ele>513.5</ele>
+      </trkpt>
+      <trkpt lat="43.756020" lon="6.219340">
+        <ele>514.8</ele>
+      </trkpt>
+      <trkpt lat="43.755770" lon="6.219140">
+        <ele>517.1</ele>
+      </trkpt>
+      <trkpt lat="43.755590" lon="6.219010">
+        <ele>517.7</ele>
+      </trkpt>
+      <trkpt lat="43.755410" lon="6.218870">
+        <ele>519.4</ele>
+      </trkpt>
+      <trkpt lat="43.755310" lon="6.218860">
+        <ele>520.3</ele>
+      </trkpt>
+      <trkpt lat="43.755220" lon="6.218930">
+        <ele>521.7</ele>
+      </trkpt>
+      <trkpt lat="43.755590" lon="6.219210">
+        <ele>518.2</ele>
+      </trkpt>
+      <trkpt lat="43.755820" lon="6.219380">
+        <ele>516.5</ele>
+      </trkpt>
+      <trkpt lat="43.756240" lon="6.219730">
+        <ele>512.7</ele>
+      </trkpt>
+      <trkpt lat="43.756480" lon="6.219900">
+        <ele>511</ele>
+      </trkpt>
+      <trkpt lat="43.756600" lon="6.219930">
+        <ele>509.3</ele>
+      </trkpt>
+      <trkpt lat="43.756570" lon="6.220070">
+        <ele>508.3</ele>
+      </trkpt>
+      <trkpt lat="43.756530" lon="6.220210">
+        <ele>506.4</ele>
+      </trkpt>
+      <trkpt lat="43.756480" lon="6.220280">
+        <ele>506.3</ele>
+      </trkpt>
+      <trkpt lat="43.756400" lon="6.220370">
+        <ele>507.2</ele>
+      </trkpt>
+      <trkpt lat="43.756220" lon="6.220440">
+        <ele>506.6</ele>
+      </trkpt>
+      <trkpt lat="43.756190" lon="6.220480">
+        <ele>506.1</ele>
+      </trkpt>
+      <trkpt lat="43.756170" lon="6.220520">
+        <ele>505.3</ele>
+      </trkpt>
+      <trkpt lat="43.756180" lon="6.221020">
+        <ele>505</ele>
+      </trkpt>
+      <trkpt lat="43.756130" lon="6.221310">
+        <ele>502</ele>
+      </trkpt>
+      <trkpt lat="43.756060" lon="6.221520">
+        <ele>502.3</ele>
+      </trkpt>
+      <trkpt lat="43.755960" lon="6.221980">
+        <ele>501.3</ele>
+      </trkpt>
+      <trkpt lat="43.755900" lon="6.222350">
+        <ele>500.2</ele>
+      </trkpt>
+      <trkpt lat="43.755890" lon="6.222490">
+        <ele>500</ele>
+      </trkpt>
+      <trkpt lat="43.755900" lon="6.222670">
+        <ele>499.4</ele>
+      </trkpt>
+      <trkpt lat="43.755990" lon="6.222870">
+        <ele>498.2</ele>
+      </trkpt>
+      <trkpt lat="43.756040" lon="6.223100">
+        <ele>496.7</ele>
+      </trkpt>
+      <trkpt lat="43.756080" lon="6.223150">
+        <ele>495.9</ele>
+      </trkpt>
+      <trkpt lat="43.756130" lon="6.223160">
+        <ele>495.1</ele>
+      </trkpt>
+      <trkpt lat="43.756200" lon="6.223110">
+        <ele>495</ele>
+      </trkpt>
+      <trkpt lat="43.756260" lon="6.223020">
+        <ele>495</ele>
+      </trkpt>
+      <trkpt lat="43.756310" lon="6.222970">
+        <ele>494.7</ele>
+      </trkpt>
+      <trkpt lat="43.756340" lon="6.222960">
+        <ele>494.4</ele>
+      </trkpt>
+      <trkpt lat="43.756590" lon="6.223040">
+        <ele>494</ele>
+      </trkpt>
+      <trkpt lat="43.756580" lon="6.223110">
+        <ele>494.5</ele>
+      </trkpt>
+      <trkpt lat="43.756540" lon="6.223130">
+        <ele>494.5</ele>
+      </trkpt>
+      <trkpt lat="43.756530" lon="6.223170">
+        <ele>494.6</ele>
+      </trkpt>
+      <trkpt lat="43.756570" lon="6.223230">
+        <ele>495.6</ele>
+      </trkpt>
+      <trkpt lat="43.756740" lon="6.223220">
+        <ele>497.6</ele>
+      </trkpt>
+      <trkpt lat="43.756880" lon="6.223070">
+        <ele>498</ele>
+      </trkpt>
+      <trkpt lat="43.756950" lon="6.222940">
+        <ele>498.3</ele>
+      </trkpt>
+      <trkpt lat="43.756990" lon="6.222840">
+        <ele>498.9</ele>
+      </trkpt>
+      <trkpt lat="43.757040" lon="6.222720">
+        <ele>499.1</ele>
+      </trkpt>
+      <trkpt lat="43.757090" lon="6.222510">
+        <ele>498.3</ele>
+      </trkpt>
+      <trkpt lat="43.757140" lon="6.222290">
+        <ele>497.8</ele>
+      </trkpt>
+      <trkpt lat="43.757170" lon="6.222150">
+        <ele>497.1</ele>
+      </trkpt>
+      <trkpt lat="43.757190" lon="6.222150">
+        <ele>497.5</ele>
+      </trkpt>
+      <trkpt lat="43.757230" lon="6.222100">
+        <ele>498</ele>
+      </trkpt>
+      <trkpt lat="43.757330" lon="6.221980">
+        <ele>498.8</ele>
+      </trkpt>
+      <trkpt lat="43.757470" lon="6.221840">
+        <ele>499.3</ele>
+      </trkpt>
+      <trkpt lat="43.757640" lon="6.221740">
+        <ele>500.1</ele>
+      </trkpt>
+      <trkpt lat="43.757810" lon="6.221640">
+        <ele>500.8</ele>
+      </trkpt>
+      <trkpt lat="43.757900" lon="6.221580">
+        <ele>500.8</ele>
+      </trkpt>
+      <trkpt lat="43.757990" lon="6.221570">
+        <ele>501.6</ele>
+      </trkpt>
+      <trkpt lat="43.758150" lon="6.221570">
+        <ele>502.6</ele>
+      </trkpt>
+      <trkpt lat="43.758260" lon="6.221590">
+        <ele>503.3</ele>
+      </trkpt>
+      <trkpt lat="43.758380" lon="6.221620">
+        <ele>504.1</ele>
+      </trkpt>
+      <trkpt lat="43.758530" lon="6.221690">
+        <ele>505.5</ele>
+      </trkpt>
+      <trkpt lat="43.758660" lon="6.221850">
+        <ele>507.2</ele>
+      </trkpt>
+      <trkpt lat="43.758770" lon="6.222020">
+        <ele>507.3</ele>
+      </trkpt>
+      <trkpt lat="43.758830" lon="6.222150">
+        <ele>508.7</ele>
+      </trkpt>
+      <trkpt lat="43.758830" lon="6.222210">
+        <ele>509.8</ele>
+      </trkpt>
+      <trkpt lat="43.758820" lon="6.222280">
+        <ele>510.5</ele>
+      </trkpt>
+      <trkpt lat="43.758780" lon="6.222340">
+        <ele>511.5</ele>
+      </trkpt>
+      <trkpt lat="43.758710" lon="6.222430">
+        <ele>512.7</ele>
+      </trkpt>
+      <trkpt lat="43.758640" lon="6.222480">
+        <ele>513.6</ele>
+      </trkpt>
+      <trkpt lat="43.758590" lon="6.222480">
+        <ele>514.1</ele>
+      </trkpt>
+      <trkpt lat="43.758500" lon="6.222460">
+        <ele>514.3</ele>
+      </trkpt>
+      <trkpt lat="43.758420" lon="6.222400">
+        <ele>514.5</ele>
+      </trkpt>
+      <trkpt lat="43.758260" lon="6.222340">
+        <ele>514.7</ele>
+      </trkpt>
+      <trkpt lat="43.758060" lon="6.222330">
+        <ele>515.1</ele>
+      </trkpt>
+      <trkpt lat="43.757890" lon="6.222350">
+        <ele>515.5</ele>
+      </trkpt>
+      <trkpt lat="43.757740" lon="6.222430">
+        <ele>516.6</ele>
+      </trkpt>
+      <trkpt lat="43.757650" lon="6.222540">
+        <ele>517.2</ele>
+      </trkpt>
+      <trkpt lat="43.757630" lon="6.222620">
+        <ele>517.9</ele>
+      </trkpt>
+      <trkpt lat="43.757630" lon="6.222750">
+        <ele>519.8</ele>
+      </trkpt>
+      <trkpt lat="43.757660" lon="6.222890">
+        <ele>521</ele>
+      </trkpt>
+      <trkpt lat="43.757770" lon="6.223240">
+        <ele>525.3</ele>
+      </trkpt>
+      <trkpt lat="43.757780" lon="6.223400">
+        <ele>526.3</ele>
+      </trkpt>
+      <trkpt lat="43.757800" lon="6.223440">
+        <ele>526.6</ele>
+      </trkpt>
+      <trkpt lat="43.757830" lon="6.223480">
+        <ele>527.3</ele>
+      </trkpt>
+      <trkpt lat="43.757870" lon="6.223490">
+        <ele>528</ele>
+      </trkpt>
+      <trkpt lat="43.758010" lon="6.223420">
+        <ele>529.3</ele>
+      </trkpt>
+      <trkpt lat="43.758100" lon="6.223430">
+        <ele>530</ele>
+      </trkpt>
+      <trkpt lat="43.758280" lon="6.223450">
+        <ele>530.6</ele>
+      </trkpt>
+      <trkpt lat="43.758500" lon="6.223480">
+        <ele>532</ele>
+      </trkpt>
+      <trkpt lat="43.758600" lon="6.223500">
+        <ele>532.8</ele>
+      </trkpt>
+      <trkpt lat="43.758700" lon="6.223560">
+        <ele>533.6</ele>
+      </trkpt>
+      <trkpt lat="43.758860" lon="6.223710">
+        <ele>536</ele>
+      </trkpt>
+      <trkpt lat="43.758880" lon="6.223800">
+        <ele>537</ele>
+      </trkpt>
+      <trkpt lat="43.758870" lon="6.223850">
+        <ele>537.6</ele>
+      </trkpt>
+      <trkpt lat="43.758720" lon="6.224030">
+        <ele>539.4</ele>
+      </trkpt>
+      <trkpt lat="43.758650" lon="6.224090">
+        <ele>540.1</ele>
+      </trkpt>
+      <trkpt lat="43.758580" lon="6.224160">
+        <ele>540.9</ele>
+      </trkpt>
+      <trkpt lat="43.758470" lon="6.224240">
+        <ele>541.2</ele>
+      </trkpt>
+      <trkpt lat="43.758280" lon="6.224520">
+        <ele>543.4</ele>
+      </trkpt>
+      <trkpt lat="43.758270" lon="6.224570">
+        <ele>543.9</ele>
+      </trkpt>
+      <trkpt lat="43.758260" lon="6.224650">
+        <ele>544.8</ele>
+      </trkpt>
+      <trkpt lat="43.758320" lon="6.224890">
+        <ele>547.8</ele>
+      </trkpt>
+      <trkpt lat="43.758350" lon="6.225030">
+        <ele>549.2</ele>
+      </trkpt>
+      <trkpt lat="43.758390" lon="6.225250">
+        <ele>550.8</ele>
+      </trkpt>
+      <trkpt lat="43.758440" lon="6.225380">
+        <ele>551.4</ele>
+      </trkpt>
+      <trkpt lat="43.758480" lon="6.225430">
+        <ele>551.9</ele>
+      </trkpt>
+      <trkpt lat="43.758600" lon="6.225540">
+        <ele>553.6</ele>
+      </trkpt>
+      <trkpt lat="43.758890" lon="6.225890">
+        <ele>556.4</ele>
+      </trkpt>
+      <trkpt lat="43.758980" lon="6.226020">
+        <ele>557.3</ele>
+      </trkpt>
+      <trkpt lat="43.759040" lon="6.226220">
+        <ele>558.6</ele>
+      </trkpt>
+      <trkpt lat="43.759070" lon="6.226380">
+        <ele>559.6</ele>
+      </trkpt>
+      <trkpt lat="43.759090" lon="6.226670">
+        <ele>561</ele>
+      </trkpt>
+      <trkpt lat="43.759080" lon="6.226910">
+        <ele>562.5</ele>
+      </trkpt>
+      <trkpt lat="43.759120" lon="6.227140">
+        <ele>564.3</ele>
+      </trkpt>
+      <trkpt lat="43.759110" lon="6.227220">
+        <ele>564.8</ele>
+      </trkpt>
+      <trkpt lat="43.759180" lon="6.227580">
+        <ele>568.6</ele>
+      </trkpt>
+      <trkpt lat="43.759240" lon="6.227690">
+        <ele>570.1</ele>
+      </trkpt>
+      <trkpt lat="43.759330" lon="6.227750">
+        <ele>571.5</ele>
+      </trkpt>
+      <trkpt lat="43.759370" lon="6.227770">
+        <ele>572.1</ele>
+      </trkpt>
+      <trkpt lat="43.759430" lon="6.227750">
+        <ele>572.6</ele>
+      </trkpt>
+      <trkpt lat="43.759480" lon="6.227780">
+        <ele>573.3</ele>
+      </trkpt>
+      <trkpt lat="43.759580" lon="6.228080">
+        <ele>576.9</ele>
+      </trkpt>
+      <trkpt lat="43.759690" lon="6.228240">
+        <ele>578.7</ele>
+      </trkpt>
+      <trkpt lat="43.759820" lon="6.228390">
+        <ele>580.6</ele>
+      </trkpt>
+      <trkpt lat="43.760100" lon="6.228580">
+        <ele>584.7</ele>
+      </trkpt>
+      <trkpt lat="43.760220" lon="6.228640">
+        <ele>586.8</ele>
+      </trkpt>
+      <trkpt lat="43.760280" lon="6.228650">
+        <ele>587.7</ele>
+      </trkpt>
+      <trkpt lat="43.760330" lon="6.228640">
+        <ele>588.3</ele>
+      </trkpt>
+      <trkpt lat="43.760410" lon="6.228610">
+        <ele>589.4</ele>
+      </trkpt>
+      <trkpt lat="43.760540" lon="6.228550">
+        <ele>590.8</ele>
+      </trkpt>
+      <trkpt lat="43.760610" lon="6.228530">
+        <ele>591.6</ele>
+      </trkpt>
+      <trkpt lat="43.760750" lon="6.228560">
+        <ele>594.1</ele>
+      </trkpt>
+      <trkpt lat="43.760790" lon="6.228560">
+        <ele>594.7</ele>
+      </trkpt>
+      <trkpt lat="43.760850" lon="6.228520">
+        <ele>595.4</ele>
+      </trkpt>
+      <trkpt lat="43.760900" lon="6.228480">
+        <ele>596.2</ele>
+      </trkpt>
+      <trkpt lat="43.760940" lon="6.228360">
+        <ele>596.3</ele>
+      </trkpt>
+      <trkpt lat="43.761050" lon="6.228190">
+        <ele>597.4</ele>
+      </trkpt>
+      <trkpt lat="43.761160" lon="6.228000">
+        <ele>598.1</ele>
+      </trkpt>
+      <trkpt lat="43.761220" lon="6.227850">
+        <ele>598.8</ele>
+      </trkpt>
+      <trkpt lat="43.761310" lon="6.227600">
+        <ele>598.9</ele>
+      </trkpt>
+      <trkpt lat="43.761340" lon="6.227550">
+        <ele>599.1</ele>
+      </trkpt>
+      <trkpt lat="43.761400" lon="6.227500">
+        <ele>600.1</ele>
+      </trkpt>
+      <trkpt lat="43.762050" lon="6.227100">
+        <ele>599.3</ele>
+      </trkpt>
+      <trkpt lat="43.762560" lon="6.226820">
+        <ele>599</ele>
+      </trkpt>
+      <trkpt lat="43.763050" lon="6.226490">
+        <ele>596.4</ele>
+      </trkpt>
+      <trkpt lat="43.763320" lon="6.226330">
+        <ele>598.4</ele>
+      </trkpt>
+      <trkpt lat="43.763640" lon="6.226120">
+        <ele>597.2</ele>
+      </trkpt>
+      <trkpt lat="43.763700" lon="6.226210">
+        <ele>597.6</ele>
+      </trkpt>
+      <trkpt lat="43.763730" lon="6.226500">
+        <ele>598.6</ele>
+      </trkpt>
+      <trkpt lat="43.763710" lon="6.226700">
+        <ele>599.9</ele>
+      </trkpt>
+      <trkpt lat="43.763720" lon="6.228320">
+        <ele>612</ele>
+      </trkpt>
+      <trkpt lat="43.763710" lon="6.229310">
+        <ele>620.6</ele>
+      </trkpt>
+      <trkpt lat="43.763780" lon="6.229470">
+        <ele>622.3</ele>
+      </trkpt>
+      <trkpt lat="43.763820" lon="6.229570">
+        <ele>623.3</ele>
+      </trkpt>
+      <trkpt lat="43.763570" lon="6.229690">
+        <ele>624.8</ele>
+      </trkpt>
+      <trkpt lat="43.763540" lon="6.229760">
+        <ele>625.9</ele>
+      </trkpt>
+      <trkpt lat="43.763590" lon="6.229810">
+        <ele>626.6</ele>
+      </trkpt>
+      <trkpt lat="43.763980" lon="6.229990">
+        <ele>630.8</ele>
+      </trkpt>
+      <trkpt lat="43.763970" lon="6.230070">
+        <ele>631.8</ele>
+      </trkpt>
+      <trkpt lat="43.763750" lon="6.230270">
+        <ele>633.3</ele>
+      </trkpt>
+      <trkpt lat="43.763550" lon="6.230400">
+        <ele>635</ele>
+      </trkpt>
+      <trkpt lat="43.763270" lon="6.230610">
+        <ele>637</ele>
+      </trkpt>
+      <trkpt lat="43.763260" lon="6.230740">
+        <ele>637.8</ele>
+      </trkpt>
+      <trkpt lat="43.763280" lon="6.230840">
+        <ele>638.6</ele>
+      </trkpt>
+      <trkpt lat="43.763600" lon="6.231060">
+        <ele>641.2</ele>
+      </trkpt>
+      <trkpt lat="43.763640" lon="6.231160">
+        <ele>642.3</ele>
+      </trkpt>
+      <trkpt lat="43.763590" lon="6.231280">
+        <ele>643.2</ele>
+      </trkpt>
+      <trkpt lat="43.763420" lon="6.231470">
+        <ele>645</ele>
+      </trkpt>
+      <trkpt lat="43.763370" lon="6.231570">
+        <ele>645.5</ele>
+      </trkpt>
+      <trkpt lat="43.763360" lon="6.231700">
+        <ele>646</ele>
+      </trkpt>
+      <trkpt lat="43.763600" lon="6.232150">
+        <ele>648.8</ele>
+      </trkpt>
+      <trkpt lat="43.763630" lon="6.232270">
+        <ele>649.1</ele>
+      </trkpt>
+      <trkpt lat="43.763540" lon="6.232480">
+        <ele>650.6</ele>
+      </trkpt>
+      <trkpt lat="43.763450" lon="6.232610">
+        <ele>652.8</ele>
+      </trkpt>
+      <trkpt lat="43.763490" lon="6.232730">
+        <ele>653.9</ele>
+      </trkpt>
+      <trkpt lat="43.763760" lon="6.232920">
+        <ele>656.3</ele>
+      </trkpt>
+      <trkpt lat="43.764160" lon="6.233150">
+        <ele>660.1</ele>
+      </trkpt>
+      <trkpt lat="43.764350" lon="6.233220">
+        <ele>660.8</ele>
+      </trkpt>
+      <trkpt lat="43.764520" lon="6.233330">
+        <ele>662.7</ele>
+      </trkpt>
+      <trkpt lat="43.764590" lon="6.233550">
+        <ele>664.7</ele>
+      </trkpt>
+      <trkpt lat="43.764580" lon="6.233800">
+        <ele>665.9</ele>
+      </trkpt>
+      <trkpt lat="43.764600" lon="6.234040">
+        <ele>666.7</ele>
+      </trkpt>
+      <trkpt lat="43.764670" lon="6.234230">
+        <ele>667.5</ele>
+      </trkpt>
+      <trkpt lat="43.764820" lon="6.234330">
+        <ele>668.4</ele>
+      </trkpt>
+      <trkpt lat="43.765020" lon="6.234370">
+        <ele>669.4</ele>
+      </trkpt>
+      <trkpt lat="43.765340" lon="6.234350">
+        <ele>670.5</ele>
+      </trkpt>
+      <trkpt lat="43.765590" lon="6.234390">
+        <ele>672</ele>
+      </trkpt>
+      <trkpt lat="43.766040" lon="6.234430">
+        <ele>675</ele>
+      </trkpt>
+      <trkpt lat="43.766250" lon="6.234420">
+        <ele>678.6</ele>
+      </trkpt>
+      <trkpt lat="43.766380" lon="6.234270">
+        <ele>678.6</ele>
+      </trkpt>
+      <trkpt lat="43.766580" lon="6.233950">
+        <ele>681.3</ele>
+      </trkpt>
+      <trkpt lat="43.766640" lon="6.233950">
+        <ele>682.9</ele>
+      </trkpt>
+      <trkpt lat="43.767190" lon="6.234630">
+        <ele>687</ele>
+      </trkpt>
+      <trkpt lat="43.767350" lon="6.234750">
+        <ele>685.3</ele>
+      </trkpt>
+      <trkpt lat="43.767620" lon="6.234800">
+        <ele>685.4</ele>
+      </trkpt>
+      <trkpt lat="43.767760" lon="6.234780">
+        <ele>686.8</ele>
+      </trkpt>
+      <trkpt lat="43.767880" lon="6.234660">
+        <ele>688.3</ele>
+      </trkpt>
+      <trkpt lat="43.768030" lon="6.234560">
+        <ele>689.3</ele>
+      </trkpt>
+      <trkpt lat="43.768220" lon="6.234500">
+        <ele>689.7</ele>
+      </trkpt>
+      <trkpt lat="43.768420" lon="6.234540">
+        <ele>691.4</ele>
+      </trkpt>
+      <trkpt lat="43.768570" lon="6.234510">
+        <ele>691.7</ele>
+      </trkpt>
+      <trkpt lat="43.768720" lon="6.234510">
+        <ele>692.2</ele>
+      </trkpt>
+      <trkpt lat="43.768810" lon="6.234560">
+        <ele>693</ele>
+      </trkpt>
+      <trkpt lat="43.768890" lon="6.234660">
+        <ele>694.3</ele>
+      </trkpt>
+      <trkpt lat="43.768980" lon="6.234870">
+        <ele>695.7</ele>
+      </trkpt>
+      <trkpt lat="43.769040" lon="6.235160">
+        <ele>697.6</ele>
+      </trkpt>
+      <trkpt lat="43.769060" lon="6.235490">
+        <ele>698.8</ele>
+      </trkpt>
+      <trkpt lat="43.769100" lon="6.235660">
+        <ele>700.4</ele>
+      </trkpt>
+      <trkpt lat="43.769210" lon="6.235820">
+        <ele>701.9</ele>
+      </trkpt>
+      <trkpt lat="43.769360" lon="6.235970">
+        <ele>703.9</ele>
+      </trkpt>
+      <trkpt lat="43.769640" lon="6.236130">
+        <ele>706.3</ele>
+      </trkpt>
+      <trkpt lat="43.769770" lon="6.236260">
+        <ele>707.9</ele>
+      </trkpt>
+      <trkpt lat="43.769860" lon="6.236420">
+        <ele>709.4</ele>
+      </trkpt>
+      <trkpt lat="43.770030" lon="6.236660">
+        <ele>711.8</ele>
+      </trkpt>
+      <trkpt lat="43.770260" lon="6.236890">
+        <ele>714.3</ele>
+      </trkpt>
+      <trkpt lat="43.770390" lon="6.237010">
+        <ele>716.4</ele>
+      </trkpt>
+      <trkpt lat="43.770540" lon="6.237130">
+        <ele>718.6</ele>
+      </trkpt>
+      <trkpt lat="43.770840" lon="6.237290">
+        <ele>722.1</ele>
+      </trkpt>
+      <trkpt lat="43.771040" lon="6.237380">
+        <ele>724</ele>
+      </trkpt>
+      <trkpt lat="43.771180" lon="6.237500">
+        <ele>727.2</ele>
+      </trkpt>
+      <trkpt lat="43.771360" lon="6.237650">
+        <ele>729.2</ele>
+      </trkpt>
+      <trkpt lat="43.771490" lon="6.237730">
+        <ele>729.2</ele>
+      </trkpt>
+      <trkpt lat="43.771510" lon="6.237880">
+        <ele>730.1</ele>
+      </trkpt>
+      <trkpt lat="43.771520" lon="6.238060">
+        <ele>731.6</ele>
+      </trkpt>
+      <trkpt lat="43.771670" lon="6.238090">
+        <ele>731.3</ele>
+      </trkpt>
+      <trkpt lat="43.771780" lon="6.238110">
+        <ele>731.8</ele>
+      </trkpt>
+      <trkpt lat="43.771900" lon="6.238090">
+        <ele>732.1</ele>
+      </trkpt>
+      <trkpt lat="43.772070" lon="6.238020">
+        <ele>732.9</ele>
+      </trkpt>
+      <trkpt lat="43.772200" lon="6.237980">
+        <ele>733.8</ele>
+      </trkpt>
+      <trkpt lat="43.772380" lon="6.237930">
+        <ele>734.9</ele>
+      </trkpt>
+      <trkpt lat="43.772530" lon="6.237850">
+        <ele>735.4</ele>
+      </trkpt>
+      <trkpt lat="43.772640" lon="6.237780">
+        <ele>735.5</ele>
+      </trkpt>
+      <trkpt lat="43.772730" lon="6.237790">
+        <ele>735.8</ele>
+      </trkpt>
+      <trkpt lat="43.772830" lon="6.237790">
+        <ele>736</ele>
+      </trkpt>
+      <trkpt lat="43.773000" lon="6.237740">
+        <ele>735.7</ele>
+      </trkpt>
+      <trkpt lat="43.773060" lon="6.237730">
+        <ele>735.7</ele>
+      </trkpt>
+      <trkpt lat="43.773160" lon="6.237700">
+        <ele>736.3</ele>
+      </trkpt>
+      <trkpt lat="43.773290" lon="6.237640">
+        <ele>737.1</ele>
+      </trkpt>
+      <trkpt lat="43.773330" lon="6.237600">
+        <ele>737.4</ele>
+      </trkpt>
+      <trkpt lat="43.773410" lon="6.237510">
+        <ele>738.7</ele>
+      </trkpt>
+      <trkpt lat="43.773500" lon="6.237380">
+        <ele>740.1</ele>
+      </trkpt>
+      <trkpt lat="43.773540" lon="6.237290">
+        <ele>740.6</ele>
+      </trkpt>
+      <trkpt lat="43.773590" lon="6.237250">
+        <ele>741.5</ele>
+      </trkpt>
+      <trkpt lat="43.773610" lon="6.237250">
+        <ele>742.1</ele>
+      </trkpt>
+      <trkpt lat="43.773640" lon="6.237270">
+        <ele>741.8</ele>
+      </trkpt>
+      <trkpt lat="43.773770" lon="6.237430">
+        <ele>743</ele>
+      </trkpt>
+      <trkpt lat="43.773820" lon="6.237540">
+        <ele>744.9</ele>
+      </trkpt>
+      <trkpt lat="43.773830" lon="6.237580">
+        <ele>745.5</ele>
+      </trkpt>
+      <trkpt lat="43.773890" lon="6.237620">
+        <ele>746.2</ele>
+      </trkpt>
+      <trkpt lat="43.773960" lon="6.237710">
+        <ele>745</ele>
+      </trkpt>
+      <trkpt lat="43.774020" lon="6.237860">
+        <ele>744.4</ele>
+      </trkpt>
+      <trkpt lat="43.774030" lon="6.238110">
+        <ele>745.8</ele>
+      </trkpt>
+      <trkpt lat="43.774090" lon="6.238330">
+        <ele>747.2</ele>
+      </trkpt>
+      <trkpt lat="43.774390" lon="6.239030">
+        <ele>751.4</ele>
+      </trkpt>
+      <trkpt lat="43.774530" lon="6.239320">
+        <ele>754.7</ele>
+      </trkpt>
+      <trkpt lat="43.774600" lon="6.239440">
+        <ele>756.7</ele>
+      </trkpt>
+      <trkpt lat="43.774880" lon="6.239660">
+        <ele>760.6</ele>
+      </trkpt>
+      <trkpt lat="43.774950" lon="6.239730">
+        <ele>762.1</ele>
+      </trkpt>
+      <trkpt lat="43.775020" lon="6.239840">
+        <ele>762.6</ele>
+      </trkpt>
+      <trkpt lat="43.775210" lon="6.239970">
+        <ele>762.2</ele>
+      </trkpt>
+      <trkpt lat="43.775420" lon="6.240390">
+        <ele>759.1</ele>
+      </trkpt>
+      <trkpt lat="43.775520" lon="6.240700">
+        <ele>760.2</ele>
+      </trkpt>
+      <trkpt lat="43.775730" lon="6.241000">
+        <ele>761</ele>
+      </trkpt>
+      <trkpt lat="43.775730" lon="6.240980">
+        <ele>760.7</ele>
+      </trkpt>
+      <trkpt lat="43.776020" lon="6.240850">
+        <ele>756.1</ele>
+      </trkpt>
+      <trkpt lat="43.776230" lon="6.240770">
+        <ele>753.1</ele>
+      </trkpt>
+      <trkpt lat="43.776420" lon="6.240770">
+        <ele>751.1</ele>
+      </trkpt>
+      <trkpt lat="43.776700" lon="6.240900">
+        <ele>747.5</ele>
+      </trkpt>
+      <trkpt lat="43.776720" lon="6.240760">
+        <ele>744.4</ele>
+      </trkpt>
+      <trkpt lat="43.776710" lon="6.240670">
+        <ele>743.2</ele>
+      </trkpt>
+      <trkpt lat="43.776660" lon="6.240430">
+        <ele>740.3</ele>
+      </trkpt>
+      <trkpt lat="43.776650" lon="6.240360">
+        <ele>739.3</ele>
+      </trkpt>
+      <trkpt lat="43.776630" lon="6.240130">
+        <ele>736.1</ele>
+      </trkpt>
+      <trkpt lat="43.776580" lon="6.240020">
+        <ele>734.9</ele>
+      </trkpt>
+      <trkpt lat="43.776520" lon="6.239930">
+        <ele>734.3</ele>
+      </trkpt>
+      <trkpt lat="43.776500" lon="6.239720">
+        <ele>732.2</ele>
+      </trkpt>
+      <trkpt lat="43.776560" lon="6.239570">
+        <ele>730.1</ele>
+      </trkpt>
+      <trkpt lat="43.776630" lon="6.239240">
+        <ele>725.3</ele>
+      </trkpt>
+      <trkpt lat="43.776640" lon="6.239040">
+        <ele>722.6</ele>
+      </trkpt>
+      <trkpt lat="43.776600" lon="6.238860">
+        <ele>721.1</ele>
+      </trkpt>
+      <trkpt lat="43.776590" lon="6.238770">
+        <ele>721</ele>
+      </trkpt>
+      <trkpt lat="43.776590" lon="6.238610">
+        <ele>720.5</ele>
+      </trkpt>
+      <trkpt lat="43.776600" lon="6.238550">
+        <ele>718.9</ele>
+      </trkpt>
+      <trkpt lat="43.776600" lon="6.238470">
+        <ele>717.5</ele>
+      </trkpt>
+      <trkpt lat="43.776500" lon="6.238340">
+        <ele>716.5</ele>
+      </trkpt>
+      <trkpt lat="43.776260" lon="6.238110">
+        <ele>713.5</ele>
+      </trkpt>
+      <trkpt lat="43.776040" lon="6.237910">
+        <ele>710.9</ele>
+      </trkpt>
+      <trkpt lat="43.775960" lon="6.237810">
+        <ele>709.9</ele>
+      </trkpt>
+      <trkpt lat="43.775820" lon="6.237590">
+        <ele>707</ele>
+      </trkpt>
+      <trkpt lat="43.775720" lon="6.237400">
+        <ele>705.6</ele>
+      </trkpt>
+      <trkpt lat="43.775690" lon="6.237270">
+        <ele>704.5</ele>
+      </trkpt>
+      <trkpt lat="43.775650" lon="6.236930">
+        <ele>703</ele>
+      </trkpt>
+      <trkpt lat="43.775620" lon="6.236680">
+        <ele>703</ele>
+      </trkpt>
+      <trkpt lat="43.775620" lon="6.236480">
+        <ele>702</ele>
+      </trkpt>
+      <trkpt lat="43.775660" lon="6.236370">
+        <ele>701</ele>
+      </trkpt>
+      <trkpt lat="43.775740" lon="6.236320">
+        <ele>699.7</ele>
+      </trkpt>
+      <trkpt lat="43.775760" lon="6.236240">
+        <ele>698.3</ele>
+      </trkpt>
+      <trkpt lat="43.775620" lon="6.235880">
+        <ele>694.1</ele>
+      </trkpt>
+      <trkpt lat="43.775510" lon="6.235600">
+        <ele>691.2</ele>
+      </trkpt>
+      <trkpt lat="43.775400" lon="6.235480">
+        <ele>688.9</ele>
+      </trkpt>
+      <trkpt lat="43.775350" lon="6.235380">
+        <ele>687.4</ele>
+      </trkpt>
+      <trkpt lat="43.775360" lon="6.235290">
+        <ele>686.4</ele>
+      </trkpt>
+      <trkpt lat="43.775510" lon="6.235140">
+        <ele>685</ele>
+      </trkpt>
+      <trkpt lat="43.775690" lon="6.235060">
+        <ele>682.9</ele>
+      </trkpt>
+      <trkpt lat="43.775880" lon="6.235030">
+        <ele>680.8</ele>
+      </trkpt>
+      <trkpt lat="43.776060" lon="6.235080">
+        <ele>679</ele>
+      </trkpt>
+      <trkpt lat="43.776130" lon="6.235120">
+        <ele>678.4</ele>
+      </trkpt>
+      <trkpt lat="43.776240" lon="6.235170">
+        <ele>677</ele>
+      </trkpt>
+      <trkpt lat="43.776300" lon="6.235210">
+        <ele>676.6</ele>
+      </trkpt>
+      <trkpt lat="43.776360" lon="6.235190">
+        <ele>675.3</ele>
+      </trkpt>
+      <trkpt lat="43.776350" lon="6.235130">
+        <ele>674.7</ele>
+      </trkpt>
+      <trkpt lat="43.776290" lon="6.235050">
+        <ele>674.4</ele>
+      </trkpt>
+      <trkpt lat="43.776220" lon="6.234870">
+        <ele>672.9</ele>
+      </trkpt>
+      <trkpt lat="43.776180" lon="6.234710">
+        <ele>670.9</ele>
+      </trkpt>
+      <trkpt lat="43.776150" lon="6.234630">
+        <ele>670.1</ele>
+      </trkpt>
+      <trkpt lat="43.776180" lon="6.234530">
+        <ele>668.4</ele>
+      </trkpt>
+      <trkpt lat="43.776380" lon="6.234300">
+        <ele>665.1</ele>
+      </trkpt>
+      <trkpt lat="43.776480" lon="6.234200">
+        <ele>663.4</ele>
+      </trkpt>
+      <trkpt lat="43.776590" lon="6.234100">
+        <ele>661.1</ele>
+      </trkpt>
+      <trkpt lat="43.776720" lon="6.233870">
+        <ele>657.8</ele>
+      </trkpt>
+      <trkpt lat="43.776780" lon="6.233650">
+        <ele>655.7</ele>
+      </trkpt>
+      <trkpt lat="43.776770" lon="6.233390">
+        <ele>654.1</ele>
+      </trkpt>
+      <trkpt lat="43.776740" lon="6.233120">
+        <ele>652.1</ele>
+      </trkpt>
+      <trkpt lat="43.776720" lon="6.232830">
+        <ele>649.5</ele>
+      </trkpt>
+      <trkpt lat="43.776700" lon="6.232610">
+        <ele>646.9</ele>
+      </trkpt>
+      <trkpt lat="43.776630" lon="6.232400">
+        <ele>645.3</ele>
+      </trkpt>
+      <trkpt lat="43.776580" lon="6.232240">
+        <ele>643.9</ele>
+      </trkpt>
+      <trkpt lat="43.776480" lon="6.232070">
+        <ele>641.8</ele>
+      </trkpt>
+      <trkpt lat="43.776450" lon="6.232020">
+        <ele>641</ele>
+      </trkpt>
+      <trkpt lat="43.776390" lon="6.231960">
+        <ele>640.3</ele>
+      </trkpt>
+      <trkpt lat="43.776380" lon="6.231920">
+        <ele>639.6</ele>
+      </trkpt>
+      <trkpt lat="43.776440" lon="6.231830">
+        <ele>638</ele>
+      </trkpt>
+      <trkpt lat="43.776580" lon="6.231720">
+        <ele>635.5</ele>
+      </trkpt>
+      <trkpt lat="43.776710" lon="6.231650">
+        <ele>633.9</ele>
+      </trkpt>
+      <trkpt lat="43.776920" lon="6.231540">
+        <ele>633.1</ele>
+      </trkpt>
+      <trkpt lat="43.777010" lon="6.231530">
+        <ele>632.5</ele>
+      </trkpt>
+      <trkpt lat="43.777250" lon="6.231600">
+        <ele>631.6</ele>
+      </trkpt>
+      <trkpt lat="43.777480" lon="6.231690">
+        <ele>629.6</ele>
+      </trkpt>
+      <trkpt lat="43.777730" lon="6.231760">
+        <ele>628.7</ele>
+      </trkpt>
+      <trkpt lat="43.777910" lon="6.231790">
+        <ele>628.1</ele>
+      </trkpt>
+      <trkpt lat="43.778000" lon="6.231800">
+        <ele>627.8</ele>
+      </trkpt>
+      <trkpt lat="43.778180" lon="6.231790">
+        <ele>626.9</ele>
+      </trkpt>
+      <trkpt lat="43.778440" lon="6.231790">
+        <ele>626</ele>
+      </trkpt>
+      <trkpt lat="43.778730" lon="6.231810">
+        <ele>625.1</ele>
+      </trkpt>
+      <trkpt lat="43.778890" lon="6.231630">
+        <ele>623.8</ele>
+      </trkpt>
+      <trkpt lat="43.779010" lon="6.231550">
+        <ele>622.6</ele>
+      </trkpt>
+      <trkpt lat="43.779170" lon="6.231470">
+        <ele>621.7</ele>
+      </trkpt>
+      <trkpt lat="43.779290" lon="6.231370">
+        <ele>619.8</ele>
+      </trkpt>
+      <trkpt lat="43.779350" lon="6.231260">
+        <ele>618.8</ele>
+      </trkpt>
+      <trkpt lat="43.779450" lon="6.231090">
+        <ele>618.2</ele>
+      </trkpt>
+      <trkpt lat="43.779580" lon="6.230930">
+        <ele>617.2</ele>
+      </trkpt>
+      <trkpt lat="43.779650" lon="6.230840">
+        <ele>616.5</ele>
+      </trkpt>
+      <trkpt lat="43.779710" lon="6.230700">
+        <ele>615.2</ele>
+      </trkpt>
+      <trkpt lat="43.779710" lon="6.230540">
+        <ele>615</ele>
+      </trkpt>
+      <trkpt lat="43.779700" lon="6.230410">
+        <ele>613.8</ele>
+      </trkpt>
+      <trkpt lat="43.779680" lon="6.230280">
+        <ele>612.7</ele>
+      </trkpt>
+      <trkpt lat="43.779670" lon="6.230090">
+        <ele>611.8</ele>
+      </trkpt>
+      <trkpt lat="43.779660" lon="6.229930">
+        <ele>610.5</ele>
+      </trkpt>
+      <trkpt lat="43.779658" lon="6.229889">
+        <ele>610</ele>
+      </trkpt>
+      <trkpt lat="43.779651" lon="6.229878">
+        <ele>609.9</ele>
+      </trkpt>
+      <trkpt lat="43.779638" lon="6.229843">
+        <ele>609.5</ele>
+      </trkpt>
+      <trkpt lat="43.779602" lon="6.229768">
+        <ele>608.9</ele>
+      </trkpt>
+      <trkpt lat="43.779495" lon="6.229618">
+        <ele>607.2</ele>
+      </trkpt>
+      <trkpt lat="43.779398" lon="6.229495">
+        <ele>605.2</ele>
+      </trkpt>
+      <trkpt lat="43.779201" lon="6.229227">
+        <ele>602.2</ele>
+      </trkpt>
+      <trkpt lat="43.779182" lon="6.229173">
+        <ele>601.9</ele>
+      </trkpt>
+      <trkpt lat="43.779147" lon="6.229119">
+        <ele>601.4</ele>
+      </trkpt>
+      <trkpt lat="43.779118" lon="6.229066">
+        <ele>600.8</ele>
+      </trkpt>
+      <trkpt lat="43.779081" lon="6.229007">
+        <ele>600.2</ele>
+      </trkpt>
+      <trkpt lat="43.779044" lon="6.228934">
+        <ele>599.5</ele>
+      </trkpt>
+      <trkpt lat="43.778976" lon="6.228830">
+        <ele>598.9</ele>
+      </trkpt>
+      <trkpt lat="43.778941" lon="6.228768">
+        <ele>598.7</ele>
+      </trkpt>
+      <trkpt lat="43.778839" lon="6.228586">
+        <ele>597.9</ele>
+      </trkpt>
+      <trkpt lat="43.778786" lon="6.228486">
+        <ele>597.1</ele>
+      </trkpt>
+      <trkpt lat="43.778717" lon="6.228325">
+        <ele>596.5</ele>
+      </trkpt>
+      <trkpt lat="43.778678" lon="6.228213">
+        <ele>596.8</ele>
+      </trkpt>
+      <trkpt lat="43.778661" lon="6.228041">
+        <ele>596.5</ele>
+      </trkpt>
+      <trkpt lat="43.778659" lon="6.227915">
+        <ele>595.4</ele>
+      </trkpt>
+      <trkpt lat="43.778677" lon="6.227688">
+        <ele>593.1</ele>
+      </trkpt>
+      <trkpt lat="43.778686" lon="6.227628">
+        <ele>592.4</ele>
+      </trkpt>
+      <trkpt lat="43.778689" lon="6.227562">
+        <ele>591.8</ele>
+      </trkpt>
+      <trkpt lat="43.778687" lon="6.227443">
+        <ele>590.9</ele>
+      </trkpt>
+      <trkpt lat="43.778681" lon="6.227395">
+        <ele>590.6</ele>
+      </trkpt>
+      <trkpt lat="43.778682" lon="6.227310">
+        <ele>589.9</ele>
+      </trkpt>
+      <trkpt lat="43.778689" lon="6.227169">
+        <ele>588.7</ele>
+      </trkpt>
+      <trkpt lat="43.778692" lon="6.227132">
+        <ele>588.4</ele>
+      </trkpt>
+      <trkpt lat="43.778740" lon="6.227040">
+        <ele>586.7</ele>
+      </trkpt>
+      <trkpt lat="43.778760" lon="6.226850">
+        <ele>585.6</ele>
+      </trkpt>
+      <trkpt lat="43.778770" lon="6.226740">
+        <ele>585.4</ele>
+      </trkpt>
+      <trkpt lat="43.778740" lon="6.226590">
+        <ele>585.1</ele>
+      </trkpt>
+      <trkpt lat="43.778660" lon="6.226360">
+        <ele>584.7</ele>
+      </trkpt>
+      <trkpt lat="43.778580" lon="6.226020">
+        <ele>582.9</ele>
+      </trkpt>
+      <trkpt lat="43.778570" lon="6.225750">
+        <ele>580.9</ele>
+      </trkpt>
+      <trkpt lat="43.778560" lon="6.225320">
+        <ele>577.1</ele>
+      </trkpt>
+      <trkpt lat="43.778560" lon="6.225220">
+        <ele>576.9</ele>
+      </trkpt>
+      <trkpt lat="43.778540" lon="6.225120">
+        <ele>577.1</ele>
+      </trkpt>
+      <trkpt lat="43.778500" lon="6.225070">
+        <ele>576.8</ele>
+      </trkpt>
+      <trkpt lat="43.778340" lon="6.224900">
+        <ele>574.9</ele>
+      </trkpt>
+      <trkpt lat="43.778040" lon="6.224610">
+        <ele>572.4</ele>
+      </trkpt>
+      <trkpt lat="43.777910" lon="6.224470">
+        <ele>571.1</ele>
+      </trkpt>
+      <trkpt lat="43.777840" lon="6.224390">
+        <ele>570.2</ele>
+      </trkpt>
+      <trkpt lat="43.777800" lon="6.224330">
+        <ele>569.8</ele>
+      </trkpt>
+      <trkpt lat="43.777700" lon="6.224220">
+        <ele>568.5</ele>
+      </trkpt>
+      <trkpt lat="43.777630" lon="6.224090">
+        <ele>567</ele>
+      </trkpt>
+      <trkpt lat="43.777520" lon="6.223890">
+        <ele>564.5</ele>
+      </trkpt>
+      <trkpt lat="43.777410" lon="6.223740">
+        <ele>562.5</ele>
+      </trkpt>
+      <trkpt lat="43.777270" lon="6.223540">
+        <ele>559.3</ele>
+      </trkpt>
+      <trkpt lat="43.777160" lon="6.223390">
+        <ele>557</ele>
+      </trkpt>
+      <trkpt lat="43.777020" lon="6.223190">
+        <ele>553.4</ele>
+      </trkpt>
+      <trkpt lat="43.776910" lon="6.223020">
+        <ele>550.4</ele>
+      </trkpt>
+      <trkpt lat="43.776840" lon="6.222930">
+        <ele>548.9</ele>
+      </trkpt>
+      <trkpt lat="43.776800" lon="6.222880">
+        <ele>547.9</ele>
+      </trkpt>
+      <trkpt lat="43.776550" lon="6.222710">
+        <ele>543.5</ele>
+      </trkpt>
+      <trkpt lat="43.776400" lon="6.222610">
+        <ele>541.3</ele>
+      </trkpt>
+      <trkpt lat="43.776250" lon="6.222450">
+        <ele>537.3</ele>
+      </trkpt>
+      <trkpt lat="43.776160" lon="6.222370">
+        <ele>535.8</ele>
+      </trkpt>
+      <trkpt lat="43.776090" lon="6.222310">
+        <ele>534.8</ele>
+      </trkpt>
+      <trkpt lat="43.775890" lon="6.222070">
+        <ele>531.5</ele>
+      </trkpt>
+      <trkpt lat="43.775750" lon="6.221990">
+        <ele>529</ele>
+      </trkpt>
+      <trkpt lat="43.775630" lon="6.221800">
+        <ele>527.6</ele>
+      </trkpt>
+      <trkpt lat="43.775270" lon="6.221510">
+        <ele>522</ele>
+      </trkpt>
+      <trkpt lat="43.775110" lon="6.221370">
+        <ele>520.1</ele>
+      </trkpt>
+      <trkpt lat="43.775020" lon="6.221270">
+        <ele>517.9</ele>
+      </trkpt>
+      <trkpt lat="43.774760" lon="6.221130">
+        <ele>515.2</ele>
+      </trkpt>
+      <trkpt lat="43.774680" lon="6.221040">
+        <ele>514.3</ele>
+      </trkpt>
+      <trkpt lat="43.774600" lon="6.220900">
+        <ele>513.1</ele>
+      </trkpt>
+      <trkpt lat="43.774520" lon="6.220790">
+        <ele>511.9</ele>
+      </trkpt>
+      <trkpt lat="43.774460" lon="6.220720">
+        <ele>511.3</ele>
+      </trkpt>
+      <trkpt lat="43.774290" lon="6.220380">
+        <ele>507.7</ele>
+      </trkpt>
+      <trkpt lat="43.774240" lon="6.220290">
+        <ele>506.8</ele>
+      </trkpt>
+      <trkpt lat="43.774150" lon="6.219860">
+        <ele>505.3</ele>
+      </trkpt>
+      <trkpt lat="43.774070" lon="6.219460">
+        <ele>504.3</ele>
+      </trkpt>
+      <trkpt lat="43.773960" lon="6.219030">
+        <ele>502.6</ele>
+      </trkpt>
+      <trkpt lat="43.773880" lon="6.218650">
+        <ele>502</ele>
+      </trkpt>
+      <trkpt lat="43.773870" lon="6.218530">
+        <ele>501.6</ele>
+      </trkpt>
+      <trkpt lat="43.773870" lon="6.218530">
+        <ele>501.6</ele>
+      </trkpt>
+      <trkpt lat="43.773759" lon="6.218079">
+        <ele>500.6</ele>
+      </trkpt>
+      <trkpt lat="43.773526" lon="6.217597">
+        <ele>501.4</ele>
+      </trkpt>
+      <trkpt lat="43.773351" lon="6.217454">
+        <ele>500.7</ele>
+      </trkpt>
+      <trkpt lat="43.773087" lon="6.217238">
+        <ele>501.1</ele>
+      </trkpt>
+      <trkpt lat="43.772793" lon="6.216839">
+        <ele>499</ele>
+      </trkpt>
+      <trkpt lat="43.772560" lon="6.216486">
+        <ele>497.7</ele>
+      </trkpt>
+      <trkpt lat="43.772321" lon="6.216035">
+        <ele>496.7</ele>
+      </trkpt>
+      <trkpt lat="43.772064" lon="6.215561">
+        <ele>496.1</ele>
+      </trkpt>
+      <trkpt lat="43.771896" lon="6.215221">
+        <ele>494.7</ele>
+      </trkpt>
+      <trkpt lat="43.771561" lon="6.214273">
+        <ele>495.1</ele>
+      </trkpt>
+      <trkpt lat="43.771462" lon="6.213935">
+        <ele>494.4</ele>
+      </trkpt>
+      <trkpt lat="43.771307" lon="6.213302">
+        <ele>494.1</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
