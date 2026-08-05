@@ -540,7 +540,8 @@ window.EVENTS_DATA = {
         ]
       },
       "logement": "both",
-      "url": "https://www.ville-riez.fr/fete-manifestation/marche-traditionnel"
+      "url": "https://www.ville-riez.fr/fete-manifestation/marche-traditionnel",
+      "img": "https://www.ville-riez.fr/sites/default/files/styles/colorbox/public/apidae/F%C3%AAte%20et%20manifestation/4653708/image/7772770.jpg?itok=8lg2-Z8U"
     },
     {
       "id": "rec-stecroix-mardi",
@@ -570,7 +571,8 @@ window.EVENTS_DATA = {
         ]
       },
       "logement": "both",
-      "url": "https://www.stecroixduverdon-tourisme.fr/agenda-manifestation/marche-de-sainte-croix-du-verdon/"
+      "url": "https://www.stecroixduverdon-tourisme.fr/agenda-manifestation/marche-de-sainte-croix-du-verdon/",
+      "img": "https://cdn.iris-etourism.io/media/saintecroix_du_verdon/4914913/cbb85927a6cf46d5-800x520.webp"
     },
     {
       "id": "rec-moustiers-artisanat-mardi",
@@ -662,7 +664,8 @@ window.EVENTS_DATA = {
         ]
       },
       "logement": "both",
-      "url": "https://www.ville-riez.fr/fete-manifestation/marche-nocturne-riez"
+      "url": "https://www.ville-riez.fr/fete-manifestation/marche-nocturne-riez",
+      "img": "https://www.ville-riez.fr/sites/default/files/styles/colorbox/public/apidae/F%C3%AAte%20et%20manifestation/5589904/image/41705644.jpeg?itok=DIr44l5F"
     },
     {
       "id": "2007AIOLI",
@@ -2284,7 +2287,8 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-22",
       "logement": "both",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22698-upgratt-en-concert.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22698-upgratt-en-concert.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22698_2_1.jpg"
     },
     {
       "id": "evt-82",
@@ -2303,7 +2307,8 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-22",
       "logement": "both",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22641-concerts-du-groupe--undercover-.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22641-concerts-du-groupe--undercover-.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22641_2_1.jpg"
     },
     {
       "id": "2708ASTROSOL",
@@ -2365,7 +2370,8 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-08-28",
       "logement": "both",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22703-cicada-lodge-en-concert.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22703-cicada-lodge-en-concert.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22703_2_1.jpg"
     },
     {
       "id": "evt-67b",
@@ -2583,7 +2589,8 @@ window.EVENTS_DATA = {
       "rating": 2,
       "date": "2026-09-11",
       "logement": "both",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22706-fete-du-lac-de-sainte-croix.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22706-fete-du-lac-de-sainte-croix.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22706_2_1.jpg"
     },
     {
       "id": "1109MAMA",
@@ -2619,7 +2626,8 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-09-26",
       "url": "https://natureman-var.fr/",
-      "logement": "both"
+      "logement": "both",
+      "img": "https://natureman-var.fr/wp-content/uploads/2023/01/1PARCOURS-1.jpeg"
     },
     {
       "id": "2609MAMA",
@@ -2698,7 +2706,8 @@ window.EVENTS_DATA = {
           "sat"
         ]
       },
-      "url": "https://www.francecomfort.com/fr/des-vues/305/marches-castellane"
+      "url": "https://www.francecomfort.com/fr/des-vues/305/marches-castellane",
+      "img": "https://www.castellane-verdon.com/app/uploads/2025/08/marche-castellane-1024x804.webp"
     },
     {
       "id": "evt-33",
@@ -2728,7 +2737,8 @@ window.EVENTS_DATA = {
           "wed"
         ]
       },
-      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/marches-nocturnes-regusse-fr-2881209/"
+      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/marches-nocturnes-regusse-fr-2881209/",
+      "img": "https://static.neopse.com/medias/p/2553/site/2a/59/5d/2a595dde9c30fd1347e4d5c3e92ebec8fb62029e.jpg"
     },
     {
       "id": "evt-16",
@@ -2837,7 +2847,8 @@ window.EVENTS_DATA = {
           "wed",
           "sat"
         ]
-      }
+      },
+      "img": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/2e/c9/31/caption.jpg?w=1200&h=1200&s=1"
     },
     {
       "id": "AUPS-TRUFFE-MARKET",
@@ -2888,7 +2899,8 @@ window.EVENTS_DATA = {
         "byDay": [
           "tue"
         ]
-      }
+      },
+      "img": "https://cdn.iris-etourism.io/media/saintecroix_du_verdon/6519213/0187022274088c86-800x520.webp"
     },
     {
       "id": "evt-48",
@@ -2917,7 +2929,8 @@ window.EVENTS_DATA = {
           "thu",
           "sat"
         ]
-      }
+      },
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/57/253/41876793.jpg"
     },
     {
       "id": "evt-49",
