@@ -188,6 +188,7 @@
         <div>
             <h1 id="page-title" class="text-2xl sm:text-3xl font-bold font-display text-[var(--c-ink)]">Votre programme</h1>
             <p id="page-subtitle" class="text-sm text-[var(--c-muted)] mt-1">Une sélection d'évènements à ne pas manquer pendant votre séjour.</p>
+            <p id="edit-mode-notice" class="text-xs text-[var(--c-muted)] mt-1 italic hidden">—</p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
             <button id="btn-add-event" type="button" class="btn-listing btn-listing-outline">
@@ -328,7 +329,9 @@
             editRatingTitle: (n) => `Note maison : ${n}/3 — clique pour changer`,
             editFavoriteOn: "Retirer le coup de cœur", editFavoriteOff: "Marquer comme coup de cœur",
             downloadJson: "Télécharger evenements.js",
-            recurrenceNotice: "Cette modification s'applique à toute la récurrence de cet évènement."
+            recurrenceNotice: "Cette modification s'applique à toute la récurrence de cet évènement.",
+            recurringLabel: "Récurrent",
+            editModeNotice: (n) => `Mode édition : les ${n} évènements de evenements.js sont tous affichés ci-dessous, indépendamment de la sélection habituelle.`
         },
         EN: {
             back: "Back", label: "Your selection",
@@ -358,7 +361,9 @@
             editRatingTitle: (n) => `House rating: ${n}/3 — click to change`,
             editFavoriteOn: "Remove highlight", editFavoriteOff: "Mark as highlight",
             downloadJson: "Download evenements.js",
-            recurrenceNotice: "This change applies to the whole recurrence of this event."
+            recurrenceNotice: "This change applies to the whole recurrence of this event.",
+            recurringLabel: "Recurring",
+            editModeNotice: (n) => `Edit mode: all ${n} events from evenements.js are listed below, regardless of the usual selection.`
         }
     };
 
@@ -589,6 +594,27 @@
             }
         });
         return out;
+    }
+
+    // -------- mode edition (edit=1) : liste complete de evenements.js --------
+    // En mode edition, on n'affiche plus une selection (state.ids/showevents) mais
+    // l'integralite des evenements du fichier, un par un (un seul et unique modele
+    // par evenement recurrent, jamais une occurrence en double), pour pouvoir noter/
+    // marquer un coup de coeur sur n'importe quel evenement puis exporter le fichier
+    // complet a jour. Pour un modele recurrent, on affiche sa prochaine occurrence a
+    // venir (juste pour la date visible sur la carte) ; si la recurrence est terminee
+    // (endDate passe), on retombe sur le modele lui-meme, sans date affichee.
+    function computeAllEventsForEdit() {
+        const data = window.EVENTS_DATA;
+        if (!data) return [];
+        const events = data.events || [];
+        const today = startOfToday();
+        const horizon = addDays(today, 3650);
+        return events.map(e => {
+            if (!e.recurrence) return e;
+            const occurrences = expandOne(e, today, horizon);
+            return occurrences.length ? occurrences[0] : e;
+        });
     }
 
     // -------- visites POI ajoutees automatiquement (showpois=true) --------
@@ -874,6 +900,11 @@
             dlBtn.classList.remove('hidden');
             dlBtn.title = L.downloadJson;
             dlBtn.setAttribute('aria-label', L.downloadJson);
+
+            const notice = $('#edit-mode-notice');
+            const total = (window.EVENTS_DATA && window.EVENTS_DATA.events || []).length;
+            notice.textContent = L.editModeNotice(total);
+            notice.classList.remove('hidden');
         }
     }
 
@@ -934,8 +965,11 @@
                         ${evt.recurring || evt.recurrence ? `<span class="hl-edit-rec-hint" title="${L.recurrenceNotice}">↻</span>` : ''}
                     </div>`;
             })() : '';
+            const dateBadgeHtml = evt.date
+                ? `${calendarIcon()}<span>${formatDateBadge(evt.date, evt.time)}</span>`
+                : `${calendarIcon()}<span>${L.recurringLabel}</span>`;
             items.push({
-                date: evt.date,
+                date: evt.date || '9999-99-99',
                 html: `
                 <div class="card">
                     <span class="hl-kind-badge is-event">🎉 ${L.kindEvent}</span>
@@ -945,7 +979,7 @@
                         <img class="hl-media-img${hasImg ? '' : ' is-logo'}" src="${imgSrc}" alt="" loading="lazy" />
                     </div>
                     <div class="p-4">
-                        <div class="hl-date-badge">${calendarIcon()}<span>${formatDateBadge(evt.date, evt.time)}</span></div>
+                        <div class="hl-date-badge">${dateBadgeHtml}</div>
                         <p class="hl-category">${catLabel(data, evt)}</p>
                         <h2 class="hl-title"><a href="${eventUrl(evt)}" target="_blank" rel="noopener">${t(evt.title)}</a></h2>
                         ${evt.place ? `<p class="hl-place">${pinIcon()}<span>${evt.place}</span></p>` : ''}
@@ -980,11 +1014,18 @@
         }
 
         if (data) {
-            state.ids.forEach(id => {
-                const evt = resolveEvent(data, id);
-                if (evt) pushEventCard(evt, id, true);
-            });
-            computeShowEventsExtra().forEach(evt => pushEventCard(evt, baseEventId(evt), false));
+            if (window.EDIT_MODE) {
+                // Mode edition : on ignore la selection habituelle (state.ids/showevents)
+                // et on affiche l'integralite des evenements de evenements.js, pour pouvoir
+                // les noter/marquer un par un puis exporter le fichier complet a jour.
+                computeAllEventsForEdit().forEach(evt => pushEventCard(evt, baseEventId(evt), false));
+            } else {
+                state.ids.forEach(id => {
+                    const evt = resolveEvent(data, id);
+                    if (evt) pushEventCard(evt, id, true);
+                });
+                computeShowEventsExtra().forEach(evt => pushEventCard(evt, baseEventId(evt), false));
+            }
         }
 
         state.visits.forEach((visit, idx) => {
