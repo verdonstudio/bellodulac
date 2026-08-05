@@ -36,7 +36,7 @@ const reservations = {
     "HMHBKYZK28": {
         "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-08-17&edateend=2026-08-22",
         "map": "index.html?lang=FR&logement=moustiers&zoom=13&pos=43.82945%2C6.21921&edatestart=2026-08-17&edateend=2026-08-22",
-        "highlights": "highlights.html?edatestart=2026-08-17&edateend=2026-08-22&lang=FR&logement=moustiers&ids=1708PONEY%2Cevt-23%2C1808PATEVENT-SALLES%2C1808PETIT%2Crec-stecroix-mardi%2Crec-moustiers-artisanat-mardi%2Cevt-27%2Cevt-48%2Cevt-49%2C1908ACCRONOCT%2Crec-aperitif-ferme-roumoules%2Crec-boules-nocturnes-salles%2Crec-riez-marche-mercredi%2Crec-moustiers-nocturne-mercredi%2Cevt-30%2Cevt-33%2Cevt-29%2C2008ASTROSOL%2C2008ASTRO%2Crec-riez-nocturne-jeudi%2Cevt-36%2Cevt-64b%2C2108CINE%2Cevt-16%2Cevt-81%2Cevt-82&from=evenements&visits=rando-moustiers%3A2026-08-18%2Cplage-galetas%3A2026-08-19%2Caiguines-table-orientation%3A2026-08-20%2Ctopo-lac-basses-gorges-mrkl4060%3A2026-08-21%2Cplage-salles%3A2026-08-22",
+        "highlights": "highlights.html?lang=FR&logement=moustiers&ids=1708PONEY%2Cevt-23%2C1808PATEVENT-SALLES%2C1808PETIT%2Crec-moustiers-artisanat-mardi%2Cevt-49%2C1908ACCRONOCT%2Crec-aperitif-ferme-roumoules%2Crec-moustiers-nocturne-mercredi%2C2008ASTRO%2Cevt-36%2Cevt-64b%2C2108CINE%2Cevt-16%2Cevt-82&visits=rando-moustiers%3A2026-08-18%2Cplage-galetas%3A2026-08-19%2Caiguines-table-orientation%3A2026-08-20%2Ctopo-lac-basses-gorges-mrkl4060%3A2026-08-21%2Cplage-salles%3A2026-08-22&from=evenements&edatestart=2026-08-17&edateend=2026-08-22",
         "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-08-17&edateend=2026-08-22"
     },
     "HMKZPX4TMA": {
