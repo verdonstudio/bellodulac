@@ -384,8 +384,8 @@ window.EVENTS_DATA = {
         "FR": "Accrobranche en nocturne + concert live + restauration sur place (Accro Guinguette). Réservation conseillée.",
         "EN": "Night-time tree climbing + live concert + on-site dining (Accro Guinguette). Booking recommended."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-07-08",
 	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
@@ -404,8 +404,8 @@ window.EVENTS_DATA = {
         "FR": "Accrobranche en nocturne + concert live + restauration sur place (Accro Guinguette). Réservation conseillée.",
         "EN": "Night-time tree climbing + live concert + on-site dining (Accro Guinguette). Booking recommended."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-07-15",
 	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
@@ -484,8 +484,8 @@ window.EVENTS_DATA = {
         "FR": "Accrobranche en nocturne + concert live + restauration sur place (Accro Guinguette). Réservation conseillée.",
         "EN": "Night-time tree climbing + live concert + on-site dining (Accro Guinguette). Booking recommended."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-12",
 	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
@@ -504,8 +504,8 @@ window.EVENTS_DATA = {
         "FR": "Accrobranche en nocturne + concert live + restauration sur place (Accro Guinguette). Réservation conseillée.",
         "EN": "Night-time tree climbing + live concert + on-site dining (Accro Guinguette). Booking recommended."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-19",
 	  "img" : "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22882_2_1.jpg",
@@ -590,8 +590,8 @@ window.EVENTS_DATA = {
         "FR": "Marché de créateurs et producteurs",
         "EN": "Craftspeople and producers market"
       },
-      "favorite": false,
-      "rating": 2,
+      "favorite": true,
+      "rating": 3,
       "recurrence": {
         "freq": "weekly",
         "interval": 1,
@@ -1375,7 +1375,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 2,
       "date": "2026-07-30",
-      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/32/218/42064416.jpg",
+      "img": "https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9zdGF0aWMuYXBpZGFlLXRvdXJpc21lLmNvbS9maWxlc3RvcmUvb2JqZXRzLXRvdXJpc3RpcXVlcy9pbWFnZXMvMzIvMjE4LzQyMDY0NDE2LmpwZw==/image.jpg",
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/guinguettestivales-bauduen-fr-3243440/"
     },
     {
@@ -1748,8 +1748,8 @@ window.EVENTS_DATA = {
         "EN": "Astronomy evening with Astro Évasion"
       },
       "details": "",
-      "favorite": false,
-      "rating": 2,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-06",
       "logement": "both",
       "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
@@ -1769,7 +1769,7 @@ window.EVENTS_DATA = {
         "EN": "Covers band. Free entry."
       },
       "favorite": false,
-      "rating": 0,
+      "rating": 2,
       "date": "2026-08-07",
       "logement": "both",
       "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22276_2_1.jpg",
@@ -1831,8 +1831,8 @@ window.EVENTS_DATA = {
         "FR": "Feux d'artifice suivis d'un bal-concert par Backstage (plage et théâtre en plein air). Semaine de festivités du 07 au 13/08 : concours de boules (vendredi, dimanche, lundi matin), concours de quilles (jeudi), apéritif festif (dimanche 18h).",
         "EN": "Fireworks followed by a dance concert by Backstage (beach and open-air theatre). Festive week from 07 to 13/08: pétanque contests (Friday, Sunday, Monday morning), skittles contest (Thursday), festive aperitif (Sunday 6pm)."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-08",
 	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22678_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22678-fete-d-ete---feu-d-artifice-et-bal-concert.html"
@@ -1850,8 +1850,8 @@ window.EVENTS_DATA = {
         "FR": "Duo musical spécialisé dans l'interprétation de reprises de morceaux très connus.",
         "EN": "Musical duo specialised in covers of well-known songs."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-08",
 	  "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22656_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22656-concerts-de--legends-of-love-and-light-.html"
@@ -1889,8 +1889,8 @@ window.EVENTS_DATA = {
         "FR": "Exposition dans la salle polyvalente, démonstrations et initiations au tournage sur réservation, organisées par la Commune d'Aiguines et l'association Tourneurs et Art du Bois en Provence.",
         "EN": "Exhibition in the multi-purpose hall, demonstrations and taster sessions by reservation, organised by the town of Aiguines and the Tourneurs et Art du Bois en Provence association."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "recurrence": {
         "freq": "daily",
         "interval": 1,
@@ -1953,8 +1953,8 @@ window.EVENTS_DATA = {
         "EN": "Blind Test & Karaoke Night at Brasserie du Petit Lac"
       },
       "details": "",
-      "favorite": false,
-      "rating": 2,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-11",
       "logement": "both",
 	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/94/41836262-diaporama.png",
@@ -1997,7 +1997,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 2,
       "date": "2026-08-13",
-      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/32/218/42064416.jpg",
+      "img": "https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9zdGF0aWMuYXBpZGFlLXRvdXJpc21lLmNvbS9maWxlc3RvcmUvb2JqZXRzLXRvdXJpc3RpcXVlcy9pbWFnZXMvMzIvMjE4LzQyMDY0NDE2LmpwZw==/image.jpg",
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/guinguettestivales-bauduen-fr-3243440/"
     },
     {
@@ -2039,8 +2039,8 @@ window.EVENTS_DATA = {
         "FR": "Balade géologique avec le Géoparc de Haute-Provence",
         "EN": "Geology walk with the Haute-Provence Geopark"
       },
-      "favorite": false,
-      "rating": 1,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-13",
       "logement": "both",
       "img": "https://www.geoparchauteprovence.com/wp-content/uploads/elementor/thumbs/9602667-rgjdctj22fduixjqot3khh4hk5mdlyqogu6p8spmi8.jpg",
@@ -2181,8 +2181,8 @@ window.EVENTS_DATA = {
         "EN": "Blind Test & Karaoke Night at Brasserie du Petit Lac"
       },
       "details": "",
-      "favorite": false,
-      "rating": 2,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-18",
       "logement": "both",
 	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/94/41836262-diaporama.png",
@@ -2224,8 +2224,8 @@ window.EVENTS_DATA = {
         "EN": "Astronomy evening with Astro Évasion"
       },
       "details": "",
-      "favorite": false,
-      "rating": 2,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-20",
       "logement": "both",
       "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
@@ -2244,8 +2244,8 @@ window.EVENTS_DATA = {
         "FR": "Soirée musicale au son du groupe \"Adagio en duo\".",
         "EN": "Musical evening with the band \"Adagio en duo\"."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-21",
       "img":"https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/120/222/22732408.png",
       "url": "https://www.restaurant-chez-nous.fr/"
@@ -2349,8 +2349,8 @@ window.EVENTS_DATA = {
         "EN": "Astronomy evening with Astro Évasion"
       },
       "details": "",
-      "favorite": false,
-      "rating": 2,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-27",
       "logement": "both",
       "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
@@ -2389,8 +2389,8 @@ window.EVENTS_DATA = {
         "FR": "Moment de convivialité, ouvert à tous.",
         "EN": "A friendly get-together, open to all."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-08-29",
       "img": "https://lacliquesalloise.fr/wp-content/uploads/2026/06/cropped-LogoLaClique-1-e1780901338723.png",
       "url": "https://lacliquesalloise.fr/"
@@ -2451,7 +2451,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-08-30",
-      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/182/44/17837238.jpg",
+      "img": "https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9zdGF0aWMuYXBpZGFlLXRvdXJpc21lLmNvbS9maWxlc3RvcmUvb2JqZXRzLXRvdXJpc3RpcXVlcy9pbWFnZXMvMTgyLzQ0LzE3ODM3MjM4LmpwZw==/image.jpg",
       "url": "https://www.yogasarasana.com/"
     },
     {
@@ -2490,8 +2490,8 @@ window.EVENTS_DATA = {
         "EN": "Astronomy evening with Astro Évasion"
       },
       "details": "",
-      "favorite": false,
-      "rating": 2,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-09-03",
       "logement": "both",
       "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/189/2/41091773.jpg",
@@ -2510,8 +2510,8 @@ window.EVENTS_DATA = {
         "EN": "Blind Test & Karaoke Night at Brasserie du Petit Lac"
       },
       "details": "",
-      "favorite": false,
-      "rating": 2,
+      "favorite": true,
+      "rating": 3,
       "date": "2026-09-05",
       "logement": "both",
 	  "img":"https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/94/41836262-diaporama.png",
@@ -2533,7 +2533,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-09-06",
-      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/182/44/17837238.jpg",
+      "img": "https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9zdGF0aWMuYXBpZGFlLXRvdXJpc21lLmNvbS9maWxlc3RvcmUvb2JqZXRzLXRvdXJpc3RpcXVlcy9pbWFnZXMvMTgyLzQ0LzE3ODM3MjM4LmpwZw==/image.jpg",
       "url": "https://www.yogasarasana.com/"
     },
     {
@@ -3090,8 +3090,8 @@ window.EVENTS_DATA = {
         "FR": "Concert intimiste au bar Le Mouton Noir.",
         "EN": "Intimate concert at Le Mouton Noir bar."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-06",
       "url": "https://www.moustiers.fr/en/fiche/journey-man-in-concert-at-the-mouton-noir/",
@@ -3129,8 +3129,8 @@ window.EVENTS_DATA = {
         "FR": "Concert gratuit en plein air, place de l'église.",
         "EN": "Free open-air concert, church square."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-12",
       "url": "https://www.moustiers.fr/en/fiche/place-a-la-musique-concert-with-licks-brains/",
@@ -3169,8 +3169,8 @@ window.EVENTS_DATA = {
         "FR": "Bal en plein air organisé par les pompiers.",
         "EN": "Open-air ball organised by the fire brigade."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-15",
       "url": "https://www.moustiers.fr/en/fiche/firemen-brigade-of-moustiers-ste-marie-open-air-ball/",
@@ -3189,8 +3189,8 @@ window.EVENTS_DATA = {
         "FR": "Concert gratuit en plein air, place de l'église.",
         "EN": "Free open-air concert, church square."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-19",
       "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-concert-with-arena-negra/",
@@ -3209,8 +3209,8 @@ window.EVENTS_DATA = {
         "FR": "Concert rock gratuit en plein air.",
         "EN": "Free open-air rock concert."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-26",
       "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-rock-concert-with-the-page/",
@@ -3229,8 +3229,8 @@ window.EVENTS_DATA = {
         "FR": "Concert intimiste au bar Le Mouton Noir.",
         "EN": "Intimate concert at Le Mouton Noir bar."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-29",
       "url": "https://www.moustiers.fr/en/fiche/matt-low-in-concert-at-the-mouton-noir/",
@@ -3249,8 +3249,8 @@ window.EVENTS_DATA = {
         "FR": "Fête votive traditionnelle du village. Du 31/08 au 08/09.",
         "EN": "Traditional village patronal feast. From 31/08 to 08/09."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-31",
       "url": "https://www.moustiers.fr/en/fiche/celebration-of-notre-dame-de-beauvoir/",
@@ -3269,8 +3269,8 @@ window.EVENTS_DATA = {
         "FR": "Concert intimiste au bar Le Mouton Noir.",
         "EN": "Intimate concert at Le Mouton Noir bar."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-12",
       "url": "https://www.moustiers.fr/en/fiche/tibert-in-concert-at-le-mouton-noir/",
@@ -3289,8 +3289,8 @@ window.EVENTS_DATA = {
         "FR": "Salon découverte des médecines alternatives et du bien-être.",
         "EN": "Discovery fair for alternative therapies and wellbeing."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-13",
       "url": "https://www.moustiers.fr/en/fiche/bien-etre-sous-letoile-3-alternative-treatments-exhibition/",
@@ -3309,8 +3309,8 @@ window.EVENTS_DATA = {
         "FR": "Même marché que celui du mardi, tenu exceptionnellement le dimanche.",
         "EN": "Same market as the Tuesday edition, exceptionally held on Sunday."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-13",
       "url": "https://www.moustiers.fr/en/fiche/southern-alps-crafts-flavours-market-6/",
@@ -3329,8 +3329,8 @@ window.EVENTS_DATA = {
         "FR": "Même marché que celui du mardi, tenu exceptionnellement le dimanche.",
         "EN": "Same market as the Tuesday edition, exceptionally held on Sunday."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-27",
       "url": "https://www.moustiers.fr/en/fiche/southern-alps-crafts-flavours-market-5/",
@@ -3349,8 +3349,8 @@ window.EVENTS_DATA = {
         "FR": "Découverte du patrimoine local : visites, animations. Les 19 et 20/09.",
         "EN": "Discover local heritage: guided tours and activities. 19-20 September."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-19",
       "url": "https://www.moustiers.fr/en/fiche/european-heritage-days-2026-43/",
@@ -3369,8 +3369,8 @@ window.EVENTS_DATA = {
         "FR": "Salon du livre et de la bande dessinée.",
         "EN": "Book and comic-book fair."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-20",
       "url": "https://www.moustiers.fr/en/fiche/9th-edition-moustiers-a-la-page-meeting-around-books-and-comics/",
@@ -3389,8 +3389,8 @@ window.EVENTS_DATA = {
         "FR": "Concert intimiste au bar Le Mouton Noir.",
         "EN": "Intimate concert at Le Mouton Noir bar."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-26",
       "url": "https://www.moustiers.fr/en/fiche/le-caribou-volant-in-concert-at-le-mouton-noir/",
@@ -3409,8 +3409,8 @@ window.EVENTS_DATA = {
         "FR": "Concert de fin de résidence artistique. Les 26 et 27/09.",
         "EN": "End-of-artistic-residency concert. 26-27 September."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-26",
       "url": "https://www.moustiers.fr/en/fiche/concert-to-mark-the-end-of-the-residency-at-segries-monastery-the-segries-symphony/",
@@ -3513,8 +3513,8 @@ window.EVENTS_DATA = {
         "FR": "Duo guitare/voix (Marie-Eve \"Bonnie\" au chant, Franck \"Clyde\" à la guitare).",
         "EN": "Guitar/vocal duo (Marie-Eve \"Bonnie\" on vocals, Franck \"Clyde\" on guitar)."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-12",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22920-concert-de--bonnie-and-clyde-.html",
@@ -3533,8 +3533,8 @@ window.EVENTS_DATA = {
         "FR": "Volet local de la Fête du lac de Sainte-Croix : animations, repas, concert, feu d'artifice.",
         "EN": "Local leg of the Lake Sainte-Croix festival: activities, meal, concert, fireworks."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-12",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22902-les-salles-sur-verdon-fetent-le-lac-de-sainte-croix.html",
@@ -3553,8 +3553,8 @@ window.EVENTS_DATA = {
         "FR": "Rassemblement automobile Porsche. Les 19 et 20/09.",
         "EN": "Porsche car gathering. 19-20 September."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-19",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22919-1er-porsche-canyon-tour-rassemblement.html",
@@ -3593,8 +3593,8 @@ window.EVENTS_DATA = {
         "FR": "Animation jeux en bois géants en accès libre.",
         "EN": "Free-access giant wooden games activity."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-08-14",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22809-jeux-en-bois-geants.html",
@@ -3634,7 +3634,7 @@ window.EVENTS_DATA = {
         "EN": "Summer sailing courses, online registration, limited places."
       },
       "favorite": false,
-      "rating": 0,
+      "rating": 1,
       "logement": "both",
       "recurrence": {
         "freq": "weekly",
@@ -3665,7 +3665,7 @@ window.EVENTS_DATA = {
         "EN": "Local leg of the Lake Sainte-Croix festival, alongside the inter-village programme on 11/09."
       },
       "favorite": false,
-      "rating": 0,
+      "rating": 2,
       "logement": "both",
       "date": "2026-09-12",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22901-bauduen-fete-le-lac-de-sainte-croix.html",
@@ -3685,7 +3685,7 @@ window.EVENTS_DATA = {
         "EN": "Guided heritage tour of Bauduen, booking required at the tourist office (min. 4 people), weather permitting."
       },
       "favorite": false,
-      "rating": 0,
+      "rating": 2,
       "logement": "both",
       "recurrence": {
         "freq": "weekly",
@@ -3713,7 +3713,7 @@ window.EVENTS_DATA = {
         "EN": "Big inter-village pétanque contest. 11-13 September."
       },
       "favorite": false,
-      "rating": 0,
+      "rating": 2,
       "logement": "both",
       "date": "2026-09-11",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22711-fete-du-lac-de-sainte-croix---concours-de-boules.html",
@@ -3732,8 +3732,8 @@ window.EVENTS_DATA = {
         "FR": "Fête du Lieu d'Accueil Enfants-Parents.",
         "EN": "Fair organised by the local parent-child play centre (LAEP)."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-16",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22897-fete-du-laep.html",
@@ -3752,8 +3752,8 @@ window.EVENTS_DATA = {
         "FR": "Volet local de la Fête du lac de Sainte-Croix.",
         "EN": "Local leg of the Lake Sainte-Croix festival."
       },
-      "favorite": false,
-      "rating": 0,
+      "favorite": true,
+      "rating": 3,
       "logement": "both",
       "date": "2026-09-11",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22903-aiguines-fete-le-lac-de-sainte-croix.html",
