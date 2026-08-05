@@ -2619,12 +2619,12 @@ window.EVENTS_DATA = {
       "time": "Voir programme",
       "title": "Natureman Var",
       "details": {
-        "FR": "13ème édition du triathlon nature Natureman Var, sur tout le week-end.",
-        "EN": "13th edition of the Natureman Var off-road triathlon, over the whole weekend."
+        "FR": "13ème édition du triathlon nature Natureman Var. Retrait des dossards le 25/09, course principale le 26/09, épreuve \"Natur'M\" le 27/09.",
+        "EN": "13th edition of the Natureman Var off-road triathlon. Race-pack collection on 25/09, main race on 26/09, \"Natur'M\" event on 27/09."
       },
       "favorite": true,
       "rating": 3,
-      "date": "2026-09-26",
+      "date": "2026-09-25",
       "url": "https://natureman-var.fr/",
       "logement": "both",
       "img": "https://natureman-var.fr/wp-content/uploads/2023/01/1PARCOURS-1.jpeg"
@@ -3048,6 +3048,695 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-07-28"
+    },
+    {
+      "id": "evt-88",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "21h00",
+      "title": {
+        "FR": "\"Place à la Musique\" : concert avec Cumbia Boom Box",
+        "EN": "\"Music in the Spotlights\": concert with Cumbia Boom Box"
+      },
+      "details": {
+        "FR": "Concert gratuit en plein air, place de l'église.",
+        "EN": "Free open-air concert, church square."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-05",
+      "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-concert-with-cumbia-boom-box/"
+    },
+    {
+      "id": "evt-89",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "19h00",
+      "title": {
+        "FR": "Journey Man en concert au Mouton Noir",
+        "EN": "Journey Man in concert at Le Mouton Noir"
+      },
+      "details": {
+        "FR": "Concert intimiste au bar Le Mouton Noir.",
+        "EN": "Intimate concert at Le Mouton Noir bar."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-06",
+      "url": "https://www.moustiers.fr/en/fiche/journey-man-in-concert-at-the-mouton-noir/"
+    },
+    {
+      "id": "evt-90",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "20h30–0h00",
+      "title": {
+        "FR": "Bal Tango \"Milonga sous les étoiles\"",
+        "EN": "Tango Ball \"Milonga Under the Stars\""
+      },
+      "details": {
+        "FR": "Bal tango en plein air, place de l'Eglise.",
+        "EN": "Open-air tango ball, church square."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-04",
+      "url": "https://www.moustiers.fr/en/fiche/tango-dance-milonga-under-the-star-2/"
+    },
+    {
+      "id": "evt-91",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "21h00",
+      "title": {
+        "FR": "\"Place à la Musique\" : concert avec Licks & Brains",
+        "EN": "\"Music in the Spotlights\": concert with Licks & Brains"
+      },
+      "details": {
+        "FR": "Concert gratuit en plein air, place de l'église.",
+        "EN": "Free open-air concert, church square."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-12",
+      "url": "https://www.moustiers.fr/en/fiche/place-a-la-musique-concert-with-licks-brains/"
+    },
+    {
+      "id": "evt-92",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "19h00",
+      "title": {
+        "FR": "Les Lucioles Rouges en concert au Mouton Noir",
+        "EN": "Les Lucioles Rouges in concert at Le Mouton Noir"
+      },
+      "details": {
+        "FR": "Concert intimiste au bar Le Mouton Noir.",
+        "EN": "Intimate concert at Le Mouton Noir bar."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-15",
+      "url": "https://www.moustiers.fr/en/fiche/les-lucioles-rouges-in-concert-at-le-mouton-noir/"
+    },
+    {
+      "id": "evt-93",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "19h30–0h00",
+      "title": {
+        "FR": "Bal des Sapeurs-Pompiers de Moustiers-Sainte-Marie",
+        "EN": "Firefighters' Ball of Moustiers-Sainte-Marie"
+      },
+      "details": {
+        "FR": "Bal en plein air organisé par les pompiers.",
+        "EN": "Open-air ball organised by the fire brigade."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-15",
+      "url": "https://www.moustiers.fr/en/fiche/firemen-brigade-of-moustiers-ste-marie-open-air-ball/"
+    },
+    {
+      "id": "evt-94",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "21h00",
+      "title": {
+        "FR": "\"Place à la Musique\" : concert avec Arena Negra",
+        "EN": "\"Music in the Spotlights\": concert with Arena Negra"
+      },
+      "details": {
+        "FR": "Concert gratuit en plein air, place de l'église.",
+        "EN": "Free open-air concert, church square."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-19",
+      "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-concert-with-arena-negra/"
+    },
+    {
+      "id": "evt-95",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "21h00",
+      "title": {
+        "FR": "\"Place à la Musique — Rockissime\" avec The Page",
+        "EN": "\"Music in the Spotlights — Rockissime\" with The Page"
+      },
+      "details": {
+        "FR": "Concert rock gratuit en plein air.",
+        "EN": "Free open-air rock concert."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-26",
+      "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-rock-concert-with-the-page/"
+    },
+    {
+      "id": "evt-96",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "19h00",
+      "title": {
+        "FR": "Matt Low en concert au Mouton Noir",
+        "EN": "Matt Low in concert at Le Mouton Noir"
+      },
+      "details": {
+        "FR": "Concert intimiste au bar Le Mouton Noir.",
+        "EN": "Intimate concert at Le Mouton Noir bar."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-29",
+      "url": "https://www.moustiers.fr/en/fiche/matt-low-in-concert-at-the-mouton-noir/"
+    },
+    {
+      "id": "evt-97",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "Journée",
+      "title": {
+        "FR": "Fête patronale de Notre-Dame de Beauvoir",
+        "EN": "Patronal Feast of Notre-Dame de Beauvoir"
+      },
+      "details": {
+        "FR": "Fête votive traditionnelle du village. Du 31/08 au 08/09.",
+        "EN": "Traditional village patronal feast. From 31/08 to 08/09."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-31",
+      "url": "https://www.moustiers.fr/en/fiche/celebration-of-notre-dame-de-beauvoir/"
+    },
+    {
+      "id": "evt-98",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "19h00",
+      "title": {
+        "FR": "Tibert en concert au Mouton Noir",
+        "EN": "Tibert in concert at Le Mouton Noir"
+      },
+      "details": {
+        "FR": "Concert intimiste au bar Le Mouton Noir.",
+        "EN": "Intimate concert at Le Mouton Noir bar."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-12",
+      "url": "https://www.moustiers.fr/en/fiche/tibert-in-concert-at-le-mouton-noir/"
+    },
+    {
+      "id": "evt-99",
+      "cat": "culture",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "10h00–18h30",
+      "title": {
+        "FR": "Bien-Être sous l'Étoile #3",
+        "EN": "Wellbeing Under the Stars #3"
+      },
+      "details": {
+        "FR": "Salon découverte des médecines alternatives et du bien-être.",
+        "EN": "Discovery fair for alternative therapies and wellbeing."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-13",
+      "url": "https://www.moustiers.fr/en/fiche/bien-etre-sous-letoile-3-alternative-treatments-exhibition/"
+    },
+    {
+      "id": "evt-100",
+      "cat": "marche",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "9h00–19h00",
+      "title": {
+        "FR": "Marché Artisanat & Saveurs des Alpes du Sud (édition du dimanche)",
+        "EN": "Southern Alps Crafts & Flavours Market (Sunday edition)"
+      },
+      "details": {
+        "FR": "Même marché que celui du mardi, tenu exceptionnellement le dimanche.",
+        "EN": "Same market as the Tuesday edition, exceptionally held on Sunday."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-13",
+      "url": "https://www.moustiers.fr/en/fiche/southern-alps-crafts-flavours-market-6/"
+    },
+    {
+      "id": "evt-101",
+      "cat": "marche",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "9h00–19h00",
+      "title": {
+        "FR": "Marché Artisanat & Saveurs des Alpes du Sud (édition du dimanche)",
+        "EN": "Southern Alps Crafts & Flavours Market (Sunday edition)"
+      },
+      "details": {
+        "FR": "Même marché que celui du mardi, tenu exceptionnellement le dimanche.",
+        "EN": "Same market as the Tuesday edition, exceptionally held on Sunday."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-27",
+      "url": "https://www.moustiers.fr/en/fiche/southern-alps-crafts-flavours-market-5/"
+    },
+    {
+      "id": "evt-102",
+      "cat": "culture",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "Journée",
+      "title": {
+        "FR": "Journées Européennes du Patrimoine 2026 #43",
+        "EN": "European Heritage Days 2026 #43"
+      },
+      "details": {
+        "FR": "Découverte du patrimoine local : visites, animations. Les 19 et 20/09.",
+        "EN": "Discover local heritage: guided tours and activities. 19-20 September."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-19",
+      "url": "https://www.moustiers.fr/en/fiche/european-heritage-days-2026-43/"
+    },
+    {
+      "id": "evt-103",
+      "cat": "culture",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "10h00–17h00",
+      "title": {
+        "FR": "9e édition \"Moustiers à la Page !\"",
+        "EN": "9th edition \"Moustiers à la Page!\""
+      },
+      "details": {
+        "FR": "Salon du livre et de la bande dessinée.",
+        "EN": "Book and comic-book fair."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-20",
+      "url": "https://www.moustiers.fr/en/fiche/9th-edition-moustiers-a-la-page-meeting-around-books-and-comics/"
+    },
+    {
+      "id": "evt-104",
+      "cat": "fete",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "19h00",
+      "title": {
+        "FR": "Le Caribou Volant en concert au Mouton Noir",
+        "EN": "The Flying Caribou in concert at Le Mouton Noir"
+      },
+      "details": {
+        "FR": "Concert intimiste au bar Le Mouton Noir.",
+        "EN": "Intimate concert at Le Mouton Noir bar."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-26",
+      "url": "https://www.moustiers.fr/en/fiche/le-caribou-volant-in-concert-at-le-mouton-noir/"
+    },
+    {
+      "id": "evt-105",
+      "cat": "culture",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "Journée",
+      "title": {
+        "FR": "Concert de fin de résidence au Monastère de Ségriès : la Symphonie de Ségriès",
+        "EN": "End-of-residency concert at Ségriès Monastery: the Ségriès Symphony"
+      },
+      "details": {
+        "FR": "Concert de fin de résidence artistique. Les 26 et 27/09.",
+        "EN": "End-of-artistic-residency concert. 26-27 September."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-26",
+      "url": "https://www.moustiers.fr/en/fiche/concert-to-mark-the-end-of-the-residency-at-segries-monastery-the-segries-symphony/"
+    },
+    {
+      "id": "rec-moustiers-visite-vieuxcentre-mardi",
+      "cat": "culture",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "10h30–12h00",
+      "title": {
+        "FR": "Visite guidée du vieux centre pour individuels",
+        "EN": "Guided tour of the old town for individuals"
+      },
+      "details": {
+        "FR": "Visite guidée par un guide agréé de l'Office de Tourisme.",
+        "EN": "Guided tour led by a licensed Tourist Office guide."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "recurrence": {
+        "freq": "weekly",
+        "interval": 1,
+        "startDate": "2026-08-04",
+        "endDate": null,
+        "byDay": [
+          "tue"
+        ]
+      },
+      "url": "https://www.moustiers.fr/en/fiche/individual-guided-tour-of-moustiers-2/"
+    },
+    {
+      "id": "rec-moustiers-cluedo-mercredi",
+      "cat": "sport",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "Journée",
+      "title": {
+        "FR": "Cluedo Géant : \"La Chronique du Trésor des Esvanouis\"",
+        "EN": "Giant Cluedo: \"The Chronicle of the Lost Treasure\""
+      },
+      "details": {
+        "FR": "Jeu d'enquête familial dans les rues de Moustiers.",
+        "EN": "Family investigation game through the streets of Moustiers."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "recurrence": {
+        "freq": "weekly",
+        "interval": 1,
+        "startDate": "2026-08-05",
+        "endDate": null,
+        "byDay": [
+          "wed"
+        ]
+      },
+      "url": "https://www.moustiers.fr/en/fiche/cluedo-geant-la-chronique-du-tresor-esvanouis-3/"
+    },
+    {
+      "id": "rec-moustiers-fromage-chevre-mercredi",
+      "cat": "culture",
+      "place": "Moustiers-Sainte-Marie",
+      "time": "10h00–12h00",
+      "title": {
+        "FR": "Fabrication du fromage de chèvre",
+        "EN": "Goat cheese making"
+      },
+      "details": {
+        "FR": "Atelier découverte de la fabrication du fromage de chèvre.",
+        "EN": "Discovery workshop on goat cheese making."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "recurrence": {
+        "freq": "weekly",
+        "interval": 1,
+        "startDate": "2026-08-05",
+        "endDate": "2026-08-26",
+        "byDay": [
+          "wed"
+        ]
+      },
+      "url": "https://www.moustiers.fr/en/fiche/fabriquer-du-fromage-de-chevre-3/"
+    },
+    {
+      "id": "evt-106",
+      "cat": "fete",
+      "place": "Les Salles-sur-Verdon",
+      "time": "21h00",
+      "title": {
+        "FR": "Concert de \"Bonnie and Clyde\"",
+        "EN": "\"Bonnie and Clyde\" concert"
+      },
+      "details": {
+        "FR": "Duo guitare/voix (Marie-Eve \"Bonnie\" au chant, Franck \"Clyde\" à la guitare).",
+        "EN": "Guitar/vocal duo (Marie-Eve \"Bonnie\" on vocals, Franck \"Clyde\" on guitar)."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-12",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22920-concert-de--bonnie-and-clyde-.html"
+    },
+    {
+      "id": "evt-107",
+      "cat": "fete",
+      "place": "Les Salles-sur-Verdon",
+      "time": "Journée",
+      "title": {
+        "FR": "Les Salles-sur-Verdon fêtent le lac de Sainte-Croix",
+        "EN": "Les Salles-sur-Verdon celebrates Lake Sainte-Croix"
+      },
+      "details": {
+        "FR": "Volet local de la Fête du lac de Sainte-Croix : animations, repas, concert, feu d'artifice.",
+        "EN": "Local leg of the Lake Sainte-Croix festival: activities, meal, concert, fireworks."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-12",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22902-les-salles-sur-verdon-fetent-le-lac-de-sainte-croix.html"
+    },
+    {
+      "id": "evt-108",
+      "cat": "sport",
+      "place": "Les Salles-sur-Verdon",
+      "time": "Journée",
+      "title": {
+        "FR": "1er Porsche Canyon Tour — Rassemblement",
+        "EN": "1st Porsche Canyon Tour — Gathering"
+      },
+      "details": {
+        "FR": "Rassemblement automobile Porsche. Les 19 et 20/09.",
+        "EN": "Porsche car gathering. 19-20 September."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-19",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22919-1er-porsche-canyon-tour-rassemblement.html"
+    },
+    {
+      "id": "evt-109",
+      "cat": "sport",
+      "place": "Les Salles-sur-Verdon",
+      "time": "18h00",
+      "title": {
+        "FR": "Jeux en bois géants",
+        "EN": "Giant wooden games"
+      },
+      "details": {
+        "FR": "Animation jeux en bois géants en accès libre.",
+        "EN": "Free-access giant wooden games activity."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-07-31",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22809-jeux-en-bois-geants.html"
+    },
+    {
+      "id": "evt-110",
+      "cat": "sport",
+      "place": "Les Salles-sur-Verdon",
+      "time": "18h00",
+      "title": {
+        "FR": "Jeux en bois géants",
+        "EN": "Giant wooden games"
+      },
+      "details": {
+        "FR": "Animation jeux en bois géants en accès libre.",
+        "EN": "Free-access giant wooden games activity."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-14",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22809-jeux-en-bois-geants.html"
+    },
+    {
+      "id": "evt-111",
+      "cat": "fete",
+      "place": "Bauduen",
+      "time": "18h30",
+      "title": {
+        "FR": "Soirée jeux intergénérationnelle",
+        "EN": "Intergenerational game night"
+      },
+      "details": {
+        "FR": "Soirée jeux ouverte à toutes les générations.",
+        "EN": "Game night open to all generations."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-14",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22892-soiree-jeux.html"
+    },
+    {
+      "id": "rec-bauduen-stage-nautique",
+      "cat": "sport",
+      "place": "Bauduen",
+      "time": "13h30",
+      "title": {
+        "FR": "Stage d'été au Centre Nautique de Bauduen",
+        "EN": "Summer course at Bauduen Water Sports Centre"
+      },
+      "details": {
+        "FR": "Stages nautiques d'été (voile), inscription en ligne, places limitées.",
+        "EN": "Summer sailing courses, online registration, limited places."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "recurrence": {
+        "freq": "weekly",
+        "interval": 1,
+        "startDate": "2026-08-01",
+        "endDate": "2026-08-27",
+        "byDay": [
+          "mon",
+          "tue",
+          "wed",
+          "thu"
+        ]
+      },
+      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/stage-dete-au-centre-nautique-de-bauduen-bauduen-fr-6426351/"
+    },
+    {
+      "id": "evt-112",
+      "cat": "fete",
+      "place": "Bauduen",
+      "time": "Journée",
+      "title": {
+        "FR": "Bauduen fête le lac de Sainte-Croix",
+        "EN": "Bauduen celebrates Lake Sainte-Croix"
+      },
+      "details": {
+        "FR": "Volet local de la Fête du lac de Sainte-Croix, en complément du programme intervillage du 11/09.",
+        "EN": "Local leg of the Lake Sainte-Croix festival, alongside the inter-village programme on 11/09."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-12",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22901-bauduen-fete-le-lac-de-sainte-croix.html"
+    },
+    {
+      "id": "rec-bauduen-visite-guidee-jeudi",
+      "cat": "culture",
+      "place": "Bauduen",
+      "time": "Sur réservation",
+      "title": {
+        "FR": "Visite guidée du village de Bauduen",
+        "EN": "Guided tour of Bauduen village"
+      },
+      "details": {
+        "FR": "Visite guidée du patrimoine bauduennois, réservation à l'office de tourisme (min. 4 pers.), sous réserve météo.",
+        "EN": "Guided heritage tour of Bauduen, booking required at the tourist office (min. 4 people), weather permitting."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "recurrence": {
+        "freq": "weekly",
+        "interval": 1,
+        "startDate": "2026-08-01",
+        "endDate": "2026-08-27",
+        "byDay": [
+          "thu"
+        ]
+      },
+      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/visite-guidee-du-village-de-bauduen-bauduen-fr-3222181/"
+    },
+    {
+      "id": "evt-113",
+      "cat": "sport",
+      "place": "Aiguines",
+      "time": "Journée",
+      "title": {
+        "FR": "Fête du lac de Sainte-Croix — Concours de boules intervillage",
+        "EN": "Lake Sainte-Croix Festival — Inter-village pétanque contest"
+      },
+      "details": {
+        "FR": "Grand concours de pétanque intervillage. Du 11 au 13/09.",
+        "EN": "Big inter-village pétanque contest. 11-13 September."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-11",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22711-fete-du-lac-de-sainte-croix---concours-de-boules.html"
+    },
+    {
+      "id": "evt-114",
+      "cat": "fete",
+      "place": "Aiguines",
+      "time": "10h00–15h30",
+      "title": {
+        "FR": "Fête du LAEP",
+        "EN": "LAEP Family Fair"
+      },
+      "details": {
+        "FR": "Fête du Lieu d'Accueil Enfants-Parents.",
+        "EN": "Fair organised by the local parent-child play centre (LAEP)."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-16",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22897-fete-du-laep.html"
+    },
+    {
+      "id": "evt-115",
+      "cat": "fete",
+      "place": "Aiguines",
+      "time": "Journée",
+      "title": {
+        "FR": "Aiguines fête le lac de Sainte-Croix",
+        "EN": "Aiguines celebrates Lake Sainte-Croix"
+      },
+      "details": {
+        "FR": "Volet local de la Fête du lac de Sainte-Croix.",
+        "EN": "Local leg of the Lake Sainte-Croix festival."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-09-11",
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22903-aiguines-fete-le-lac-de-sainte-croix.html"
+    },
+    {
+      "id": "evt-116",
+      "cat": "culture",
+      "place": "Quinson",
+      "time": "Journée",
+      "title": {
+        "FR": "Exposition Temporaire \"Sors de ta Réserve\"",
+        "EN": "Temporary Exhibition \"Sors de ta Réserve\""
+      },
+      "details": {
+        "FR": "Exposition au Musée de Préhistoire sur les 40 ans de la Réserve géologique de Haute-Provence (ammonites, ichthyosaures).",
+        "EN": "Exhibition at the Museum of Prehistory marking 40 years of the Haute-Provence Geological Reserve (ammonites, ichthyosaurs)."
+      },
+      "favorite": false,
+      "rating": 0,
+      "logement": "both",
+      "date": "2026-08-01",
+      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/exposition-temporaire-sors-de-ta-reserve-quinson-fr-5006431/"
     }
   ]
 };	
