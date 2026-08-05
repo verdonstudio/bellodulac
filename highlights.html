@@ -132,6 +132,18 @@
     .hl-place { display: flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--c-muted); font-weight: 600; margin: 0; }
     .hl-place svg { width: 13px; height: 13px; flex-shrink: 0; }
 
+    /* Petit badge en haut a gauche de chaque carte pour distinguer au premier coup d'oeil
+       un evenement (programme local) d'une visite (point d'interet ajoute manuellement). */
+    .hl-kind-badge {
+        position: absolute; top: 8px; left: 8px; z-index: 5;
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 4px 10px; border-radius: 999px;
+        font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    }
+    .hl-kind-badge.is-event { background: var(--c-accent); color: #78350f; }
+    .hl-kind-badge.is-visit { background: var(--c-primary); color: #fff; }
+
     #empty-state { display: none; text-align: center; padding: 40px 16px; color: var(--c-muted); font-size: 14px; }
     #empty-state.visible { display: block; }
 </style>
@@ -279,7 +291,8 @@
             },
             addEvent: "Ajouter un évènement", modalTitleEvent: "Ajouter un évènement",
             searchEventPlaceholder: "Rechercher un évènement…",
-            noEventFound: "Aucun évènement disponible sur cette période."
+            noEventFound: "Aucun évènement disponible sur cette période.",
+            kindEvent: "Évènement", kindVisit: "Visite"
         },
         EN: {
             back: "Back", label: "Your selection",
@@ -304,7 +317,8 @@
             },
             addEvent: "Add an event", modalTitleEvent: "Add an event",
             searchEventPlaceholder: "Search for an event…",
-            noEventFound: "No events available for this period."
+            noEventFound: "No events available for this period.",
+            kindEvent: "Event", kindVisit: "Visit"
         }
     };
 
@@ -771,6 +785,7 @@
                     date: evt.date,
                     html: `
                     <div class="card">
+                        <span class="hl-kind-badge is-event">🎉 ${L.kindEvent}</span>
                         <button type="button" class="hl-remove-btn" data-kind="event" data-key="${id}" title="${L.removeCard}" aria-label="${L.removeCard}">✕</button>
                         <button type="button" class="hl-share-btn" data-share-kind="event" data-share-id="${id}" title="${L.shareCard}" aria-label="${L.shareCard}">🔗</button>
                         <div class="hl-media">
@@ -798,6 +813,7 @@
                 date: visit.date,
                 html: `
                 <div class="card">
+                    <span class="hl-kind-badge is-visit">📍 ${L.kindVisit}</span>
                     <button type="button" class="hl-remove-btn" data-kind="visit" data-index="${idx}" title="${L.removeCard}" aria-label="${L.removeCard}">✕</button>
                     <button type="button" class="hl-share-btn" data-share-kind="visit" data-share-index="${idx}" title="${L.shareCard}" aria-label="${L.shareCard}">🔗</button>
                     <div class="hl-media">
