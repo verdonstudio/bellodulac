@@ -3066,7 +3066,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-05",
-      "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-concert-with-cumbia-boom-box/"
+      "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-concert-with-cumbia-boom-box/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/79/146/37655119-diaporama.png"
     },
     {
       "id": "evt-89",
@@ -3085,7 +3086,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-06",
-      "url": "https://www.moustiers.fr/en/fiche/journey-man-in-concert-at-the-mouton-noir/"
+      "url": "https://www.moustiers.fr/en/fiche/journey-man-in-concert-at-the-mouton-noir/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/110/34/38216302-diaporama.png"
     },
     {
       "id": "evt-90",
@@ -3123,7 +3125,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-12",
-      "url": "https://www.moustiers.fr/en/fiche/place-a-la-musique-concert-with-licks-brains/"
+      "url": "https://www.moustiers.fr/en/fiche/place-a-la-musique-concert-with-licks-brains/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/46/154/35559982-diaporama.png"
     },
     {
       "id": "evt-92",
@@ -3142,7 +3145,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-15",
-      "url": "https://www.moustiers.fr/en/fiche/les-lucioles-rouges-in-concert-at-le-mouton-noir/"
+      "url": "https://www.moustiers.fr/en/fiche/les-lucioles-rouges-in-concert-at-le-mouton-noir/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/122/37/38217082-diaporama.png"
     },
     {
       "id": "evt-93",
@@ -3161,7 +3165,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-15",
-      "url": "https://www.moustiers.fr/en/fiche/firemen-brigade-of-moustiers-ste-marie-open-air-ball/"
+      "url": "https://www.moustiers.fr/en/fiche/firemen-brigade-of-moustiers-ste-marie-open-air-ball/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/199/172/42249415-diaporama.png"
     },
     {
       "id": "evt-94",
@@ -3180,7 +3185,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-19",
-      "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-concert-with-arena-negra/"
+      "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-concert-with-arena-negra/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/2/122/37911042-diaporama.png"
     },
     {
       "id": "evt-95",
@@ -3199,7 +3205,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-26",
-      "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-rock-concert-with-the-page/"
+      "url": "https://www.moustiers.fr/en/fiche/music-in-the-spotlights-rock-concert-with-the-page/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/21/232/34596885-diaporama.png"
     },
     {
       "id": "evt-96",
@@ -3218,7 +3225,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-29",
-      "url": "https://www.moustiers.fr/en/fiche/matt-low-in-concert-at-the-mouton-noir/"
+      "url": "https://www.moustiers.fr/en/fiche/matt-low-in-concert-at-the-mouton-noir/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/247/38/38217463-diaporama.png"
     },
     {
       "id": "evt-97",
@@ -3237,7 +3245,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-31",
-      "url": "https://www.moustiers.fr/en/fiche/celebration-of-notre-dame-de-beauvoir/"
+      "url": "https://www.moustiers.fr/en/fiche/celebration-of-notre-dame-de-beauvoir/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/57/2/35390009-diaporama.jpg"
     },
     {
       "id": "evt-98",
@@ -3256,7 +3265,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-12",
-      "url": "https://www.moustiers.fr/en/fiche/tibert-in-concert-at-le-mouton-noir/"
+      "url": "https://www.moustiers.fr/en/fiche/tibert-in-concert-at-le-mouton-noir/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/147/39/38217619-diaporama.png"
     },
     {
       "id": "evt-99",
@@ -3275,7 +3285,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-13",
-      "url": "https://www.moustiers.fr/en/fiche/bien-etre-sous-letoile-3-alternative-treatments-exhibition/"
+      "url": "https://www.moustiers.fr/en/fiche/bien-etre-sous-letoile-3-alternative-treatments-exhibition/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/208/180/38122704-diaporama.jpg"
     },
     {
       "id": "evt-100",
@@ -3294,7 +3305,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-13",
-      "url": "https://www.moustiers.fr/en/fiche/southern-alps-crafts-flavours-market-6/"
+      "url": "https://www.moustiers.fr/en/fiche/southern-alps-crafts-flavours-market-6/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/110/197/20563310-diaporama.png"
     },
     {
       "id": "evt-101",
@@ -3313,7 +3325,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-27",
-      "url": "https://www.moustiers.fr/en/fiche/southern-alps-crafts-flavours-market-5/"
+      "url": "https://www.moustiers.fr/en/fiche/southern-alps-crafts-flavours-market-5/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/141/194/20562573-diaporama.png"
     },
     {
       "id": "evt-102",
@@ -3332,7 +3345,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-19",
-      "url": "https://www.moustiers.fr/en/fiche/european-heritage-days-2026-43/"
+      "url": "https://www.moustiers.fr/en/fiche/european-heritage-days-2026-43/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/56/42154214-diaporama.png"
     },
     {
       "id": "evt-103",
@@ -3351,7 +3365,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-20",
-      "url": "https://www.moustiers.fr/en/fiche/9th-edition-moustiers-a-la-page-meeting-around-books-and-comics/"
+      "url": "https://www.moustiers.fr/en/fiche/9th-edition-moustiers-a-la-page-meeting-around-books-and-comics/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/234/213/35968490-diaporama.png"
     },
     {
       "id": "evt-104",
@@ -3370,7 +3385,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-26",
-      "url": "https://www.moustiers.fr/en/fiche/le-caribou-volant-in-concert-at-le-mouton-noir/"
+      "url": "https://www.moustiers.fr/en/fiche/le-caribou-volant-in-concert-at-le-mouton-noir/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/26/41/38218010-diaporama.png"
     },
     {
       "id": "evt-105",
@@ -3389,7 +3405,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-26",
-      "url": "https://www.moustiers.fr/en/fiche/concert-to-mark-the-end-of-the-residency-at-segries-monastery-the-segries-symphony/"
+      "url": "https://www.moustiers.fr/en/fiche/concert-to-mark-the-end-of-the-residency-at-segries-monastery-the-segries-symphony/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/148/100/42230932-diaporama.png"
     },
     {
       "id": "rec-moustiers-visite-vieuxcentre-mardi",
@@ -3416,7 +3433,8 @@ window.EVENTS_DATA = {
           "tue"
         ]
       },
-      "url": "https://www.moustiers.fr/en/fiche/individual-guided-tour-of-moustiers-2/"
+      "url": "https://www.moustiers.fr/en/fiche/individual-guided-tour-of-moustiers-2/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/118/216/42063990-diaporama.png"
     },
     {
       "id": "rec-moustiers-cluedo-mercredi",
@@ -3443,7 +3461,8 @@ window.EVENTS_DATA = {
           "wed"
         ]
       },
-      "url": "https://www.moustiers.fr/en/fiche/cluedo-geant-la-chronique-du-tresor-esvanouis-3/"
+      "url": "https://www.moustiers.fr/en/fiche/cluedo-geant-la-chronique-du-tresor-esvanouis-3/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/71/66/41304647-diaporama.png"
     },
     {
       "id": "rec-moustiers-fromage-chevre-mercredi",
@@ -3470,7 +3489,8 @@ window.EVENTS_DATA = {
           "wed"
         ]
       },
-      "url": "https://www.moustiers.fr/en/fiche/fabriquer-du-fromage-de-chevre-3/"
+      "url": "https://www.moustiers.fr/en/fiche/fabriquer-du-fromage-de-chevre-3/",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/92/202/41863772-diaporama.jpg"
     },
     {
       "id": "evt-106",
@@ -3489,7 +3509,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-12",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22920-concert-de--bonnie-and-clyde-.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22920-concert-de--bonnie-and-clyde-.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22920_2_1.jpg"
     },
     {
       "id": "evt-107",
@@ -3508,7 +3529,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-12",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22902-les-salles-sur-verdon-fetent-le-lac-de-sainte-croix.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22902-les-salles-sur-verdon-fetent-le-lac-de-sainte-croix.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22902_2_1.jpg"
     },
     {
       "id": "evt-108",
@@ -3527,7 +3549,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-19",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22919-1er-porsche-canyon-tour-rassemblement.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22919-1er-porsche-canyon-tour-rassemblement.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22919_2_1.jpg"
     },
     {
       "id": "evt-109",
@@ -3546,7 +3569,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-07-31",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22809-jeux-en-bois-geants.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22809-jeux-en-bois-geants.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22809_2_1.jpg"
     },
     {
       "id": "evt-110",
@@ -3565,7 +3589,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-14",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22809-jeux-en-bois-geants.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22809-jeux-en-bois-geants.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22809_2_1.jpg"
     },
     {
       "id": "evt-111",
@@ -3584,7 +3609,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-14",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22892-soiree-jeux.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22892-soiree-jeux.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22892_2_1.jpg"
     },
     {
       "id": "rec-bauduen-stage-nautique",
@@ -3614,7 +3640,8 @@ window.EVENTS_DATA = {
           "thu"
         ]
       },
-      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/stage-dete-au-centre-nautique-de-bauduen-bauduen-fr-6426351/"
+      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/stage-dete-au-centre-nautique-de-bauduen-bauduen-fr-6426351/",
+      "img": "https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9zdGF0aWMuYXBpZGFlLXRvdXJpc21lLmNvbS9maWxlc3RvcmUvb2JqZXRzLXRvdXJpc3RpcXVlcy9pbWFnZXMvMTk2LzIxLzQxMjI3NzE2LmpwZw==/image.jpg"
     },
     {
       "id": "evt-112",
@@ -3633,7 +3660,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-12",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22901-bauduen-fete-le-lac-de-sainte-croix.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22901-bauduen-fete-le-lac-de-sainte-croix.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22901_2_1.jpg"
     },
     {
       "id": "rec-bauduen-visite-guidee-jeudi",
@@ -3660,7 +3688,8 @@ window.EVENTS_DATA = {
           "thu"
         ]
       },
-      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/visite-guidee-du-village-de-bauduen-bauduen-fr-3222181/"
+      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/visite-guidee-du-village-de-bauduen-bauduen-fr-3222181/",
+      "img": "https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9zdGF0aWMuYXBpZGFlLXRvdXJpc21lLmNvbS9maWxlc3RvcmUvb2JqZXRzLXRvdXJpc3RpcXVlcy9pbWFnZXMvODkvMzQvNDE5NTE4MzMuanBn/image.jpg"
     },
     {
       "id": "evt-113",
@@ -3679,7 +3708,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-11",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22711-fete-du-lac-de-sainte-croix---concours-de-boules.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22711-fete-du-lac-de-sainte-croix---concours-de-boules.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22711_2_1.jpg"
     },
     {
       "id": "evt-114",
@@ -3698,7 +3728,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-16",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22897-fete-du-laep.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22897-fete-du-laep.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22897_2_1.jpg"
     },
     {
       "id": "evt-115",
@@ -3717,7 +3748,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-09-11",
-      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22903-aiguines-fete-le-lac-de-sainte-croix.html"
+      "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22903-aiguines-fete-le-lac-de-sainte-croix.html",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22903_2_1.jpg"
     },
     {
       "id": "evt-116",
@@ -3736,7 +3768,8 @@ window.EVENTS_DATA = {
       "rating": 0,
       "logement": "both",
       "date": "2026-08-01",
-      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/exposition-temporaire-sors-de-ta-reserve-quinson-fr-5006431/"
+      "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/exposition-temporaire-sors-de-ta-reserve-quinson-fr-5006431/",
+      "img": "https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9zdGF0aWMuYXBpZGFlLXRvdXJpc21lLmNvbS9maWxlc3RvcmUvb2JqZXRzLXRvdXJpc3RpcXVlcy9pbWFnZXMvMTIzLzI0Ny8yNzcxOTU0Ny5qcGc=/image.jpg"
     }
   ]
 };	
