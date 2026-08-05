@@ -135,6 +135,15 @@
     .hl-place { display: flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--c-muted); font-weight: 600; margin: 0; }
     .hl-place svg { width: 13px; height: 13px; flex-shrink: 0; }
 
+    /* Mode edition (?edit=1) : note maison + coup de coeur, directement sur la carte */
+    .hl-edit-controls { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--c-border); }
+    .hl-edit-stars { display: inline-flex; gap: 2px; }
+    .hl-edit-star { background: none; border: none; cursor: pointer; font-size: 17px; line-height: 1; color: #d1d5db; padding: 0; }
+    .hl-edit-star.active { color: #f59e0b; }
+    .hl-edit-fav { background: none; border: none; cursor: pointer; font-size: 15px; line-height: 1; color: #d1d5db; padding: 0; margin-left: 2px; filter: grayscale(1); opacity: 0.6; }
+    .hl-edit-fav.active { color: #f59e0b; filter: none; opacity: 1; }
+    .hl-edit-rec-hint { margin-left: auto; font-size: 12px; color: var(--c-muted); cursor: help; }
+
     /* Petit badge en haut a gauche de chaque carte pour distinguer au premier coup d'oeil
        un evenement (programme local) d'une visite (point d'interet ajoute manuellement). */
     .hl-kind-badge {
@@ -169,6 +178,7 @@
             <option value="FR">FR</option>
             <option value="EN">EN</option>
         </select>
+        <button type="button" id="btn-download-json" class="chip text-[12px] font-semibold px-3 py-1.5 rounded-full shadow-sm shrink-0 hidden" style="background:#16a34a;color:#fff;border:1px solid transparent;">💾</button>
     </div>
 </header>
 
@@ -244,6 +254,14 @@
 
 <script>
 (function () {
+    // Mode edition (parametre URL edit=1) : ajoute sur chaque carte evenement la
+    // possibilite de modifier la note maison (0-3 etoiles) et le coup de coeur, et
+    // affiche un bouton pour telecharger le evenements.js mis a jour. Pour un
+    // evenement recurrent, la modification porte sur le modele (voir baseEventId()
+    // plus bas), donc s'applique a toute la recurrence, pas seulement a l'occurrence
+    // affichee.
+    window.EDIT_MODE = new URLSearchParams(window.location.search).get('edit') === '1';
+
     const state = { lang: 'FR', logement: 'salles', ids: [], visits: [], showEvents: null, showPois: false };
 
     // -------- itineraire de visites par defaut (parametre URL showpois=true) --------
@@ -306,7 +324,11 @@
             addEvent: "Ajouter un évènement", modalTitleEvent: "Ajouter un évènement",
             searchEventPlaceholder: "Rechercher un évènement…",
             noEventFound: "Aucun évènement disponible sur cette période.",
-            kindEvent: "Évènement", kindVisit: "Visite"
+            kindEvent: "Évènement", kindVisit: "Visite",
+            editRatingTitle: (n) => `Note maison : ${n}/3 — clique pour changer`,
+            editFavoriteOn: "Retirer le coup de cœur", editFavoriteOff: "Marquer comme coup de cœur",
+            downloadJson: "Télécharger evenements.js",
+            recurrenceNotice: "Cette modification s'applique à toute la récurrence de cet évènement."
         },
         EN: {
             back: "Back", label: "Your selection",
@@ -332,7 +354,11 @@
             addEvent: "Add an event", modalTitleEvent: "Add an event",
             searchEventPlaceholder: "Search for an event…",
             noEventFound: "No events available for this period.",
-            kindEvent: "Event", kindVisit: "Visit"
+            kindEvent: "Event", kindVisit: "Visit",
+            editRatingTitle: (n) => `House rating: ${n}/3 — click to change`,
+            editFavoriteOn: "Remove highlight", editFavoriteOff: "Mark as highlight",
+            downloadJson: "Download evenements.js",
+            recurrenceNotice: "This change applies to the whole recurrence of this event."
         }
     };
 
@@ -488,6 +514,30 @@
     // selection, seulement celui du modele), l'id tel quel pour un evenement ponctuel.
     function baseEventId(evt) {
         return evt.recurring ? evt.id.split('__')[0] : evt.id;
+    }
+
+    // -------- mode edition (edit=1) : note maison / coup de coeur --------
+    // Retrouve le modele reel dans window.EVENTS_DATA.events (jamais une occurrence
+    // clonee par makeInstance) a partir d'un id de base, pour que la modification de
+    // la note ou du coup de coeur s'applique a toute la recurrence le cas echeant.
+    function findEventTemplate(id) {
+        const data = window.EVENTS_DATA;
+        return data && (data.events || []).find(e => e.id === id);
+    }
+
+    function setEventRating(id, rating) {
+        const tpl = findEventTemplate(id);
+        if (!tpl) return;
+        // Re-cliquer sur l'etoile qui correspond deja a la note courante la remet a 0.
+        tpl.rating = (tpl.rating || 0) === rating ? 0 : rating;
+        renderCards();
+    }
+
+    function toggleEventFavorite(id) {
+        const tpl = findEventTemplate(id);
+        if (!tpl) return;
+        tpl.favorite = !tpl.favorite;
+        renderCards();
     }
 
     // Construit la liste des evenements disponibles sur la plage active (evenements
@@ -818,6 +868,13 @@
         topbarLogo.src = (LOGO_DATA[logoFamily(state.logement)] || LOGO_DATA.salles).src;
         topbarLogo.classList.remove('hidden');
         document.documentElement.lang = state.lang.toLowerCase();
+
+        if (window.EDIT_MODE) {
+            const dlBtn = $('#btn-download-json');
+            dlBtn.classList.remove('hidden');
+            dlBtn.title = L.downloadJson;
+            dlBtn.setAttribute('aria-label', L.downloadJson);
+        }
     }
 
     function buildEventShareUrl(id) {
@@ -866,6 +923,17 @@
         function pushEventCard(evt, id, removable) {
             const hasImg = !!evt.img;
             const imgSrc = hasImg ? evt.img : logo;
+            const editHtml = window.EDIT_MODE ? (() => {
+                const rating = evt.rating || 0;
+                const stars = [1, 2, 3].map(n => `<button type="button" class="hl-edit-star${rating >= n ? ' active' : ''}" data-star="${n}" title="${L.editRatingTitle(n)}" aria-label="${L.editRatingTitle(n)}">★</button>`).join('');
+                const favTitle = evt.favorite ? L.editFavoriteOn : L.editFavoriteOff;
+                return `
+                    <div class="hl-edit-controls" data-edit-id="${id}">
+                        <span class="hl-edit-stars">${stars}</span>
+                        <button type="button" class="hl-edit-fav${evt.favorite ? ' active' : ''}" title="${favTitle}" aria-label="${favTitle}">⭐</button>
+                        ${evt.recurring || evt.recurrence ? `<span class="hl-edit-rec-hint" title="${L.recurrenceNotice}">↻</span>` : ''}
+                    </div>`;
+            })() : '';
             items.push({
                 date: evt.date,
                 html: `
@@ -881,6 +949,7 @@
                         <p class="hl-category">${catLabel(data, evt)}</p>
                         <h2 class="hl-title"><a href="${eventUrl(evt)}" target="_blank" rel="noopener">${t(evt.title)}</a></h2>
                         ${evt.place ? `<p class="hl-place">${pinIcon()}<span>${evt.place}</span></p>` : ''}
+                        ${editHtml}
                     </div>
                 </div>
             `});
@@ -951,6 +1020,27 @@
                 }
             });
         });
+
+        if (window.EDIT_MODE) {
+            grid.querySelectorAll('.hl-edit-controls').forEach(wrap => {
+                const id = wrap.dataset.editId;
+                wrap.querySelectorAll('.hl-edit-star').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setEventRating(id, parseInt(btn.dataset.star, 10));
+                    });
+                });
+                const favBtn = wrap.querySelector('.hl-edit-fav');
+                if (favBtn) {
+                    favBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleEventFavorite(id);
+                    });
+                }
+            });
+        }
     }
 
     function render() {
@@ -1149,6 +1239,48 @@
         syncUrl();
     }
 
+    // -------- mode edition : telechargement du evenements.js mis a jour --------
+    // Les notes/coups de coeur modifies via setEventRating()/toggleEventFavorite()
+    // mutent directement les objets de window.EVENTS_DATA.events (le modele pour un
+    // evenement recurrent) : il suffit donc de reserialiser data.events tel quel,
+    // sans copie de travail separee ni logique d'ajout/suppression (contrairement au
+    // mode edition complet de evenements.html).
+    function buildExportContent() {
+        const data = window.EVENTS_DATA;
+        const events = (data.events || []).map(evt => {
+            const clean = Object.assign({}, evt);
+            delete clean.__uid;
+            delete clean.recurring;
+            if (clean.recurrence) delete clean.date;
+            else delete clean.recurrence;
+            if (!clean.url) delete clean.url;
+            if (!clean.img) delete clean.img;
+            return clean;
+        });
+        const out = {
+            config: data.config,
+            categories: data.categories,
+            distances: data.distances,
+            events
+        };
+        return '// Genere automatiquement depuis le mode edition de highlights.html (parametre ?edit=1).\n' +
+            '// Derniere generation : ' + new Date().toISOString() + '\n' +
+            'window.EVENTS_DATA = ' + JSON.stringify(out, null, 2) + ';\n';
+    }
+
+    function downloadEvenementsJs() {
+        const content = buildExportContent();
+        const blob = new Blob([content], { type: 'text/javascript;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'evenements.js';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
     function init() {
         readUrlParams();
 
@@ -1194,6 +1326,10 @@
             });
             $('#poi-date-input').addEventListener('input', updateConfirmVisitState);
             $('#btn-poi-date-confirm').addEventListener('click', confirmAddVisit);
+
+            if (window.EDIT_MODE) {
+                $('#btn-download-json').addEventListener('click', downloadEvenementsJs);
+            }
         }
 
         if (window.EVENTS_DATA) {
