@@ -1397,6 +1397,10 @@ function syncUrl(replace = true) {
       // bouton Evenements la perdait systematiquement puisque evParams etait reconstruit a vide.
       if (p.get('edatestart')) evParams.set('edatestart', p.get('edatestart'));
       if (p.get('edateend')) evParams.set('edateend', p.get('edateend'));
+      // preserve egalement showevents/showpois (destines a highlights.html) deja presents
+      // dans l'URL courante, pour la meme raison : sans ca le bouton Evenements les perdait.
+      if (p.get('showevents')) evParams.set('showevents', p.get('showevents'));
+      if (p.get('showpois')) evParams.set('showpois', p.get('showpois'));
       btnEvenements.href = `evenements.html?${evParams.toString()}`;
     }
 

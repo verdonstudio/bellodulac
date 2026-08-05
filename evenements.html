@@ -426,8 +426,10 @@
 			activeView: 'calendar', // 'calendar' | 'monthcal'
 			monthCalDate: null,    // 1er jour du mois affiche dans le calendrier mensuel
 			selectedHl: new Set(), // selection d'evenements (tous utilisateurs) pour generer un lien highlights.html
-			visitsPassthrough: null // visites POI deja choisies sur highlights.html (ids?visits=...), a ne pas perdre
+			visitsPassthrough: null, // visites POI deja choisies sur highlights.html (ids?visits=...), a ne pas perdre
 			                        // si on y retourne via "Voir ma selection" apres etre repasse par evenements.html
+			showEvents: null, // 'all' | '3stars' | null -- parametre showevents transmis a highlights.html (voir plus bas)
+			showPois: false   // parametre showpois transmis a highlights.html (voir plus bas)
 		};
 
 		const I18N = {
@@ -636,6 +638,21 @@
 					.forEach(id => state.selectedHl.add(id));
 			}
 			state.visitsPassthrough = p.get('visits') || null;
+
+			// showevents / showpois : parametres destines a highlights.html (voir ce fichier
+			// pour leur usage), simplement transportes ici pour ne pas les perdre en passant
+			// par evenements.html (ex: index.html -> evenements.html -> "Voir ma selection").
+			const rawShowEvents = (p.get('showevents') || '').trim().toLowerCase();
+			state.showEvents = (rawShowEvents === 'all' || rawShowEvents === '3stars') ? rawShowEvents : null;
+			state.showPois = ['true', '1'].includes((p.get('showpois') || '').trim().toLowerCase());
+		}
+
+		// Ajoute (ou retire) showevents/showpois sur un URLSearchParams, a partir de
+		// state.showEvents/state.showPois -- utilise partout ou un lien vers highlights.html
+		// ou un bouton retour est construit, pour ne jamais perdre ces parametres en route.
+		function applyShowParams(p) {
+			if (state.showEvents) p.set('showevents', state.showEvents); else p.delete('showevents');
+			if (state.showPois) p.set('showpois', 'true'); else p.delete('showpois');
 		}
 
 		function syncUrl() {
@@ -676,6 +693,7 @@
 			if (state.dateEnd) backParams.set('edateend', state.dateEnd);
 			if (state.selectedHl.size) backParams.set('ids', Array.from(state.selectedHl).map(encodeURIComponent).join(','));
 			if (state.visitsPassthrough) backParams.set('visits', state.visitsPassthrough);
+			applyShowParams(backParams);
 			$('#btn-back').href = `index.html?${backParams.toString()}`;
 
 			// Bouton Se loger : conserve la langue et le logement courants (valeur precise)
@@ -1094,6 +1112,7 @@
 			if (state.activeView === 'monthcal' && state.monthCalDate) {
 				p.set('emonth', `${state.monthCalDate.getFullYear()}-${pad2(state.monthCalDate.getMonth() + 1)}`);
 			}
+			applyShowParams(p);
 			return p;
 		}
 

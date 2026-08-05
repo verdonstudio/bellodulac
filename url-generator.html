@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Générateur de liens réservation — Bell'Étoile / Bell'O du Lac</title>
+<meta name="robots" content="noindex, nofollow">
+
+<!-- Ces deux fichiers sont les vraies bases de données du site : le générateur les
+     lit directement pour proposer la liste des évènements et des POIs, donc il reste
+     toujours à jour sans rien dupliquer. -->
+<script src="evenements.js"></script>
+<script src="pois.js"></script>
+
+<style>
+  :root{
+    --bg:#f4f5f7; --card:#ffffff; --border:#e2e4e9; --text:#1f2430; --muted:#6b7280;
+    --accent:#2563eb; --accent-dark:#1d4ed8; --ok:#059669; --warn:#b45309;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.45;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:24px 16px 80px;}
+  h1{font-size:1.4rem; margin:0 0 4px;}
+  .sub{color:var(--muted); margin:0 0 24px; font-size:0.92rem;}
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 20px; margin-bottom:18px;
+  }
+  .card h2{font-size:1rem; margin:0 0 14px; display:flex; align-items:center; gap:8px;}
+  .card h2 .n{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; background:var(--accent); color:#fff;
+    font-size:0.78rem; font-weight:600; flex:0 0 auto;
+  }
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;}
+  @media (max-width:640px){ .grid, .grid3{grid-template-columns:1fr;} }
+  label{display:block; font-size:0.82rem; font-weight:600; margin-bottom:4px; color:#374151;}
+  label .hint{font-weight:400; color:var(--muted); font-size:0.78rem;}
+  input[type=text], input[type=date], select, textarea{
+    width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px;
+    font-size:0.92rem; background:#fff; color:var(--text); font-family:inherit;
+  }
+  input:focus, select:focus, textarea:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  .field{margin-bottom:14px;}
+  .checkbox-row{display:flex; align-items:flex-start; gap:8px; margin-bottom:10px;}
+  .checkbox-row input{width:auto; margin-top:3px;}
+  .checkbox-row .lbl{font-size:0.88rem;}
+  .checkbox-row .lbl b{display:block; font-size:0.88rem;}
+  .checkbox-row .lbl span{color:var(--muted); font-size:0.8rem;}
+  fieldset{border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin:0 0 14px;}
+  fieldset legend{font-size:0.82rem; font-weight:600; color:#374151; padding:0 4px;}
+  .radio-line{display:flex; align-items:center; gap:6px; font-size:0.88rem; margin:4px 0;}
+  .radio-line input{width:auto;}
+
+  #event-search{margin-bottom:10px;}
+  #event-list{
+    max-height:280px; overflow:auto; border:1px solid var(--border); border-radius:8px;
+    padding:6px 10px;
+  }
+  .ev-row{display:flex; align-items:flex-start; gap:8px; padding:6px 2px; border-bottom:1px dashed var(--border);}
+  .ev-row:last-child{border-bottom:none;}
+  .ev-row input{width:auto; margin-top:3px; flex:0 0 auto;}
+  .ev-meta{font-size:0.78rem; color:var(--muted);}
+  .ev-title{font-size:0.88rem; font-weight:600;}
+  .badge{
+    display:inline-block; font-size:0.7rem; padding:1px 6px; border-radius:10px;
+    background:#eef2ff; color:#3730a3; margin-left:6px; font-weight:600;
+  }
+  .badge.rec{background:#ecfdf5; color:#065f46;}
+  .selected-count{font-size:0.8rem; color:var(--muted); margin-top:6px;}
+
+  .visits-list{display:flex; flex-direction:column; gap:8px; margin-bottom:10px;}
+  .visit-row{display:grid; grid-template-columns:1fr 150px 32px; gap:8px; align-items:center;}
+  @media (max-width:640px){.visit-row{grid-template-columns:1fr;}}
+  .icon-btn{
+    background:#fee2e2; border:1px solid #fecaca; color:#b91c1c; border-radius:8px;
+    width:32px; height:32px; cursor:pointer; font-size:0.95rem; line-height:1;
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:8px;
+    border:1px solid var(--accent); background:var(--accent); color:#fff; font-size:0.88rem;
+    font-weight:600; cursor:pointer;
+  }
+  .btn:hover{background:var(--accent-dark);}
+  .btn.ghost{background:#fff; color:var(--accent); border:1px solid var(--accent);}
+  .btn.ghost:hover{background:#eff6ff;}
+  .btn.small{padding:5px 10px; font-size:0.78rem;}
+  .btn.copy{background:#fff; color:#374151; border:1px solid var(--border); font-weight:500;}
+  .btn.copy:hover{background:#f3f4f6;}
+  .btn.copy.copied{background:var(--ok); color:#fff; border-color:var(--ok);}
+
+  details.advanced summary{cursor:pointer; font-size:0.85rem; font-weight:600; color:var(--accent); margin-bottom:10px;}
+
+  .output-row{margin-bottom:14px;}
+  .output-row .label-line{display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;}
+  .output-row .label-line span{font-size:0.85rem; font-weight:600;}
+  .url-line{display:flex; gap:6px;}
+  .url-line input{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.78rem; color:#374151;}
+  .url-line a.open{
+    display:flex; align-items:center; padding:0 10px; border:1px solid var(--border); border-radius:8px;
+    text-decoration:none; color:var(--accent); font-size:0.8rem; font-weight:600; background:#fff;
+  }
+
+  textarea#redirect-snippet{
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.78rem; min-height:150px; resize:vertical;
+    white-space:pre; color:#1f2937;
+  }
+
+  #generate-btn{width:100%; padding:12px; font-size:0.95rem; margin-top:6px;}
+  #output-section{display:none;}
+  .footer-note{font-size:0.78rem; color:var(--muted); margin-top:26px; text-align:center;}
+  .data-missing{
+    background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:10px 14px;
+    border-radius:8px; font-size:0.85rem; margin-bottom:18px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Générateur de liens réservation</h1>
+  <p class="sub">Remplis les champs ci-dessous pour générer les 4 liens d'une réservation (évènements, carte, programme, panorama 360°) et le bloc prêt à coller dans <code>redirect.js</code>. Voir le <a href="README.md" target="_blank">README</a> pour le détail de chaque paramètre.</p>
+
+  <div id="data-missing" class="data-missing" style="display:none;">
+    ⚠️ <strong>evenements.js</strong> et/ou <strong>pois.js</strong> n'ont pas pu être chargés. Ouvre cette page depuis le dossier du site (pas en double-clic isolé) ou lance-la via un petit serveur local pour que la liste des évènements et des POIs s'affiche.
+  </div>
+
+  <!-- 1. Réservation & logement -->
+  <div class="card">
+    <h2><span class="n">1</span>Réservation &amp; logement</h2>
+    <div class="grid3">
+      <div class="field">
+        <label for="f-code">Code réservation <span class="hint">(clé dans redirect.js)</span></label>
+        <input type="text" id="f-code" placeholder="ex : HMABCDE123">
+      </div>
+      <div class="field">
+        <label for="f-logement">Logement</label>
+        <select id="f-logement">
+          <option value="moustiers">Bell'Étoile — Moustiers</option>
+          <option value="salles6">Bell'O du Lac 6p — Les Salles</option>
+          <option value="salles8">Bell'O du Lac 8p — Les Salles</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-lang">Langue</label>
+        <select id="f-lang">
+          <option value="FR">Français (FR)</option>
+          <option value="EN">English (EN)</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="field">
+        <label for="f-start">Date d'arrivée</label>
+        <input type="date" id="f-start">
+      </div>
+      <div class="field">
+        <label for="f-end">Date de départ</label>
+        <input type="date" id="f-end">
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Évènements -->
+  <div class="card">
+    <h2><span class="n">2</span>Évènements à mettre en avant (<code>ids</code>)</h2>
+    <div class="grid">
+      <fieldset>
+        <legend>Affichage automatique dans le programme</legend>
+        <div class="radio-line"><input type="radio" name="showevents" value="" id="se-none" checked><label for="se-none" style="margin:0;font-weight:400;">Aucun — seulement les évènements cochés ci-dessous</label></div>
+        <div class="radio-line"><input type="radio" name="showevents" value="all" id="se-all"><label for="se-all" style="margin:0;font-weight:400;">Tous les évènements de la période du séjour (<code>showevents=all</code>)</label></div>
+        <div class="radio-line"><input type="radio" name="showevents" value="3stars" id="se-3"><label for="se-3" style="margin:0;font-weight:400;">Seulement les 3 étoiles de la période (<code>showevents=3stars</code>)</label></div>
+      </fieldset>
+      <fieldset>
+        <legend>Itinéraire POI</legend>
+        <div class="checkbox-row">
+          <input type="checkbox" id="f-showpois">
+          <div class="lbl">
+            <b>Ajouter automatiquement l'itinéraire par défaut (<code>showpois=true</code>)</b>
+            <span>Génère seul les visites jour par jour selon le logement (rando, plages, Aiguines…). Se cumule avec les visites manuelles ajoutées en bas de page.</span>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <input type="text" id="event-search" placeholder="Filtrer par titre, lieu ou catégorie…">
+    <div id="event-list"><!-- rempli en JS --></div>
+    <div class="selected-count" id="event-count">0 évènement sélectionné</div>
+  </div>
+
+  <!-- 3. Visites POI manuelles -->
+  <div class="card">
+    <h2><span class="n">3</span>Visites POI programmées manuellement (<code>visits</code>)</h2>
+    <p class="sub" style="margin-bottom:10px;">Optionnel : ajoute des visites précises jour par jour (indépendant de l'itinéraire automatique ci-dessus).</p>
+    <div class="visits-list" id="visits-list"></div>
+    <button type="button" class="btn ghost small" id="add-visit-btn">+ Ajouter une visite</button>
+  </div>
+
+  <!-- 4. Options avancées -->
+  <div class="card">
+    <h2><span class="n">4</span>Options avancées</h2>
+    <details class="advanced">
+      <summary>Bouton retour, domaine du lien et position de la carte</summary>
+      <div class="grid3">
+        <div class="field">
+          <label for="f-from">Bouton retour du programme (<code>from</code>)</label>
+          <select id="f-from">
+            <option value="evenements">evenements.html (défaut)</option>
+            <option value="index">index.html (carte)</option>
+            <option value="panorama">panorama.html</option>
+            <option value="">(aucun)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-zoom">Zoom carte</label>
+          <input type="text" id="f-zoom">
+        </div>
+        <div class="field">
+          <label for="f-pos">Position carte (lat,lng)</label>
+          <input type="text" id="f-pos">
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-domain">Domaine pour les liens partageables <span class="hint">(laisser tel quel sauf changement d'hébergement)</span></label>
+        <input type="text" id="f-domain" value="https://bellodulac.netlify.app/">
+      </div>
+    </details>
+  </div>
+
+  <button type="button" class="btn" id="generate-btn">Générer les liens</button>
+
+  <!-- Résultats -->
+  <div id="output-section">
+    <div class="card">
+      <h2>🔗 Liens directs</h2>
+      <div class="output-row">
+        <div class="label-line"><span>Évènements (evenements.html)</span></div>
+        <div class="url-line"><input type="text" id="out-evenements" readonly><button class="btn copy small" data-copy="out-evenements">Copier</button><a class="open" id="open-evenements" href="#" target="_blank">Ouvrir ↗</a></div>
+      </div>
+      <div class="output-row">
+        <div class="label-line"><span>Carte (index.html)</span></div>
+        <div class="url-line"><input type="text" id="out-map" readonly><button class="btn copy small" data-copy="out-map">Copier</button><a class="open" id="open-map" href="#" target="_blank">Ouvrir ↗</a></div>
+      </div>
+      <div class="output-row">
+        <div class="label-line"><span>Programme (highlights.html)</span></div>
+        <div class="url-line"><input type="text" id="out-highlights" readonly><button class="btn copy small" data-copy="out-highlights">Copier</button><a class="open" id="open-highlights" href="#" target="_blank">Ouvrir ↗</a></div>
+      </div>
+      <div class="output-row">
+        <div class="label-line"><span>Panorama 360° (panorama.html)</span></div>
+        <div class="url-line"><input type="text" id="out-panorama" readonly><button class="btn copy small" data-copy="out-panorama">Copier</button><a class="open" id="open-panorama" href="#" target="_blank">Ouvrir ↗</a></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 Bloc à coller dans redirect.js</h2>
+      <p class="sub" style="margin-bottom:10px;">Ouvre <code>redirect.js</code>, colle ce bloc juste avant la ligne <code>"default": {</code>, puis vérifie la virgule de fin.</p>
+      <textarea id="redirect-snippet" readonly></textarea>
+      <button class="btn copy" data-copy="redirect-snippet" style="margin-top:10px;">Copier le bloc</button>
+    </div>
+  </div>
+
+  <p class="footer-note">Outil interne, non lié aux visiteurs — sécurisé uniquement par le fait de ne pas être référencé publiquement.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const EVENTS = (window.EVENTS_DATA && window.EVENTS_DATA.events) || [];
+  const CATEGORIES = (window.EVENTS_DATA && window.EVENTS_DATA.categories) || [];
+  const POIS = window.POIS || [];
+
+  if (!EVENTS.length || !POIS.length) {
+    document.getElementById('data-missing').style.display = 'block';
+  }
+
+  const LOGEMENT_DEFAULTS = {
+    moustiers: { zoom: '13', pos: '43.82945,6.21921' },
+    salles6:   { zoom: '12', pos: '43.77258,6.20831' },
+    salles8:   { zoom: '12', pos: '43.77258,6.20831' }
+  };
+
+  const DAY_LABELS = { mon: 'lun', tue: 'mar', wed: 'mer', thu: 'jeu', fri: 'ven', sat: 'sam', sun: 'dim' };
+
+  function catInfo(catId) {
+    return CATEGORIES.find(c => c.id === catId);
+  }
+  function eventTitle(e) {
+    if (typeof e.title === 'string') return e.title;
+    if (e.title && (e.title.FR || e.title.EN)) return e.title.FR || e.title.EN;
+    return e.id;
+  }
+  function eventDateLabel(e) {
+    if (e.recurrence) {
+      const days = (e.recurrence.byDay || []).map(d => DAY_LABELS[d] || d).join('/');
+      return `récurrent (${days || '?'})`;
+    }
+    if (e.date) {
+      const d = new Date(e.date + 'T00:00:00');
+      if (!isNaN(d)) return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+    return '';
+  }
+  function sortKey(e) {
+    if (e.recurrence) return '9999-99-99_' + eventTitle(e);
+    return (e.date || '9999-99-99') + '_' + eventTitle(e);
+  }
+
+  const sortedEvents = EVENTS.slice().sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+
+  const eventListEl = document.getElementById('event-list');
+  const eventCountEl = document.getElementById('event-count');
+  const eventSearchEl = document.getElementById('event-search');
+
+  function renderEventList(filter) {
+    const q = (filter || '').trim().toLowerCase();
+    eventListEl.innerHTML = '';
+    sortedEvents.forEach(e => {
+      const title = eventTitle(e);
+      const place = e.place || '';
+      const cat = catInfo(e.cat);
+      const haystack = (title + ' ' + place + ' ' + (cat ? (cat.label.FR + ' ' + cat.label.EN) : '')).toLowerCase();
+      if (q && !haystack.includes(q)) return;
+
+      const row = document.createElement('label');
+      row.className = 'ev-row';
+      row.style.cursor = 'pointer';
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = e.id;
+      cb.className = 'event-checkbox';
+      cb.addEventListener('change', updateEventCount);
+
+      const textWrap = document.createElement('div');
+      const stars = '★'.repeat(e.rating || 0) + '☆'.repeat(Math.max(0, 3 - (e.rating || 0)));
+      const recBadge = e.recurrence ? '<span class="badge rec">récurrent</span>' : '';
+      textWrap.innerHTML = `<span class="ev-title">${cat ? cat.icon + ' ' : ''}${title}</span>${recBadge}<span class="badge">${stars}</span>
+        <div class="ev-meta">${place ? place + ' — ' : ''}${eventDateLabel(e)} <span style="color:#9ca3af;">(${e.id})</span></div>`;
+
+      row.appendChild(cb);
+      row.appendChild(textWrap);
+      eventListEl.appendChild(row);
+    });
+    updateEventCount();
+  }
+
+  function updateEventCount() {
+    const n = eventListEl.querySelectorAll('.event-checkbox:checked').length;
+    eventCountEl.textContent = n === 0 ? '0 évènement sélectionné' : (n === 1 ? '1 évènement sélectionné' : n + ' évènements sélectionnés');
+  }
+
+  eventSearchEl.addEventListener('input', () => renderEventList(eventSearchEl.value));
+  renderEventList('');
+
+  // -------- Visites POI manuelles --------
+  const visitsListEl = document.getElementById('visits-list');
+  const sortedPois = POIS.slice().sort((a, b) => {
+    const na = (a.fr && a.fr.name) || a.id;
+    const nb = (b.fr && b.fr.name) || b.id;
+    return na.localeCompare(nb);
+  });
+
+  function poiOptionsHtml(selectedId) {
+    let html = '<option value="">— choisir un POI —</option>';
+    sortedPois.forEach(p => {
+      const name = (p.fr && p.fr.name) || p.id;
+      const sel = p.id === selectedId ? 'selected' : '';
+      html += `<option value="${p.id}" ${sel}>${name}</option>`;
+    });
+    return html;
+  }
+
+  function addVisitRow(poiId, date) {
+    const row = document.createElement('div');
+    row.className = 'visit-row';
+    row.innerHTML = `
+      <select class="visit-poi">${poiOptionsHtml(poiId || '')}</select>
+      <input type="date" class="visit-date" value="${date || ''}">
+      <button type="button" class="icon-btn" title="Retirer">✕</button>
+    `;
+    row.querySelector('.icon-btn').addEventListener('click', () => row.remove());
+    visitsListEl.appendChild(row);
+  }
+
+  document.getElementById('add-visit-btn').addEventListener('click', () => addVisitRow());
+
+  // -------- Zoom/pos automatiques selon logement --------
+  const logementSelect = document.getElementById('f-logement');
+  const zoomInput = document.getElementById('f-zoom');
+  const posInput = document.getElementById('f-pos');
+
+  function applyLogementDefaults() {
+    const d = LOGEMENT_DEFAULTS[logementSelect.value] || LOGEMENT_DEFAULTS.salles6;
+    zoomInput.value = d.zoom;
+    posInput.value = d.pos;
+  }
+  logementSelect.addEventListener('change', applyLogementDefaults);
+  applyLogementDefaults();
+
+  // -------- Génération des URLs --------
+  function encList(arr) {
+    return arr.map(v => encodeURIComponent(v)).join(',');
+  }
+
+  function buildPageUrl(page, params) {
+    const p = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== '') p.set(k, v);
+    });
+    return `${page}.html?${p.toString()}`;
+  }
+
+  function generate() {
+    const code = document.getElementById('f-code').value.trim();
+    const domainRaw = document.getElementById('f-domain').value.trim();
+    const domain = domainRaw ? (domainRaw.endsWith('/') ? domainRaw : domainRaw + '/') : '';
+    const lang = document.getElementById('f-lang').value;
+    const logement = logementSelect.value;
+    const edatestart = document.getElementById('f-start').value;
+    const edateend = document.getElementById('f-end').value;
+    const from = document.getElementById('f-from').value;
+    const zoom = zoomInput.value.trim();
+    const pos = posInput.value.trim();
+    const showevents = document.querySelector('input[name="showevents"]:checked').value;
+    const showpois = document.getElementById('f-showpois').checked;
+
+    const ids = Array.from(eventListEl.querySelectorAll('.event-checkbox:checked')).map(cb => cb.value);
+
+    // Important : on encode uniquement le poiId, pas le ':' ni la date, et on joint
+    // avec des virgules litterales — exactement comme le fait highlights.html lui-meme
+    // (state.visits.map(v => `${encodeURIComponent(v.poiId)}:${v.date}`).join(',')).
+    // URLSearchParams se charge ensuite d'encoder ':' et ',' une seule fois via
+    // p.set()/toString(). Appliquer encodeURIComponent sur la chaine "poiId:date"
+    // entiere double-encoderait le ':' (%3A -> %253A).
+    const visits = Array.from(visitsListEl.querySelectorAll('.visit-row')).map(row => {
+      const poiId = row.querySelector('.visit-poi').value;
+      const date = row.querySelector('.visit-date').value;
+      return poiId && date ? `${encodeURIComponent(poiId)}:${date}` : null;
+    }).filter(Boolean);
+
+    const baseParams = { lang, logement, edatestart, edateend };
+
+    const evenementsPath = buildPageUrl('evenements', baseParams);
+    const mapPath = buildPageUrl('index', Object.assign({}, baseParams, { zoom, pos }));
+    const panoramaPath = buildPageUrl('panorama', baseParams);
+    const highlightsPath = buildPageUrl('highlights', Object.assign({}, baseParams, {
+      ids: ids.length ? encList(ids) : '',
+      visits: visits.length ? visits.join(',') : '',
+      from: from,
+      showevents: showevents,
+      showpois: showpois ? 'true' : ''
+    }));
+
+    document.getElementById('out-evenements').value = domain + evenementsPath;
+    document.getElementById('out-map').value = domain + mapPath;
+    document.getElementById('out-highlights').value = domain + highlightsPath;
+    document.getElementById('out-panorama').value = domain + panoramaPath;
+
+    ['evenements', 'map', 'highlights', 'panorama'].forEach(key => {
+      document.getElementById('open-' + key).href = document.getElementById('out-' + key).value;
+    });
+
+    const snippetKey = code || 'CODE_A_REMPLACER';
+    const snippet =
+`    "${snippetKey}": {
+        "evenements": "${evenementsPath}",
+        "map": "${mapPath}",
+        "highlights": "${highlightsPath}",
+        "panorama": "${panoramaPath}"
+    },`;
+    document.getElementById('redirect-snippet').value = snippet;
+
+    document.getElementById('output-section').style.display = 'block';
+    document.getElementById('output-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.getElementById('generate-btn').addEventListener('click', generate);
+
+  // -------- Copier --------
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn.copy');
+    if (!btn) return;
+    const targetId = btn.getAttribute('data-copy');
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    const text = el.value;
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = 'Copié ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+    }).catch(() => {
+      el.select();
+      document.execCommand('copy');
+    });
+  });
+})();
+</script>
+</body>
+</html>

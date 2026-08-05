@@ -1375,6 +1375,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 2,
       "date": "2026-07-30",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/32/218/42064416.jpg",
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/guinguettestivales-bauduen-fr-3243440/"
     },
     {
@@ -1771,6 +1772,7 @@ window.EVENTS_DATA = {
       "rating": 0,
       "date": "2026-08-07",
       "logement": "both",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22276_2_1.jpg",
       "url": "https://scenesdusud.fr/spectacle/dust-en-concert-bauduen-2026-08-07"
     },
     {
@@ -1995,6 +1997,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 2,
       "date": "2026-08-13",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/32/218/42064416.jpg",
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/guinguettestivales-bauduen-fr-3243440/"
     },
     {
@@ -2389,6 +2392,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-08-29",
+      "img": "https://lacliquesalloise.fr/wp-content/uploads/2026/06/cropped-LogoLaClique-1-e1780901338723.png",
       "url": "https://lacliquesalloise.fr/"
     },
     {
@@ -2408,6 +2412,7 @@ window.EVENTS_DATA = {
       "rating": 3,
       "date": "2026-08-29",
       "logement": "both",
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22642_2_1.jpg",
       "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22642-concert-du-groupe--eden-age-.html"
     },
     {
@@ -2446,6 +2451,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-08-30",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/182/44/17837238.jpg",
       "url": "https://www.yogasarasana.com/"
     },
     {
@@ -2527,6 +2533,7 @@ window.EVENTS_DATA = {
       "favorite": false,
       "rating": 0,
       "date": "2026-09-06",
+      "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/182/44/17837238.jpg",
       "url": "https://www.yogasarasana.com/"
     },
     {
@@ -2738,7 +2745,7 @@ window.EVENTS_DATA = {
         ]
       },
       "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/marches-nocturnes-regusse-fr-2881209/",
-      "img": "https://static.neopse.com/medias/p/2553/site/2a/59/5d/2a595dde9c30fd1347e4d5c3e92ebec8fb62029e.jpg"
+      "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/9682_2_1.jpg"
     },
     {
       "id": "evt-16",
@@ -2872,6 +2879,7 @@ window.EVENTS_DATA = {
           "wed"
         ]
       },
+      "img": "https://cdn.iris-etourism.io/media/saintecroix_du_verdon/5258405/33c79c1bb93188f5-800x520.webp",
       "url": "https://www.stecroixduverdon-tourisme.fr/agenda-manifestation/marche-a-la-truffe-dete/"
     },
     {

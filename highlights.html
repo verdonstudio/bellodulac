@@ -77,6 +77,9 @@
         transition: all 0.15s ease;
     }
     .hl-share-btn:hover { background: #fff; color: var(--c-primary); }
+    /* Carte affichee automatiquement (showevents=all/3stars ou showpois=true), sans bouton
+       de retrait : le bouton partager reprend alors la place du bouton retrait absent. */
+    .hl-share-btn.solo { right: 8px; }
 
     .btn-listing {
         display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -241,7 +244,18 @@
 
 <script>
 (function () {
-    const state = { lang: 'FR', logement: 'salles', ids: [], visits: [] };
+    const state = { lang: 'FR', logement: 'salles', ids: [], visits: [], showEvents: null, showPois: false };
+
+    // -------- itineraire de visites par defaut (parametre URL showpois=true) --------
+    // Facile a modifier a l'avenir : chaque tableau liste, dans l'ordre, l'id de POI (voir
+    // pois.js) propose par defaut a partir du 2e jour du sejour (le jour 1, arrivee, n'a
+    // jamais de visite par defaut). Un sejour plus court ne recoit que les premieres
+    // entrees ; un sejour plus long que le tableau n'ajoute rien au-dela.
+    // Cle = famille de logement (voir logoFamily() plus bas : "moustiers" ou "salles").
+    const DEFAULT_POI_ITINERARY = {
+        moustiers: ['rando-moustiers', 'plage-galetas', 'aiguines-table-orientation', 'topo-lac-basses-gorges-mrkl4060', 'plage-salles', 'plage-chabassole'],
+        salles:    ['plage-salles', 'plage-galetas', 'aiguines-table-orientation', 'rando-moustiers', 'topo-lac-basses-gorges-mrkl4060', 'plage-margaridon']
+    };
 
     const LOGO_DATA = {
         moustiers: { src: "https://bellodulac.netlify.app/images/bell-etoile-logo.png" },
@@ -499,6 +513,59 @@
         return out.sort((a, b) => a.date.localeCompare(b.date));
     }
 
+    // -------- evenements affiches automatiquement (showevents=all|3stars) --------
+    // En plus des evenements explicitement listes dans state.ids, affiche tous les
+    // evenements de la plage active (edatestart/edateend, ou plage par defaut sinon --
+    // cf. computeActiveRange()), ou uniquement ceux notes 3 etoiles si showevents=3stars.
+    // Jamais de doublon avec un evenement deja present via state.ids.
+    function computeShowEventsExtra() {
+        if (!state.showEvents) return [];
+        const data = window.EVENTS_DATA;
+        if (!data) return [];
+        const { start, end } = computeActiveRange();
+        const events = data.events || [];
+        const already = new Set(state.ids);
+        const out = [];
+        events.forEach(e => {
+            if (state.showEvents === '3stars' && (e.rating || 0) < 3) return;
+            if (e.recurrence) {
+                expandOne(e, start, end).forEach(occ => {
+                    if (!already.has(baseEventId(occ))) out.push(occ);
+                });
+            } else if (e.date) {
+                if (already.has(e.id)) return;
+                const d = parseISO(e.date);
+                if (d >= start && d <= end) out.push(e);
+            }
+        });
+        return out;
+    }
+
+    // -------- visites POI ajoutees automatiquement (showpois=true) --------
+    // Applique l'itineraire par defaut (DEFAULT_POI_ITINERARY) selon la famille de
+    // logement, a partir du 2e jour du sejour actif (edatestart) et jusqu'a edateend
+    // (ou jusqu'a la fin du tableau s'il n'y a pas de edateend / que le sejour est plus
+    // long). N'ajoute rien s'il n'y a pas de edatestart (impossible de situer "jour 2"),
+    // et ne duplique jamais une visite deja presente dans state.visits pour le meme
+    // point d'interet et la meme date.
+    function computeAutoPoiVisits() {
+        if (!state.showPois || !state.dateStart) return [];
+        const itinerary = DEFAULT_POI_ITINERARY[logoFamily(state.logement)] || [];
+        if (!itinerary.length) return [];
+        const start = parseISO(state.dateStart);
+        const end = state.dateEnd ? parseISO(state.dateEnd) : null;
+        const already = new Set(state.visits.map(v => `${v.poiId}__${v.date}`));
+        const out = [];
+        for (let i = 0; i < itinerary.length; i++) {
+            const date = addDays(start, i + 1); // i=0 -> jour 2 (start + 1 jour)
+            if (end && date > end) break;
+            const iso = toISO(date);
+            if (already.has(`${itinerary[i]}__${iso}`)) continue;
+            out.push({ poiId: itinerary[i], date: iso });
+        }
+        return out;
+    }
+
     // -------- resolution d'un identifiant d'evenement vers l'occurrence a afficher --------
     // Meme logique que resolveHighlightTarget() dans evenements.html : identifiant exact
     // (evenement ponctuel), sinon modele recurrent -> toute premiere occurrence a partir de
@@ -606,9 +673,24 @@
             const tmp = state.dateStart; state.dateStart = state.dateEnd; state.dateEnd = tmp;
         }
 
-        const managed = new Set(['lang', 'logement', 'ids', 'id', 'eventids', 'visits', 'from', 'edatestart', 'edateend']);
+        // showevents=all|3stars : affiche en plus, sur la plage edatestart/edateend active,
+        // tous les evenements (ou seulement ceux notes 3 etoiles) ; showpois=true : ajoute
+        // l'itineraire de visites par defaut (voir DEFAULT_POI_ITINERARY plus haut).
+        const rawShowEvents = (p.get('showevents') || '').trim().toLowerCase();
+        state.showEvents = (rawShowEvents === 'all' || rawShowEvents === '3stars') ? rawShowEvents : null;
+        state.showPois = ['true', '1'].includes((p.get('showpois') || '').trim().toLowerCase());
+
+        const managed = new Set(['lang', 'logement', 'ids', 'id', 'eventids', 'visits', 'from', 'edatestart', 'edateend', 'showevents', 'showpois']);
         state.passthrough = new URLSearchParams();
         p.forEach((v, k) => { if (!managed.has(k)) state.passthrough.set(k, v); });
+    }
+
+    // Ajoute (ou retire) showevents/showpois sur un URLSearchParams a partir de
+    // state.showEvents/state.showPois -- utilise partout ou une URL de cette page est
+    // reconstruite (retour, lien courant, copie), pour ne jamais les perdre en route.
+    function applyShowParams(p) {
+        if (state.showEvents) p.set('showevents', state.showEvents); else p.delete('showevents');
+        if (state.showPois) p.set('showpois', 'true'); else p.delete('showpois');
     }
 
     // Construit l'URL du bouton "Retour" vers la page d'origine (evenements.html sur Vercel,
@@ -631,6 +713,7 @@
         if (state.ids.length) p.set('ids', state.ids.map(encodeURIComponent).join(',')); else p.delete('ids');
         if (state.visits.length) p.set('visits', state.visits.map(v => `${encodeURIComponent(v.poiId)}:${v.date}`).join(',')); else p.delete('visits');
         applyDateRangeParams(p);
+        applyShowParams(p);
         if (state.from === 'evenements') return `evenements.html?${p.toString()}`;
         if (state.from === 'panorama') return `panorama.html?${p.toString()}`;
         return `index.html?${p.toString()}`;
@@ -643,6 +726,7 @@
         if (state.ids.length) p.set('ids', state.ids.map(encodeURIComponent).join(',')); else p.delete('ids');
         if (state.visits.length) p.set('visits', state.visits.map(v => `${encodeURIComponent(v.poiId)}:${v.date}`).join(',')); else p.delete('visits');
         applyDateRangeParams(p);
+        applyShowParams(p);
         const url = window.location.pathname + '?' + p.toString();
         try { history.replaceState(null, '', url); } catch (e) {}
 
@@ -657,6 +741,7 @@
         if (state.visits.length) p.set('visits', state.visits.map(v => `${encodeURIComponent(v.poiId)}:${v.date}`).join(','));
         if (state.from && state.from !== 'index') p.set('from', state.from);
         applyDateRangeParams(p);
+        applyShowParams(p);
         return `${window.location.origin}${window.location.pathname}?${p.toString()}`;
     }
 
@@ -775,36 +860,33 @@
         const logo = (LOGO_DATA[logoFamily(state.logement)] || LOGO_DATA.salles).src;
         const items = [];
 
-        if (data) {
-            state.ids.forEach(id => {
-                const evt = resolveEvent(data, id);
-                if (!evt) return;
-                const hasImg = !!evt.img;
-                const imgSrc = hasImg ? evt.img : logo;
-                items.push({
-                    date: evt.date,
-                    html: `
-                    <div class="card">
-                        <span class="hl-kind-badge is-event">🎉 ${L.kindEvent}</span>
-                        <button type="button" class="hl-remove-btn" data-kind="event" data-key="${id}" title="${L.removeCard}" aria-label="${L.removeCard}">✕</button>
-                        <button type="button" class="hl-share-btn" data-share-kind="event" data-share-id="${id}" title="${L.shareCard}" aria-label="${L.shareCard}">🔗</button>
-                        <div class="hl-media">
-                            <img class="hl-media-img${hasImg ? '' : ' is-logo'}" src="${imgSrc}" alt="" loading="lazy" />
-                        </div>
-                        <div class="p-4">
-                            <div class="hl-date-badge">${calendarIcon()}<span>${formatDateBadge(evt.date, evt.time)}</span></div>
-                            <p class="hl-category">${catLabel(data, evt)}</p>
-                            <h2 class="hl-title"><a href="${eventUrl(evt)}" target="_blank" rel="noopener">${t(evt.title)}</a></h2>
-                            ${evt.place ? `<p class="hl-place">${pinIcon()}<span>${evt.place}</span></p>` : ''}
-                        </div>
+        // removable=true -> carte issue de state.ids/state.visits (bouton ✕ de retrait actif).
+        // removable=false -> carte ajoutee automatiquement (showevents=all/3stars,
+        // showpois=true) : pas de bouton de retrait, seul le partage reste disponible.
+        function pushEventCard(evt, id, removable) {
+            const hasImg = !!evt.img;
+            const imgSrc = hasImg ? evt.img : logo;
+            items.push({
+                date: evt.date,
+                html: `
+                <div class="card">
+                    <span class="hl-kind-badge is-event">🎉 ${L.kindEvent}</span>
+                    ${removable ? `<button type="button" class="hl-remove-btn" data-kind="event" data-key="${id}" title="${L.removeCard}" aria-label="${L.removeCard}">✕</button>` : ''}
+                    <button type="button" class="hl-share-btn${removable ? '' : ' solo'}" data-share-kind="event" data-share-id="${id}" title="${L.shareCard}" aria-label="${L.shareCard}">🔗</button>
+                    <div class="hl-media">
+                        <img class="hl-media-img${hasImg ? '' : ' is-logo'}" src="${imgSrc}" alt="" loading="lazy" />
                     </div>
-                `});
-            });
+                    <div class="p-4">
+                        <div class="hl-date-badge">${calendarIcon()}<span>${formatDateBadge(evt.date, evt.time)}</span></div>
+                        <p class="hl-category">${catLabel(data, evt)}</p>
+                        <h2 class="hl-title"><a href="${eventUrl(evt)}" target="_blank" rel="noopener">${t(evt.title)}</a></h2>
+                        ${evt.place ? `<p class="hl-place">${pinIcon()}<span>${evt.place}</span></p>` : ''}
+                    </div>
+                </div>
+            `});
         }
 
-        state.visits.forEach((visit, idx) => {
-            const poi = findPoi(visit.poiId);
-            if (!poi) return;
+        function pushVisitCard(poi, visit, removable, removeIndex) {
             const content = poiContent(poi);
             const hasImg = !!poi.img;
             const imgSrc = hasImg ? poi.img : logo;
@@ -814,8 +896,8 @@
                 html: `
                 <div class="card">
                     <span class="hl-kind-badge is-visit">📍 ${L.kindVisit}</span>
-                    <button type="button" class="hl-remove-btn" data-kind="visit" data-index="${idx}" title="${L.removeCard}" aria-label="${L.removeCard}">✕</button>
-                    <button type="button" class="hl-share-btn" data-share-kind="visit" data-share-index="${idx}" title="${L.shareCard}" aria-label="${L.shareCard}">🔗</button>
+                    ${removable ? `<button type="button" class="hl-remove-btn" data-kind="visit" data-index="${removeIndex}" title="${L.removeCard}" aria-label="${L.removeCard}">✕</button>` : ''}
+                    <button type="button" class="hl-share-btn${removable ? '' : ' solo'}" data-share-kind="visit" data-share-poi="${visit.poiId}" data-share-date="${visit.date}" title="${L.shareCard}" aria-label="${L.shareCard}">🔗</button>
                     <div class="hl-media">
                         <img class="hl-media-img${hasImg ? '' : ' is-logo'}" src="${imgSrc}" alt="" loading="lazy" />
                     </div>
@@ -826,6 +908,23 @@
                     </div>
                 </div>
             `});
+        }
+
+        if (data) {
+            state.ids.forEach(id => {
+                const evt = resolveEvent(data, id);
+                if (evt) pushEventCard(evt, id, true);
+            });
+            computeShowEventsExtra().forEach(evt => pushEventCard(evt, baseEventId(evt), false));
+        }
+
+        state.visits.forEach((visit, idx) => {
+            const poi = findPoi(visit.poiId);
+            if (poi) pushVisitCard(poi, visit, true, idx);
+        });
+        computeAutoPoiVisits().forEach(visit => {
+            const poi = findPoi(visit.poiId);
+            if (poi) pushVisitCard(poi, visit, false, null);
         });
 
         if (!items.length) {
@@ -847,9 +946,8 @@
                 e.stopPropagation();
                 if (btn.dataset.shareKind === 'event') {
                     copyCardLink(buildEventShareUrl(btn.dataset.shareId), btn);
-                } else {
-                    const visit = state.visits[Number(btn.dataset.shareIndex)];
-                    if (visit) copyCardLink(buildVisitShareUrl(visit), btn);
+                } else if (btn.dataset.shareKind === 'visit') {
+                    copyCardLink(buildVisitShareUrl({ poiId: btn.dataset.sharePoi, date: btn.dataset.shareDate }), btn);
                 }
             });
         });
