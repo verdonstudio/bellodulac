@@ -63,6 +63,12 @@ const reservations = {
         "highlights": "highlights.html?edatestart=2026-09-25&edateend=2026-09-26&lang=FR&logement=salles6&ids=evt-16%2Cevt-87%2C2609MAMA%2Crec-riez-marche-mercredi%2Cevt-30%2Cevt-29%2Cevt-48&from=evenements&visits=plage-salles%3A2026-09-26",
         "panorama": "panorama.html?lang=FR&logement=salles6&edatestart=2026-09-25&edateend=2026-09-26"
     },
+    "HMFFSNS4BJ": {
+        "evenements": "evenements.html?lang=EN&logement=moustiers&edatestart=2026-10-16&edateend=2026-10-19",
+        "map": "index.html?lang=EN&logement=moustiers&edatestart=2026-10-16&edateend=2026-10-19&zoom=13&pos=43.82945%2C6.21921",
+        "highlights": "highlights.html?lang=EN&logement=moustiers&edatestart=2026-10-16&edateend=2026-10-19&from=evenements&showevents=3stars&showpois=true",
+        "panorama": "panorama.html?lang=EN&logement=moustiers&edatestart=2026-10-16&edateend=2026-10-19"
+    },
     "HMB2JRYYN5": {
         "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28",
         "map": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28&zoom=13&pos=43.82945%2C6.21921",
