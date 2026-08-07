@@ -88,7 +88,8 @@ const reservations = {
         "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28",
         "map": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28&zoom=13&pos=43.82945%2C6.21921",
         "highlights": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28&from=evenements&showevents=3stars&showpois=true",
-        "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28"
+        "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28",
+        "today": "https://bellodulac.vercel.app/highlights.html?lang=FR&logement=salles8&from=evenements&showevents=today&showpois=today"
     }
 
 };
