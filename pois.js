@@ -2877,6 +2877,25 @@ window.POIS = [
     "scale": 0.8
   },
   {
+    "id": "base-cadeno-moustiers",
+    "cat": "sportaquatique",
+    "coords": [43.804959, 6.229093],
+    "stars": 2,
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/13/72/18499597-diaporama.jpg",
+    "fr": {
+      "name": "Base nautique La Cadeno",
+      "desc": "Type : Location nautique. Pédalos, canoës, kayaks et paddles sur le lac de Sainte-Croix et dans les Gorges du Verdon. Plage, transats, snack et buvette sur place. Ouvert du 13 juin au 13 septembre.",
+      "url": "https://www.moustiers.fr/fiche/base-nautique-la-cadeno/",
+      "urlLabel": "Plus d'informations"
+    },
+    "en": {
+      "name": "La Cadeno Water Sports Base",
+      "desc": "Type: Boat rental. Pedal boats, canoes, kayaks and paddleboards on Lac de Sainte-Croix and in the Verdon Gorges. Beach, sun loungers and snack bar on site. Open June 13 to September 13.",
+      "url": "https://www.moustiers.fr/en/fiche/water-sports-centre-la-cadeno/",
+      "urlLabel": "More details"
+    }
+  },
+  {
     "id": "aiguines-table-orientation",
     "cat": "visite",
     "coords": [
