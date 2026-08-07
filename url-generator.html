@@ -174,16 +174,14 @@
         <div class="radio-line"><input type="radio" name="showevents" value="" id="se-none" checked><label for="se-none" style="margin:0;font-weight:400;">Aucun — seulement les évènements cochés ci-dessous</label></div>
         <div class="radio-line"><input type="radio" name="showevents" value="all" id="se-all"><label for="se-all" style="margin:0;font-weight:400;">Tous les évènements de la période du séjour (<code>showevents=all</code>)</label></div>
         <div class="radio-line"><input type="radio" name="showevents" value="3stars" id="se-3"><label for="se-3" style="margin:0;font-weight:400;">Seulement les 3 étoiles de la période (<code>showevents=3stars</code>)</label></div>
+        <div class="radio-line"><input type="radio" name="showevents" value="today" id="se-today"><label for="se-today" style="margin:0;font-weight:400;">Seulement les évènements du jour, sans lien avec le séjour (<code>showevents=today</code>)</label></div>
       </fieldset>
       <fieldset>
         <legend>Itinéraire POI</legend>
-        <div class="checkbox-row">
-          <input type="checkbox" id="f-showpois">
-          <div class="lbl">
-            <b>Ajouter automatiquement l'itinéraire par défaut (<code>showpois=true</code>)</b>
-            <span>Génère seul les visites jour par jour selon le logement (rando, plages, Aiguines…). Se cumule avec les visites manuelles ajoutées en bas de page.</span>
-          </div>
-        </div>
+        <div class="radio-line"><input type="radio" name="showpois" value="" id="sp-none" checked><label for="sp-none" style="margin:0;font-weight:400;">Aucun</label></div>
+        <div class="radio-line"><input type="radio" name="showpois" value="true" id="sp-true"><label for="sp-true" style="margin:0;font-weight:400;">Itinéraire par défaut jour par jour à partir de l'arrivée (<code>showpois=true</code>)</label></div>
+        <div class="radio-line"><input type="radio" name="showpois" value="today" id="sp-today"><label for="sp-today" style="margin:0;font-weight:400;">Recommandation du jour uniquement, sans lien avec le séjour (<code>showpois=today</code>)</label></div>
+        <p class="sub" style="margin:6px 0 0;">Se cumule dans tous les cas avec les visites manuelles ajoutées en bas de page.</p>
       </fieldset>
     </div>
     <input type="text" id="event-search" placeholder="Filtrer par titre, lieu ou catégorie…">
@@ -426,7 +424,7 @@
     const zoom = zoomInput.value.trim();
     const pos = posInput.value.trim();
     const showevents = document.querySelector('input[name="showevents"]:checked').value;
-    const showpois = document.getElementById('f-showpois').checked;
+    const showpois = document.querySelector('input[name="showpois"]:checked').value;
 
     const ids = Array.from(eventListEl.querySelectorAll('.event-checkbox:checked')).map(cb => cb.value);
 
@@ -452,7 +450,7 @@
       visits: visits.length ? visits.join(',') : '',
       from: from,
       showevents: showevents,
-      showpois: showpois ? 'true' : ''
+      showpois: showpois
     }));
 
     document.getElementById('out-evenements').value = domain + evenementsPath;

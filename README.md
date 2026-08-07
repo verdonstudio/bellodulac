@@ -81,13 +81,39 @@ C'est la page la plus riche. En plus des paramètres communs :
 | `ids` | liste d'id d'évènements séparés par `,` (URL-encodés) | Évènements ajoutés manuellement au programme. Pour un évènement récurrent, on utilise l'id de base (ex. `rec-moustiers-nocturne-mercredi`), pas une occurrence précise. |
 | `visits` | liste de `poiId:AAAA-MM-JJ` séparés par `,` | Visites POI programmées à une date précise. |
 | `from` | `evenements`, `index`, `panorama` | Détermine où mène le bouton retour. |
-| `showevents` | `all` ou `3stars` | Ajoute automatiquement, en plus de `ids`, tous les évènements de la période (`all`) ou seulement les 3 étoiles (`3stars`). Ces évènements ajoutés automatiquement n'ont pas de bouton de suppression. |
-| `showpois` | `true` ou `1` | Ajoute automatiquement l'itinéraire de visites par défaut du logement (voir ci-dessous), en plus des `visits` manuelles. |
+| `showevents` | `all`, `3stars` ou `today` | Ajoute automatiquement, en plus de `ids`, tous les évènements de la période (`all`), seulement les 3 étoiles (`3stars`), ou seulement les évènements du jour calendaire (`today` — indépendant de `edatestart`/`edateend`). Ces évènements ajoutés automatiquement n'ont pas de bouton de suppression. |
+| `showpois` | `true`, `1` ou `today` | `true`/`1` ajoute l'itinéraire de visites par défaut du logement, jour par jour à partir de `edatestart` (voir ci-dessous). `today` ignore les dates de séjour et ajoute une seule « recommandation du jour » (voir plus bas). |
 
 `showevents` et `showpois` sont gérés sur **toutes** les pages et sur tous
 les boutons retour : une fois présents dans l'URL, ils sont conservés
 automatiquement en naviguant entre `index.html`, `evenements.html`,
 `highlights.html` et `panorama.html`.
+
+## Le tag « today » (que faire aujourd'hui, sans réservation)
+
+`redirect.js` contient une entrée spéciale `"today"` (à côté de `"default"`),
+utilisable sans code de réservation :
+
+```
+https://bellodulac.netlify.app/display.html?res=today&action=highlights
+```
+
+Elle pointe vers `highlights.html?...&showevents=today&showpois=today`, donc
+elle affiche automatiquement les évènements du jour et la recommandation POI
+du jour — sans dates de séjour ni logement figés. `action` peut aussi être
+`evenements`, `map` ou `panorama`.
+
+Pour cibler un logement précis sur ce tag générique, il suffit d'ajouter
+`&logement=...` sur le lien `display.html` lui-même :
+
+```
+https://bellodulac.netlify.app/display.html?res=today&action=highlights&logement=moustiers
+```
+
+`display.html` transmet tout paramètre supplémentaire (autre que `res` et
+`action`) vers la page de destination, sans écraser ceux déjà fixés dans
+`redirect.js` — c'est ce qui permet ce genre de lien générique paramétrable,
+en plus des liens de réservation classiques (qui, eux, fixent déjà tout).
 
 ## Itinéraire de visites par défaut (`showpois=true`)
 
@@ -108,6 +134,17 @@ const DEFAULT_POI_ITINERARY = {
                 'rando-moustiers', 'topo-lac-basses-gorges-mrkl4060', 'plage-margaridon']
 };
 ```
+
+### Recommandation du jour (`showpois=today`)
+
+Réutilise le même tableau `DEFAULT_POI_ITINERARY`, mais tourne dessus en
+boucle sur l'année entière au lieu de le parcourir jour par jour à partir de
+l'arrivée : l'index du jour est calculé par
+`(jour de l'année - 1) % longueur du tableau`. Résultat : un POI différent
+chaque jour, qui revient au début du tableau tous les *N* jours (*N* = 6
+actuellement), et qui diffère selon la famille de logement (`moustiers` ou
+`salles`) puisque chaque famille a son propre tableau. Aucune date de séjour
+n'est nécessaire, contrairement à `showpois=true`.
 
 ## Fichiers de données
 

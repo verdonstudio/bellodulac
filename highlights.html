@@ -388,6 +388,12 @@
     }
     function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
     function startOfToday() { const n = new Date(); n.setHours(0,0,0,0); return n; }
+    // Rang du jour dans l'annee (1 pour le 1er janvier) : utilise pour faire tourner la
+    // "recommandation du jour" (showpois=today) sur l'annee entiere, de facon deterministe.
+    function dayOfYear(d) {
+        const start = new Date(d.getFullYear(), 0, 1);
+        return Math.floor((d - start) / 86400000) + 1;
+    }
 
     // Accepte, pour edatestart/edateend : l'ISO strict (AAAA-MM-JJ), une date en
     // clair FR ou EN ("10 août 2026", "1er août 2026", "August 10, 2026",
@@ -568,16 +574,20 @@
         return out.sort((a, b) => a.date.localeCompare(b.date));
     }
 
-    // -------- evenements affiches automatiquement (showevents=all|3stars) --------
+    // -------- evenements affiches automatiquement (showevents=all|3stars|today) --------
     // En plus des evenements explicitement listes dans state.ids, affiche tous les
     // evenements de la plage active (edatestart/edateend, ou plage par defaut sinon --
     // cf. computeActiveRange()), ou uniquement ceux notes 3 etoiles si showevents=3stars.
+    // Avec showevents=today, on ignore la plage du sejour : seuls les evenements du jour
+    // calendaire (aujourd'hui, quelle que soit la reservation) sont retenus.
     // Jamais de doublon avec un evenement deja present via state.ids.
     function computeShowEventsExtra() {
         if (!state.showEvents) return [];
         const data = window.EVENTS_DATA;
         if (!data) return [];
-        const { start, end } = computeActiveRange();
+        const { start, end } = state.showEvents === 'today'
+            ? { start: startOfToday(), end: startOfToday() }
+            : computeActiveRange();
         const events = data.events || [];
         const already = new Set(state.ids);
         const out = [];
@@ -617,20 +627,37 @@
         });
     }
 
-    // -------- visites POI ajoutees automatiquement (showpois=true) --------
-    // Applique l'itineraire par defaut (DEFAULT_POI_ITINERARY) selon la famille de
-    // logement, a partir du 2e jour du sejour actif (edatestart) et jusqu'a edateend
-    // (ou jusqu'a la fin du tableau s'il n'y a pas de edateend / que le sejour est plus
-    // long). N'ajoute rien s'il n'y a pas de edatestart (impossible de situer "jour 2"),
-    // et ne duplique jamais une visite deja presente dans state.visits pour le meme
-    // point d'interet et la meme date.
+    // -------- visites POI ajoutees automatiquement (showpois=true|today) --------
+    // showpois=true : applique l'itineraire par defaut (DEFAULT_POI_ITINERARY) selon la
+    // famille de logement, a partir du 2e jour du sejour actif (edatestart) et jusqu'a
+    // edateend (ou jusqu'a la fin du tableau s'il n'y a pas de edateend / que le sejour
+    // est plus long). N'ajoute rien s'il n'y a pas de edatestart (impossible de situer
+    // "jour 2").
+    // showpois=today : ignore les dates de sejour, et propose une seule "recommandation
+    // du jour" -- un POI different chaque jour de l'annee, en parcourant le meme tableau
+    // DEFAULT_POI_ITINERARY en boucle (index = jour de l'annee modulo la longueur du
+    // tableau). Independant de toute reservation : c'est ce qui alimente le tag "today"
+    // de redirect.js.
+    // Dans les deux cas, ne duplique jamais une visite deja presente dans state.visits
+    // pour le meme point d'interet et la meme date.
     function computeAutoPoiVisits() {
-        if (!state.showPois || !state.dateStart) return [];
+        if (!state.showPois) return [];
         const itinerary = DEFAULT_POI_ITINERARY[logoFamily(state.logement)] || [];
         if (!itinerary.length) return [];
+        const already = new Set(state.visits.map(v => `${v.poiId}__${v.date}`));
+
+        if (state.showPois === 'today') {
+            const today = startOfToday();
+            const idx = (dayOfYear(today) - 1) % itinerary.length;
+            const poiId = itinerary[idx];
+            const iso = toISO(today);
+            if (already.has(`${poiId}__${iso}`)) return [];
+            return [{ poiId, date: iso }];
+        }
+
+        if (!state.dateStart) return [];
         const start = parseISO(state.dateStart);
         const end = state.dateEnd ? parseISO(state.dateEnd) : null;
-        const already = new Set(state.visits.map(v => `${v.poiId}__${v.date}`));
         const out = [];
         for (let i = 0; i < itinerary.length; i++) {
             const date = addDays(start, i + 1); // i=0 -> jour 2 (start + 1 jour)
@@ -749,12 +776,17 @@
             const tmp = state.dateStart; state.dateStart = state.dateEnd; state.dateEnd = tmp;
         }
 
-        // showevents=all|3stars : affiche en plus, sur la plage edatestart/edateend active,
-        // tous les evenements (ou seulement ceux notes 3 etoiles) ; showpois=true : ajoute
-        // l'itineraire de visites par defaut (voir DEFAULT_POI_ITINERARY plus haut).
+        // showevents=all|3stars|today : affiche en plus tous les evenements (ou seulement
+        // ceux notes 3 etoiles) sur la plage edatestart/edateend active, ou uniquement ceux
+        // du jour (calendaire, independant du sejour) si "today". showpois=true : ajoute
+        // l'itineraire de visites par defaut jour par jour a partir de edatestart (voir
+        // DEFAULT_POI_ITINERARY plus haut) ; showpois=today : ajoute uniquement la
+        // recommandation du jour (une seule visite, calculee sans avoir besoin de dates de
+        // sejour -- voir computeAutoPoiVisits()).
         const rawShowEvents = (p.get('showevents') || '').trim().toLowerCase();
-        state.showEvents = (rawShowEvents === 'all' || rawShowEvents === '3stars') ? rawShowEvents : null;
-        state.showPois = ['true', '1'].includes((p.get('showpois') || '').trim().toLowerCase());
+        state.showEvents = ['all', '3stars', 'today'].includes(rawShowEvents) ? rawShowEvents : null;
+        const rawShowPois = (p.get('showpois') || '').trim().toLowerCase();
+        state.showPois = rawShowPois === 'today' ? 'today' : ['true', '1'].includes(rawShowPois);
 
         const managed = new Set(['lang', 'logement', 'ids', 'id', 'eventids', 'visits', 'from', 'edatestart', 'edateend', 'showevents', 'showpois']);
         state.passthrough = new URLSearchParams();
@@ -766,7 +798,9 @@
     // reconstruite (retour, lien courant, copie), pour ne jamais les perdre en route.
     function applyShowParams(p) {
         if (state.showEvents) p.set('showevents', state.showEvents); else p.delete('showevents');
-        if (state.showPois) p.set('showpois', 'true'); else p.delete('showpois');
+        if (state.showPois === 'today') p.set('showpois', 'today');
+        else if (state.showPois) p.set('showpois', 'true');
+        else p.delete('showpois');
     }
 
     // Construit l'URL du bouton "Retour" vers la page d'origine (evenements.html sur Vercel,

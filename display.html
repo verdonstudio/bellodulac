@@ -23,7 +23,7 @@
 
         // Si un numéro est fourni et que le fichier de conf est bien chargé
         if (numeroReservation && typeof reservations !== 'undefined') {
-            
+
             const donneesReservation = reservations[numeroReservation];
 
             // Si la réservation existe ET que l'action demandée existe dans redirect.js
@@ -31,6 +31,24 @@
                 // On remplace l'URL par défaut par la bonne URL trouvée
                 urlDestination = donneesReservation[typeAction];
             }
+        }
+
+        // On transmet aussi tout paramètre supplémentaire présent sur le lien display.html
+        // (autre que res/action) vers la page de destination, sans écraser ceux déjà fixés
+        // dans redirect.js. Utile pour des tags génériques comme "today" (voir redirect.js) :
+        // ex. display.html?res=today&action=highlights&logement=moustiers permet de choisir
+        // le logement sur un lien qui n'en fixe pas un par défaut.
+        const passthrough = new URLSearchParams(urlParams);
+        passthrough.delete('res');
+        passthrough.delete('action');
+        if ([...passthrough.keys()].length) {
+            const [baseUrl, existingQuery] = urlDestination.split('?');
+            const destParams = new URLSearchParams(existingQuery || '');
+            for (const [cle, valeur] of passthrough.entries()) {
+                if (!destParams.has(cle)) destParams.set(cle, valeur);
+            }
+            const destQuery = destParams.toString();
+            urlDestination = destQuery ? `${baseUrl}?${destQuery}` : baseUrl;
         }
 
         // On effectue la redirection dans tous les cas

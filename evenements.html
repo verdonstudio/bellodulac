@@ -428,8 +428,8 @@
 			selectedHl: new Set(), // selection d'evenements (tous utilisateurs) pour generer un lien highlights.html
 			visitsPassthrough: null, // visites POI deja choisies sur highlights.html (ids?visits=...), a ne pas perdre
 			                        // si on y retourne via "Voir ma selection" apres etre repasse par evenements.html
-			showEvents: null, // 'all' | '3stars' | null -- parametre showevents transmis a highlights.html (voir plus bas)
-			showPois: false   // parametre showpois transmis a highlights.html (voir plus bas)
+			showEvents: null, // 'all' | '3stars' | 'today' | null -- parametre showevents transmis a highlights.html (voir plus bas)
+			showPois: false   // false | true | 'today' -- parametre showpois transmis a highlights.html (voir plus bas)
 		};
 
 		const I18N = {
@@ -643,8 +643,9 @@
 			// pour leur usage), simplement transportes ici pour ne pas les perdre en passant
 			// par evenements.html (ex: index.html -> evenements.html -> "Voir ma selection").
 			const rawShowEvents = (p.get('showevents') || '').trim().toLowerCase();
-			state.showEvents = (rawShowEvents === 'all' || rawShowEvents === '3stars') ? rawShowEvents : null;
-			state.showPois = ['true', '1'].includes((p.get('showpois') || '').trim().toLowerCase());
+			state.showEvents = ['all', '3stars', 'today'].includes(rawShowEvents) ? rawShowEvents : null;
+			const rawShowPois = (p.get('showpois') || '').trim().toLowerCase();
+			state.showPois = rawShowPois === 'today' ? 'today' : ['true', '1'].includes(rawShowPois);
 		}
 
 		// Ajoute (ou retire) showevents/showpois sur un URLSearchParams, a partir de
@@ -652,7 +653,9 @@
 		// ou un bouton retour est construit, pour ne jamais perdre ces parametres en route.
 		function applyShowParams(p) {
 			if (state.showEvents) p.set('showevents', state.showEvents); else p.delete('showevents');
-			if (state.showPois) p.set('showpois', 'true'); else p.delete('showpois');
+			if (state.showPois === 'today') p.set('showpois', 'today');
+			else if (state.showPois) p.set('showpois', 'true');
+			else p.delete('showpois');
 		}
 
 		function syncUrl() {
