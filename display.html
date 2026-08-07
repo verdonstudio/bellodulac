@@ -12,11 +12,13 @@
 
         // Récupération des paramètres de l'URL
         const urlParams = new URLSearchParams(window.location.search);
-        const numeroReservation = urlParams.get('res');
-        
+        // S'il n'y a pas de "res" précisé (ex: ?action=parking tout seul), on retombe
+        // sur l'entrée "default" de redirect.js plutôt que sur urlParDefaut directement.
+        const numeroReservation = urlParams.get('res') || 'default';
+
         // On récupère maintenant le paramètre "action" (ex: ?res=12345&action=url2)
         // S'il n'y a pas d'action précisée, on prend "default" par défaut
-        const typeAction = urlParams.get('action') || 'default'; 
+        const typeAction = urlParams.get('action') || 'default';
 
         // On initialise la destination avec l'URL par défaut
         let urlDestination = urlParDefaut;
