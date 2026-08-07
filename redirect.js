@@ -11,7 +11,8 @@ const reservations = {
         "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-08-06&edateend=2026-08-09",
         "map": "index.html?lang=FR&logement=moustiers&zoom=13&pos=43.82945%2C6.21921&edatestart=2026-08-06&edateend=2026-08-09",
         "highlights": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-08-06&edateend=2026-08-09&ids=evt-36%2C0608SURF%2C0608ASTROSOL%2Cevt-74%2C0708CINE%2Cevt-75%2Cevt-72%2Cevt-76%2Crec-bois-tourne-aiguines%2Cevt-16&from=evenements&visits=rando-moustiers%3A2026-08-06%2Cplage-galetas%3A2026-08-07%2Cplage-chabassole%3A2026-08-09%2Ctopo-lac-basses-gorges-mrkl4060%3A2026-08-08",
-        "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-08-06&edateend=2026-08-09"
+        "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-08-06&edateend=2026-08-09",
+        "today": "https://bellodulac.vercel.app/highlights.html?lang=EN&logement=moustiers&edatestart=2026-08-07&edateend=2026-08-07&ids=evt-74%2C0708CINE%2Crec-bois-tourne-aiguines%2Cevt-16%2Crec-tournage-bois-aiguines&from=evenements"
     },
     "HMNQTFPKEP": {
         "evenements": "evenements.html?lang=FR&logement=salles8&edatestart=2026-08-09&edateend=2026-08-14",
