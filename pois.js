@@ -5427,6 +5427,25 @@ window.POIS = [
     }
   },
   {
+    "id": "aquattitude-montpezat",
+    "cat": "sportaquatique",
+    "coords": [43.7454, 6.08625],
+    "stars": 2,
+    "img": "https://www.aquattitude.com/wp-content/uploads/2021/05/christophe-tremeau-canoe-gorges-cascades-w1920-1160x653.png",
+    "fr": {
+      "name": "Aquattitude",
+      "desc": "Type : Location nautique. Base nautique dans les Gorges de Baudinard, à Montpezat : canoë-kayak, paddle, pédalo et rafting. Ouvert en juillet-août, réservation conseillée.",
+      "url": "https://www.aquattitude.com/",
+      "urlLabel": "Site internet"
+    },
+    "en": {
+      "name": "Aquattitude",
+      "desc": "Type: Boat rental. Water sports base in the Baudinard Gorges, in Montpezat: canoe-kayak, paddleboard, pedal boats and rafting. Open July-August, booking recommended.",
+      "url": "https://www.aquattitude.com/",
+      "urlLabel": "Website"
+    }
+  },
+  {
     "id": "alize-bauduen",
     "cat": "sportaquatique",
     "coords": [43.73257,6.17979],
