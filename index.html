@@ -1243,7 +1243,10 @@
     hasCentered: false,
     scrollToMap: false,
     mapFullscreen: false,
-    editMode: false
+    editMode: false,
+    // Affiche, en mode edition (?edit=1) avec une pin posee (?pin=true), un trait entre
+    // le logement courant et la pin -- active via ?trace=true (voir readUrlParams).
+    traceHome: false
   };
 
   // -------- helpers
@@ -1320,7 +1323,10 @@
       pin: rawPin === 'true' || rawPin === '1',
       cats: catsArray,
       stars: parsedStars,
-      traceId: rawTrace ? rawTrace.trim() : null,
+      // trace=true|1 est un flag booleen distinct d'un id de trace POI existant
+      // (voir traceHome ci-dessous) -- on ne le traite comme traceId que sinon.
+      traceId: (rawTrace && rawTrace !== 'true' && rawTrace !== '1') ? rawTrace.trim() : null,
+      traceHome: rawTrace === 'true' || rawTrace === '1',
       fullscreen: rawFullscreen === 'true' || rawFullscreen === '1',
       edit: rawEdit === 'true' || rawEdit === '1'
     };
@@ -1367,6 +1373,8 @@ function syncUrl(replace = true) {
 
     if (typeof mapState !== 'undefined' && mapState.activeTraceId) {
       p.set('trace', mapState.activeTraceId);
+    } else if (state.editMode && state.pin && state.traceHome) {
+      p.set('trace', 'true');
     } else {
       p.delete('trace');
     }
@@ -1441,7 +1449,11 @@ function syncUrl(replace = true) {
           mapState.map.removeLayer(mapState.pinMarker);
           mapState.pinMarker = null;
         }
-        
+        if (mapState.homeTraceLine) {
+          mapState.map.removeLayer(mapState.homeTraceLine);
+          mapState.homeTraceLine = null;
+        }
+
         $('#listing-details').open = false;
         syncUrl();
         render();
@@ -1745,6 +1757,7 @@ function syncUrl(replace = true) {
     traceVisible: true,
     activeTraceId: null,
     pendingTraceId: null,
+    homeTraceLine: null,
     traceEditActive: false,
     traceEditCoords: [],
     traceEditPoints: [],
@@ -1962,6 +1975,35 @@ function getPoiLinks(content, poi) {
       mapState.pinMarker.setLatLng([state.pos.lat, state.pos.lng]);
     } else {
       mapState.pinMarker = Lglobal.marker([state.pos.lat, state.pos.lng]).addTo(mapState.map);
+    }
+  }
+
+  // -------- Trait logement <-> pin (mode edition, ?pin=true&trace=true uniquement)
+  function updateHomeTraceLine() {
+    if (!mapState.map || !Lglobal) return;
+    const shouldShow = state.editMode && state.pin && state.traceHome && state.pos;
+    if (!shouldShow) {
+      if (mapState.homeTraceLine) {
+        mapState.map.removeLayer(mapState.homeTraceLine);
+        mapState.homeTraceLine = null;
+      }
+      return;
+    }
+    const listing = LISTINGS[state.listingId];
+    if (!listing || !listing.coords) return;
+    const coords = [
+      [listing.coords.lat, listing.coords.lon],
+      [state.pos.lat, state.pos.lng]
+    ];
+    if (mapState.homeTraceLine) {
+      mapState.homeTraceLine.setLatLngs(coords);
+    } else {
+      mapState.homeTraceLine = Lglobal.polyline(coords, {
+        color: '#ff6600',
+        weight: 4,
+        opacity: 0.85,
+        dashArray: '8, 8'
+      }).addTo(mapState.map);
     }
   }
 
@@ -2399,6 +2441,7 @@ function getPoiLinks(content, poi) {
         const targetZoom = state.zoom || 14; 
         mapState.map.setView([state.pos.lat, state.pos.lng], targetZoom, { animate: true });
         if (state.pin) updatePinMarker();
+        updateHomeTraceLine();
         const mapEl = document.getElementById('leaflet-map');
         if (mapEl) mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         state.hasCentered = true;
@@ -2428,6 +2471,7 @@ function getPoiLinks(content, poi) {
       if (state.pin) {
         updatePinMarker();
       }
+      updateHomeTraceLine();
       syncUrl();
     });
 
@@ -2709,6 +2753,7 @@ function getPoiLinks(content, poi) {
     if (urlParams.pos)     state.pos       = urlParams.pos;
     if (urlParams.pin)     state.pin       = urlParams.pin;
     if (urlParams.traceId) mapState.pendingTraceId = urlParams.traceId;
+    if (urlParams.traceHome) state.traceHome = true;
     if (urlParams.fullscreen) state.mapFullscreen = true;
     if (urlParams.edit) state.editMode = true;
 
