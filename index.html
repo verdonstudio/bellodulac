@@ -1762,6 +1762,7 @@ function syncUrl(replace = true) {
     pendingTraceId: null,
     homeTraceLine: null,
     homeTraceKey: null,
+    traceBadgeKind: null, // 'poi' | 'home' | null -- qui occupe le badge de distance #btn-trace
     traceEditActive: false,
     traceEditCoords: [],
     traceEditPoints: [],
@@ -1983,8 +1984,11 @@ function getPoiLinks(content, poi) {
   }
 
   // -------- Itineraire pieton logement <-> pin (?pin=true&trace=true, avec ou sans ?edit=1)
-  // Suit les rues/chemins reels via l'API de routage pieton OSRM (aucune cle requise).
-  // En cas d'echec reseau, on retombe sur un trait direct (pointille) entre les 2 points.
+  // Suit les rues/chemins reels via l'API de routage pieton OSRM (aucune cle requise), meme
+  // style que le tracé piéton d'un POI (showPoiTrace) : couleur/epaisseur identiques, et
+  // badge de distance sur #btn-trace (mapState.traceBadgeKind distingue qui l'occupe pour
+  // ne jamais ecraser le badge d'un tracé POI actif).
+  // En cas d'echec reseau, on retombe sur un trait direct entre les 2 points.
   let homeTraceRequestId = 0;
   let homeTraceDebounceTimer = null;
 
@@ -1999,6 +2003,11 @@ function getPoiLinks(content, poi) {
         mapState.homeTraceLine = null;
       }
       mapState.homeTraceKey = null;
+      if (mapState.traceBadgeKind === 'home') {
+        const btn = document.getElementById('btn-trace');
+        if (btn) { btn.style.display = 'none'; btn.classList.remove('active'); }
+        mapState.traceBadgeKind = null;
+      }
       return;
     }
 
@@ -2020,7 +2029,6 @@ function getPoiLinks(content, poi) {
       [listing.coords.lat, listing.coords.lon],
       [pos.lat, pos.lng]
     ];
-    let followsRoad = false;
     try {
       const from = `${listing.coords.lon},${listing.coords.lat}`;
       const to = `${pos.lng},${pos.lat}`;
@@ -2029,7 +2037,6 @@ function getPoiLinks(content, poi) {
       const geomCoords = data && data.routes && data.routes[0] && data.routes[0].geometry && data.routes[0].geometry.coordinates;
       if (Array.isArray(geomCoords) && geomCoords.length > 1) {
         coords = geomCoords.map(([lng, lat]) => [lat, lng]);
-        followsRoad = true;
       }
     } catch (e) {
       // API de routage indisponible (hors-ligne, etc.) : on garde le trait direct en secours
@@ -2042,12 +2049,31 @@ function getPoiLinks(content, poi) {
     if (mapState.homeTraceLine) {
       mapState.map.removeLayer(mapState.homeTraceLine);
     }
+    // Meme style que le tracé piéton d'un POI (showPoiTrace)
     mapState.homeTraceLine = Lglobal.polyline(coords, {
-      color: '#ff6600',
-      weight: 4,
-      opacity: 0.85,
-      dashArray: followsRoad ? null : '8, 8'
+      color: '#0066ff',
+      weight: 6,
+      opacity: 0.8,
+      lineJoin: 'round'
     }).addTo(mapState.map);
+
+    // Badge de distance sur #btn-trace, sans ecraser un tracé POI deja affiché
+    if (!mapState.activeTraceId) showHomeTraceBadge();
+  }
+
+  // Affiche le badge de distance (#btn-trace) pour le tracé logement<->pin courant,
+  // sans refaire d'appel reseau (utilise les coordonnees deja tracees sur la carte).
+  function showHomeTraceBadge() {
+    if (!mapState.homeTraceLine) return;
+    const latlngs = mapState.homeTraceLine.getLatLngs().map(ll => [ll.lat, ll.lng]);
+    const distanceLabel = formatTraceDistance(computeTraceDistanceMeters(latlngs));
+    const btn = document.getElementById('btn-trace');
+    if (btn) {
+      btn.innerHTML = `🚶${distanceLabel ? ' <span>' + distanceLabel + '</span>' : ''}`;
+      btn.style.display = 'flex';
+      btn.classList.add('active');
+    }
+    mapState.traceBadgeKind = 'home';
   }
 
   // -------- Tracé piéton (chemin vers un POI)
@@ -2105,6 +2131,7 @@ function getPoiLinks(content, poi) {
       btn.style.display = 'flex';
       btn.classList.add('active');
     }
+    mapState.traceBadgeKind = 'poi';
 
     mapState.map.closePopup();
     mapState.map.fitBounds(mapState.traceLayer.getBounds(), { padding: [60, 60], maxZoom: 17 });
@@ -2123,7 +2150,10 @@ function getPoiLinks(content, poi) {
       btn.style.display = 'none';
       btn.classList.remove('active');
     }
+    mapState.traceBadgeKind = null;
     syncUrl();
+    // le tracé logement<->pin peut reprendre le badge desormais libre
+    if (mapState.homeTraceLine) showHomeTraceBadge();
   }
 
   function maybeClearTraceOnSelection(selectedId) {
