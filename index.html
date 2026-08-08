@@ -1244,8 +1244,9 @@
     scrollToMap: false,
     mapFullscreen: false,
     editMode: false,
-    // Affiche, en mode edition (?edit=1) avec une pin posee (?pin=true), un trait entre
-    // le logement courant et la pin -- active via ?trace=true (voir readUrlParams).
+    // Affiche, quand une pin est posee (?pin=true), un itineraire piéton entre le
+    // logement courant et la pin -- active via ?trace=true (voir readUrlParams).
+    // Fonctionne avec ou sans ?edit=1.
     traceHome: false
   };
 
@@ -1373,7 +1374,7 @@ function syncUrl(replace = true) {
 
     if (typeof mapState !== 'undefined' && mapState.activeTraceId) {
       p.set('trace', mapState.activeTraceId);
-    } else if (state.editMode && state.pin && state.traceHome) {
+    } else if (state.pin && state.traceHome) {
       p.set('trace', 'true');
     } else {
       p.delete('trace');
@@ -1453,6 +1454,8 @@ function syncUrl(replace = true) {
           mapState.map.removeLayer(mapState.homeTraceLine);
           mapState.homeTraceLine = null;
         }
+        mapState.homeTraceKey = null;
+        homeTraceRequestId++;
 
         $('#listing-details').open = false;
         syncUrl();
@@ -1758,6 +1761,7 @@ function syncUrl(replace = true) {
     activeTraceId: null,
     pendingTraceId: null,
     homeTraceLine: null,
+    homeTraceKey: null,
     traceEditActive: false,
     traceEditCoords: [],
     traceEditPoints: [],
@@ -1978,33 +1982,72 @@ function getPoiLinks(content, poi) {
     }
   }
 
-  // -------- Trait logement <-> pin (mode edition, ?pin=true&trace=true uniquement)
+  // -------- Itineraire pieton logement <-> pin (?pin=true&trace=true, avec ou sans ?edit=1)
+  // Suit les rues/chemins reels via l'API de routage pieton OSRM (aucune cle requise).
+  // En cas d'echec reseau, on retombe sur un trait direct (pointille) entre les 2 points.
+  let homeTraceRequestId = 0;
+  let homeTraceDebounceTimer = null;
+
   function updateHomeTraceLine() {
     if (!mapState.map || !Lglobal) return;
-    const shouldShow = state.editMode && state.pin && state.traceHome && state.pos;
+    const shouldShow = state.pin && state.traceHome && state.pos;
     if (!shouldShow) {
+      homeTraceRequestId++; // invalide toute requete OSRM en cours
+      clearTimeout(homeTraceDebounceTimer);
       if (mapState.homeTraceLine) {
         mapState.map.removeLayer(mapState.homeTraceLine);
         mapState.homeTraceLine = null;
       }
+      mapState.homeTraceKey = null;
       return;
     }
+
     const listing = LISTINGS[state.listingId];
     if (!listing || !listing.coords) return;
-    const coords = [
+
+    const key = `${state.listingId}|${state.pos.lat.toFixed(5)},${state.pos.lng.toFixed(5)}`;
+    if (mapState.homeTraceKey === key) return; // deja a jour ou requete deja en cours pour cette position
+
+    clearTimeout(homeTraceDebounceTimer);
+    homeTraceDebounceTimer = setTimeout(() => {
+      fetchHomeTraceRoute(listing, state.pos, key);
+    }, 350);
+  }
+
+  async function fetchHomeTraceRoute(listing, pos, key) {
+    const requestId = ++homeTraceRequestId;
+    let coords = [
       [listing.coords.lat, listing.coords.lon],
-      [state.pos.lat, state.pos.lng]
+      [pos.lat, pos.lng]
     ];
-    if (mapState.homeTraceLine) {
-      mapState.homeTraceLine.setLatLngs(coords);
-    } else {
-      mapState.homeTraceLine = Lglobal.polyline(coords, {
-        color: '#ff6600',
-        weight: 4,
-        opacity: 0.85,
-        dashArray: '8, 8'
-      }).addTo(mapState.map);
+    let followsRoad = false;
+    try {
+      const from = `${listing.coords.lon},${listing.coords.lat}`;
+      const to = `${pos.lng},${pos.lat}`;
+      const res = await fetch(`https://router.project-osrm.org/route/v1/foot/${from};${to}?overview=full&geometries=geojson`);
+      const data = await res.json();
+      const geomCoords = data && data.routes && data.routes[0] && data.routes[0].geometry && data.routes[0].geometry.coordinates;
+      if (Array.isArray(geomCoords) && geomCoords.length > 1) {
+        coords = geomCoords.map(([lng, lat]) => [lat, lng]);
+        followsRoad = true;
+      }
+    } catch (e) {
+      // API de routage indisponible (hors-ligne, etc.) : on garde le trait direct en secours
     }
+
+    if (requestId !== homeTraceRequestId) return; // une position plus recente a pris le relais
+    if (!mapState.map || !state.pin || !state.traceHome || !state.pos) return; // etat change entretemps
+
+    mapState.homeTraceKey = key;
+    if (mapState.homeTraceLine) {
+      mapState.map.removeLayer(mapState.homeTraceLine);
+    }
+    mapState.homeTraceLine = Lglobal.polyline(coords, {
+      color: '#ff6600',
+      weight: 4,
+      opacity: 0.85,
+      dashArray: followsRoad ? null : '8, 8'
+    }).addTo(mapState.map);
   }
 
   // -------- Tracé piéton (chemin vers un POI)
