@@ -2600,6 +2600,29 @@ window.EVENTS_DATA = {
       "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22706_2_1.jpg"
     },
     {
+      "id": "0908BAL",
+      "cat": "fete",
+      "place": "Sainte-Croix-du-Verdon",
+      "time": {
+        "FR": "Soir",
+        "EN": "Evening"
+      },
+      "title": {
+        "FR": "Bal populaire — Fête de la Saint-Sauveur",
+        "EN": "Bal populaire — Saint-Sauveur Festival"
+      },
+      "details": {
+        "FR": "Feu d'artifice suivi d'un bal populaire au bord du lac. Fête foraine sur place. 3e jour de la Fête de la Saint-Sauveur (8–10 août).",
+        "EN": "Fireworks followed by a popular street dance by the lake. Funfair on site. Day 2 of the Saint-Sauveur Festival (Aug 8–10)."
+      },
+      "favorite": false,
+      "rating": 3,
+      "date": "2026-08-09",
+      "logement": "both",
+      "img": "https://www.stecroixduverdon-tourisme.fr/app/uploads/sites/4/2025/08/affiche-de-la-fete-de-la-saint-sauveur.webp",
+      "url": "https://www.stecroixduverdon-tourisme.fr/temps-fort/fete-de-la-saint-sauveur/"
+    },
+    {
       "id": "1109MAMA",
       "cat": "fete",
       "place": "Sainte-Croix-du-Verdon",
