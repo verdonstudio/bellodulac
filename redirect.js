@@ -42,7 +42,9 @@ const reservations = {
         "highlights": "highlights.html",
         "panorama": "panorama.html",
         "parking" : "index.html?logement=moustiers&lang=FR&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
-        "parking-en" : "index.html?logement=moustiers&lang=EN&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1"
+        "parking-en" : "index.html?logement=moustiers&lang=EN&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
+        "plage-bellodulac1" : "https://bellodulac.vercel.app/index.html?lang=FR&logement=salles8&zoom=17&pos=43.77194%2C6.20816&fullscreen=1&trace=plage-salles",
+        "plage-bellodulac2" : "https://bellodulac.vercel.app/index.html?lang=FR&logement=salles8&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon"        
     },
     // Tag generique "que faire aujourd'hui" : pas lie a une reservation precise, pas de
     // dates ni de logement fixes -- showevents=today (evenements du jour calendaire) et
