@@ -17,7 +17,8 @@ const reservations = {
         "panorama": "panorama.html?lang=EN&logement=moustiers&edatestart=2026-08-06&edateend=2026-08-09",
         "today": "https://bellodulac.vercel.app/highlights.html?lang=EN&logement=moustiers&edatestart=2026-08-07&edateend=2026-08-10&showevents=today&showpois=today&visits=rando-salles%3A2026-08-08%2Cplage-salles%3A2026-08-08",
         "parking": "index.html?logement=moustiers&lang=EN&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
-        "trash": "https://bellodulac.vercel.app/?logement=moustiers&lang=EN&zoom=16&pos=43.84536%2C6.2203&cat=ordures"
+        "trash": "https://bellodulac.vercel.app/?logement=moustiers&lang=EN&zoom=16&pos=43.84536%2C6.2203&cat=ordures",
+        "martel" : "https://bellodulac.vercel.app/index.html?lang=EN&logement=moustiers&visits=rando-salles%3A2026-08-08%2Cplage-salles%3A2026-08-08&edatestart=2026-08-07&edateend=2026-08-10&showevents=today&showpois=today&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
     },
     "HMNQTFPKEP": {
         "evenements": "evenements.html?lang=FR&logement=salles8&edatestart=2026-08-09&edateend=2026-08-14",
