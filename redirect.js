@@ -75,7 +75,7 @@ const reservations = {
     "HMKZPX4TMA": {
         "evenements": "evenements.html?lang=FR&logement=salles8&edatestart=2026-08-22&edateend=2026-08-28",
         "map": "index.html?lang=FR&logement=salles8&zoom=12&pos=43.77258%2C6.20831&edatestart=2026-08-22&edateend=2026-08-28",
-        "highlights": "highlights.html?edatestart=2026-08-22&edateend=2026-08-28&lang=FR&logement=salles8&from=evenements&showevents=3stars&showpois=true",
+        "highlights": "highlights.html?edatestart=2026-08-22&edateend=2026-08-28&lang=FR&logement=salles8&from=evenements&showevents=3stars&showpois=true&ids=evt-12",
         "panorama": "panorama.html?lang=FR&logement=salles8&edatestart=2026-08-22&edateend=2026-08-28",
         "today": "highlights.html?lang=FR&logement=salles8&from=evenements&showevents=today&showpois=today8&edatestart=2026-08-22&edateend=2026-08-28",
         "parking": "index.html?logement=salles8&lang=FR&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1"
