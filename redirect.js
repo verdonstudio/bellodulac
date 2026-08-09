@@ -46,7 +46,7 @@ const reservations = {
         "plage-bellodulac1" : "index.html?lang=FR&logement=salles8&zoom=17&pos=43.77194%2C6.20816&fullscreen=1&trace=plage-salles",
         "plage-bellodulac2" : "index.html?lang=FR&logement=salles8&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
         "trash": "index.html?logement=moustiers&lang=FR&zoom=16&pos=43.84536%2C6.2203&cat=ordures&fullscreen=1",
-        "trash-en": "?logement=moustiers&lang=EN&zoom=16&pos=43.84536%2C6.2203&cat=ordures&fullscreen=1"    
+        "trash-en": "index.html?logement=moustiers&lang=EN&zoom=16&pos=43.84536%2C6.2203&cat=ordures&fullscreen=1"    
     },
     // Tag generique "que faire aujourd'hui" : pas lie a une reservation precise, pas de
     // dates ni de logement fixes -- showevents=today (evenements du jour calendaire) et
@@ -75,9 +75,9 @@ const reservations = {
     "HMKZPX4TMA": {
         "evenements": "evenements.html?lang=FR&logement=salles8&edatestart=2026-08-22&edateend=2026-08-28",
         "map": "index.html?lang=FR&logement=salles8&zoom=12&pos=43.77258%2C6.20831&edatestart=2026-08-22&edateend=2026-08-28",
-        "highlights": "highlights.html?edatestart=2026-08-22&edateend=2026-08-28&lang=FR&logement=salles8&ids=evt-81%2Cevt-82%2Crec-riez-marche-mercredi%2Cevt-30%2Cevt-29%2Cevt-48%2Cevt-12%2Cevt-13%2Cevt-23%2Crec-stecroix-mardi%2Crec-moustiers-artisanat-mardi%2Cevt-27%2Cevt-49%2Crec-aperitif-ferme-roumoules%2Crec-boules-nocturnes-salles%2Crec-moustiers-nocturne-mercredi%2Cevt-33%2C2708ASTROSOL%2C2708ASTRO%2Crec-riez-nocturne-jeudi%2Cevt-36%2Cevt-83%2Cevt-16&from=evenements&visits=plage-salles%3A2026-08-23%2Cplage-galetas%3A2026-08-24%2Caiguines-table-orientation%3A2026-08-25%2Crando-moustiers%3A2026-08-26%2Ctopo-lac-basses-gorges-mrkl4060%3A2026-08-27%2Cplage-margaridon%3A2026-08-28",
+        "highlights": "highlights.html?edatestart=2026-08-22&edateend=2026-08-28&lang=FR&logement=salles8&from=evenements&showevents=3stars&showpois=true",
         "panorama": "panorama.html?lang=FR&logement=salles8&edatestart=2026-08-22&edateend=2026-08-28",
-        "today": "highlights.html?lang=FR&logement=salles8&from=evenements&showevents=today&showpois=today",
+        "today": "highlights.html?lang=FR&logement=salles8&from=evenements&showevents=today&showpois=today8&edatestart=2026-08-22&edateend=2026-08-28",
         "parking": "index.html?logement=salles8&lang=FR&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1"
     },
     "HMYRZQWQNF": {
