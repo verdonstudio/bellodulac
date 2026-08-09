@@ -2,10 +2,10 @@
 //display.html?res=default&action=evenements
 const reservations = {
     "HMDYW4ZT32": {
-        "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=10 août 2026&edateend=17 août 2026",
-        "map": "index.html?lang=FR&logement=moustiers&zoom=13&pos=43.82945%2C6.21921",
-        "highlights": "highlights.html?lang=FR&logement=moustiers&ids=rec-bois-tourne-aiguines%2Cevt-77%2C1108PETIT%2Crec-moustiers-artisanat-mardi%2Crec-moustiers-nocturne-mercredi%2Crec-aperitif-ferme-roumoules%2C1208MAMA%2Cevt-36%2C1308SURF%2C1408CINE%2Cevt-16%2Cevt-79%2Cevt-80%2Cevt-13%2C1708PONEY&from=evenements&edatestart=2026-08-10&edateend=2026-08-17&lang=FR&visits=rando-moustiers%3A2026-08-10%2Cplage-galetas%3A2026-08-11%2Cplage-salles%3A2026-08-12%2Caiguines-table-orientation%3A2026-08-14%2Caiguines%3A2026-08-14%2Cplage-chabassole%3A2026-08-15%2Cplage-sainte-croix%3A2026-08-17%2Ctopo-lac-basses-gorges-mrkl4060%3A2026-08-17",
-        "panorama": "panorama.html?lang=FR&logement=moustiers",
+        "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-08-10&edateend=2026-08-17",
+        "map": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-10&edateend=2026-08-17&zoom=13&pos=43.82945%2C6.21921",
+        "highlights": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-08-10&edateend=2026-08-17&from=evenements&showevents=3stars&showpois=true",
+        "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-08-10&edateend=2026-08-17",
         "today": "https://bellodulac.vercel.app/highlights.html?lang=FR&logement=moustiers&from=evenements&showevents=today&showpois=today",
         "parking": "index.html?logement=moustiers&lang=FR&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
         "trash": "https://bellodulac.vercel.app/?logement=moustiers&lang=FR&zoom=16&pos=43.84536%2C6.2203&cat=ordures"
