@@ -65,13 +65,30 @@
         }
 
         /* Topbar */
-        .topbar { 
-            background-color: rgba(14, 165, 233, 0.35); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
-            transition: background-color 0.3s ease;
+        .topbar {
+            background-color: rgba(14, 165, 233, 0.35);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
-        
+
+        /* Retraction du bandeau (portrait mobile uniquement) : libere de la hauteur pour
+           l'image et les toasters. Voir toggleTopbarCollapse()/applyTopbarCollapseState(). */
+        .topbar.is-collapsed { transform: translateY(-100%); }
+
+        #topbar-toggle {
+            display: none;
+            position: absolute; left: 50%; bottom: -22px; transform: translateX(-50%);
+            width: 42px; height: 22px;
+            background: rgba(0,0,0,0.55); color: #fff; border: none; border-radius: 0 0 10px 10px;
+            align-items: center; justify-content: center; font-size: 12px; line-height: 1;
+            cursor: pointer; pointer-events: auto;
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+        }
+        @media (orientation: portrait) {
+            #topbar-toggle { display: flex; }
+        }
+
         .filter-bar { 
             display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; 
             -webkit-overflow-scrolling: touch;
@@ -170,6 +187,15 @@
         .poi-toaster.is-top { top: var(--offset); transform: translate(-50%, -15px) scale(0.9); }
         .poi-marker-container.active .poi-toaster.is-top { transform: translate(-50%, 0) scale(1); opacity: 1; pointer-events: auto; }
 
+        /* Toaster lateral (portrait uniquement, quand ni le haut ni le bas n'ont assez
+           de place -- voir isSide dans renderMarkers()) : affiche a cote du point plutot
+           que de deborder verticalement de l'ecran et cacher les boutons d'action. */
+        .poi-toaster.is-right { left: calc(100% + 14px); top: 50%; transform: translate(15px, -50%) scale(0.9); }
+        .poi-marker-container.active .poi-toaster.is-right { transform: translate(0, -50%) scale(1); opacity: 1; pointer-events: auto; }
+
+        .poi-toaster.is-left { left: auto; right: calc(100% + 14px); top: 50%; transform: translate(-15px, -50%) scale(0.9); }
+        .poi-marker-container.active .poi-toaster.is-left { transform: translate(0, -50%) scale(1); opacity: 1; pointer-events: auto; }
+
         /* Design Popup */
         .ov-popup { 
             background: white; border-radius: 12px; width: 260px; 
@@ -254,6 +280,13 @@
         <div class="max-w-6xl mx-auto px-3 pb-2">
             <div id="filter-bar" class="filter-bar"></div>
         </div>
+
+        <!-- Poignee de retraction du bandeau (portrait mobile uniquement, voir CSS
+             #topbar-toggle) : accrochee au bas du bandeau, elle se retrouve donc pile en
+             haut de l'ecran une fois le bandeau retracte (translateY(-100%)). -->
+        <button id="topbar-toggle" type="button" onclick="toggleTopbarCollapse()" aria-label="Afficher/Masquer le menu" title="Afficher/Masquer le menu">
+            <span id="topbar-toggle-icon">▴</span>
+        </button>
     </header>
 
 	<div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 pointer-events-none text-center text-white/40 text-[10px] font-medium drop-shadow-md tracking-wide whitespace-nowrap">
@@ -348,11 +381,13 @@
             }
         };
 
-        let isPaused = false; 
+        let isPaused = false;
         let isNightMode = false;
         let draggedIndex = null;
         let currentX = 0;
         let isDraggingPano = false;
+        let topbarCollapsed = false;
+        let topbarUserToggled = false;
 
         let baseScrollSpeed = 0.3; 
         let scrollSpeed = baseScrollSpeed; 
@@ -421,6 +456,41 @@
         function refreshPanoTiles() {
             const imgWidth = ensurePanoTiles();
             if (imgWidth > 0) ensureMarkerLayers(imgWidth);
+        }
+
+        // -------- Retraction du bandeau (portrait mobile) --------
+        function applyTopbarCollapseState() {
+            const topbarEl = document.querySelector('.topbar');
+            const icon = document.getElementById('topbar-toggle-icon');
+            if (topbarEl) topbarEl.classList.toggle('is-collapsed', topbarCollapsed);
+            if (icon) icon.textContent = topbarCollapsed ? '▾' : '▴';
+            // Le bandeau retracte/deploye change de hauteur reelle : il faut recalculer
+            // headerSafeZoneMeasured et repositionner marqueurs/toasters en consequence.
+            renderMarkers();
+        }
+        window.toggleTopbarCollapse = function () {
+            topbarCollapsed = !topbarCollapsed;
+            topbarUserToggled = true;
+            applyTopbarCollapseState();
+        };
+        // Retraction automatique par defaut a l'ouverture en portrait (liberer un
+        // maximum de hauteur des le depart, sans geste requis) ; respecte ensuite le
+        // choix de l'utilisateur si il rouvre le bandeau manuellement.
+        function initTopbarCollapse() {
+            if (window.innerHeight > window.innerWidth) topbarCollapsed = true;
+            applyTopbarCollapseState();
+        }
+        // Si l'ecran repasse en paysage alors que le bandeau etait retracte, on le
+        // redeploie (la poignee est masquee en paysage, il faut donc que le bandeau
+        // reste accessible sans elle).
+        function handleViewportChange() {
+            const isPortraitNow = window.innerHeight > window.innerWidth;
+            if (!isPortraitNow && topbarCollapsed) {
+                topbarCollapsed = false;
+                applyTopbarCollapseState();
+            } else {
+                renderMarkers();
+            }
         }
 
         // ==========================================
@@ -698,35 +768,87 @@
                 const poiCatDefs = poiCatKeys.map(key => window.POI_CATEGORIES[key]).filter(Boolean);
                 const catInfo = poiCatDefs[0] || {color: '#888', emoji: '📍', fr: '', en: ''};
                 const catLabel = state.lang === 'EN' ? catInfo.en : catInfo.fr;
-                
+
+                // --- Contenu et metriques du toaster : calcules ici (avant la decision
+                // haut/bas/cote ci-dessous) car popupMinFloor sert desormais a cette decision. ---
+                const links = getPoiLinks(content, poi);
+                const defaultLabel = I18N[state.lang].read_more;
+                // Si le POI a plusieurs categories, on affiche un badge pour chacune (sinon 1 seul, comme avant).
+                const badgesHtml = poiCatDefs.length
+                    ? poiCatDefs.map(c => {
+                        const label = state.lang === 'EN' ? c.en : c.fr;
+                        return `<span class="ov-popup__badge" style="background:${c.color}">${c.emoji} ${label}</span>`;
+                    }).join('')
+                    : `<span class="ov-popup__badge" style="background:${catInfo.color}">${catInfo.emoji} ${catLabel}</span>`;
+                const stars = poi.stars > 0 ? `<span class="ov-popup__stars">${'★'.repeat(poi.stars)}</span>` : '';
+                const placeholderHTML = `<div class="ov-popup__placeholder" style="background:${catInfo.color}22; height:${popupPlaceholderHeightPx}px;">${catInfo.emoji}</div>`;
+                const imgHTML = poi.img ? `<img class="ov-popup__img" src="${poi.img}" alt="" loading="lazy" style="height:${popupImgHeightPx}px;" onerror="this.outerHTML='<div class=\\'ov-popup__placeholder\\' style=\\'background:${catInfo.color}22;height:${popupPlaceholderHeightPx}px\\'></div>'" />` : placeholderHTML;
+                const traceLabel = state.lang === 'EN' ? 'Show the walking path' : 'Afficher le chemin';
+                const traceCoords = poi.trace ? (Array.isArray(poi.trace) ? poi.trace : poi.trace.coords) : null;
+                const traceLogements = (poi.trace && !Array.isArray(poi.trace)) ? poi.trace.logements : null;
+                const traceAllowedHere = !Array.isArray(traceLogements) || traceLogements.length === 0 || traceLogements.includes(state.listingId);
+                const traceLinkHtml = (Array.isArray(traceCoords) && traceCoords.length > 1 && traceAllowedHere)
+                    ? `<a class="ov-popup__link" href="${buildIndexUrl({ trace: poi.id })}" target="_self" style="color: white !important; background-color: ${catInfo.color} !important;">🚶 ${traceLabel}</a>`
+                    : '';
+                const linksHtml = (links.length || traceLinkHtml) ? `<div class="ov-popup__links">${traceLinkHtml}${links.map(l => `<a class="ov-popup__link" href="${l.url}" target="_self" style="color: white !important; background-color: ${catInfo.color} !important;">${l.label || defaultLabel} →</a>`).join('')}</div>` : '';
+
+                // Plancher de hauteur garantissant que l'image, le titre et TOUS les
+                // boutons restent visibles quoi qu'il arrive ; seule la description
+                // (qui a maintenant son propre scroll interne) absorbe le manque de place.
+                const nbButtons = links.length + (traceLinkHtml ? 1 : 0);
+                const buttonRows = nbButtons > 0 ? Math.ceil(nbButtons / 2) : 0;
+                const badgeRows = Math.max(1, Math.ceil((poiCatDefs.length || 1) / 2));
+                const chromeHeight = 26 /* padding body */ + (badgeRows * 24 + 4) /* badge(s) */ + 44 /* titre 2 lignes */
+                    + (poi.img ? popupImgHeightPx : 0) /* image */
+                    + (buttonRows > 0 ? (buttonRows * 34 + 6) : 0); /* boutons */
+                const popupMinFloor = Math.min(chromeHeight + 20, viewportHeight - 40);
+
                 let labelHeights = isMobile ? [10, 20] : [15, 30, 45];
                 let labelZ = labelHeights[index % labelHeights.length];
 
                 const markerY = (yPos / 100) * viewportHeight;
                 const headerSafeZone = headerSafeZoneMeasured;
-                const bottomSafeZone = 30;  
-                
-                const spaceAbove = markerY - headerSafeZone; 
-                const spaceBelow = viewportHeight - markerY - bottomSafeZone; 
-                
-                let isTop = false; 
-                let availableSpace = spaceAbove;
+                const bottomSafeZone = 30;
 
-                if (spaceAbove < (labelZ + 250)) { 
+                const spaceAbove = markerY - headerSafeZone;
+                const spaceBelow = viewportHeight - markerY - bottomSafeZone;
+
+                let isTop = false;
+                let isSide = false;
+                let availableSpace = spaceAbove;
+                let popupMaxHeight;
+                let popupWidthPxForThis = popupWidthPx;
+
+                if (spaceAbove < (labelZ + popupMinFloor)) {
                     if (spaceBelow > spaceAbove) {
-                        isTop = true; 
+                        isTop = true;
                         availableSpace = spaceBelow;
                     } else {
-                        labelZ = 15; 
+                        labelZ = 15;
                         availableSpace = spaceAbove;
                     }
                 }
-                if (isTop && spaceBelow < (labelZ + 250)) {
-                    labelZ = 15; 
+                if (isTop && spaceBelow < (labelZ + popupMinFloor)) {
+                    labelZ = 15;
                     availableSpace = spaceBelow;
                 }
 
-                const dirClass = isTop ? 'is-top' : 'is-bottom';
+                // Portrait uniquement : si ni au-dessus ni en-dessous il n'y a assez de
+                // place pour le toaster (meme apres le repli ci-dessus), on l'affiche a
+                // cote du point (gauche/droite) plutot que de le laisser deborder de
+                // l'ecran en haut ou en bas et cacher les boutons d'action.
+                if (isPortrait && Math.max(spaceAbove, spaceBelow) < (labelZ + popupMinFloor)) {
+                    isSide = true;
+                    const verticalRoomForSide = viewportHeight - headerSafeZone - bottomSafeZone;
+                    popupMaxHeight = Math.max(popupMinFloor, verticalRoomForSide);
+                    // Alternance gauche/droite par index (position ecran reelle instable
+                    // pendant le defilement du panorama, donc pas de detection fine ici).
+                    popupWidthPxForThis = Math.min(popupWidthPx, Math.round(window.innerWidth * 0.6));
+                } else {
+                    popupMaxHeight = Math.max(popupMinFloor, availableSpace - labelZ);
+                }
+
+                const dirClass = isSide ? (index % 2 === 0 ? 'is-right' : 'is-left') : (isTop ? 'is-top' : 'is-bottom');
 
                 // --- NOUVEAU: Le bouton de suppression reçoit la classe edit-tools ---
                 let btnDelete = EDIT_MODE 
@@ -774,41 +896,8 @@
                     bubbleHTML = `<div class="poi-dot absolute flex items-center justify-center rounded-full border-[3px] border-white z-10 cursor-pointer" style="width:${dotSize}px; height:${dotSize}px; font-size:${dotFontSize}px; background: ${catInfo.color}; left:${-dotSize / 2}px; top:${-dotSize / 2}px; transform: scale(${scaleVal});">${catInfo.emoji}</div>`;
                 }
 
-                const links = getPoiLinks(content, poi);
-                const defaultLabel = I18N[state.lang].read_more;
-                // Si le POI a plusieurs categories, on affiche un badge pour chacune (sinon 1 seul, comme avant).
-                const badgesHtml = poiCatDefs.length
-                    ? poiCatDefs.map(c => {
-                        const label = state.lang === 'EN' ? c.en : c.fr;
-                        return `<span class="ov-popup__badge" style="background:${c.color}">${c.emoji} ${label}</span>`;
-                    }).join('')
-                    : `<span class="ov-popup__badge" style="background:${catInfo.color}">${catInfo.emoji} ${catLabel}</span>`;
-                const stars = poi.stars > 0 ? `<span class="ov-popup__stars">${'★'.repeat(poi.stars)}</span>` : '';
-                const placeholderHTML = `<div class="ov-popup__placeholder" style="background:${catInfo.color}22; height:${popupPlaceholderHeightPx}px;">${catInfo.emoji}</div>`;
-                const imgHTML = poi.img ? `<img class="ov-popup__img" src="${poi.img}" alt="" loading="lazy" style="height:${popupImgHeightPx}px;" onerror="this.outerHTML='<div class=\\'ov-popup__placeholder\\' style=\\'background:${catInfo.color}22;height:${popupPlaceholderHeightPx}px\\'></div>'" />` : placeholderHTML;
-                const traceLabel = state.lang === 'EN' ? 'Show the walking path' : 'Afficher le chemin';
-                const traceCoords = poi.trace ? (Array.isArray(poi.trace) ? poi.trace : poi.trace.coords) : null;
-                const traceLogements = (poi.trace && !Array.isArray(poi.trace)) ? poi.trace.logements : null;
-                const traceAllowedHere = !Array.isArray(traceLogements) || traceLogements.length === 0 || traceLogements.includes(state.listingId);
-                const traceLinkHtml = (Array.isArray(traceCoords) && traceCoords.length > 1 && traceAllowedHere)
-                    ? `<a class="ov-popup__link" href="${buildIndexUrl({ trace: poi.id })}" target="_self" style="color: white !important; background-color: ${catInfo.color} !important;">🚶 ${traceLabel}</a>`
-                    : '';
-                const linksHtml = (links.length || traceLinkHtml) ? `<div class="ov-popup__links">${traceLinkHtml}${links.map(l => `<a class="ov-popup__link" href="${l.url}" target="_self" style="color: white !important; background-color: ${catInfo.color} !important;">${l.label || defaultLabel} →</a>`).join('')}</div>` : '';
-
-                // Plancher de hauteur garantissant que l'image, le titre et TOUS les
-                // boutons restent visibles quoi qu'il arrive ; seule la description
-                // (qui a maintenant son propre scroll interne) absorbe le manque de place.
-                const nbButtons = links.length + (traceLinkHtml ? 1 : 0);
-                const buttonRows = nbButtons > 0 ? Math.ceil(nbButtons / 2) : 0;
-                const badgeRows = Math.max(1, Math.ceil((poiCatDefs.length || 1) / 2));
-                const chromeHeight = 26 /* padding body */ + (badgeRows * 24 + 4) /* badge(s) */ + 44 /* titre 2 lignes */
-                    + (poi.img ? popupImgHeightPx : 0) /* image */
-                    + (buttonRows > 0 ? (buttonRows * 34 + 6) : 0); /* boutons */
-                const popupMinFloor = Math.min(chromeHeight + 20, viewportHeight - 40);
-                const popupMaxHeight = Math.max(popupMinFloor, availableSpace - labelZ);
-
                 const toasterHTML = `
-                    <div class="poi-toaster ov-popup ${dirClass}" style="--offset: calc(14px + ${labelZ}px); width: ${popupWidthPx}px; max-height: ${popupMaxHeight}px;">
+                    <div class="poi-toaster ov-popup ${dirClass}" style="--offset: calc(14px + ${labelZ}px); width: ${popupWidthPxForThis}px; max-height: ${popupMaxHeight}px;">
                         ${imgHTML}
                         <div class="ov-popup__body">
                             <div class="flex items-center gap-1.5 shrink-0 mb-1.5 flex-wrap self-start">
@@ -1192,6 +1281,8 @@
                 document.getElementById('help-scale').classList.remove('hidden');
             }
 
+            initTopbarCollapse();
+
             if (imgRef.complete) {
                 renderMarkers(); animate(); hidePanoLoader();
             } else {
@@ -1199,11 +1290,11 @@
                 imgRef.onerror = showPanoLoadError;
             }
 
-            window.addEventListener('resize', renderMarkers);
+            window.addEventListener('resize', handleViewportChange);
             // Sur iOS, innerWidth/innerHeight peuvent etre temporairement obsoletes au
             // moment exact de l'evenement 'orientationchange' (rotation en cours) -- un
             // leger delai garantit que ensurePanoTiles() mesure les bonnes dimensions.
-            window.addEventListener('orientationchange', () => setTimeout(renderMarkers, 150));
+            window.addEventListener('orientationchange', () => setTimeout(handleViewportChange, 150));
         }
 
         // Chargement de logements.js (source de verite du logement par defaut), avec repli

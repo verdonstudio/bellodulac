@@ -53,6 +53,49 @@
             urlDestination = destQuery ? `${baseUrl}?${destQuery}` : baseUrl;
         }
 
+        // Tracking GA4 avant redirection, sans jamais la retarder : display.html ne charge
+        // pas analytics.js (gtag.js n'aurait de toute facon pas le temps de se charger avant
+        // le window.location.replace ci-dessous). On envoie donc un hit "brut" via l'API
+        // Measurement Protocol de GA4 en sendBeacon (appel synchrone, non-bloquant, et dont
+        // le navigateur garantit l'envoi meme si la page se ferme juste apres).
+        (function () {
+            try {
+                const GA_MEASUREMENT_ID = "G-DNTYRENFNL"; // meme propriete GA4 que analytics.js
+                const GA_API_SECRET = "RcYgy0FvT8WMP66lBWjBaw";
+
+                // Reutilise le client_id existant (cookie _ga, pose par gtag.js sur les
+                // autres pages du site) pour rattacher ce hit au meme visiteur/session ;
+                // sinon on en genere un nouveau pour ce hit isole.
+                function getGaClientId() {
+                    const match = document.cookie.match(/(?:^|;\s*)_ga=([^;]+)/);
+                    if (match) {
+                        const parts = decodeURIComponent(match[1]).split('.');
+                        if (parts.length >= 4) return parts.slice(-2).join('.');
+                    }
+                    return (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '.' + Math.random().toString(36).slice(2));
+                }
+
+                const payload = {
+                    client_id: getGaClientId(),
+                    events: [{
+                        name: 'redirect_click',
+                        params: {
+                            reservation_code: numeroReservation,
+                            action: typeAction,
+                            destination_url: urlDestination,
+                            page_location: window.location.href,
+                            engagement_time_msec: '1'
+                        }
+                    }]
+                };
+
+                const beaconUrl = `https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=${GA_API_SECRET}`;
+                navigator.sendBeacon(beaconUrl, JSON.stringify(payload));
+            } catch (e) {
+                // Le tracking ne doit jamais empecher la redirection.
+            }
+        })();
+
         // On effectue la redirection dans tous les cas
         window.location.replace(urlDestination);
     </script>
