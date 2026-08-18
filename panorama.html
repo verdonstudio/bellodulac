@@ -72,8 +72,10 @@
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        /* Retraction du bandeau (portrait mobile uniquement) : libere de la hauteur pour
-           l'image et les toasters. Voir toggleTopbarCollapse()/applyTopbarCollapseState(). */
+        /* Retraction du bandeau (petits ecrans mobiles, portrait ET paysage) : libere de
+           la hauteur pour l'image et les toasters. Visibilite du bouton geree en JS (voir
+           applyTopbarCollapseState()) car elle depend des 2 dimensions de l'ecran, pas
+           seulement de l'orientation (un mobile en paysage est "petit" en hauteur). */
         .topbar.is-collapsed { transform: translateY(-100%); }
 
         #topbar-toggle {
@@ -84,9 +86,6 @@
             align-items: center; justify-content: center; font-size: 12px; line-height: 1;
             cursor: pointer; pointer-events: auto;
             backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-        }
-        @media (orientation: portrait) {
-            #topbar-toggle { display: flex; }
         }
 
         .filter-bar { 
@@ -277,13 +276,13 @@
             </div>
         </div>
         
-        <div class="max-w-6xl mx-auto px-3 pb-2">
+        <div id="filter-bar-wrapper" class="max-w-6xl mx-auto px-3 pb-2">
             <div id="filter-bar" class="filter-bar"></div>
         </div>
 
-        <!-- Poignee de retraction du bandeau (portrait mobile uniquement, voir CSS
-             #topbar-toggle) : accrochee au bas du bandeau, elle se retrouve donc pile en
-             haut de l'ecran une fois le bandeau retracte (translateY(-100%)). -->
+        <!-- Poignee de retraction du bandeau (petits ecrans mobiles, portrait et paysage,
+             voir CSS #topbar-toggle) : accrochee au bas du bandeau, elle se retrouve donc
+             pile en haut de l'ecran une fois le bandeau retracte (translateY(-100%)). -->
         <button id="topbar-toggle" type="button" onclick="toggleTopbarCollapse()" aria-label="Afficher/Masquer le menu" title="Afficher/Masquer le menu">
             <span id="topbar-toggle-icon">▴</span>
         </button>
@@ -458,12 +457,22 @@
             if (imgWidth > 0) ensureMarkerLayers(imgWidth);
         }
 
-        // -------- Retraction du bandeau (portrait mobile) --------
+        // -------- Petit ecran mobile (portrait OU paysage) --------
+        // Base sur la plus petite des 2 dimensions : un mobile en paysage est "petit" en
+        // hauteur (ex. iPhone ~390px) meme si sa largeur est grande, donc une detection
+        // par simple orientation ne suffit pas a couvrir les 2 cas.
+        function isCompactViewport() {
+            return Math.min(window.innerWidth, window.innerHeight) <= 600;
+        }
+
+        // -------- Retraction du bandeau (petits ecrans mobiles, portrait et paysage) --------
         function applyTopbarCollapseState() {
             const topbarEl = document.querySelector('.topbar');
             const icon = document.getElementById('topbar-toggle-icon');
+            const toggleBtn = document.getElementById('topbar-toggle');
             if (topbarEl) topbarEl.classList.toggle('is-collapsed', topbarCollapsed);
             if (icon) icon.textContent = topbarCollapsed ? '▾' : '▴';
+            if (toggleBtn) toggleBtn.style.display = isCompactViewport() ? 'flex' : 'none';
             // Le bandeau retracte/deploye change de hauteur reelle : il faut recalculer
             // headerSafeZoneMeasured et repositionner marqueurs/toasters en consequence.
             renderMarkers();
@@ -473,19 +482,18 @@
             topbarUserToggled = true;
             applyTopbarCollapseState();
         };
-        // Retraction automatique par defaut a l'ouverture en portrait (liberer un
+        // Retraction automatique par defaut a l'ouverture sur petit ecran (liberer un
         // maximum de hauteur des le depart, sans geste requis) ; respecte ensuite le
         // choix de l'utilisateur si il rouvre le bandeau manuellement.
         function initTopbarCollapse() {
-            if (window.innerHeight > window.innerWidth) topbarCollapsed = true;
+            if (isCompactViewport()) topbarCollapsed = true;
             applyTopbarCollapseState();
         }
-        // Si l'ecran repasse en paysage alors que le bandeau etait retracte, on le
-        // redeploie (la poignee est masquee en paysage, il faut donc que le bandeau
-        // reste accessible sans elle).
+        // Si l'ecran redevient grand alors que le bandeau etait retracte, on le redeploie
+        // (la poignee est masquee sur grand ecran, il faut donc que le bandeau reste
+        // accessible sans elle).
         function handleViewportChange() {
-            const isPortraitNow = window.innerHeight > window.innerWidth;
-            if (!isPortraitNow && topbarCollapsed) {
+            if (!isCompactViewport() && topbarCollapsed) {
                 topbarCollapsed = false;
                 applyTopbarCollapseState();
             } else {
@@ -741,19 +749,23 @@
             const isMobile = window.innerWidth <= 768;
             const viewportHeight = window.innerHeight;
 
-            // En portrait mobile, l'ecran est etroit ET peu haut par rapport aux tailles
-            // fixes des marqueurs/toasters (pensees pour desktop) : on reduit tout pour
-            // que les toasters restent dans l'ecran et que leurs boutons d'action
-            // restent visibles/cliquables (au lieu de deborder en bas/haut de l'ecran).
-            const isPortrait = window.innerHeight > window.innerWidth;
-            const bubbleScale = isPortrait ? 0.7 : 1;
-            const popupWidthPx = isPortrait ? 210 : 260;
-            const popupImgHeightPx = isPortrait ? 92 : 130;
-            const popupPlaceholderHeightPx = isPortrait ? 50 : 70;
+            // Petit ecran mobile (portrait OU paysage) : l'un des 2 axes est etroit par
+            // rapport aux tailles fixes des marqueurs/toasters (pensees pour desktop) --
+            // on reduit tout pour que les toasters restent dans l'ecran et que leurs
+            // boutons d'action restent visibles/cliquables, et on masque la barre de
+            // filtres par categorie pour simplifier l'ecran et liberer de la hauteur.
+            const isCompact = isCompactViewport();
+            const bubbleScale = isCompact ? 0.7 : 1;
+            const popupWidthPx = isCompact ? 210 : 260;
+            const popupImgHeightPx = isCompact ? 92 : 130;
+            const popupPlaceholderHeightPx = isCompact ? 50 : 70;
 
-            // Mesure reelle du bandeau du haut (titre + barre de filtres) au lieu d'une
-            // constante fixe : sur mobile la barre de filtres peut agrandir le header
-            // bien au-dela de 110px, ce qui faussait le calcul de place disponible.
+            const filterWrapper = document.getElementById('filter-bar-wrapper');
+            if (filterWrapper) filterWrapper.classList.toggle('hidden', isCompact);
+
+            // Mesure reelle du bandeau du haut (titre + barre de filtres, si visible) au
+            // lieu d'une constante fixe : sur mobile la barre de filtres peut agrandir le
+            // header bien au-dela de 110px, ce qui faussait le calcul de place disponible.
             const topbarEl = document.querySelector('.topbar');
             const headerSafeZoneMeasured = topbarEl ? (topbarEl.getBoundingClientRect().height + 14) : 110;
 
@@ -833,11 +845,11 @@
                     availableSpace = spaceBelow;
                 }
 
-                // Portrait uniquement : si ni au-dessus ni en-dessous il n'y a assez de
-                // place pour le toaster (meme apres le repli ci-dessus), on l'affiche a
-                // cote du point (gauche/droite) plutot que de le laisser deborder de
-                // l'ecran en haut ou en bas et cacher les boutons d'action.
-                if (isPortrait && Math.max(spaceAbove, spaceBelow) < (labelZ + popupMinFloor)) {
+                // Petit ecran (portrait ou paysage) : si ni au-dessus ni en-dessous il
+                // n'y a assez de place pour le toaster (meme apres le repli ci-dessus),
+                // on l'affiche a cote du point (gauche/droite) plutot que de le laisser
+                // deborder de l'ecran en haut ou en bas et cacher les boutons d'action.
+                if (isCompact && Math.max(spaceAbove, spaceBelow) < (labelZ + popupMinFloor)) {
                     isSide = true;
                     const verticalRoomForSide = viewportHeight - headerSafeZone - bottomSafeZone;
                     popupMaxHeight = Math.max(popupMinFloor, verticalRoomForSide);
