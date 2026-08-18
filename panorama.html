@@ -302,12 +302,14 @@
     <div id="pano-wrapper">
         <div id="pano-scroller">
             <div class="flex h-full pointer-events-none" id="pano-layer">
-                <img src="https://bellodulac.netlify.app/images/panorama360.jpg" id="img-ref" class="h-full w-auto max-w-none block" alt="Panorama">
-                <img src="https://bellodulac.netlify.app/images/panorama360.jpg" id="img-clone" class="h-full w-auto max-w-none block -ml-[1px]" alt="Panorama Clone">
+                <img src="https://bellodulac.netlify.app/images/panorama360.jpg" id="img-ref" class="h-full w-auto max-w-none block pano-tile" alt="Panorama">
             </div>
-            
-            <div id="markers-1" class="absolute top-0 left-0 h-full pointer-events-none"></div>
-            <div id="markers-2" class="absolute top-0 h-full pointer-events-none"></div>
+
+            <!-- Calques de marqueurs : generes dynamiquement (1 par copie de l'image),
+                 voir ensurePanoTiles()/ensureMarkerLayers() -- necessaire car le nombre
+                 de copies necessaires pour boucler sans trou varie avec l'orientation
+                 (l'image est dimensionnee en hauteur, donc tres etroite en paysage mobile). -->
+            <div id="markers-container" class="absolute top-0 left-0 h-full pointer-events-none"></div>
         </div>
     </div>
 
@@ -358,10 +360,68 @@
         let pointerDownX = 0, pointerDownY = 0, dragStartPanoX = 0, targetPanoPos = null;
         let lastDragX = 0, lastDragTime = 0, dragVelocity = 0;
 
-        const markers1 = document.getElementById('markers-1');
-        const markers2 = document.getElementById('markers-2');
+        const markersContainer = document.getElementById('markers-container');
+        const panoLayer = document.getElementById('pano-layer');
         const imgRef = document.getElementById('img-ref');
         const scroller = document.getElementById('pano-scroller');
+
+        // ==========================================
+        // 1bis. TUILES DE L'IMAGE PANORAMA (boucle infinie sans trou)
+        // ==========================================
+        // La boucle infinie fonctionne en juxtaposant des copies de l'image et en
+        // translatant le tout d'au plus une largeur d'image (voir animate()). Ca ne
+        // suffit que si une seule copie est deja plus large que l'ecran -- vrai sur PC
+        // et en portrait mobile, mais FAUX en paysage sur mobile : l'image est
+        // dimensionnee en hauteur (h-full), donc en paysage (ecran tres large mais peu
+        // haut) sa largeur rendue devient plus petite que la largeur d'ecran, et 2
+        // copies fixes laissent apparaitre du noir. On genere donc dynamiquement le
+        // nombre de copies necessaire (et autant de calques de marqueurs assortis).
+        let tileCount = 2;
+
+        function ensurePanoTiles() {
+            const imgWidth = imgRef.clientWidth;
+            if (imgWidth === 0) return 0;
+
+            const needed = Math.max(2, Math.ceil(window.innerWidth / imgWidth) + 1);
+            if (needed !== tileCount || panoLayer.children.length !== needed) {
+                tileCount = needed;
+                const currentSrc = imgRef.src;
+
+                while (panoLayer.children.length < tileCount) {
+                    const clone = document.createElement('img');
+                    clone.className = 'h-full w-auto max-w-none block pano-tile -ml-[1px]';
+                    clone.alt = 'Panorama';
+                    clone.src = currentSrc;
+                    panoLayer.appendChild(clone);
+                }
+                while (panoLayer.children.length > tileCount) {
+                    panoLayer.removeChild(panoLayer.lastElementChild);
+                }
+            }
+            return imgWidth;
+        }
+
+        function ensureMarkerLayers(imgWidth) {
+            while (markersContainer.children.length < tileCount) {
+                const layer = document.createElement('div');
+                layer.className = 'absolute top-0 h-full pointer-events-none markers-layer';
+                markersContainer.appendChild(layer);
+            }
+            while (markersContainer.children.length > tileCount) {
+                markersContainer.removeChild(markersContainer.lastElementChild);
+            }
+            Array.from(markersContainer.children).forEach((layer, i) => {
+                layer.style.width = imgWidth + 'px';
+                layer.style.left = (i * (imgWidth - 1)) + 'px'; // -1 par tuile : compense le -ml-[1px] des copies
+            });
+        }
+
+        // A appeler avant renderMarkers() partout ou la taille de l'ecran / de l'image
+        // peut avoir change (chargement initial, resize, rotation d'ecran).
+        function refreshPanoTiles() {
+            const imgWidth = ensurePanoTiles();
+            if (imgWidth > 0) ensureMarkerLayers(imgWidth);
+        }
 
         // ==========================================
         // 2. PRÉPARATION DES POIS
@@ -598,15 +658,14 @@
         };
 
         function renderMarkers() {
-            markers1.innerHTML = '';
-            markers2.innerHTML = '';
-            
+            refreshPanoTiles();
+
             const imgWidth = imgRef.clientWidth;
             if (imgWidth === 0) return;
 
-            markers1.style.width = imgWidth + 'px';
-            markers2.style.width = imgWidth + 'px';
-            markers2.style.left = (imgWidth - 1) + 'px';
+            const markerLayers = Array.from(markersContainer.children);
+            markerLayers.forEach(layer => { layer.innerHTML = ''; });
+            if (markerLayers.length === 0) return;
 
             const allActive = state.activeCats.has('__all__');
             const isMobile = window.innerWidth <= 768;
@@ -763,8 +822,7 @@
                     </div>
                 `;
 
-                markers1.insertAdjacentHTML('beforeend', markerHTML);
-                markers2.insertAdjacentHTML('beforeend', markerHTML);
+                markerLayers.forEach(layer => layer.insertAdjacentHTML('beforeend', markerHTML));
             });
 
             if (state.poiId && !state.hasCenteredPoi) {
@@ -1053,13 +1111,10 @@
 
         function toggleDayNight() {
             isNightMode = !isNightMode;
-            
+
             const newSrc = isNightMode ? 'https://bellodulac.netlify.app/images/panorama360_night.jpg' : 'https://bellodulac.netlify.app/images/panorama360.jpg';
-            document.getElementById('img-ref').src = newSrc;
-            
-            const cloneImg = document.getElementById('img-clone');
-            if(cloneImg) cloneImg.src = newSrc;
-            
+            Array.from(panoLayer.children).forEach(img => { img.src = newSrc; });
+
             const topbarEl = document.querySelector('.topbar');
             if (topbarEl) {
                 topbarEl.style.backgroundColor = isNightMode ? 'transparent' : 'rgba(14, 165, 233, 0.35)';
@@ -1132,6 +1187,10 @@
             }
 
             window.addEventListener('resize', renderMarkers);
+            // Sur iOS, innerWidth/innerHeight peuvent etre temporairement obsoletes au
+            // moment exact de l'evenement 'orientationchange' (rotation en cours) -- un
+            // leger delai garantit que ensurePanoTiles() mesure les bonnes dimensions.
+            window.addEventListener('orientationchange', () => setTimeout(renderMarkers, 150));
         }
 
         // Chargement de logements.js (source de verite du logement par defaut), avec repli
