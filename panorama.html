@@ -671,6 +671,16 @@
             const isMobile = window.innerWidth <= 768;
             const viewportHeight = window.innerHeight;
 
+            // En portrait mobile, l'ecran est etroit ET peu haut par rapport aux tailles
+            // fixes des marqueurs/toasters (pensees pour desktop) : on reduit tout pour
+            // que les toasters restent dans l'ecran et que leurs boutons d'action
+            // restent visibles/cliquables (au lieu de deborder en bas/haut de l'ecran).
+            const isPortrait = window.innerHeight > window.innerWidth;
+            const bubbleScale = isPortrait ? 0.7 : 1;
+            const popupWidthPx = isPortrait ? 210 : 260;
+            const popupImgHeightPx = isPortrait ? 92 : 130;
+            const popupPlaceholderHeightPx = isPortrait ? 50 : 70;
+
             // Mesure reelle du bandeau du haut (titre + barre de filtres) au lieu d'une
             // constante fixe : sur mobile la barre de filtres peut agrandir le header
             // bien au-dela de 110px, ce qui faussait le calcul de place disponible.
@@ -756,9 +766,12 @@
                     `;
                 } else if (poiHasCat(poi, 'logement')) {
                     let logoSrc = poi.id.includes('moustiers') ? 'https://bellodulac.netlify.app/images/bell-etoile-logo.png' : 'https://bellodulac.netlify.app/images/bellodulac-logo.png';
-                    bubbleHTML = `<img src="${logoSrc}" class="poi-dot absolute z-10 cursor-pointer poi-logo-bubble" style="left: -24px; top: -24px; transform: scale(${scaleVal});" alt="Logo"/>`;
+                    const logoSize = Math.round(48 * bubbleScale);
+                    bubbleHTML = `<img src="${logoSrc}" class="poi-dot absolute z-10 cursor-pointer poi-logo-bubble" style="width:${logoSize}px; height:${logoSize}px; left:${-logoSize / 2}px; top:${-logoSize / 2}px; transform: scale(${scaleVal});" alt="Logo"/>`;
                 } else {
-                    bubbleHTML = `<div class="poi-dot absolute w-7 h-7 flex items-center justify-center rounded-full border-[3px] border-white z-10 cursor-pointer text-[12px]" style="background: ${catInfo.color}; left: -14px; top: -14px; transform: scale(${scaleVal});">${catInfo.emoji}</div>`;
+                    const dotSize = Math.round(28 * bubbleScale);
+                    const dotFontSize = Math.round(12 * bubbleScale);
+                    bubbleHTML = `<div class="poi-dot absolute flex items-center justify-center rounded-full border-[3px] border-white z-10 cursor-pointer" style="width:${dotSize}px; height:${dotSize}px; font-size:${dotFontSize}px; background: ${catInfo.color}; left:${-dotSize / 2}px; top:${-dotSize / 2}px; transform: scale(${scaleVal});">${catInfo.emoji}</div>`;
                 }
 
                 const links = getPoiLinks(content, poi);
@@ -771,8 +784,8 @@
                     }).join('')
                     : `<span class="ov-popup__badge" style="background:${catInfo.color}">${catInfo.emoji} ${catLabel}</span>`;
                 const stars = poi.stars > 0 ? `<span class="ov-popup__stars">${'★'.repeat(poi.stars)}</span>` : '';
-                const placeholderHTML = `<div class="ov-popup__placeholder" style="background:${catInfo.color}22">${catInfo.emoji}</div>`;
-                const imgHTML = poi.img ? `<img class="ov-popup__img" src="${poi.img}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'ov-popup__placeholder\\' style=\\'background:${catInfo.color}22\\'></div>'" />` : placeholderHTML;
+                const placeholderHTML = `<div class="ov-popup__placeholder" style="background:${catInfo.color}22; height:${popupPlaceholderHeightPx}px;">${catInfo.emoji}</div>`;
+                const imgHTML = poi.img ? `<img class="ov-popup__img" src="${poi.img}" alt="" loading="lazy" style="height:${popupImgHeightPx}px;" onerror="this.outerHTML='<div class=\\'ov-popup__placeholder\\' style=\\'background:${catInfo.color}22;height:${popupPlaceholderHeightPx}px\\'></div>'" />` : placeholderHTML;
                 const traceLabel = state.lang === 'EN' ? 'Show the walking path' : 'Afficher le chemin';
                 const traceCoords = poi.trace ? (Array.isArray(poi.trace) ? poi.trace : poi.trace.coords) : null;
                 const traceLogements = (poi.trace && !Array.isArray(poi.trace)) ? poi.trace.logements : null;
@@ -789,13 +802,13 @@
                 const buttonRows = nbButtons > 0 ? Math.ceil(nbButtons / 2) : 0;
                 const badgeRows = Math.max(1, Math.ceil((poiCatDefs.length || 1) / 2));
                 const chromeHeight = 26 /* padding body */ + (badgeRows * 24 + 4) /* badge(s) */ + 44 /* titre 2 lignes */
-                    + (poi.img ? 130 : 0) /* image */
+                    + (poi.img ? popupImgHeightPx : 0) /* image */
                     + (buttonRows > 0 ? (buttonRows * 34 + 6) : 0); /* boutons */
                 const popupMinFloor = Math.min(chromeHeight + 20, viewportHeight - 40);
                 const popupMaxHeight = Math.max(popupMinFloor, availableSpace - labelZ);
 
                 const toasterHTML = `
-                    <div class="poi-toaster ov-popup ${dirClass}" style="--offset: calc(14px + ${labelZ}px); max-height: ${popupMaxHeight}px;">
+                    <div class="poi-toaster ov-popup ${dirClass}" style="--offset: calc(14px + ${labelZ}px); width: ${popupWidthPx}px; max-height: ${popupMaxHeight}px;">
                         ${imgHTML}
                         <div class="ov-popup__body">
                             <div class="flex items-center gap-1.5 shrink-0 mb-1.5 flex-wrap self-start">
