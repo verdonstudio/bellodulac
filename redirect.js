@@ -210,29 +210,15 @@ const reservations = {
         "martel": "index.html?lang=EN&logement=moustiers&edatestart=2026-10-16&edateend=2026-10-19&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
     },
     "default": {
-        "evenements": "evenements.html",
-        "map": "index.html",
-        "highlights": "highlights.html",
-        "panorama": "panorama.html",
+        "evenements": "evenements.html?lang=FR&showevents=today",
+        "map": "index.html?lang=FR",
+        "highlights": "highlights.html?lang=FR&showevents=today&showpois=today&from=evenements",
+        "panorama": "panorama.html?lang=FR",
         "parking" : "index.html?logement=moustiers&lang=FR&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
         "parking-en" : "index.html?logement=moustiers&lang=EN&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
         "plage-bellodulac1" : "index.html?lang=FR&logement=salles8&zoom=17&pos=43.77194%2C6.20816&fullscreen=1&trace=plage-salles",
         "plage-bellodulac2" : "index.html?lang=FR&logement=salles8&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
         "trash": "index.html?logement=moustiers&lang=FR&zoom=16&pos=43.84536%2C6.2203&cat=ordures&fullscreen=1",
         "trash-en": "index.html?logement=moustiers&lang=EN&zoom=16&pos=43.84536%2C6.2203&cat=ordures&fullscreen=1"    
-    },
-    // Tag generique "que faire aujourd'hui" : pas lie a une reservation precise, pas de
-    // dates ni de logement fixes -- showevents=today (evenements du jour calendaire) et
-    // showpois=today (recommandation POI du jour, qui tourne selon la famille de logement,
-    // voir DEFAULT_POI_ITINERARY dans highlights.html) se calculent tout seuls a l'ouverture.
-    // Pour cibler un logement precis, ajouter &logement=moustiers|salles6|salles8 sur le
-    // lien display.html?res=today&action=... lui-meme : display.html le transmet a la page
-    // de destination (voir le passthrough ajoute dans display.html).
-    "today": {
-        "evenements": "evenements.html?lang=FR&showevents=today",
-        "map": "index.html?lang=FR",
-        "highlights": "highlights.html?lang=FR&showevents=today&showpois=today&from=evenements",
-        "panorama": "panorama.html?lang=FR",
-        "parking": "index.html?lang=FR&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1"
     }
 };
