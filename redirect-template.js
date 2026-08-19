@@ -74,7 +74,7 @@ window.FLYER_TEMPLATES = {
     label: "English",
     rect: { x: 57, y: 327, width: 618, height: 620 }
   },
-  en: {
+  fr: {
     image: "assets/flyer-template-fr.png",
     label: "Français",
     rect: { x: 57, y: 327, width: 618, height: 620 }
