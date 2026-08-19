@@ -117,10 +117,26 @@
   const resCode = urlParams.get('res') || 'default';
   const reservationData = (typeof reservations !== 'undefined' && (reservations[resCode] || reservations['default'])) || {};
 
-  let lang = (urlParams.get('lang') || 'FR').toUpperCase();
+  // Si "lang"/"logement" ne sont pas precises sur l'URL de home.html elle-meme (lien
+  // raccourci, saisi a la main, etc.), on les retrouve dans les autres liens deja
+  // stockes pour cette reservation dans redirect.js, plutot que de supposer FR/un
+  // logement par defaut qui ne correspondrait pas forcement au bon voyageur.
+  function paramFromReservation(paramName) {
+    const candidates = ['home', 'map', 'evenements', 'highlights', 'panorama'];
+    for (const key of candidates) {
+      const url = reservationData[key];
+      if (!url) continue;
+      const qs = url.split('?')[1] || '';
+      const value = new URLSearchParams(qs).get(paramName);
+      if (value) return value;
+    }
+    return null;
+  }
+
+  let lang = (urlParams.get('lang') || paramFromReservation('lang') || 'FR').toUpperCase();
   if (lang !== 'FR' && lang !== 'EN') lang = 'FR';
 
-  const logementId = urlParams.get('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
+  const logementId = urlParams.get('logement') || paramFromReservation('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
   const listing = LOGEMENTS[logementId];
 
   const TILES = [
