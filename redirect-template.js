@@ -25,8 +25,8 @@
 // plage-bellodulac1/2, martel) sont des liens a usage unique vers un lieu ou
 // un ecran precis : elles sont utilisees telles quelles, sans enrichissement.
 window.REDIRECT_TEMPLATE = {
-  "evenements": "evenements.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}",
   "map": "index.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}&zoom=13&pos=43.82945%2C6.21921",
+  "evenements": "evenements.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}",
   "highlights": "highlights.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}&from=evenements",
   "panorama": "panorama.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}",
   "today": "highlights.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}&from=evenements&showevents=today&showpois=today",

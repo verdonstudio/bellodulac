@@ -2,8 +2,8 @@
 //display.html?res=default&action=evenements
 const reservations = {
     "HMAZKZK5XA": {
-        "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04",
         "map": "index.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04&zoom=13&pos=43.82945%2C6.21921",
+        "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04",
         "highlights": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04&from=evenements",
         "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04",
         "today": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04&from=evenements&showevents=today&showpois=today",
@@ -17,8 +17,8 @@ const reservations = {
         "martel": "index.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
     },
     "HM9FT3XCJQ": {
-        "evenements": "evenements.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13",
         "map": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&zoom=13&pos=43.82945%2C6.21921",
+        "evenements": "evenements.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13",
         "highlights": "highlights.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&from=evenements",
         "panorama": "panorama.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13",
         "today": "highlights.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&from=evenements&showevents=today&showpois=today",
