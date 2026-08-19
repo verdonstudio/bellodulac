@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Bienvenue — Bell'O du Lac™ & Bell'Étoile™</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Source des liens (map/evenements/highlights/panorama) pour la reservation en cours -->
+<script src="redirect.js"></script>
+<script src="logements.js"></script>
+
+<style>
+  :root {
+    --c-bg:        #fdfbf7;
+    --c-ink:       #1e293b;
+    --c-muted:     #64748b;
+    --c-primary:   #0284c7;
+    --c-border:    rgba(14, 165, 233, 0.1);
+    --c-card:      #ffffff;
+  }
+  body { font-family: 'Inter', sans-serif; margin: 0; background: var(--c-bg); color: var(--c-ink); }
+  .font-display { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+  .topbar {
+    background-color: rgba(253, 251, 247, 0.85);
+    -webkit-backdrop-filter: saturate(200%) blur(24px);
+    backdrop-filter: saturate(200%) blur(24px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    z-index: 50;
+  }
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 999px;
+    background: #f1f5f9; border: 1px solid rgba(0,0,0,0.05);
+    font-size: 12px; font-weight: 600; color: #334155;
+    transition: all 0.2s; text-decoration: none;
+  }
+  .btn-back:hover { background: #e2e8f0; color: #0f172a; }
+
+  .hero {
+    background: linear-gradient(180deg, #e0f2fe 0%, var(--c-bg) 100%);
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .tile-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .tile-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .tile-grid { grid-template-columns: 1fr; } }
+
+  .tile {
+    display: flex; flex-direction: column; gap: 10px;
+    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 20px;
+    padding: 22px 18px; text-decoration: none; color: inherit;
+    box-shadow: 0 4px 20px rgba(2,132,199,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .tile:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(2,132,199,0.14); }
+  .tile .tile-icon {
+    width: 52px; height: 52px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; background: #e0f2fe;
+  }
+  .tile .tile-title { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 17px; }
+  .tile .tile-desc { font-size: 13px; color: var(--c-muted); line-height: 1.4; flex: 1; }
+  .tile .tile-arrow { font-size: 13px; font-weight: 700; color: var(--c-primary); }
+
+  .tile.disabled { opacity: 0.45; pointer-events: none; }
+
+  .data-missing {
+    max-width: 640px; margin: 24px auto; background:#fef2f2; border:1px solid #fecaca; color:#991b1b;
+    padding:12px 16px; border-radius:12px; font-size:0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar fixed top-0 w-full">
+  <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+    <div class="flex items-center gap-2 min-w-0">
+      <img id="topbar-logo" src="" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+      <span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Bell'O du Lac & Bell'Étoile</span>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <a id="btn-selogers" href="logements.html" class="btn-back shadow-sm" style="text-decoration:none;">
+        🏡 <span id="btn-selogers-label">Se loger</span>
+      </a>
+      <select id="lang-select" class="text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat:no-repeat; background-position:right 8px center;">
+        <option value="FR">FR</option>
+        <option value="EN">EN</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<section class="hero pt-20 pb-10 px-4 text-center">
+  <h1 id="hero-title" class="font-display font-bold text-2xl sm:text-3xl text-[var(--c-ink)]">—</h1>
+  <p id="hero-subtitle" class="text-sm sm:text-base text-[var(--c-muted)] mt-2 max-w-lg mx-auto">—</p>
+</section>
+
+<main class="max-w-5xl mx-auto px-4 pb-16 -mt-4">
+  <div id="data-missing" class="data-missing" style="display:none;"></div>
+  <div class="tile-grid" id="tile-grid"><!-- rempli en JS --></div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  const LOGEMENTS = (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings) || {};
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // Meme logique de repli que display.html : sans "res" (ou reservation inconnue),
+  // on retombe sur l'entree "default" de redirect.js plutot que de ne rien afficher.
+  const resCode = urlParams.get('res') || 'default';
+  const reservationData = (typeof reservations !== 'undefined' && (reservations[resCode] || reservations['default'])) || {};
+
+  let lang = (urlParams.get('lang') || 'FR').toUpperCase();
+  if (lang !== 'FR' && lang !== 'EN') lang = 'FR';
+
+  const logementId = urlParams.get('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
+  const listing = LOGEMENTS[logementId];
+
+  const TILES = [
+    {
+      key: 'map',
+      icon: '🗺️',
+      title: { FR: 'Carte interactive', EN: 'Interactive map' },
+      desc: {
+        FR: 'Découvrez plus de 130 lieux à visiter autour du lac et des villages.',
+        EN: 'Discover more than 130 spots to visit around the lake and villages.'
+      }
+    },
+    {
+      key: 'evenements',
+      icon: '📅',
+      title: { FR: 'Évènements locaux', EN: 'Local events' },
+      desc: {
+        FR: 'Tous les évènements du coin, jour par jour, pendant votre séjour.',
+        EN: 'All local events, day by day, during your stay.'
+      }
+    },
+    {
+      key: 'highlights',
+      icon: '✨',
+      title: { FR: 'Votre programme', EN: 'Your selection' },
+      desc: {
+        FR: 'Une sélection d’évènements et de lieux rien que pour vous.',
+        EN: 'A selection of events and spots picked just for you.'
+      }
+    },
+    {
+      key: 'panorama',
+      icon: '🌄',
+      title: { FR: 'Panorama 360°', EN: '360° panorama' },
+      desc: {
+        FR: 'Repérez les logements et les environs en vue à 360°, et bien plus à découvrir…',
+        EN: 'Spot the homes and surroundings in 360° view, and much more to discover…'
+      }
+    }
+  ];
+
+  const I18N = {
+    heroTitle: { FR: 'Bienvenue !', EN: 'Welcome!' },
+    heroSubtitle: {
+      FR: 'Planifiez vos activités pendant votre séjour.',
+      EN: 'Plan your activities during your stay.'
+    },
+    seLoger: { FR: 'Se loger', EN: 'Book a stay' },
+    missing: {
+      FR: '⚠️ redirect.js n’a pas pu être chargé, ou cette réservation est introuvable — les liens ci-dessous peuvent être incomplets.',
+      EN: '⚠️ redirect.js could not be loaded, or this reservation was not found — the links below may be incomplete.'
+    }
+  };
+
+  document.documentElement.lang = lang.toLowerCase();
+  document.getElementById('btn-selogers-label').textContent = I18N.seLoger[lang];
+  document.getElementById('hero-title').textContent = I18N.heroTitle[lang];
+  document.getElementById('hero-subtitle').textContent = I18N.heroSubtitle[lang];
+  document.getElementById('lang-select').value = lang;
+
+  if (listing) {
+    document.getElementById('label-title').textContent = listing.brand ? (listing.brand[lang] || listing.brand.FR) : listing.id;
+    const logoEl = document.getElementById('topbar-logo');
+    if (listing.logo) { logoEl.src = listing.logo; logoEl.classList.remove('hidden'); }
+  }
+
+  if (!reservationData || !Object.keys(reservationData).length) {
+    const missingEl = document.getElementById('data-missing');
+    missingEl.textContent = I18N.missing[lang];
+    missingEl.style.display = 'block';
+  }
+
+  const grid = document.getElementById('tile-grid');
+  TILES.forEach(t => {
+    const href = reservationData[t.key];
+    const a = document.createElement('a');
+    a.className = 'tile' + (href ? '' : ' disabled');
+    a.href = href || '#';
+    a.innerHTML = `
+      <div class="tile-icon">${t.icon}</div>
+      <div class="tile-title">${t.title[lang]}</div>
+      <div class="tile-desc">${t.desc[lang]}</div>
+      <div class="tile-arrow">${lang === 'FR' ? 'Ouvrir →' : 'Open →'}</div>
+    `;
+    grid.appendChild(a);
+  });
+
+  document.getElementById('lang-select').addEventListener('change', (e) => {
+    const p = new URLSearchParams(window.location.search);
+    p.set('lang', e.target.value);
+    window.location.search = p.toString();
+  });
+})();
+</script>
+</body>
+</html>

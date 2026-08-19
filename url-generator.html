@@ -267,6 +267,12 @@
     </div>
 
     <div class="card">
+      <h2>🖼️ Flyer d'accueil (QR incrusté)</h2>
+      <p class="sub" style="margin-bottom:10px;">Le QR code du lien « Accueil » est incrusté automatiquement dans l'emplacement prévu sur le visuel. Télécharge l'image et envoie-la telle quelle avec ton message de bienvenue.</p>
+      <div id="flyer-grid" class="qr-grid" style="grid-template-columns:repeat(2, 1fr);"><!-- rempli en JS a partir de FLYER_TEMPLATES --></div>
+    </div>
+
+    <div class="card">
       <h2>📋 Bloc à coller dans redirect.js</h2>
       <p class="sub" style="margin-bottom:10px;">Ouvre <code>redirect.js</code>, colle ce bloc juste avant la ligne <code>"default": {</code>, puis vérifie la virgule de fin.</p>
       <textarea id="redirect-snippet" readonly></textarea>
@@ -287,6 +293,7 @@
   const LOGEMENTS = (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings) || {};
   const REDIRECT_TEMPLATE = window.REDIRECT_TEMPLATE || {};
   const REDIRECT_TEMPLATE_LABELS = window.REDIRECT_TEMPLATE_LABELS || {};
+  const FLYER_TEMPLATES = window.FLYER_TEMPLATES || {};
 
   // Ces 4 actions correspondent aux sections 2/3/4 du formulaire (évènements cochés,
   // visites POI manuelles, bouton retour, zoom/position carte) : leur URL de base vient
@@ -478,7 +485,10 @@
     updateQrLogoLabel();
     // Si des QR codes sont deja affiches, on les regenere avec le logo du nouveau
     // logement sans obliger a recliquer sur "Generer les liens".
-    if (lastGeneratedUrls) renderQrCodes(lastGeneratedUrls);
+    if (lastGeneratedUrls) {
+      renderQrCodes(lastGeneratedUrls);
+      renderFlyers(lastGeneratedUrls.home);
+    }
   }
   logementSelect.addEventListener('change', applyLogementDefaults);
   applyLogementDefaults();
@@ -566,6 +576,7 @@
 
     lastGeneratedUrls = shareableUrls;
     renderQrCodes(lastGeneratedUrls);
+    renderFlyers(lastGeneratedUrls.home);
 
     const snippetKey = code || 'CODE_A_REMPLACER';
     const snippetLines = Object.entries(snippetUrls)
@@ -636,18 +647,21 @@ ${snippetLines}
   // correction d'erreur du niveau H utilise ci-dessous pour tous les QR codes.
   // (Verifie par decodage reel via jsQR sur des URLs courtes et longues : ~8.5% de la
   // surface totale masquee, largement sous la marge de recuperation du niveau H.)
-  function drawLogoOnCanvas(canvas, logoUrl) {
+  // "rect" optionnel : zone du canvas occupee par le QR code (par defaut, tout le
+  // canvas) — utilise pour le flyer, ou le QR n'occupe qu'un rectangle du visuel.
+  function drawLogoOnCanvas(canvas, logoUrl, rect) {
+    const r = rect || { x: 0, y: 0, width: canvas.width, height: canvas.height };
     return new Promise((resolve) => {
       const img = new Image();
       img.crossOrigin = 'anonymous'; // necessaire pour pouvoir relire le canvas ensuite (toDataURL)
       img.onload = () => {
         const ctx = canvas.getContext('2d');
-        const size = canvas.width;
+        const size = Math.min(r.width, r.height);
         const logoBoxSize = Math.round(size * 0.22);
         const pad = Math.round(logoBoxSize * 0.16);
         const outerSize = logoBoxSize + pad * 2; // diametre du disque de fond
-        const centerX = size / 2;
-        const centerY = size / 2;
+        const centerX = r.x + r.width / 2;
+        const centerY = r.y + r.height / 2;
         const radius = outerSize / 2;
 
         // Disque blanc de fond, pour detacher le logo des modules du QR autour.
@@ -760,8 +774,115 @@ ${snippetLines}
   }
 
   document.getElementById('qr-logo-toggle').addEventListener('change', () => {
-    if (lastGeneratedUrls) renderQrCodes(lastGeneratedUrls);
+    if (lastGeneratedUrls) {
+      renderQrCodes(lastGeneratedUrls);
+      renderFlyers(lastGeneratedUrls.home);
+    }
   });
+
+  // -------- Flyer d'accueil (visuel avec le QR "home" incruste dans l'emplacement prevu) --------
+
+  const imageCache = {};
+  function loadImageCached(url) {
+    if (!imageCache[url]) {
+      imageCache[url] = new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = url;
+      });
+    }
+    return imageCache[url];
+  }
+
+  // Dessine le QR (fond blanc + modules) directement dans un rectangle du canvas du
+  // flyer, mis a l'echelle pour remplir exactement ce rectangle (memes modules que
+  // drawQrToCanvas, mais rendus a la taille du rectangle plutot que sur un canvas dedie).
+  function drawQrIntoRect(ctx, qr, rect, marginModules) {
+    const moduleCount = qr.getModuleCount();
+    const cellSize = rect.width / (moduleCount + marginModules * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+    ctx.fillStyle = '#000000';
+    for (let row = 0; row < moduleCount; row++) {
+      for (let col = 0; col < moduleCount; col++) {
+        if (qr.isDark(row, col)) {
+          ctx.fillRect(
+            rect.x + (col + marginModules) * cellSize,
+            rect.y + (row + marginModules) * cellSize,
+            cellSize, cellSize
+          );
+        }
+      }
+    }
+  }
+
+  async function renderFlyers(homeUrl) {
+    const grid = document.getElementById('flyer-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const langs = Object.keys(FLYER_TEMPLATES);
+    if (!langs.length) {
+      grid.innerHTML = '<p class="qr-hint">Aucun visuel de flyer configuré pour le moment (voir <code>FLYER_TEMPLATES</code> dans redirect-template.js).</p>';
+      return;
+    }
+    if (!homeUrl || typeof qrcode !== 'function') return;
+
+    const includeLogo = document.getElementById('qr-logo-toggle').checked;
+    const logoUrl = includeLogo ? currentLogoUrl() : '';
+    const code = document.getElementById('f-code').value.trim();
+    const filenameSuffix = code ? ('_' + code) : '';
+
+    await Promise.all(langs.map(async (langKey) => {
+      const cfg = FLYER_TEMPLATES[langKey];
+      const item = document.createElement('div');
+      item.className = 'qr-item';
+      item.innerHTML = `<div class="qr-label">${cfg.label || langKey}</div><div class="qr-hint">Génération…</div>`;
+      grid.appendChild(item);
+
+      try {
+        const templateImg = await loadImageCached(cfg.image);
+        const canvas = document.createElement('canvas');
+        canvas.width = templateImg.naturalWidth;
+        canvas.height = templateImg.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(templateImg, 0, 0);
+
+        const qr = qrcode(0, 'H');
+        qr.addData(homeUrl);
+        qr.make();
+        drawQrIntoRect(ctx, qr, cfg.rect, 2);
+
+        if (logoUrl) {
+          try {
+            await drawLogoOnCanvas(canvas, logoUrl, cfg.rect);
+          } catch (e) {
+            console.warn('Logo non incruste sur le flyer', langKey, e);
+          }
+        }
+
+        let dataUrl;
+        try {
+          dataUrl = canvas.toDataURL('image/png');
+        } catch (e) {
+          // Canvas tainte (image du flyer non accessible en cross-origin, ou logo) :
+          // on ne peut pas produire de PNG telechargeable dans ce cas.
+          console.warn('Flyer non genere (canvas tainté)', langKey, e);
+          item.innerHTML = `<div class="qr-label">${cfg.label || langKey}</div><div class="qr-hint">⚠️ Image non accessible (CORS) — impossible de générer ce flyer.</div>`;
+          return;
+        }
+
+        item.innerHTML = `
+          <div class="qr-label">${cfg.label || langKey}</div>
+          <a class="qr-dl" id="flyer-link-${langKey}" download="flyer_${langKey}${filenameSuffix}.png"><img src="${dataUrl}" alt="Flyer ${cfg.label || langKey}" style="max-width:100%;"></a>`;
+      } catch (err) {
+        console.warn('Flyer non genere pour', langKey, err);
+        item.innerHTML = `<div class="qr-label">${cfg.label || langKey}</div><div class="qr-hint">⚠️ Visuel introuvable (${cfg.image}).</div>`;
+      }
+    }));
+  }
 
   document.getElementById('generate-btn').addEventListener('click', generate);
 

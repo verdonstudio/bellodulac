@@ -25,6 +25,7 @@
 // plage-bellodulac1/2, martel) sont des liens a usage unique vers un lieu ou
 // un ecran precis : elles sont utilisees telles quelles, sans enrichissement.
 window.REDIRECT_TEMPLATE = {
+  "home": "home.html?res={{reservation}}&lang={{lang}}&logement={{logement}}",
   "map": "index.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}&zoom=13&pos=43.82945%2C6.21921",
   "evenements": "evenements.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}",
   "highlights": "highlights.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}&from=evenements&showevents=3stars&showpois=true",
@@ -43,6 +44,7 @@ window.REDIRECT_TEMPLATE = {
 // Libelles affiches dans le generateur pour chaque action (fallback automatique
 // sur le nom de la cle si une nouvelle action est ajoutee sans libelle ici).
 window.REDIRECT_TEMPLATE_LABELS = {
+  "home": "Accueil (résumé des 4 liens)",
   "evenements": "Évènements",
   "map": "Carte",
   "highlights": "Programme",
@@ -56,4 +58,25 @@ window.REDIRECT_TEMPLATE_LABELS = {
   "plage-bellodulac1": "Plage Bell'O du Lac 1",
   "plage-bellodulac2": "Plage Bell'O du Lac 2",
   "martel": "Sentier Blanc-Martel"
+};
+
+// Support "flyer" a coller sur le mot de bienvenue : le QR code de l'action "home"
+// est incruste automatiquement dans l'emplacement blanc prevu sur ce visuel, pour
+// n'avoir plus qu'un seul PNG a telecharger par langue (voir url-generator.html,
+// section "Flyer d'accueil"). "rect" = zone interieure au cadre blanc du visuel,
+// en pixels reels du fichier image (mesuree une fois, ne bouge pas tant que le
+// visuel n'est pas remplace).
+// Pour ajouter la version FR : deposer l'image dans assets/flyer-template-fr.png
+// et ajouter une entree "fr" ci-dessous (memes cles que "en").
+window.FLYER_TEMPLATES = {
+  en: {
+    image: "assets/flyer-template-en.png",
+    label: "English",
+    rect: { x: 57, y: 327, width: 618, height: 620 }
+  },
+  en: {
+    image: "assets/flyer-template-fr.png",
+    label: "Français",
+    rect: { x: 57, y: 327, width: 618, height: 620 }
+  }
 };
