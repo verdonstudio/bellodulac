@@ -11,6 +11,12 @@
      toujours à jour sans rien dupliquer. -->
 <script src="evenements.js"></script>
 <script src="pois.js"></script>
+<script src="logements.js"></script>
+<!-- Modele des actions (bloc a coller + QR codes) : source unique partagee entre les
+     liens directs, les QR codes et le bloc redirect.js, voir redirect-template.js -->
+<script src="redirect-template.js"></script>
+<!-- Generation de QR codes 100% cote client (aucune donnee envoyee a un service tiers) -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 
 <style>
   :root{
@@ -111,6 +117,15 @@
     white-space:pre; color:#1f2937;
   }
 
+  .qr-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:14px;}
+  @media (max-width:640px){ .qr-grid{grid-template-columns:repeat(2, 1fr);} }
+  .qr-item{text-align:center;}
+  .qr-item .qr-label{font-size:0.8rem; font-weight:600; margin-bottom:6px; color:#374151;}
+  .qr-item a.qr-dl{display:inline-block; border:1px solid var(--border); border-radius:8px; padding:6px; background:#fff; text-decoration:none;}
+  .qr-item a.qr-dl:hover{border-color:var(--accent);}
+  .qr-item a.qr-dl img{display:block; width:100%; max-width:120px; height:auto; image-rendering:pixelated;}
+  .qr-item .qr-hint{font-size:0.72rem; color:var(--muted); margin-top:4px;}
+
   #generate-btn{width:100%; padding:12px; font-size:0.95rem; margin-top:6px;}
   #output-section{display:none;}
   .footer-note{font-size:0.78rem; color:var(--muted); margin-top:26px; text-align:center;}
@@ -123,10 +138,13 @@
 <body>
 <div class="wrap">
   <h1>Générateur de liens réservation</h1>
-  <p class="sub">Remplis les champs ci-dessous pour générer les 4 liens d'une réservation (évènements, carte, programme, panorama 360°) et le bloc prêt à coller dans <code>redirect.js</code>. Voir le <a href="README.md" target="_blank">README</a> pour le détail de chaque paramètre.</p>
+  <p class="sub">Remplis les champs ci-dessous pour générer tous les liens d'une réservation (évènements, carte, programme, panorama 360°, parking, poubelles…), leurs QR codes et le bloc prêt à coller dans <code>redirect.js</code>. La liste des liens vient de <code>redirect-template.js</code>. Voir le <a href="README.md" target="_blank">README</a> pour le détail de chaque paramètre.</p>
 
   <div id="data-missing" class="data-missing" style="display:none;">
     ⚠️ <strong>evenements.js</strong> et/ou <strong>pois.js</strong> n'ont pas pu être chargés. Ouvre cette page depuis le dossier du site (pas en double-clic isolé) ou lance-la via un petit serveur local pour que la liste des évènements et des POIs s'affiche.
+  </div>
+  <div id="template-missing" class="data-missing" style="display:none;">
+    ⚠️ <strong>redirect-template.js</strong> n'a pas pu être chargé — les liens, QR codes et le bloc à coller ne peuvent pas être générés.
   </div>
 
   <!-- 1. Réservation & logement -->
@@ -223,7 +241,7 @@
       </div>
       <div class="field">
         <label for="f-domain">Domaine pour les liens partageables <span class="hint">(laisser tel quel sauf changement d'hébergement)</span></label>
-        <input type="text" id="f-domain" value="https://bellodulac.netlify.app/">
+        <input type="text" id="f-domain" value="https://bellodulac.vercel.app/">
       </div>
     </details>
   </div>
@@ -234,22 +252,18 @@
   <div id="output-section">
     <div class="card">
       <h2>🔗 Liens directs</h2>
-      <div class="output-row">
-        <div class="label-line"><span>Évènements (evenements.html)</span></div>
-        <div class="url-line"><input type="text" id="out-evenements" readonly><button class="btn copy small" data-copy="out-evenements">Copier</button><a class="open" id="open-evenements" href="#" target="_blank">Ouvrir ↗</a></div>
-      </div>
-      <div class="output-row">
-        <div class="label-line"><span>Carte (index.html)</span></div>
-        <div class="url-line"><input type="text" id="out-map" readonly><button class="btn copy small" data-copy="out-map">Copier</button><a class="open" id="open-map" href="#" target="_blank">Ouvrir ↗</a></div>
-      </div>
-      <div class="output-row">
-        <div class="label-line"><span>Programme (highlights.html)</span></div>
-        <div class="url-line"><input type="text" id="out-highlights" readonly><button class="btn copy small" data-copy="out-highlights">Copier</button><a class="open" id="open-highlights" href="#" target="_blank">Ouvrir ↗</a></div>
-      </div>
-      <div class="output-row">
-        <div class="label-line"><span>Panorama 360° (panorama.html)</span></div>
-        <div class="url-line"><input type="text" id="out-panorama" readonly><button class="btn copy small" data-copy="out-panorama">Copier</button><a class="open" id="open-panorama" href="#" target="_blank">Ouvrir ↗</a></div>
-      </div>
+      <div id="output-links-list"><!-- rempli en JS a partir de redirect-template.js --></div>
+    </div>
+
+    <div class="card">
+      <h2>📱 QR codes</h2>
+      <p class="sub" style="margin-bottom:10px;">Un QR code par lien direct ci-dessus (générés localement dans le navigateur, aucune donnée envoyée à un service externe). Clique sur un QR code pour le télécharger en PNG.</p>
+      <label class="checkbox-row">
+        <input type="checkbox" id="qr-logo-toggle" checked>
+        <span class="lbl">Incruster le logo du logement (<span id="qr-logo-listing-name">—</span>) au centre du QR code</span>
+      </label>
+      <div class="qr-grid" id="qr-grid"><!-- rempli en JS a partir de redirect-template.js --></div>
+      <p class="qr-hint" id="qr-missing" style="display:none;">⚠️ La librairie de génération de QR codes n'a pas pu être chargée (hors-ligne ?) — les liens ci-dessus restent utilisables normalement.</p>
     </div>
 
     <div class="card">
@@ -270,10 +284,76 @@
   const EVENTS = (window.EVENTS_DATA && window.EVENTS_DATA.events) || [];
   const CATEGORIES = (window.EVENTS_DATA && window.EVENTS_DATA.categories) || [];
   const POIS = window.POIS || [];
+  const LOGEMENTS = (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings) || {};
+  const REDIRECT_TEMPLATE = window.REDIRECT_TEMPLATE || {};
+  const REDIRECT_TEMPLATE_LABELS = window.REDIRECT_TEMPLATE_LABELS || {};
+
+  // Ces 4 actions correspondent aux sections 2/3/4 du formulaire (évènements cochés,
+  // visites POI manuelles, bouton retour, zoom/position carte) : leur URL de base vient
+  // du gabarit, mais le formulaire vient ensuite compléter/écraser certains paramètres.
+  // Toutes les autres actions du gabarit sont des liens à usage unique (parking, plage,
+  // POI précis...) et sont utilisées telles quelles, sans enrichissement.
+  const RICH_ACTIONS = ['evenements', 'map', 'highlights', 'panorama'];
 
   if (!EVENTS.length || !POIS.length) {
     document.getElementById('data-missing').style.display = 'block';
   }
+  if (!Object.keys(REDIRECT_TEMPLATE).length) {
+    document.getElementById('template-missing').style.display = 'block';
+  }
+
+  function labelForAction(key) {
+    if (REDIRECT_TEMPLATE_LABELS[key]) return REDIRECT_TEMPLATE_LABELS[key];
+    return key.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  // Remplace {{nom}} par vars.nom dans le gabarit. Delimiteur choisi (plutot que
+  // %nom%) car plusieurs URLs contiennent deja du percent-encoding en dur (ex. %2C
+  // pour une virgule) : {{...}} ne peut jamais entrer en collision avec ca.
+  function fillTemplate(tpl, vars) {
+    return tpl.replace(/\{\{(\w+)\}\}/g, (match, name) => (vars[name] != null ? String(vars[name]) : ''));
+  }
+
+  function isAbsoluteUrl(u) {
+    return /^https?:\/\//i.test(u);
+  }
+
+  // Ajoute/ecrase des parametres sur une URL relative ou absolue deja construite
+  // (le gabarit peut deja contenir sa propre query string), sans toucher aux
+  // parametres non concernes ni a leur ordre.
+  function mergeParamsIntoUrl(url, extraParams) {
+    const [base, query] = url.split('?');
+    const p = new URLSearchParams(query || '');
+    Object.entries(extraParams).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== '') p.set(k, v);
+    });
+    const qs = p.toString();
+    return qs ? `${base}?${qs}` : base;
+  }
+
+  // -------- Logo du logement selectionne (pour l'incrustation sur les QR codes) --------
+  function currentLogoUrl() {
+    const listing = LOGEMENTS[logementSelect.value];
+    const raw = (listing && listing.logo) || '';
+    if (!raw) return '';
+    // Le logo est heberge sur bellodulac.netlify.app, qui n'envoie pas d'en-tete CORS
+    // (Access-Control-Allow-Origin) : sans ca, le navigateur "tainte" le canvas des qu'on
+    // y dessine cette image, et toDataURL() (necessaire pour produire un PNG telechargeable
+    // avec le logo incruste) est alors bloque silencieusement -- le logo disparaissait donc
+    // du QR final. On passe par images.weserv.nl, un proxy d'images public qui ajoute
+    // systematiquement "Access-Control-Allow-Origin: *" sur tout ce qu'il sert, precisement
+    // concu pour ce cas d'usage (dessin sur canvas cross-origin).
+    const withoutScheme = raw.replace(/^https?:\/\//, '');
+    return 'https://images.weserv.nl/?url=' + encodeURIComponent(withoutScheme);
+  }
+  function updateQrLogoLabel() {
+    const listing = LOGEMENTS[logementSelect.value];
+    const nameEl = document.getElementById('qr-logo-listing-name');
+    if (nameEl) nameEl.textContent = listing ? (listing.brand ? (listing.brand.FR || listing.brand.EN) : listing.id) : '—';
+  }
+  // Derniers liens generes (pour pouvoir regenerer les QR codes sans re-cliquer sur
+  // "Generer les liens" quand on change de logement ou qu'on coche/decoche le logo).
+  let lastGeneratedUrls = null;
 
   const LOGEMENT_DEFAULTS = {
     moustiers: { zoom: '13', pos: '43.82945,6.21921' },
@@ -395,6 +475,10 @@
     const d = LOGEMENT_DEFAULTS[logementSelect.value] || LOGEMENT_DEFAULTS.salles6;
     zoomInput.value = d.zoom;
     posInput.value = d.pos;
+    updateQrLogoLabel();
+    // Si des QR codes sont deja affiches, on les regenere avec le logo du nouveau
+    // logement sans obliger a recliquer sur "Generer les liens".
+    if (lastGeneratedUrls) renderQrCodes(lastGeneratedUrls);
   }
   logementSelect.addEventListener('change', applyLogementDefaults);
   applyLogementDefaults();
@@ -440,41 +524,244 @@
       return poiId && date ? `${encodeURIComponent(poiId)}:${date}` : null;
     }).filter(Boolean);
 
-    const baseParams = { lang, logement, edatestart, edateend };
+    const vars = {
+      reservation: code || 'CODE_A_REMPLACER',
+      lang: lang,
+      logement: logement,
+      startdate: edatestart,
+      enddate: edateend
+    };
 
-    const evenementsPath = buildPageUrl('evenements', baseParams);
-    const mapPath = buildPageUrl('index', Object.assign({}, baseParams, { zoom, pos }));
-    const panoramaPath = buildPageUrl('panorama', baseParams);
-    const highlightsPath = buildPageUrl('highlights', Object.assign({}, baseParams, {
-      ids: ids.length ? encList(ids) : '',
-      visits: visits.length ? visits.join(',') : '',
-      from: from,
-      showevents: showevents,
-      showpois: showpois
-    }));
+    // Parametres "riches" issus des sections 2/3/4 du formulaire, appliques
+    // uniquement aux actions historiquement construites a partir d'elles.
+    const richExtras = {
+      evenements: {},
+      map: { zoom: zoom, pos: pos },
+      highlights: {
+        ids: ids.length ? encList(ids) : '',
+        visits: visits.length ? visits.join(',') : '',
+        from: from,
+        showevents: showevents,
+        showpois: showpois
+      },
+      panorama: {}
+    };
 
-    document.getElementById('out-evenements').value = domain + evenementsPath;
-    document.getElementById('out-map').value = domain + mapPath;
-    document.getElementById('out-highlights').value = domain + highlightsPath;
-    document.getElementById('out-panorama').value = domain + panoramaPath;
+    // snippetUrls : valeur exacte a stocker dans redirect.js (relative ou absolue,
+    // telle que produite par le gabarit — jamais prefixee par le domaine).
+    // shareableUrls : URL complete utilisable telle quelle (liens directs + QR codes).
+    const snippetUrls = {};
+    const shareableUrls = {};
 
-    ['evenements', 'map', 'highlights', 'panorama'].forEach(key => {
-      document.getElementById('open-' + key).href = document.getElementById('out-' + key).value;
+    Object.entries(REDIRECT_TEMPLATE).forEach(([key, tpl]) => {
+      let url = fillTemplate(tpl, vars);
+      if (RICH_ACTIONS.includes(key)) {
+        url = mergeParamsIntoUrl(url, richExtras[key]);
+      }
+      snippetUrls[key] = url;
+      shareableUrls[key] = isAbsoluteUrl(url) ? url : (domain + url);
     });
 
+    renderOutputLinks(shareableUrls);
+
+    lastGeneratedUrls = shareableUrls;
+    renderQrCodes(lastGeneratedUrls);
+
     const snippetKey = code || 'CODE_A_REMPLACER';
+    const snippetLines = Object.entries(snippetUrls)
+      .map(([key, url]) => `        "${key}": "${url}"`)
+      .join(',\n');
     const snippet =
 `    "${snippetKey}": {
-        "evenements": "${evenementsPath}",
-        "map": "${mapPath}",
-        "highlights": "${highlightsPath}",
-        "panorama": "${panoramaPath}"
+${snippetLines}
     },`;
     document.getElementById('redirect-snippet').value = snippet;
 
     document.getElementById('output-section').style.display = 'block';
     document.getElementById('output-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+
+  // -------- Liens directs (dynamique, une ligne par action du gabarit) --------
+  function renderOutputLinks(urls) {
+    const container = document.getElementById('output-links-list');
+    container.innerHTML = '';
+    Object.entries(urls).forEach(([key, url]) => {
+      const row = document.createElement('div');
+      row.className = 'output-row';
+      row.innerHTML = `
+        <div class="label-line"><span>${labelForAction(key)}</span></div>
+        <div class="url-line">
+          <input type="text" id="out-${key}" readonly value="${url.replace(/"/g, '&quot;')}">
+          <button class="btn copy small" data-copy="out-${key}">Copier</button>
+          <a class="open" id="open-${key}" href="${url.replace(/"/g, '&quot;')}" target="_blank">Ouvrir ↗</a>
+        </div>`;
+      container.appendChild(row);
+    });
+  }
+
+  // -------- QR codes (generation 100% locale via qrcode-generator, aucun appel reseau) --------
+
+  // Dessine le QR code module par module sur un <canvas> neuf (jamais "tainte" : on ne
+  // fait que remplir des rectangles unis, aucune image externe n'entre en jeu ici).
+  function drawQrToCanvas(qr, cellSize, marginModules) {
+    const moduleCount = qr.getModuleCount();
+    const size = (moduleCount + marginModules * 2) * cellSize;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#000000';
+    for (let row = 0; row < moduleCount; row++) {
+      for (let col = 0; col < moduleCount; col++) {
+        if (qr.isDark(row, col)) {
+          ctx.fillRect((col + marginModules) * cellSize, (row + marginModules) * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+    return canvas;
+  }
+
+  function cloneCanvas(source) {
+    const c = document.createElement('canvas');
+    c.width = source.width;
+    c.height = source.height;
+    c.getContext('2d').drawImage(source, 0, 0);
+    return c;
+  }
+
+  // Incruste le logo au centre, sur un disque blanc, proportions du logo preservees.
+  // ~22% de la surface du QR : marge de securite confortable sous les ~30% de
+  // correction d'erreur du niveau H utilise ci-dessous pour tous les QR codes.
+  // (Verifie par decodage reel via jsQR sur des URLs courtes et longues : ~8.5% de la
+  // surface totale masquee, largement sous la marge de recuperation du niveau H.)
+  function drawLogoOnCanvas(canvas, logoUrl) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous'; // necessaire pour pouvoir relire le canvas ensuite (toDataURL)
+      img.onload = () => {
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width;
+        const logoBoxSize = Math.round(size * 0.22);
+        const pad = Math.round(logoBoxSize * 0.16);
+        const outerSize = logoBoxSize + pad * 2; // diametre du disque de fond
+        const centerX = size / 2;
+        const centerY = size / 2;
+        const radius = outerSize / 2;
+
+        // Disque blanc de fond, pour detacher le logo des modules du QR autour.
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // On dessine le logo redimensionne pour tenir dans le carre inscrit dans ce
+        // disque (cote = diametre / racine(2)) : meme si le logo est un carre plein
+        // sans transparence, ses coins restent a l'interieur du disque blanc, sans
+        // deborder sur les modules noirs du QR autour.
+        const inscribedSide = outerSize / Math.SQRT2;
+        const ratio = (img.naturalWidth && img.naturalHeight) ? img.naturalWidth / img.naturalHeight : 1;
+        let logoW = inscribedSide, logoH = inscribedSide;
+        if (ratio > 1) logoH = inscribedSide / ratio;
+        else if (ratio < 1) logoW = inscribedSide * ratio;
+        const lx = centerX - logoW / 2;
+        const ly = centerY - logoH / 2;
+
+        // Filet de securite supplementaire : on ecrete strictement au disque, au cas ou
+        // (logo non carre avec une marge interne, arrondis flottants, etc.).
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(img, lx, ly, logoW, logoH);
+        ctx.restore();
+        resolve();
+      };
+      img.onerror = () => resolve(); // logo introuvable/hors-ligne : on continue sans
+      img.src = logoUrl;
+    });
+  }
+
+  async function renderQrCodes(urls) {
+    const missingEl = document.getElementById('qr-missing');
+    const libAvailable = typeof qrcode === 'function';
+    if (missingEl) missingEl.style.display = libAvailable ? 'none' : 'block';
+    if (!libAvailable) return;
+
+    const includeLogo = document.getElementById('qr-logo-toggle').checked;
+    const logoUrl = includeLogo ? currentLogoUrl() : '';
+    const code = document.getElementById('f-code').value.trim();
+    const filenameSuffix = code ? ('_' + code) : '';
+
+    // Grille reconstruite a chaque generation : le nombre et l'ordre des QR codes
+    // suivent exactement les cles du gabarit (redirect-template.js), donc un ajout
+    // ou retrait d'action s'y reflete automatiquement sans toucher au HTML.
+    const grid = document.getElementById('qr-grid');
+    grid.innerHTML = '';
+    Object.keys(urls).forEach(key => {
+      const item = document.createElement('div');
+      item.className = 'qr-item';
+      item.innerHTML = `
+        <div class="qr-label">${labelForAction(key)}</div>
+        <a class="qr-dl" id="qr-link-${key}" download="${key}.png"><div id="qr-${key}"></div></a>`;
+      grid.appendChild(item);
+    });
+
+    await Promise.all(Object.entries(urls).map(async ([key, url]) => {
+      const container = document.getElementById('qr-' + key);
+      const link = document.getElementById('qr-link-' + key);
+      if (!container) return;
+      container.innerHTML = '';
+      if (!url) return;
+
+      try {
+        // typeNumber 0 = qrcode-generator choisit automatiquement la version minimale
+        // suffisante pour la longueur de l'URL (nos liens peuvent etre assez longs avec
+        // ids/visits remplis). Niveau H (correction d'erreur maximale, ~30%) systematique
+        // car necessaire des qu'un logo recouvre le centre du QR code.
+        const qr = qrcode(0, 'H');
+        qr.addData(url);
+        qr.make();
+
+        const cleanCanvas = drawQrToCanvas(qr, 5, 4);
+        let dataUrl;
+
+        if (logoUrl) {
+          const withLogo = cloneCanvas(cleanCanvas);
+          await drawLogoOnCanvas(withLogo, logoUrl);
+          try {
+            dataUrl = withLogo.toDataURL('image/png');
+          } catch (e) {
+            // Canvas "tainte" par une image cross-origin sans en-tetes CORS permissifs :
+            // on retombe sur le QR sans logo (cleanCanvas n'a jamais ete touche par
+            // drawImage() d'une image externe, donc jamais tainte).
+            console.warn('Logo non incruste (restriction CORS probable) pour', key, '— QR simple utilisé.', e);
+            dataUrl = cleanCanvas.toDataURL('image/png');
+          }
+        } else {
+          dataUrl = cleanCanvas.toDataURL('image/png');
+        }
+
+        const img = document.createElement('img');
+        img.alt = 'QR code — ' + key;
+        img.src = dataUrl;
+        container.appendChild(img);
+        if (link) {
+          link.href = dataUrl;
+          link.setAttribute('download', key + filenameSuffix + '.png'); // ex. evenements_HM9FT3XCJQ.png
+        }
+      } catch (err) {
+        // Longueur d'URL au-dela de la capacite max d'un QR (tres rare) : on laisse la
+        // case vide plutot que de planter la generation des autres QR codes.
+        console.warn('QR code non genere pour', key, err);
+      }
+    }));
+  }
+
+  document.getElementById('qr-logo-toggle').addEventListener('change', () => {
+    if (lastGeneratedUrls) renderQrCodes(lastGeneratedUrls);
+  });
 
   document.getElementById('generate-btn').addEventListener('click', generate);
 
