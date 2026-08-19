@@ -787,9 +787,14 @@ ${snippetLines}
     if (!imageCache[url]) {
       imageCache[url] = new Promise((resolve, reject) => {
         const img = new Image();
-        img.crossOrigin = 'anonymous';
+        // Pas de crossOrigin ici : ce visuel est un fichier local du site (meme origine
+        // que url-generator.html), donc jamais de "taint" du canvas au dessin, quel que
+        // soit crossOrigin. Le forcer a "anonymous" casse au contraire le chargement
+        // sur certains navigateurs quand la page est ouverte en file:// (Chrome refuse
+        // les requetes crossorigin explicites sur des fichiers locaux) : c'etait la
+        // cause du "Visuel introuvable" alors que le fichier existe bien.
         img.onload = () => resolve(img);
-        img.onerror = reject;
+        img.onerror = (e) => reject(new Error('Echec de chargement de l\'image : ' + url));
         img.src = url;
       });
     }
