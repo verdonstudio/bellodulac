@@ -139,6 +139,18 @@
   const logementId = urlParams.get('logement') || paramFromReservation('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
   const listing = LOGEMENTS[logementId];
 
+  // "Retour vers le futur" (remonter le temps) : page distincte selon le secteur, comme
+  // sur index.html (bouton #btn-backintime) -- moustiers_backintime.html ou
+  // salles_backintime.html, avec juste lang/logement (ces pages n'ont pas besoin des
+  // dates de sejour).
+  function backInTimeHref() {
+    const ville = logementId.includes('moustiers') ? 'moustiers' : 'salles';
+    const p = new URLSearchParams();
+    p.set('lang', lang);
+    p.set('logement', logementId);
+    return `${ville}_backintime.html?${p.toString()}`;
+  }
+
   const TILES = [
     {
       key: 'map',
@@ -175,6 +187,16 @@
         FR: 'Repérez les logements et les environs en vue à 360°, et bien plus à découvrir…',
         EN: 'Spot the homes and surroundings in 360° view, and much more to discover…'
       }
+    },
+    {
+      key: 'backintime',
+      icon: '🕰️',
+      title: { FR: 'Retour vers le futur', EN: 'Back to the future' },
+      desc: {
+        FR: 'Remontez le temps et comparez le village et le lac d’hier à aujourd’hui.',
+        EN: 'Travel back in time and compare the village and the lake, then and now.'
+      },
+      href: backInTimeHref()
     }
   ];
 
@@ -211,7 +233,9 @@
 
   const grid = document.getElementById('tile-grid');
   TILES.forEach(t => {
-    const href = reservationData[t.key];
+    // "href" precalcule (ex. backintime, qui ne depend pas de redirect.js) prioritaire
+    // sur la valeur stockee dans redirect.js pour cette reservation.
+    const href = t.href || reservationData[t.key];
     const a = document.createElement('a');
     a.className = 'tile' + (href ? '' : ' disabled');
     a.href = href || '#';
