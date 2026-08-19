@@ -881,7 +881,7 @@ ${snippetLines}
 
         item.innerHTML = `
           <div class="qr-label">${cfg.label || langKey}</div>
-          <a class="qr-dl" id="flyer-link-${langKey}" download="flyer_${langKey}${filenameSuffix}.png"><img src="${dataUrl}" alt="Flyer ${cfg.label || langKey}" style="max-width:100%;"></a>`;
+          <a class="qr-dl" id="flyer-link-${langKey}" href="${dataUrl}" download="flyer_${langKey}${filenameSuffix}.png"><img src="${dataUrl}" alt="Flyer ${cfg.label || langKey}" style="max-width:100%;"></a>`;
       } catch (err) {
         console.warn('Flyer non genere pour', langKey, err);
         item.innerHTML = `<div class="qr-label">${cfg.label || langKey}</div><div class="qr-hint">⚠️ Visuel introuvable (${cfg.image}).</div>`;
