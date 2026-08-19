@@ -157,13 +157,20 @@ const reservations = {
         "trash": "index.html?logement=moustiers&lang=EN&zoom=16&pos=43.84536%2C6.2203&cat=ordures"
     },
     "HMB2JRYYN5": {
-        "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28",
+        "home": "home.html?res=HMB2JRYYN5&lang=FR&logement=moustiers",
         "map": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28&zoom=13&pos=43.82945%2C6.21921",
+        "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28",
         "highlights": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28&from=evenements&showevents=3stars&showpois=true",
         "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28",
-        "today": "highlights.html?lang=FR&logement=moustiers&from=evenements&showevents=today&showpois=today",
-        "parking": "index.html?logement=moustiers&lang=FR&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
-        "trash": "index.html?logement=moustiers&lang=FR&zoom=16&pos=43.84536%2C6.2203&cat=ordures"
+        "today": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28&from=evenements&showevents=today&showpois=today",
+        "parking": "index.html?logement=moustiers&lang=FR&edatestart=2026-08-25&edateend=2026-08-28&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
+        "trash": "index.html?logement=moustiers&lang=FR&edatestart=2026-08-25&edateend=2026-08-28&zoom=16&pos=43.84536%2C6.2203&cat=ordures&fullscreen=1",
+        "baudinard": "index.html?logement=moustiers&lang=FR&edatestart=2026-08-25&edateend=2026-08-28&zoom=13&pos=43.73917%2C6.08299&fullscreen=1&poi=aquattitude-montpezat",
+        "quinson": "index.html?logement=moustiers&lang=FR&edatestart=2026-08-25&edateend=2026-08-28&zoom=16.5&pos=43.69367%2C6.04253&fullscreen=1&poi=canoe-quinson",
+        "galetas": "index.html?logement=moustiers&lang=FR&edatestart=2026-08-25&edateend=2026-08-28&zoom=15.5&pos=43.80229%2C6.25044&poi=canoe-galetas-1",
+        "plage-bellodulac1": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28&zoom=17&pos=43.77194%2C6.20816&fullscreen=1&trace=plage-salles",
+        "plage-bellodulac2": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
+        "martel": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-25&edateend=2026-08-28&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
     }
 
 };
