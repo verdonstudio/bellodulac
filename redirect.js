@@ -4,7 +4,7 @@ const reservations = {
     "HMAZKZK5XA": {
         "map": "index.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04&zoom=13&pos=43.82945%2C6.21921",
         "evenements": "evenements.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04",
-        "highlights": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04&from=evenements",
+        "highlights": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04&from=evenements&showevents=3stars&showpois=true",
         "panorama": "panorama.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04",
         "today": "highlights.html?lang=FR&logement=moustiers&edatestart=2026-10-01&edateend=2026-10-04&from=evenements&showevents=today&showpois=today",
         "parking": "index.html?logement=moustiers&lang=FR&edatestart=2026-10-01&edateend=2026-10-04&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
@@ -19,7 +19,7 @@ const reservations = {
     "HM9FT3XCJQ": {
         "map": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&zoom=13&pos=43.82945%2C6.21921",
         "evenements": "evenements.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13",
-        "highlights": "highlights.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&from=evenements",
+        "highlights": "highlights.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&from=evenements&showevents=3stars&showpois=true",
         "panorama": "panorama.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13",
         "today": "highlights.html?lang=EN&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&from=evenements&showevents=today&showpois=today",
         "parking": "index.html?logement=moustiers&lang=EN&edatestart=2026-09-10&edateend=2026-09-13&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",

@@ -27,7 +27,7 @@
 window.REDIRECT_TEMPLATE = {
   "map": "index.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}&zoom=13&pos=43.82945%2C6.21921",
   "evenements": "evenements.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}",
-  "highlights": "highlights.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}&from=evenements",
+  "highlights": "highlights.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}&from=evenements&showevents=3stars&showpois=true",
   "panorama": "panorama.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}",
   "today": "highlights.html?lang={{lang}}&logement={{logement}}&edatestart={{startdate}}&edateend={{enddate}}&from=evenements&showevents=today&showpois=today",
   "parking": "index.html?logement={{logement}}&lang={{lang}}&edatestart={{startdate}}&edateend={{enddate}}&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
