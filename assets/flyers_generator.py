@@ -179,6 +179,7 @@ class PPTXTranslatorApp(tk.Tk):
             with open(jpg_path, "rb") as img_file:
                 b64_string = base64.b64encode(img_file.read()).decode('utf-8')
             with open(txt_path, "w", encoding="utf-8") as txt_file:
+                # Ajout du préfixe Data URI scheme pour JPEG
                 txt_file.write(f"data:image/jpeg;base64,{b64_string}")
         except Exception as e:
             self.log(f"  [!] Erreur Base64 : {e}")
