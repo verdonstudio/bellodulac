@@ -302,6 +302,39 @@
         return (logement || '').includes('moustiers') ? 'moustiers' : 'salles';
     }
 
+    // Ville "du logement" (celle affichee en priorite chaque matin/apres-midi/soir,
+    // voir timeSortKey/isHometownPlace ci-dessous) : Moustiers-Sainte-Marie ou
+    // Les Salles-sur-Verdon, alignee sur les chaines exactes utilisees comme
+    // "place" dans evenements.js.
+    function hometownPlace(logement) {
+        return logoFamily(logement) === 'moustiers' ? 'Moustiers-Sainte-Marie' : 'Les Salles-sur-Verdon';
+    }
+    function isHometownPlace(place, logement) {
+        return !!place && place === hometownPlace(logement);
+    }
+
+    // Determine le creneau (0=matin, 1=apres-midi, 2=soir) et une heure
+    // approximative en minutes (pour trier finement a l'interieur d'un meme
+    // creneau) a partir du champ "time" d'un evenement. On se base toujours
+    // sur le texte FR (les mots-cles "matin/apres-midi/soir" ne changent pas
+    // de sens selon la langue affichee, seul l'affichage change).
+    function timeSortKey(evt) {
+        const raw = (evt && evt.time && typeof evt.time === 'object') ? (evt.time.FR || evt.time.EN || '') : ((evt && evt.time) || '');
+        const norm = raw.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        if (norm.includes('matin')) return { bucket: 0, minutes: 9 * 60 };
+        if (norm.includes('journee')) return { bucket: 0, minutes: 8 * 60 }; // "Journée" : commence le matin
+        if (norm.includes('apres-midi') || norm.includes('apres midi')) return { bucket: 1, minutes: 15 * 60 };
+        if (norm.includes('soir')) return { bucket: 2, minutes: 20 * 60 }; // "Soir", "Soirée", "En soirée"
+        const m = raw.match(/(\d{1,2})\s*[:hH]\s*(\d{0,2})/);
+        if (m) {
+            const hour = parseInt(m[1], 10);
+            const minute = m[2] ? parseInt(m[2], 10) : 0;
+            const bucket = hour < 12 ? 0 : (hour < 18 ? 1 : 2);
+            return { bucket, minutes: hour * 60 + minute };
+        }
+        return { bucket: 1, minutes: 12 * 60 }; // horaire absent/non reconnu : creneau neutre
+    }
+
     const I18N = {
         FR: {
             back: "Retour", label: "Votre programme",
@@ -1071,6 +1104,8 @@
                 : `${calendarIcon()}<span>${L.recurringLabel}</span>`;
             items.push({
                 date: evt.date || '9999-99-99',
+                timeInfo: timeSortKey(evt),
+                hometown: isHometownPlace(evt.place, state.logement) ? 0 : 1,
                 html: `
                 <div class="card">
                     <span class="hl-kind-badge is-event">🎉 ${L.kindEvent}</span>
@@ -1097,6 +1132,11 @@
             const catInfo = poiCategoryInfo(poi);
             items.push({
                 date: visit.date,
+                // Une visite libre n'a pas d'horaire fixe : creneau neutre (apres-midi),
+                // sans priorite "ville du logement" (les POI suggeres sont surtout hors du
+                // village, contrairement aux evenements programmes sur place).
+                timeInfo: { bucket: 1, minutes: 12 * 60 },
+                hometown: 1,
                 html: `
                 <div class="card">
                     <span class="hl-kind-badge is-visit">📍 ${L.kindVisit}</span>
@@ -1145,8 +1185,15 @@
         }
 
         // Toujours trie par date croissante (les evenements recurrents sont deja resolus
-        // a leur prochaine occurrence a venir par resolveEvent, jamais une date passee).
-        items.sort((a, b) => a.date.localeCompare(b.date));
+        // a leur prochaine occurrence a venir par resolveEvent, jamais une date passee),
+        // puis par creneau (matin -> apres-midi -> soir), puis activites de la ville du
+        // logement en premier dans chaque creneau, puis par heure approximative.
+        items.sort((a, b) => {
+            if (a.date !== b.date) return a.date.localeCompare(b.date);
+            if (a.timeInfo.bucket !== b.timeInfo.bucket) return a.timeInfo.bucket - b.timeInfo.bucket;
+            if (a.hometown !== b.hometown) return a.hometown - b.hometown;
+            return a.timeInfo.minutes - b.timeInfo.minutes;
+        });
 
         empty.classList.remove('visible');
         grid.innerHTML = items.map(it => it.html).join('');
