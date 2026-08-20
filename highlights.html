@@ -177,6 +177,8 @@
         <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
             <option value="FR">FR</option>
             <option value="EN">EN</option>
+            <option value="DE">DE</option>
+            <option value="NL">NL</option>
         </select>
         <button type="button" id="btn-download-json" class="chip text-[12px] font-semibold px-3 py-1.5 rounded-full shadow-sm shrink-0 hidden" style="background:#16a34a;color:#fff;border:1px solid transparent;">💾</button>
     </div>
@@ -364,6 +366,70 @@
             recurrenceNotice: "This change applies to the whole recurrence of this event.",
             recurringLabel: "Recurring",
             editModeNotice: (n) => `Edit mode: all ${n} events from evenements.js are listed below, regardless of the usual selection.`
+        },
+        DE: {
+            back: "Zurück", label: "Ihr Programm",
+            pageTitle: "Ihr Programm",
+            pageSubtitle: "Eine Auswahl an Veranstaltungen, die Sie während Ihres Aufenthalts nicht verpassen sollten.",
+            noEvents: "Keine Veranstaltungen anzuzeigen.",
+            months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
+            dateWithTime: (day, month, time) => `${day}. ${month} – ${time}`,
+            dateNoTime: (day, month) => `${day}. ${month}`,
+            addVisit: "Besuch hinzufügen", copyLink: "Link kopieren", linkCopied: "Link kopiert!",
+            removeCard: "Entfernen", modalTitle: "Besuch hinzufügen",
+            shareCard: "Link zu dieser Karte kopieren",
+            searchPlaceholder: "Sehenswürdigkeit suchen…", noPoiFound: "Keine Ergebnisse.",
+            visitDateLabel: "Besuchsdatum", back: "Zurück", add: "Hinzufügen",
+            pickDateAlert: "Bitte wählen Sie ein Datum.",
+            dateOutOfRangeAlert: "Bitte wählen Sie ein Datum innerhalb Ihres Aufenthaltszeitraums.",
+            visitDateRangeHint: (start, end) => {
+                if (start && end) return `Zwischen dem ${start} und dem ${end}`;
+                if (start) return `Ab dem ${start}`;
+                if (end) return `Bis zum ${end}`;
+                return '';
+            },
+            addEvent: "Veranstaltung hinzufügen", modalTitleEvent: "Veranstaltung hinzufügen",
+            searchEventPlaceholder: "Veranstaltung suchen…",
+            noEventFound: "Für diesen Zeitraum sind keine Veranstaltungen verfügbar.",
+            kindEvent: "Veranstaltung", kindVisit: "Besuch",
+            editRatingTitle: (n) => `Hausbewertung: ${n}/3 — zum Ändern klicken`,
+            editFavoriteOn: "Favorit entfernen", editFavoriteOff: "Als Favorit markieren",
+            downloadJson: "evenements.js herunterladen",
+            recurrenceNotice: "Diese Änderung gilt für die gesamte Wiederholung dieser Veranstaltung.",
+            recurringLabel: "Wiederkehrend",
+            editModeNotice: (n) => `Bearbeitungsmodus: Alle ${n} Veranstaltungen aus evenements.js werden unten angezeigt, unabhängig von der üblichen Auswahl.`
+        },
+        NL: {
+            back: "Terug", label: "Uw programma",
+            pageTitle: "Uw programma",
+            pageSubtitle: "Een selectie van evenementen die u tijdens uw verblijf niet mag missen.",
+            noEvents: "Geen evenementen om weer te geven.",
+            months: ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"],
+            dateWithTime: (day, month, time) => `${day} ${month} - ${time}`,
+            dateNoTime: (day, month) => `${day} ${month}`,
+            addVisit: "Bezoek toevoegen", copyLink: "Link kopiëren", linkCopied: "Link gekopieerd!",
+            removeCard: "Verwijderen", modalTitle: "Bezoek toevoegen",
+            shareCard: "Link naar deze kaart kopiëren",
+            searchPlaceholder: "Zoek een bezienswaardigheid…", noPoiFound: "Geen resultaten.",
+            visitDateLabel: "Bezoekdatum", back: "Terug", add: "Toevoegen",
+            pickDateAlert: "Kies een datum.",
+            dateOutOfRangeAlert: "Kies een datum binnen de periode van uw verblijf.",
+            visitDateRangeHint: (start, end) => {
+                if (start && end) return `Tussen ${start} en ${end}`;
+                if (start) return `Vanaf ${start}`;
+                if (end) return `Tot ${end}`;
+                return '';
+            },
+            addEvent: "Evenement toevoegen", modalTitleEvent: "Evenement toevoegen",
+            searchEventPlaceholder: "Zoek een evenement…",
+            noEventFound: "Geen evenementen beschikbaar voor deze periode.",
+            kindEvent: "Evenement", kindVisit: "Bezoek",
+            editRatingTitle: (n) => `Huisbeoordeling: ${n}/3 — klik om te wijzigen`,
+            editFavoriteOn: "Favoriet verwijderen", editFavoriteOff: "Markeren als favoriet",
+            downloadJson: "evenements.js downloaden",
+            recurrenceNotice: "Deze wijziging geldt voor de volledige herhaling van dit evenement.",
+            recurringLabel: "Terugkerend",
+            editModeNotice: (n) => `Bewerkingsmodus: alle ${n} evenementen uit evenements.js worden hieronder weergegeven, ongeacht de gebruikelijke selectie.`
         }
     };
 
@@ -748,6 +814,7 @@
     function readUrlParams() {
         const p = new URLSearchParams(window.location.search);
         if (p.get('lang')) state.lang = p.get('lang').toUpperCase();
+        if (!['FR', 'EN', 'DE', 'NL'].includes(state.lang)) state.lang = 'FR';
         state.logement = resolveLogement(p.get('logement'));
 
         const rawIds = p.get('ids') || p.get('id') || p.get('eventids') || '';
@@ -899,7 +966,7 @@
         const key = getPoiPrimaryCat(poi);
         const cd = key && window.POI_CATEGORIES && window.POI_CATEGORIES[key];
         if (!cd) return null;
-        return { label: state.lang === 'EN' ? cd.en : cd.fr, emoji: cd.emoji, color: cd.color };
+        return { label: cd[state.lang.toLowerCase()] || cd.fr || cd.en, emoji: cd.emoji, color: cd.color };
     }
     function findPoi(poiId) {
         return (window.POIS || []).find(p => p.id === poiId);

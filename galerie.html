@@ -141,6 +141,8 @@
             <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
                 <option value="FR">FR</option>
                 <option value="EN">EN</option>
+                <option value="DE">DE</option>
+                <option value="NL">NL</option>
             </select>
         </div>
     </header>
@@ -181,7 +183,9 @@
 
         const I18N = {
             FR: { back: "Retour", brand: "Bell'O du Lac™ & Bell'Étoile™", defaultTitle: "Galerie" },
-            EN: { back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", defaultTitle: "Gallery" }
+            EN: { back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", defaultTitle: "Gallery" },
+            DE: { back: "Zurück", brand: "Bell'O du Lac™ & Bell'Étoile™", defaultTitle: "Galerie" },
+            NL: { back: "Terug", brand: "Bell'O du Lac™ & Bell'Étoile™", defaultTitle: "Galerij" }
         };
 
         const LOGO_DATA = {
@@ -199,6 +203,7 @@
             const p = new URLSearchParams(window.location.search);
             const rawLang = p.get('lang') || p.get('lng');
             if (rawLang) state.lang = rawLang.toUpperCase();
+            if (!['FR', 'EN', 'DE', 'NL'].includes(state.lang)) state.lang = 'FR';
 
             const rawLogement = p.get('logement') || p.get('listing') || p.get('l') || p.get('id');
             state.logement = rawLogement || DEFAULT_LISTING_ID;

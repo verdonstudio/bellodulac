@@ -263,6 +263,8 @@
                 <select id="lang-select" class="bg-white/90 text-gray-800 text-xs font-bold px-3 py-1.5 rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm shrink-0">
                     <option value="FR">FR</option>
                     <option value="EN">EN</option>
+                    <option value="DE">DE</option>
+                    <option value="NL">NL</option>
                 </select>
 
                 <button id="btn-pause" onclick="togglePause()" class="flex items-center justify-center gap-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/30 px-3 py-1.5 rounded-full text-xs font-semibold transition shrink-0">
@@ -364,19 +366,33 @@
         };
 		
 		const I18N = {
-            FR: { 
-                title: "Panorama BelloduLac & BellEtoile", filter_all: "Tout voir", read_more: "En savoir plus", 
+            FR: {
+                title: "Panorama BelloduLac & BellEtoile", filter_all: "Tout voir", read_more: "En savoir plus",
                 day: "Jour", night: "Nuit", play: "Lecture", pause: "Pause", back_2d: "Retour Guide 2D",
                 loading: "Chargement du panorama…", load_error: "Le panorama n'a pas pu se charger. Vérifiez votre connexion.",
                 footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés. Marques déposées.",
-                selogers: "Se loger"
+                selogers: "Se loger", trace_label: "Afficher le chemin"
             },
-            EN: { 
-                title: "BelloduLac & BellEtoile Panorama", filter_all: "Show all", read_more: "Read more", 
+            EN: {
+                title: "BelloduLac & BellEtoile Panorama", filter_all: "Show all", read_more: "Read more",
                 day: "Day", night: "Night", play: "Play", pause: "Pause", back_2d: "Back to Guide",
                 loading: "Loading panorama…", load_error: "The panorama couldn't load. Please check your connection.",
                 footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. All rights reserved. Registered Trademarks.",
-                selogers: "Book a stay"
+                selogers: "Book a stay", trace_label: "Show the walking path"
+            },
+            DE: {
+                title: "BelloduLac & BellEtoile Panorama", filter_all: "Alle anzeigen", read_more: "Mehr erfahren",
+                day: "Tag", night: "Nacht", play: "Wiedergabe", pause: "Pause", back_2d: "Zurück zum Guide",
+                loading: "Panorama wird geladen…", load_error: "Das Panorama konnte nicht geladen werden. Bitte überprüfen Sie Ihre Internetverbindung.",
+                footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Alle Rechte vorbehalten. Eingetragene Marken.",
+                selogers: "Unterkunft buchen", trace_label: "Fußweg anzeigen"
+            },
+            NL: {
+                title: "BelloduLac & BellEtoile Panorama", filter_all: "Alles tonen", read_more: "Meer lezen",
+                day: "Dag", night: "Nacht", play: "Afspelen", pause: "Pauze", back_2d: "Terug naar de gids",
+                loading: "Panorama wordt geladen…", load_error: "Het panorama kon niet worden geladen. Controleer uw internetverbinding.",
+                footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Alle rechten voorbehouden. Geregistreerde handelsmerken.",
+                selogers: "Verblijf boeken", trace_label: "Wandelroute tonen"
             }
         };
 
@@ -506,13 +522,13 @@
         // ==========================================
         if (!window.POI_CATEGORIES) window.POI_CATEGORIES = {};
         if (!window.POI_CATEGORIES.logement) {
-            window.POI_CATEGORIES.logement = { fr: "Nos Logements", en: "Our Stays", color: "#EA0000", emoji: "🏡" };
+            window.POI_CATEGORIES.logement = { fr: "Nos Logements", en: "Our Stays", de: "Unsere Unterkünfte", nl: "Onze accommodaties", color: "#EA0000", emoji: "🏡" };
         }
 
         if (window.POIS) {
             const defaultLogements = [
-                { id: "logement-moustiers", cat: "logement", coords: [43.84715, 6.22066], stars: 3, img: "https://bellodulac.netlify.app/images/moustiers-terrasse.jpg", fr: { name: "Bell'Étoile", desc: "Votre logement avec terrasse panoramique au cœur de Moustiers.", url: "index.html?logement=moustiers" }, en: { name: "Bell'Étoile", desc: "Your stay with a panoramic terrace in Moustiers.", url: "index.html?logement=moustiers" } },
-                { id: "logement-salles", cat: "logement", coords: [43.77267, 6.20780], stars: 3, img: "https://bellodulac.netlify.app/images/bello6-cover.jpg", fr: { name: "Bell'O du Lac", desc: "Votre logement à 400m du Lac de Sainte-Croix.", url: "index.html?logement=salles6" }, en: { name: "Bell'O du Lac", desc: "Your stay 400m from Lake Sainte-Croix.", url: "index.html?logement=salles6" } }
+                { id: "logement-moustiers", cat: "logement", coords: [43.84715, 6.22066], stars: 3, img: "https://bellodulac.netlify.app/images/moustiers-terrasse.jpg", fr: { name: "Bell'Étoile", desc: "Votre logement avec terrasse panoramique au cœur de Moustiers.", url: "index.html?logement=moustiers" }, en: { name: "Bell'Étoile", desc: "Your stay with a panoramic terrace in Moustiers.", url: "index.html?logement=moustiers" }, de: { name: "Bell'Étoile", desc: "Ihre Unterkunft mit Panoramaterrasse im Herzen von Moustiers.", url: "index.html?logement=moustiers" }, nl: { name: "Bell'Étoile", desc: "Uw accommodatie met panoramaterras in het hart van Moustiers.", url: "index.html?logement=moustiers" } },
+                { id: "logement-salles", cat: "logement", coords: [43.77267, 6.20780], stars: 3, img: "https://bellodulac.netlify.app/images/bello6-cover.jpg", fr: { name: "Bell'O du Lac", desc: "Votre logement à 400m du Lac de Sainte-Croix.", url: "index.html?logement=salles6" }, en: { name: "Bell'O du Lac", desc: "Your stay 400m from Lake Sainte-Croix.", url: "index.html?logement=salles6" }, de: { name: "Bell'O du Lac", desc: "Ihre Unterkunft, 400 m vom Lac de Sainte-Croix entfernt.", url: "index.html?logement=salles6" }, nl: { name: "Bell'O du Lac", desc: "Uw accommodatie op 400 m van het Lac de Sainte-Croix.", url: "index.html?logement=salles6" } }
             ];
             defaultLogements.forEach(lg => {
                 if (!window.POIS.find(p => p.id === lg.id)) window.POIS.push(lg);
@@ -522,6 +538,7 @@
         function readUrlParams() {
             const p = new URLSearchParams(window.location.search);
             if (p.get('lang')) state.lang = p.get('lang').toUpperCase();
+            if (!['FR', 'EN', 'DE', 'NL'].includes(state.lang)) state.lang = 'FR';
             state.traceId = p.get('trace') || null;
             if (p.get('poi')) state.poiId = p.get('poi');
             else if (state.traceId) {
@@ -616,7 +633,7 @@
                 if (!counts[key]) return; 
                 const cat = window.POI_CATEGORIES[key];
                 const isActive = !allActive && state.activeCats.has(key);
-                const label = state.lang === 'EN' ? cat.en : cat.fr;
+                const label = cat[state.lang.toLowerCase()] || cat.en || cat.fr;
                 const style = isActive ? `background:${cat.color};border-color:${cat.color};` : '';
                 html += `<button class="filter-btn ${isActive ? 'is-active' : ''}" data-cat="${key}" style="${style}"><span>${cat.emoji}</span><span>${label}</span> <span class="filter-btn__count">(${counts[key]})</span></button>`;
             });
@@ -779,7 +796,7 @@
                 const poiCatKeys = getPoiCats(poi);
                 const poiCatDefs = poiCatKeys.map(key => window.POI_CATEGORIES[key]).filter(Boolean);
                 const catInfo = poiCatDefs[0] || {color: '#888', emoji: '📍', fr: '', en: ''};
-                const catLabel = state.lang === 'EN' ? catInfo.en : catInfo.fr;
+                const catLabel = catInfo[state.lang.toLowerCase()] || catInfo.en || catInfo.fr;
 
                 // --- Contenu et metriques du toaster : calcules ici (avant la decision
                 // haut/bas/cote ci-dessous) car popupMinFloor sert desormais a cette decision. ---
@@ -788,14 +805,14 @@
                 // Si le POI a plusieurs categories, on affiche un badge pour chacune (sinon 1 seul, comme avant).
                 const badgesHtml = poiCatDefs.length
                     ? poiCatDefs.map(c => {
-                        const label = state.lang === 'EN' ? c.en : c.fr;
+                        const label = c[state.lang.toLowerCase()] || c.en || c.fr;
                         return `<span class="ov-popup__badge" style="background:${c.color}">${c.emoji} ${label}</span>`;
                     }).join('')
                     : `<span class="ov-popup__badge" style="background:${catInfo.color}">${catInfo.emoji} ${catLabel}</span>`;
                 const stars = poi.stars > 0 ? `<span class="ov-popup__stars">${'★'.repeat(poi.stars)}</span>` : '';
                 const placeholderHTML = `<div class="ov-popup__placeholder" style="background:${catInfo.color}22; height:${popupPlaceholderHeightPx}px;">${catInfo.emoji}</div>`;
                 const imgHTML = poi.img ? `<img class="ov-popup__img" src="${poi.img}" alt="" loading="lazy" style="height:${popupImgHeightPx}px;" onerror="this.outerHTML='<div class=\\'ov-popup__placeholder\\' style=\\'background:${catInfo.color}22;height:${popupPlaceholderHeightPx}px\\'></div>'" />` : placeholderHTML;
-                const traceLabel = state.lang === 'EN' ? 'Show the walking path' : 'Afficher le chemin';
+                const traceLabel = I18N[state.lang].trace_label;
                 const traceCoords = poi.trace ? (Array.isArray(poi.trace) ? poi.trace : poi.trace.coords) : null;
                 const traceLogements = (poi.trace && !Array.isArray(poi.trace)) ? poi.trace.logements : null;
                 const traceAllowedHere = !Array.isArray(traceLogements) || traceLogements.length === 0 || traceLogements.includes(state.listingId);

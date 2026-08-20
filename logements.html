@@ -90,6 +90,8 @@
         <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
             <option value="FR">FR</option>
             <option value="EN">EN</option>
+            <option value="DE">DE</option>
+            <option value="NL">NL</option>
         </select>
     </div>
 </header>
@@ -138,6 +140,22 @@
             viewListing: "View listing", contactHost: "Contact the host",
             reviewsSuffix: (n) => `${n} reviews`,
             footerNote: "",
+        },
+        DE: {
+            back: "Zurück", label: "Unsere Unterkünfte",
+            pageTitle: "Unsere Unterkünfte im Verdon",
+            pageSubtitle: "Entdecken Sie unsere Unterkünfte und buchen Sie direkt über Airbnb.",
+            viewListing: "Anzeige ansehen", contactHost: "Gastgeber kontaktieren",
+            reviewsSuffix: (n) => `${n} Bewertungen`,
+            footerNote: "",
+        },
+        NL: {
+            back: "Terug", label: "Onze verblijven",
+            pageTitle: "Onze verblijven in de Verdon",
+            pageSubtitle: "Ontdek onze accommodaties en boek rechtstreeks via Airbnb.",
+            viewListing: "Bekijk advertentie", contactHost: "Contact met de gastheer",
+            reviewsSuffix: (n) => `${n} beoordelingen`,
+            footerNote: "",
         }
     };
 
@@ -146,6 +164,7 @@
     function readUrlParams() {
         const p = new URLSearchParams(window.location.search);
         if (p.get('lang')) state.lang = p.get('lang').toUpperCase();
+        if (!['FR', 'EN', 'DE', 'NL'].includes(state.lang)) state.lang = 'FR';
         state.logement = p.get('logement') || null;
     }
 

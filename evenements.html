@@ -261,6 +261,8 @@
 			<select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
 				<option value="FR">FR</option>
 				<option value="EN">EN</option>
+				<option value="DE">DE</option>
+				<option value="NL">NL</option>
 			</select>
 		</div>
 	</header>
@@ -469,7 +471,8 @@
 				selectForHighlights: "Inclure dans le lien Temps forts",
 				copyHighlightsLink: (n) => n > 0 ? `🔗 Copier le lien Temps forts (${n})` : "🔗 Copier le lien Temps forts",
 				noSelectionAlert: "Sélectionnez au moins un évènement à inclure dans le lien.",
-				viewSelection: "Voir ma sélection", selectForHighlightsTitle: "Ajouter à ma sélection"
+				viewSelection: "Voir ma sélection", selectForHighlightsTitle: "Ajouter à ma sélection",
+				today: "Aujourd'hui", eventsCounter: (n) => `${n} événement${n > 1 ? 's' : ''}`
 			},
 			EN: {
 				back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", pageTitle: "Events",
@@ -507,7 +510,86 @@
 				selectForHighlights: "Include in Highlights link",
 				copyHighlightsLink: (n) => n > 0 ? `🔗 Copy Highlights link (${n})` : "🔗 Copy Highlights link",
 				noSelectionAlert: "Select at least one event to include in the link.",
-				viewSelection: "View my selection", selectForHighlightsTitle: "Add to my selection"
+				viewSelection: "View my selection", selectForHighlightsTitle: "Add to my selection",
+				today: "Today", eventsCounter: (n) => `${n} event${n > 1 ? 's' : ''}`
+			},
+			DE: {
+				back: "Zurück", brand: "Bell'O du Lac™ & Bell'Étoile™", pageTitle: "Veranstaltungen",
+				all: "Alle", allPlaces: "Alle Orte", fPlaceFilter: "Ort", dayColorsLabel: "Farben der Wochentage",
+				favOnly: "Favoriten ⭐", showPast: "Vergangene Tage anzeigen",
+				hidePastAgain: "Vergangene Tage wieder ausblenden", noEvents: "Keine Veranstaltungen an diesem Tag",
+				highlightsTitle: "Unsere Favoriten", practicalTitle: "Praktische Infos", distancesTitle: "Entfernungen",
+				legalRest: "Alle Rechte vorbehalten.", recurring: "Wiederkehrend",
+				ratingAll: "Alle Bewertungen", rating1: "★ und mehr", rating2: "★★ und mehr", rating3: "Nur ★★★",
+				ratingTitle: "Bell'O du Lac Bewertung",
+				weekdays: ["Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"],
+				months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
+				editOn: "Bearbeiten", editOff: "Zurück zum Kalender",
+				editIntro: "Bearbeitungsmodus: Alle Veranstaltungen werden ohne Datumsfilter angezeigt.",
+				addEvent: "Veranstaltung hinzufügen", download: "evenements.js herunterladen",
+				deleteEvent: "Diese Veranstaltung löschen?", duplicateEvent: "Diese Veranstaltung duplizieren", oneTime: "Einmalig", recurringType: "Wiederkehrend",
+				fCategory: "Kategorie", fPlace: "Ort", fDate: "Datum", fFreq: "Häufigkeit", fInterval: "Intervall (alle X)",
+				fByDay: "Wochentage", fByMonthDay: "Tag des Monats", fStart: "Beginn", fEnd: "Ende (optional)",
+				fTimeFr: "Uhrzeit (FR)", fTimeEn: "Uhrzeit (EN)", fTitleFr: "Titel (FR)", fTitleEn: "Titel (EN)",
+				fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Link (URL, optional)",
+				fImg: "Bild (URL oder Pfad)",
+				fFavorite: "Favorit", fRating: "Hausbewertung (0 bis 3)",
+				freqDaily: "Täglich", freqWeekly: "Wöchentlich", freqMonthly: "Monatlich",
+				editCounter: (n) => `${n} Veranstaltung${n > 1 ? 'en' : ''} insgesamt`,
+				newEventTitle: "Neue Veranstaltung", requireTitle: "Jede Veranstaltung benötigt mindestens einen Titel (FR).",
+				requireDateOrRec: "Jede Veranstaltung benötigt entweder ein Datum oder eine Wiederholung.",
+				duplicateId: "Zwei Veranstaltungen haben dieselbe ID: ",
+				byDayShort: { sun:"So", mon:"Mo", tue:"Di", wed:"Mi", thu:"Do", fri:"Fr", sat:"Sa" },
+				fLogement: "Betrifft die Unterkunft", logementBoth: "Beide", logementSalles: "Les Salles-sur-Verdon", logementMoustiers: "Moustiers-Sainte-Marie",
+				monthCal: "Monatskalender", monthCalTitle: "Veranstaltungen", printLabel: "Drucken", backToCalendar: "Zurück zum Kalender",
+				monthCalPrev: "Vorheriger Monat", monthCalNext: "Nächster Monat",
+				monthEventsCount: (n) => `${n} Veranstaltung${n > 1 ? 'en' : ''} in diesem Monat`,
+				fullscreenLabel: "Vollbild", exitFullscreenLabel: "Vollbild beenden",
+				selogers: "Unterkunft buchen", copyLinkLabel: "Link zu dieser Veranstaltung kopieren", linkCopied: "Link kopiert!",
+				selectForHighlights: "Zum Highlights-Link hinzufügen",
+				copyHighlightsLink: (n) => n > 0 ? `🔗 Highlights-Link kopieren (${n})` : "🔗 Highlights-Link kopieren",
+				noSelectionAlert: "Wählen Sie mindestens eine Veranstaltung für den Link aus.",
+				viewSelection: "Meine Auswahl ansehen", selectForHighlightsTitle: "Zu meiner Auswahl hinzufügen",
+				today: "Heute", eventsCounter: (n) => `${n} Veranstaltung${n > 1 ? 'en' : ''}`
+			},
+			NL: {
+				back: "Terug", brand: "Bell'O du Lac™ & Bell'Étoile™", pageTitle: "Evenementen",
+				all: "Alle", allPlaces: "Alle locaties", fPlaceFilter: "Locatie", dayColorsLabel: "Kleuren per dag",
+				favOnly: "Favorieten ⭐", showPast: "Voorbije dagen tonen",
+				hidePastAgain: "Voorbije dagen weer verbergen", noEvents: "Geen evenementen op deze dag",
+				highlightsTitle: "Onze favorieten", practicalTitle: "Praktische info", distancesTitle: "Afstanden",
+				legalRest: "Alle rechten voorbehouden.", recurring: "Terugkerend",
+				ratingAll: "Alle beoordelingen", rating1: "★ en hoger", rating2: "★★ en hoger", rating3: "Alleen ★★★",
+				ratingTitle: "Bell'O du Lac beoordeling",
+				weekdays: ["Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag","Zondag"],
+				months: ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"],
+				editOn: "Bewerken", editOff: "Terug naar kalender",
+				editIntro: "Bewerkingsmodus: alle evenementen worden getoond, zonder datumfilter.",
+				addEvent: "Evenement toevoegen", download: "evenements.js downloaden",
+				deleteEvent: "Dit evenement verwijderen?", duplicateEvent: "Dit evenement dupliceren", oneTime: "Eenmalig", recurringType: "Terugkerend",
+				fCategory: "Categorie", fPlace: "Locatie", fDate: "Datum", fFreq: "Frequentie", fInterval: "Interval (elke X)",
+				fByDay: "Dagen van de week", fByMonthDay: "Dag van de maand", fStart: "Start", fEnd: "Einde (optioneel)",
+				fTimeFr: "Tijdstip (FR)", fTimeEn: "Tijdstip (EN)", fTitleFr: "Titel (FR)", fTitleEn: "Titel (EN)",
+				fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Link (URL, optioneel)",
+				fImg: "Afbeelding (URL of pad)",
+				fFavorite: "Favoriet", fRating: "Huisbeoordeling (0 tot 3)",
+				freqDaily: "Dagelijks", freqWeekly: "Wekelijks", freqMonthly: "Maandelijks",
+				editCounter: (n) => `${n} evenement${n > 1 ? 'en' : ''} in totaal`,
+				newEventTitle: "Nieuw evenement", requireTitle: "Elk evenement heeft minstens een titel (FR) nodig.",
+				requireDateOrRec: "Elk evenement heeft ofwel een datum, ofwel een terugkeerpatroon nodig.",
+				duplicateId: "Twee evenementen hebben dezelfde id: ",
+				byDayShort: { sun:"Zo", mon:"Ma", tue:"Di", wed:"Wo", thu:"Do", fri:"Vr", sat:"Za" },
+				fLogement: "Van toepassing op accommodatie", logementBoth: "Beide", logementSalles: "Les Salles-sur-Verdon", logementMoustiers: "Moustiers-Sainte-Marie",
+				monthCal: "Maandkalender", monthCalTitle: "Festiviteiten", printLabel: "Afdrukken", backToCalendar: "Terug naar kalender",
+				monthCalPrev: "Vorige maand", monthCalNext: "Volgende maand",
+				monthEventsCount: (n) => `${n} evenement${n > 1 ? 'en' : ''} deze maand`,
+				fullscreenLabel: "Volledig scherm", exitFullscreenLabel: "Volledig scherm sluiten",
+				selogers: "Verblijf boeken", copyLinkLabel: "Link naar dit evenement kopiëren", linkCopied: "Link gekopieerd!",
+				selectForHighlights: "Toevoegen aan Highlights-link",
+				copyHighlightsLink: (n) => n > 0 ? `🔗 Highlights-link kopiëren (${n})` : "🔗 Highlights-link kopiëren",
+				noSelectionAlert: "Selecteer minstens één evenement om in de link op te nemen.",
+				viewSelection: "Mijn selectie bekijken", selectForHighlightsTitle: "Toevoegen aan mijn selectie",
+				today: "Vandaag", eventsCounter: (n) => `${n} evenement${n > 1 ? 'en' : ''}`
 			}
 		};
 
@@ -592,6 +674,7 @@
 		function readUrlParams() {
 			const p = new URLSearchParams(window.location.search);
 			if (p.get('lang')) state.lang = p.get('lang').toUpperCase();
+			if (!['FR', 'EN', 'DE', 'NL'].includes(state.lang)) state.lang = 'FR';
 			// valeur precise (ex: "salles6"/"salles8"/"moustiers") a preserver telle quelle dans l'URL/les liens ;
 			// accepte les mêmes alias que les autres pages (logement/listing/l/id).
 			state.logementRaw = p.get('logement') || p.get('listing') || p.get('l') || p.get('id') || DEFAULT_LISTING_ID;
@@ -966,11 +1049,19 @@
 			return (b.rating || 0) - (a.rating || 0);
 		}
 
-		// version {FR, EN} systematique d'une valeur localisee (chaine simple ou objet {FR,EN})
+		// version {FR, EN, DE, NL} systematique d'une valeur localisee (chaine simple ou objet {FR,EN,DE,NL, ...})
 		function bilingual(val) {
-			if (val == null) return { FR: '', EN: '' };
-			if (typeof val === 'object') return { FR: val.FR || val.EN || '', EN: val.EN || val.FR || '' };
-			return { FR: val, EN: val };
+			if (val == null) return { FR: '', EN: '', DE: '', NL: '' };
+			if (typeof val === 'object') {
+				const base = val.FR || val.EN || val.DE || val.NL || '';
+				return {
+					FR: val.FR || base,
+					EN: val.EN || base,
+					DE: val.DE || base,
+					NL: val.NL || base
+				};
+			}
+			return { FR: val, EN: val, DE: val, NL: val };
 		}
 
 		// "Vendredi 24 juillet" : jour de semaine + quantieme + mois, dans la langue demandee
@@ -1000,7 +1091,9 @@
 					const placeSuffix = e.place ? ' — ' + e.place : '';
 					return {
 						FR: titleLoc.FR + placeSuffix + ' · ' + formatShortDateFor('FR', e.date),
-						EN: titleLoc.EN + placeSuffix + ' · ' + formatShortDateFor('EN', e.date)
+						EN: titleLoc.EN + placeSuffix + ' · ' + formatShortDateFor('EN', e.date),
+						DE: titleLoc.DE + placeSuffix + ' · ' + formatShortDateFor('DE', e.date),
+						NL: titleLoc.NL + placeSuffix + ' · ' + formatShortDateFor('NL', e.date)
 					};
 				});
 		}
@@ -1179,7 +1272,7 @@
 			head.innerHTML = `
 				<div class="day-num">${day.getDate()}</div>
 				<div class="day-meta">
-					<span class="day-name">${I18N[state.lang].weekdays[weekdayIdx]}${isToday ? ' · ' + (state.lang === 'EN' ? 'Today' : "Aujourd'hui") : ''}</span>
+				<span class="day-name">${I18N[state.lang].weekdays[weekdayIdx]}${isToday ? ' · ' + I18N[state.lang].today : ''}</span>
 					<span class="day-month">${I18N[state.lang].months[day.getMonth()]}</span>
 				</div>
 				${dayIcon ? `<span class="day-icon">${dayIcon}</span>` : ''}
@@ -1347,9 +1440,7 @@
 				list.appendChild(renderDayCard(cfg, day, dayEvents, isToday));
 			});
 
-			$('#events-counter').textContent = state.lang === 'EN'
-				? `${total} event${total > 1 ? 's' : ''}`
-				: `${total} événement${total > 1 ? 's' : ''}`;
+			$('#events-counter').textContent = I18N[state.lang].eventsCounter(total);
 
 			// bouton "afficher les jours passés" (masque quand une plage de dates explicite est imposee par l'URL)
 			const btnPast = $('#btn-toggle-past');
@@ -1367,7 +1458,7 @@
 			hlList.innerHTML = '';
 			visibleHighlights.forEach(h => {
 				const li = document.createElement('li');
-				li.textContent = `⭐ ${state.lang === 'EN' ? h.EN : h.FR}`;
+				li.textContent = `⭐ ${h[state.lang] || h.FR}`;
 				hlList.appendChild(li);
 			});
 			$('#highlights-card').classList.toggle('hidden', !visibleHighlights.length);
