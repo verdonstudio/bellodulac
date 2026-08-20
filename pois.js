@@ -2640,13 +2640,13 @@ window.POIS = [
     "de": {
       "name": "Insel Costebelle",
       "desc": "Entdecken Sie beim Stand-up-Paddling oder Kajakfahren die geheimnisvolle, herzförmige Insel Costebelle! Machen Sie an einem ihrer Strände Halt für ein Picknick.",
-      "url": "gpx/paddle_costebelle.html?lang=EN",
+      "url": "gpx/paddle_costebelle.html?lang=DE",
       "urlLabel": "Weitere Informationen"
     },
     "nl": {
       "name": "Eiland Costebelle",
       "desc": "Ontdek per supboard of kajak het mysterieuze, hartvormige eiland Costebelle! Stop op een van de stranden voor een picknick.",
-      "url": "gpx/paddle_costebelle.html?lang=EN",
+      "url": "gpx/paddle_costebelle.html?lang=NL",
       "urlLabel": "Meer informatie"
     },
     "pano": [
@@ -4149,7 +4149,7 @@ window.POIS = [
           "label": "Weitere Informationen"
         },
         {
-          "url": "gpx/rando_quinson.html?logement=moustiers&lang=EN",
+          "url": "gpx/rando_quinson.html?logement=moustiers&lang=DE",
           "label": "GPX-Route"
         }
       ]
@@ -4163,7 +4163,7 @@ window.POIS = [
           "label": "Meer informatie"
         },
         {
-          "url": "gpx/rando_quinson.html?logement=moustiers&lang=EN",
+          "url": "gpx/rando_quinson.html?logement=moustiers&lang=NL",
           "label": "GPX-route"
         }
       ]
@@ -4408,7 +4408,7 @@ window.POIS = [
           "label": "Weitere Informationen"
         },
         {
-          "url": "gpx/rando_moustiers.html?logement=moustiers&lang=EN",
+          "url": "gpx/rando_moustiers.html?logement=moustiers&lang=DE",
           "label": "GPX-Strecke"
         }
       ]
@@ -4422,7 +4422,7 @@ window.POIS = [
           "label": "Meer informatie"
         },
         {
-          "url": "gpx/rando_moustiers.html?logement=moustiers&lang=EN",
+          "url": "gpx/rando_moustiers.html?logement=moustiers&lang=NL",
           "label": "GPX-route"
         }
       ]
@@ -5125,13 +5125,13 @@ window.POIS = [
     "de": {
       "name": "Strand Costebelle",
       "desc": "Familienstrand mit Spielgeräten und schwimmender Plattform zum Springen in der Hochsaison sowie Materialverleih. Im Sommer bewachter Strand.",
-      "url": "galerie.html?lang=EN&folder=plage_costebelle&image=1.png",
+      "url": "galerie.html?lang=DE&folder=plage_costebelle&image=1.png",
       "urlLabel": "Weitere Informationen"
     },
     "nl": {
       "name": "Strand Costebelle",
       "desc": "Familiestrand met speeltoestellen en een drijvend platform om in het hoogseizoen vanaf te duiken, plus materiaalverhuur. In de zomer bewaakt strand.",
-      "url": "galerie.html?lang=EN&folder=plage_costebelle&image=1.png",
+      "url": "galerie.html?lang=NL&folder=plage_costebelle&image=1.png",
       "urlLabel": "Meer informatie"
     },
     "pano": [
@@ -7417,13 +7417,13 @@ window.POIS = [
     "de": {
       "name": "Wandern in Les Salles-sur-Verdon",
       "desc": "Familienwanderung am See von Les Salles-sur-Verdon",
-      "url": "gpx/rando_salles.html?lang=EN",
+      "url": "gpx/rando_salles.html?lang=DE",
       "urlLabel": "Weitere Informationen"
     },
     "nl": {
       "name": "Wandelen in Les Salles-sur-Verdon",
       "desc": "Familiewandeling aan het meer van Les Salles-sur-Verdon",
-      "url": "gpx/rando_salles.html?lang=EN",
+      "url": "gpx/rando_salles.html?lang=NL",
       "urlLabel": "Meer informatie"
     },
     "pano": [
@@ -7821,7 +7821,7 @@ window.POIS = [
           "label": "Weitere Informationen"
         },
         {
-          "url": "gpx/rando_aiguines.html?lang=EN",
+          "url": "gpx/rando_aiguines.html?lang=DE",
           "label": "GPX-Track"
         }
       ]
@@ -7835,7 +7835,7 @@ window.POIS = [
           "label": "Meer informatie"
         },
         {
-          "url": "gpx/rando_aiguines.html?lang=EN",
+          "url": "gpx/rando_aiguines.html?lang=NL",
           "label": "GPX-route"
         }
       ]
@@ -8571,7 +8571,7 @@ window.POIS = [
           "label": "Video ansehen ▶️"
         },
         {
-          "url": "galerie.html?folder=plage_margaridon&image=1.png&lang=EN",
+          "url": "galerie.html?folder=plage_margaridon&image=1.png&lang=DE",
           "label": "Nachtansicht 📸"
         },
         {
@@ -8589,7 +8589,7 @@ window.POIS = [
           "label": "Video bekijken ▶️"
         },
         {
-          "url": "galerie.html?folder=plage_margaridon&image=1.png&lang=EN",
+          "url": "galerie.html?folder=plage_margaridon&image=1.png&lang=NL",
           "label": "Nachtbeeld 📸"
         },
         {
@@ -9026,7 +9026,7 @@ window.POIS = [
       "desc": "Entdecken Sie die Entwicklung von Les Salles-sur-Verdon über die letzten Jahrzehnte in einer Animation...",
       "links": [
         {
-          "url": "salles_backintime.html?lang=EN",
+          "url": "salles_backintime.html?lang=DE",
           "label": "Zurück in die Zukunft..."
         },
         {
@@ -9040,7 +9040,7 @@ window.POIS = [
       "desc": "Ontdek de evolutie van het dorp Les Salles-sur-Verdon over de afgelopen decennia in een animatie...",
       "links": [
         {
-          "url": "salles_backintime.html?lang=EN",
+          "url": "salles_backintime.html?lang=NL",
           "label": "Terug naar de toekomst..."
         },
         {
@@ -9101,7 +9101,7 @@ window.POIS = [
       "desc": "Entdecken Sie die Entwicklung von Les Salles-sur-Verdon über die letzten Jahrzehnte in einer Animation...",
       "links": [
         {
-          "url": "salles_backintime.html?lang=EN",
+          "url": "salles_backintime.html?lang=DE",
           "label": "Zurück in die Zukunft..."
         },
         {
@@ -9115,7 +9115,7 @@ window.POIS = [
       "desc": "Ontdek de evolutie van het dorp Les Salles-sur-Verdon over de afgelopen decennia in een animatie...",
       "links": [
         {
-          "url": "salles_backintime.html?lang=EN",
+          "url": "salles_backintime.html?lang=NL",
           "label": "Terug naar de toekomst..."
         },
         {
@@ -9188,7 +9188,7 @@ window.POIS = [
       "desc": "Entdecken Sie die Entwicklung des Dorfes über die letzten Jahrzehnte in einer Animation...",
       "links": [
         {
-          "url": "moustiers_backintime.html?lang=EN",
+          "url": "moustiers_backintime.html?lang=DE",
           "label": "Zurück in die Zukunft..."
         },
         {
@@ -9206,7 +9206,7 @@ window.POIS = [
       "desc": "Ontdek de evolutie van het dorp over de afgelopen decennia in een animatie...",
       "links": [
         {
-          "url": "moustiers_backintime.html?lang=EN",
+          "url": "moustiers_backintime.html?lang=NL",
           "label": "Terug naar de toekomst..."
         },
         {
@@ -9276,7 +9276,7 @@ window.POIS = [
       "desc": "Entdecken Sie das Tal vor der Entstehung des Sees in einer Animation...",
       "links": [
         {
-          "url": "lac_backintime.html?lang=EN",
+          "url": "lac_backintime.html?lang=DE",
           "label": "Zurück in die Zukunft..."
         },
         {
@@ -9290,7 +9290,7 @@ window.POIS = [
       "desc": "Ontdek de vallei vóór het ontstaan van het meer in een animatie...",
       "links": [
         {
-          "url": "lac_backintime.html?lang=EN",
+          "url": "lac_backintime.html?lang=NL",
           "label": "Terug naar de toekomst..."
         },
         {
@@ -10349,13 +10349,13 @@ window.POIS = [
     "de": {
       "name": "📍Insel Costebelle",
       "desc": "Entdecken Sie mit dem Paddleboard oder Kajak die geheimnisvolle, herzförmige Insel Costebelle! Machen Sie an einem ihrer Strände Halt für ein Picknick.",
-      "url": "gpx/paddle_costebelle.html?lang=EN",
+      "url": "gpx/paddle_costebelle.html?lang=DE",
       "urlLabel": "Weitere Informationen"
     },
     "nl": {
       "name": "📍Eiland Costebelle",
       "desc": "Ontdek per suppboard of kajak het mysterieuze, hartvormige eiland Costebelle! Stop op een van de stranden voor een picknick.",
-      "url": "gpx/paddle_costebelle.html?lang=EN",
+      "url": "gpx/paddle_costebelle.html?lang=NL",
       "urlLabel": "Meer informatie"
     },
     "backintime": {
