@@ -6325,6 +6325,25 @@ window.POIS = [
       "url": "https://www.tripadvisor.fr/Restaurant_Review-g1761554-d20989977-Reviews-Pizzeria_l_Ermitage-Les_Salles_sur_Verdon_Var_Provence_Alpes_Cote_d_Azur.html",
       "urlLabel": "More details"
     }
+  },
+  {
+    "id": "petit-train-moustiers",
+    "cat": "visite",
+    "coords": [43.846433, 6.221353],
+    "stars": 2,
+    "img": "https://bellodulac.vercel.app/assets/train_moustiers.jpg",
+    "fr": {
+      "name": "Le petit train des Alpes",
+      "desc": "Petit train touristique qui monte jusqu'au centre du village avec un commentaire sur l'histoire de Moustiers. Pratique pour se garer en bas (parking Maïre ou parking du stade, gratuits) sans galérer à trouver une place au village. Plusieurs arrêts, tickets valables toute la journée. Tarifs : 5€ (3€ réduit : -65 ans/situation de handicap/3-11 ans), 3€ l'aller simple, 15€ le forfait famille (2 adultes + 2 enfants). Ouvert du 06/04 au 31/10, tous les jours de 10h à 12h et 14h à 18h (et jusqu'à 22h les soirs de marché nocturne en juillet-août).",
+      "url": "https://www.moustiers.fr/fiche/le-petit-train-des-alpes/",
+      "urlLabel": "Plus d'informations"
+    },
+    "en": {
+      "name": "The Little Train of the Alps",
+      "desc": "Tourist train that takes you up to the village centre with commentary on the history of Moustiers. Handy for parking at the bottom (free Maïre or stadium car parks) without the hassle of finding a spot in the village. Several stops, tickets valid all day. Rates: €5 (€3 reduced: 65+/disability/ages 3-11), €3 one-way, €15 family pass (2 adults + 2 children). Open 06/04 to 31/10, daily 10am-12pm and 2pm-6pm (until 10pm on night-market evenings in July-August).",
+      "url": "https://www.moustiers.fr/en/fiche/le-petit-train-des-alpes-3/",
+      "urlLabel": "More details"
+    }
   }
 
 ];
