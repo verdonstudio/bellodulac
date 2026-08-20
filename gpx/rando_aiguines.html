@@ -241,6 +241,8 @@ canvas#elevation-chart { width: 100% !important; height: 100% !important; }
           <div class="lang-toggle">
             <button id="btn-fr" class="lang-btn">FR</button>
             <button id="btn-en" class="lang-btn">EN</button>
+            <button id="btn-de" class="lang-btn">DE</button>
+            <button id="btn-nl" class="lang-btn">NL</button>
           </div>
         </div>
       </div>
@@ -308,6 +310,22 @@ window.addEventListener('DOMContentLoaded', async function () {
       errGpx: "Error: GPX track not found. Paste XML at the bottom.",
       copied: "Code successfully copied!", copyErr: "Copy error (see console)",
       dlGpx: "Download GPX file"
+    },
+    de: {
+      dist: 'Distanz', time: 'Dauer', elev: 'Höhenunterschied', photos: 'Fotos',
+      editOn: 'Bearbeitung aktivieren', editOff: 'Bearbeitung beenden', addPhoto: '+ Foto', addPoi: '+ Info (POI)', export: 'Exportieren',
+      save: 'Speichern', view: 'Vergrößern', del: 'Löschen',
+      errGpx: "Fehler: GPX-Track nicht gefunden. Fügen Sie den XML-Code unten in der Datei ein.",
+      copied: "Code erfolgreich kopiert!", copyErr: "Fehler beim Kopieren (siehe Konsole)",
+      dlGpx: "GPX-Datei herunterladen"
+    },
+    nl: {
+      dist: 'Afstand', time: 'Duur', elev: 'Hoogteverschil', photos: "Foto's",
+      editOn: 'Bewerken inschakelen', editOff: 'Bewerken afsluiten', addPhoto: '+ Foto', addPoi: '+ Info (POI)', export: 'Exporteren',
+      save: 'Opslaan', view: 'Vergroten', del: 'Verwijderen',
+      errGpx: "Fout: GPX-track niet gevonden. Plak de XML onderaan het bestand.",
+      copied: "Code succesvol gekopieerd!", copyErr: "Kopieerfout (zie console)",
+      dlGpx: "GPX-bestand downloaden"
     }
   };
 
@@ -346,7 +364,8 @@ window.addEventListener('DOMContentLoaded', async function () {
   // ───── PARAMÈTRES URL ─────────────────────────────
   const urlParams = new URLSearchParams(window.location.search);
   let currentLang = 'fr';
-  if ((urlParams.get('lang') || urlParams.get('lng') || '').toLowerCase() === 'en') currentLang = 'en';
+  const rawLangParam = (urlParams.get('lang') || urlParams.get('lng') || '').toLowerCase();
+  if (['en', 'de', 'nl'].includes(rawLangParam)) currentLang = rawLangParam;
 
   let currentLogement = DEFAULT_LISTING_ID;
   const logementParam = urlParams.get('logement') || urlParams.get('listing') || urlParams.get('l') || urlParams.get('id');
@@ -393,6 +412,8 @@ window.addEventListener('DOMContentLoaded', async function () {
 
   document.getElementById('btn-fr').addEventListener('click', () => { setLang('fr'); syncUrlParams(); });
   document.getElementById('btn-en').addEventListener('click', () => { setLang('en'); syncUrlParams(); });
+  document.getElementById('btn-de').addEventListener('click', () => { setLang('de'); syncUrlParams(); });
+  document.getElementById('btn-nl').addEventListener('click', () => { setLang('nl'); syncUrlParams(); });
 
   function setLang(lang) {
     currentLang = lang;
@@ -634,9 +655,10 @@ window.addEventListener('DOMContentLoaded', async function () {
             .setContent(popupHtml)
             .openOn(map);
         } else {
-          const badge = currentLang === 'en' ? (poi.badgeEn || poi.badgeFr) : (poi.badgeFr || poi.badgeEn);
-          const title = currentLang === 'en' ? (poi.titleEn || poi.titleFr) : (poi.titleFr || poi.titleEn);
-          const desc  = currentLang === 'en' ? (poi.descEn || poi.descFr)   : (poi.descFr || poi.descEn);
+          const capLang = currentLang.charAt(0).toUpperCase() + currentLang.slice(1);
+          const badge = poi['badge' + capLang] || poi.badgeFr || poi.badgeEn;
+          const title = poi['title' + capLang] || poi.titleFr || poi.titleEn;
+          const desc  = poi['desc' + capLang]  || poi.descFr  || poi.descEn;
           const logoBlock = logoUrl ? `<div class="ov-popup__logo-wrap"><img src="${logoUrl}" alt="" class="ov-popup__logo"></div>` : '';
 
           const viewerHtml = `

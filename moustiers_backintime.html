@@ -269,6 +269,8 @@
                 <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
                     <option value="FR">FR</option>
                     <option value="EN">EN</option>
+                    <option value="DE">DE</option>
+                    <option value="NL">NL</option>
                 </select>
             </div>
         </div>
@@ -352,10 +354,10 @@
         // ==========================================
         const CURRENT_CITY = 'moustiers'; 
         const IMAGE_LAYERS = {
-            "1950": { src: "https://bellodulac.netlify.app/images/moustiers/1950_1965.png", fr: "1950-1965", en: "1950-1965" },
-            "1965": { src: "https://bellodulac.netlify.app/images/moustiers/1965_1980.png", fr: "1965-1980 (Constr.)", en: "1965-1980 (Constr.)" },
-            "2021": { src: "https://bellodulac.netlify.app/images/moustiers/2021_2023.png", fr: "2021-2023", en: "2021-2023" },
-            "2026": { src: "https://bellodulac.netlify.app/images/moustiers/2026.png", fr: "Aujourd'hui", en: "Today" }
+            "1950": { src: "https://bellodulac.netlify.app/images/moustiers/1950_1965.png", fr: "1950-1965", en: "1950-1965", de: "1950-1965", nl: "1950-1965" },
+            "1965": { src: "https://bellodulac.netlify.app/images/moustiers/1965_1980.png", fr: "1965-1980 (Constr.)", en: "1965-1980 (Constr.)", de: "1965-1980 (Bau)", nl: "1965-1980 (Bouw)" },
+            "2021": { src: "https://bellodulac.netlify.app/images/moustiers/2021_2023.png", fr: "2021-2023", en: "2021-2023", de: "2021-2023", nl: "2021-2023" },
+            "2026": { src: "https://bellodulac.netlify.app/images/moustiers/2026.png", fr: "Aujourd'hui", en: "Today", de: "Heute", nl: "Vandaag" }
         };
 
                 // Logement par defaut : vient de logements.js (source de verite partagee), avec ce
@@ -372,8 +374,10 @@ const state = {
 
         const I18N = {
             FR: { back: "Retour", title: "Moustiers à travers le temps", read_more: "En savoir plus" },
-            EN: { back: "Back", title: "Moustiers over time", read_more: "Read more" }
-        };	
+            EN: { back: "Back", title: "Moustiers over time", read_more: "Read more" },
+            DE: { back: "Zurück", title: "Moustiers im Wandel der Zeit", read_more: "Mehr erfahren" },
+            NL: { back: "Terug", title: "Moustiers door de tijd heen", read_more: "Meer lezen" }
+        };
 
 
         // ==========================================
@@ -404,7 +408,10 @@ const state = {
         function readUrlParams() {
             const p = new URLSearchParams(window.location.search);
             const rawLang = p.get('lang') || p.get('lng');
-            if (rawLang) state.lang = rawLang.toUpperCase();
+            if (rawLang) {
+                const upperLang = rawLang.toUpperCase();
+                state.lang = ['FR', 'EN', 'DE', 'NL'].includes(upperLang) ? upperLang : 'FR';
+            }
             const rawLogement = p.get('logement') || p.get('listing') || p.get('l') || p.get('id');
             state.logementRaw = rawLogement || DEFAULT_LISTING_ID;
             state.logement = state.logementRaw.toLowerCase().includes('moustiers') ? 'moustiers' : 'salles';
@@ -437,7 +444,7 @@ const state = {
             sLeft.innerHTML = ''; sRight.innerHTML = '';
 
             Object.keys(IMAGE_LAYERS).forEach(key => {
-                const label = state.lang === 'EN' ? IMAGE_LAYERS[key].en : IMAGE_LAYERS[key].fr;
+                const label = IMAGE_LAYERS[key][state.lang.toLowerCase()] || IMAGE_LAYERS[key].fr;
                 sLeft.add(new Option(label, key, false, key === state.layerLeft));
                 sRight.add(new Option(label, key, false, key === state.layerRight));
             });
@@ -812,9 +819,9 @@ const state = {
                 // créer un filtre inutile sur la carte 2D d'index.html), on leur donne ici un
                 // habillage local, uniquement utilisé pour le badge du toaster de cette page.
                 const catInfo = isToponyme
-                    ? { color: '#0284c7', emoji: '🏷️', fr: 'Lieu-dit', en: 'Place name' }
+                    ? { color: '#0284c7', emoji: '🏷️', fr: 'Lieu-dit', en: 'Place name', de: 'Ortsname', nl: 'Plaatsnaam' }
                     : (window.POI_CATEGORIES[poi.cat] || {color: '#888', emoji: '📍', fr: '', en: ''});
-                const catLabel = state.lang === 'EN' ? catInfo.en : catInfo.fr;
+                const catLabel = catInfo[state.lang.toLowerCase()] || catInfo.fr;
                 const content = getPoiContent(poi);
                 const links = getPoiLinks(content, poi);
 

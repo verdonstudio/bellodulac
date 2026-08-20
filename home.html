@@ -90,6 +90,8 @@
       <select id="lang-select" class="text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat:no-repeat; background-position:right 8px center;">
         <option value="FR">FR</option>
         <option value="EN">EN</option>
+        <option value="DE">DE</option>
+        <option value="NL">NL</option>
       </select>
     </div>
   </div>
@@ -134,7 +136,7 @@
   }
 
   let lang = (urlParams.get('lang') || paramFromReservation('lang') || 'FR').toUpperCase();
-  if (lang !== 'FR' && lang !== 'EN') lang = 'FR';
+  if (!['FR', 'EN', 'DE', 'NL'].includes(lang)) lang = 'FR';
 
   const logementId = urlParams.get('logement') || paramFromReservation('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
   const listing = LOGEMENTS[logementId];
@@ -155,61 +157,76 @@
     {
       key: 'map',
       icon: '🗺️',
-      title: { FR: 'Carte interactive', EN: 'Interactive map' },
+      title: { FR: 'Carte interactive', EN: 'Interactive map', DE: 'Interaktive Karte', NL: 'Interactieve kaart' },
       desc: {
         FR: 'Découvrez plus de 130 lieux à visiter autour du lac et des villages.',
-        EN: 'Discover more than 130 spots to visit around the lake and villages.'
+        EN: 'Discover more than 130 spots to visit around the lake and villages.',
+        DE: 'Entdecken Sie mehr als 130 Orte rund um den See und die Dörfer.',
+        NL: 'Ontdek meer dan 130 plekken rond het meer en de dorpen.'
       }
     },
     {
       key: 'evenements',
       icon: '📅',
-      title: { FR: 'Évènements locaux', EN: 'Local events' },
+      title: { FR: 'Évènements locaux', EN: 'Local events', DE: 'Lokale Veranstaltungen', NL: 'Lokale evenementen' },
       desc: {
         FR: 'Tous les évènements du coin, jour par jour, pendant votre séjour.',
-        EN: 'All local events, day by day, during your stay.'
+        EN: 'All local events, day by day, during your stay.',
+        DE: 'Alle Veranstaltungen der Umgebung, Tag für Tag, während Ihres Aufenthalts.',
+        NL: 'Alle evenementen in de omgeving, dag na dag, tijdens uw verblijf.'
       }
     },
     {
       key: 'highlights',
       icon: '✨',
-      title: { FR: 'Votre programme', EN: 'Your selection' },
+      title: { FR: 'Votre programme', EN: 'Your selection', DE: 'Ihr Programm', NL: 'Uw programma' },
       desc: {
         FR: 'Une sélection d’évènements et de lieux rien que pour vous.',
-        EN: 'A selection of events and spots picked just for you.'
+        EN: 'A selection of events and spots picked just for you.',
+        DE: 'Eine Auswahl an Veranstaltungen und Orten, nur für Sie zusammengestellt.',
+        NL: 'Een selectie van evenementen en plekken speciaal voor u samengesteld.'
       }
     },
     {
       key: 'panorama',
       icon: '🌄',
-      title: { FR: 'Panorama 360°', EN: '360° panorama' },
+      title: { FR: 'Panorama 360°', EN: '360° panorama', DE: '360°-Panorama', NL: '360°-panorama' },
       desc: {
         FR: 'Repérez les logements et les environs en vue à 360°, et bien plus à découvrir…',
-        EN: 'Spot the homes and surroundings in 360° view, and much more to discover…'
+        EN: 'Spot the homes and surroundings in 360° view, and much more to discover…',
+        DE: 'Entdecken Sie die Unterkünfte und die Umgebung in der 360°-Ansicht, und vieles mehr…',
+        NL: 'Bekijk de woningen en de omgeving in 360°-weergave, en nog veel meer…'
       }
     },
     {
       key: 'backintime',
       icon: '🕰️',
-      title: { FR: 'Retour vers le futur', EN: 'Back to the future' },
+      title: { FR: 'Retour vers le futur', EN: 'Back to the future', DE: 'Zurück in die Zukunft', NL: 'Terug naar de toekomst' },
       desc: {
         FR: 'Remontez le temps et comparez le village et le lac d’hier à aujourd’hui.',
-        EN: 'Travel back in time and compare the village and the lake, then and now.'
+        EN: 'Travel back in time and compare the village and the lake, then and now.',
+        DE: 'Reisen Sie in der Zeit zurück und vergleichen Sie das Dorf und den See von früher mit heute.',
+        NL: 'Reis terug in de tijd en vergelijk het dorp en het meer van vroeger met nu.'
       },
       href: backInTimeHref()
     }
   ];
 
   const I18N = {
-    heroTitle: { FR: 'Bienvenue !', EN: 'Welcome!' },
+    heroTitle: { FR: 'Bienvenue !', EN: 'Welcome!', DE: 'Willkommen!', NL: 'Welkom!' },
     heroSubtitle: {
       FR: 'Planifiez vos activités pendant votre séjour.',
-      EN: 'Plan your activities during your stay.'
+      EN: 'Plan your activities during your stay.',
+      DE: 'Planen Sie Ihre Aktivitäten während Ihres Aufenthalts.',
+      NL: 'Plan uw activiteiten tijdens uw verblijf.'
     },
-    seLoger: { FR: 'Se loger', EN: 'Book a stay' },
+    seLoger: { FR: 'Se loger', EN: 'Book a stay', DE: 'Unterkunft buchen', NL: 'Verblijf boeken' },
+    ouvrir: { FR: 'Ouvrir →', EN: 'Open →', DE: 'Öffnen →', NL: 'Openen →' },
     missing: {
       FR: '⚠️ redirect.js n’a pas pu être chargé, ou cette réservation est introuvable — les liens ci-dessous peuvent être incomplets.',
-      EN: '⚠️ redirect.js could not be loaded, or this reservation was not found — the links below may be incomplete.'
+      EN: '⚠️ redirect.js could not be loaded, or this reservation was not found — the links below may be incomplete.',
+      DE: '⚠️ redirect.js konnte nicht geladen werden, oder diese Reservierung wurde nicht gefunden — die untenstehenden Links können unvollständig sein.',
+      NL: '⚠️ redirect.js kon niet worden geladen, of deze reservering werd niet gevonden — de onderstaande links kunnen onvolledig zijn.'
     }
   };
 
@@ -243,7 +260,7 @@
       <div class="tile-icon">${t.icon}</div>
       <div class="tile-title">${t.title[lang]}</div>
       <div class="tile-desc">${t.desc[lang]}</div>
-      <div class="tile-arrow">${lang === 'FR' ? 'Ouvrir →' : 'Open →'}</div>
+      <div class="tile-arrow">${I18N.ouvrir[lang]}</div>
     `;
     grid.appendChild(a);
   });
