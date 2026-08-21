@@ -54,6 +54,19 @@ body {
 .gpx-dl-btn svg { flex-shrink: 0; }
 .header__actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
+/* Bouton retour (vers index.html), meme principe que sur les autres pages
+   (highlights.html, moustiers_backintime.html, etc.) mais adapte au theme sombre. */
+.btn-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.08); color: #FAFAFA;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 6px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; font-family: inherit;
+  text-decoration: none; cursor: pointer; transition: background 0.2s;
+}
+.btn-back:hover { background: rgba(255,255,255,0.16); }
+.btn-back svg { flex-shrink: 0; }
+
 .stats { display: flex; gap: 28px; flex-wrap: wrap; }
 .stat { display: flex; flex-direction: column; gap: 2px; }
 .stat__label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(250,250,250,0.5); }
@@ -232,6 +245,10 @@ canvas#elevation-chart { width: 100% !important; height: 100% !important; }
         </div>
         
         <div class="header__actions">
+          <a id="btn-back" href="../index.html" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <span id="text-back">Retour</span>
+          </a>
           <button id="btn-download-gpx" class="gpx-dl-btn" type="button">
             <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
               <path d="M7.25 1.5v7.69L4.78 6.72 3.72 7.78 8 12.06l4.28-4.28-1.06-1.06-2.47 2.47V1.5h-1.5zM3 13.5v1h10v-1H3z"/>
@@ -301,7 +318,7 @@ window.addEventListener('DOMContentLoaded', async function () {
       save: 'Valider', view: 'Agrandir', del: 'Suppr.',
       errGpx: "Erreur : Tracé GPX introuvable. Copiez le XML en bas du fichier.",
       copied: "Code copié avec succès !", copyErr: "Erreur de copie (voir console)",
-      dlGpx: "Télécharger le fichier GPX"
+      dlGpx: "Télécharger le fichier GPX", back: "Retour"
     },
     en: { 
       dist: 'Distance', time: 'Time', elev: 'Elevation', photos: 'Photos', 
@@ -309,7 +326,7 @@ window.addEventListener('DOMContentLoaded', async function () {
       save: 'Save', view: 'View', del: 'Delete',
       errGpx: "Error: GPX track not found. Paste XML at the bottom.",
       copied: "Code successfully copied!", copyErr: "Copy error (see console)",
-      dlGpx: "Download GPX file"
+      dlGpx: "Download GPX file", back: "Back"
     },
     de: {
       dist: 'Distanz', time: 'Dauer', elev: 'Höhenunterschied', photos: 'Fotos',
@@ -317,7 +334,7 @@ window.addEventListener('DOMContentLoaded', async function () {
       save: 'Speichern', view: 'Vergrößern', del: 'Löschen',
       errGpx: "Fehler: GPX-Track nicht gefunden. Fügen Sie den XML-Code unten in der Datei ein.",
       copied: "Code erfolgreich kopiert!", copyErr: "Fehler beim Kopieren (siehe Konsole)",
-      dlGpx: "GPX-Datei herunterladen"
+      dlGpx: "GPX-Datei herunterladen", back: "Zurück"
     },
     nl: {
       dist: 'Afstand', time: 'Duur', elev: 'Hoogteverschil', photos: "Foto's",
@@ -325,7 +342,7 @@ window.addEventListener('DOMContentLoaded', async function () {
       save: 'Opslaan', view: 'Vergroten', del: 'Verwijderen',
       errGpx: "Fout: GPX-track niet gevonden. Plak de XML onderaan het bestand.",
       copied: "Code succesvol gekopieerd!", copyErr: "Kopieerfout (zie console)",
-      dlGpx: "GPX-bestand downloaden"
+      dlGpx: "GPX-bestand downloaden", back: "Terug"
     }
   };
 
@@ -458,6 +475,11 @@ window.addEventListener('DOMContentLoaded', async function () {
 
     const btnGpx = document.getElementById('btn-download-gpx');
     if (btnGpx) btnGpx.title = T[currentLang].dlGpx;
+
+    const textBack = document.getElementById('text-back');
+    if (textBack) textBack.textContent = T[currentLang].back;
+    const btnBack = document.getElementById('btn-back');
+    if (btnBack) btnBack.href = `../index.html?logement=${currentLogement}&lang=${currentLang.toUpperCase()}`;
 
     renderStats();
     if(isEditMode) { renderPhotos(); renderPois(); }
