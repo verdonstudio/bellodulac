@@ -80,6 +80,8 @@ const reservations = {
         "galetas": "index.html?logement=moustiers&lang=FR&edatestart=2026-08-17&edateend=2026-08-22&zoom=15.5&pos=43.80229%2C6.25044&poi=canoe-galetas-1",
         "plage-bellodulac1": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-17&edateend=2026-08-22&zoom=17&pos=43.77194%2C6.20816&fullscreen=1&trace=plage-salles",
         "plage-bellodulac2": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-17&edateend=2026-08-22&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
+        "cinema" : "index.html?logement=moustiers&lang=FR&edatestart=2026-08-17&edateend=2026-08-22&zoom=19&pos=43.84427%2C6.22152&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1&pin=true",
+        "musees" : "highlights.html?lang=FR&logement=moustiers&from=evenements&edatestart=2026-08-17&edateend=2026-08-22&visits=visite-quinson%3A2026-08-21%2Cvisite-faience%3A2026-08-21",
         "martel": "index.html?lang=FR&logement=moustiers&edatestart=2026-08-17&edateend=2026-08-22&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
     },
     "HMKZPX4TMA": {
