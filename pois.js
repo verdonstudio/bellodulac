@@ -8038,7 +8038,8 @@ window.POIS = [
       "coords": [
         51.042,
         47.503
-      ]
+      ],
+      "noClick": true
     }
   },
   {

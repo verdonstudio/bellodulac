@@ -27,7 +27,22 @@
             backdrop-filter: saturate(200%) blur(24px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
             z-index: 100;
+            transition: transform 0.25s ease;
         }
+
+        /* Menu retractable : utile en paysage sur mobile, ou la hauteur est comptee.
+           Le bouton chevron reste toujours visible/cliquable, meme topbar masquee. */
+        body.topbar-hidden .topbar { transform: translateY(-100%); }
+        body.topbar-hidden #compare-viewport { margin-top: 0; height: 100dvh; }
+        .btn-toggle-menu {
+            position: fixed; top: 6px; left: 50%; transform: translateX(-50%);
+            z-index: 110; width: 32px; height: 20px; border-radius: 0 0 10px 10px;
+            background: rgba(253, 251, 247, 0.9); border: 1px solid rgba(0,0,0,0.08);
+            border-top: none; display: flex; align-items: center; justify-content: center;
+            color: #334155; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: top 0.25s ease, transform 0.25s ease;
+        }
+        body.topbar-hidden .btn-toggle-menu { top: 0; transform: translateX(-50%) rotate(180deg); }
 
         .btn-back {
             display: inline-flex; align-items: center; gap: 6px;
@@ -113,6 +128,11 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 15; pointer-events: none;
         }
         .poi-container { position: absolute; pointer-events: auto; z-index: 30; }
+        /* Nouvelle propriete POI : poi.backintime.noClick = true (voir renderPois()).
+           Empeche ce marqueur d'intercepter le pointeur en vue normale, pour qu'un
+           glisser-deposer demarre sur son emplacement fasse bien defiler la comparaison
+           au lieu d'etre avale par le POI. Toujours interactif en mode edition. */
+        body:not(.edit-mode) .poi-container.poi-noclick { pointer-events: none; }
         .poi-container.active { z-index: 50; }
         .poi-container:hover { z-index: 60; }
 
@@ -275,6 +295,10 @@
             </div>
         </div>
     </header>
+
+    <button id="btn-toggle-menu" type="button" class="btn-toggle-menu" title="Afficher/masquer le menu" aria-label="Afficher/masquer le menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
 
     <!-- Overlay d'Aide Mobile Dynamique (disparaît seul) -->
     <div id="mobile-hint" class="absolute inset-0 z-40 pointer-events-none flex items-center justify-center transition-opacity duration-1000 opacity-0 hidden sm:hidden">
@@ -492,6 +516,12 @@ const state = {
             let isFirstLoad = false; // On ajoute un petit marqueur
 
             if (!hasCentered) {
+                // Garantit un affichage plein écran des le chargement, quelle que soit
+                // l'orientation : contentW/contentH couvrent deja tout le viewport a scale=1
+                // (calcul ci-dessus), donc tout scale < 1 laisse forcement apparaitre un
+                // bord de fond (#111) sur au moins un axe. C'est ce qui rendait cette page
+                // "pas plein ecran" en mobile (DEFAULT_ZOOM_MOBILE=0.8 < 1).
+                scale = Math.max(scale, 1);
                 const scaledWidth = contentW * scale;
                 const scaledHeight = contentH * scale;
 
@@ -888,7 +918,8 @@ const state = {
                 `;
 
                 const marker = document.createElement('div');
-                marker.className = `poi-container ${isActive} ${isToponyme ? 'poi-toponyme' : ''}`;
+                const noClick = !Array.isArray(poi.backintime) && !!(poi.backintime && poi.backintime.noClick);
+                marker.className = `poi-container ${isActive} ${isToponyme ? 'poi-toponyme' : ''} ${noClick ? 'poi-noclick' : ''}`;
                 marker.style.left = `${xPercent}%`;
                 marker.style.top = `${yPercent}%`;
                 marker.dataset.id = poi.id;
@@ -1207,6 +1238,12 @@ const state = {
 
             // Re-dimensionner si l'utilisateur pivote son téléphone
             window.addEventListener('resize', updateSizing);
+
+            // Menu retractable (utile en paysage mobile pour gagner de la hauteur).
+            document.getElementById('btn-toggle-menu').addEventListener('click', () => {
+                document.body.classList.toggle('topbar-hidden');
+                setTimeout(updateSizing, 260); // apres la transition CSS (0.25s)
+            });
 
             const zoomControlsEl = document.querySelector('.zoom-controls');
             if (zoomControlsEl) {
