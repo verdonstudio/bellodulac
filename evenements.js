@@ -4598,7 +4598,7 @@ window.EVENTS_DATA = {
       ]
     },
     "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/stage-dete-au-centre-nautique-de-bauduen-bauduen-fr-6426351/",
-    "img": "https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9zdGF0aWMuYXBpZGFlLXRvdXJpc21lLmNvbS9maWxlc3RvcmUvb2JqZXRzLXRvdXJpc3RpcXVlcy9pbWFnZXMvMTk2LzIxLzQxMjI3NzE2LmpwZw==/image.jpg"
+    "img": "https://www.cnbauduen.com/media/uploaded/sites/13034/evenement/5ee20b0e6ce60_IMG2569.JPG"
   },
   {
     "id": "evt-112",
