@@ -488,6 +488,7 @@ const state = {
         // DIMENSIONNEMENT DYNAMIQUE DES IMAGES
         // ==========================================
         let hasCentered = false;
+        let lastOrientation = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
 
 		function updateSizing() {
             const img = document.getElementById('img-left');
@@ -1237,7 +1238,19 @@ const state = {
             updateImages(); // Ceci va aussi appeler updateSizing() une fois chargé !
 
             // Re-dimensionner si l'utilisateur pivote son téléphone
-            window.addEventListener('resize', updateSizing);
+            window.addEventListener('resize', () => {
+                // Changement d'orientation (portrait <-> paysage) : on reinitialise le
+                // zoom/pan a l'etat plein ecran par defaut plutot que de garder le zoom
+                // manuel de l'orientation precedente (qui pourrait laisser des bords vides
+                // une fois la mise en page recalculee pour la nouvelle orientation).
+                const currentOrientation = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+                if (currentOrientation !== lastOrientation) {
+                    lastOrientation = currentOrientation;
+                    scale = getDefaultZoom();
+                    hasCentered = false;
+                }
+                updateSizing();
+            });
 
             // Menu retractable (utile en paysage mobile pour gagner de la hauteur).
             document.getElementById('btn-toggle-menu').addEventListener('click', () => {
