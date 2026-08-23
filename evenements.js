@@ -4331,10 +4331,10 @@ window.EVENTS_DATA = {
     "place": "Moustiers-Sainte-Marie",
     "time": "10h30–12h00",
     "title": {
-      "FR": "Visite guidée du vieux centre pour individuels",
-      "EN": "Guided tour of the old town for individuals",
-      "DE": "Geführter Rundgang durch die Altstadt für Einzelpersonen",
-      "NL": "Gegidste wandeling door het oude centrum voor individuele bezoekers"
+      "FR": "Visite guidée du vieux centre",
+      "EN": "Guided tour of the old town",
+      "DE": "Geführter Rundgang durch die Altstadt",
+      "NL": "Gegidste wandeling door het oude centrum"
     },
     "details": {
       "FR": "Visite guidée par un guide agréé de l'Office de Tourisme.",
