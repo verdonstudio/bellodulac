@@ -89,7 +89,7 @@
         #select-left { left: 20px; }
         #select-right { right: 20px; }
 
-        @media (max-width: 640px) {
+        @media (max-width: 640px), (max-height: 640px) {
             .year-selector { font-size: 12px; padding: 6px 10px; bottom: 20px; max-width: 140px; }
             #select-left { left: 10px; }
             #select-right { right: 10px; }
@@ -224,7 +224,7 @@
         .edit-mode .poi-dot { cursor: grab; }
         .edit-mode .poi-topo-marker:active,
         .edit-mode .poi-dot:active { cursor: grabbing; }
-        @media (max-width: 640px) { .poi-topo-label { font-size: 11px; } }
+        @media (max-width: 640px), (max-height: 640px) { .poi-topo-label { font-size: 11px; } }
 
         /* Bouton d'édition (crayon) : même logique que le bouton de suppression (croix), positionné à gauche */
         .edit-tools-edit {
@@ -398,7 +398,10 @@ const state = {
         const DEFAULT_ZOOM_POSITION = 0;
 
         function isMobileViewport() {
-            return window.innerWidth <= 640;
+            // Le plus petit des deux cotes reste stable en portrait comme en paysage
+            // (contrairement a window.innerWidth seul, qui devient large en paysage
+            // et faisait passer un telephone en mode "PC" : zoom/pan mal adaptes).
+            return Math.min(window.innerWidth, window.innerHeight) <= 640;
         }
 
         function getDefaultZoom() {
@@ -491,7 +494,7 @@ const state = {
                 const scaledWidth = contentW * scale;
                 const scaledHeight = contentH * scale;
 
-                if (viewportW <= 640) {
+                if (isMobileViewport()) {
                     // Mobile: Cale l'image à droite
                     panX = viewportW - scaledWidth;
                 } else {
@@ -1227,7 +1230,7 @@ const state = {
             });
 
             // Afficher une petite astuce d'aide sur mobile au 1er lancement
-            if (window.innerWidth <= 640) {
+            if (isMobileViewport()) {
                 const hint = document.getElementById('mobile-hint');
                 hint.classList.remove('hidden');
                 setTimeout(() => hint.classList.remove('opacity-0'), 200);
