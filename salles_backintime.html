@@ -352,12 +352,16 @@
             <img id="img-right" class="compare-img" src="" alt="Vue de droite">
 
             <div id="poi-layer"></div>
+        </div>
 
-            <div id="slider-handle">
-                <div id="slider-button-wrapper" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
-                    <div id="slider-button">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h8"/><path d="m12 8 4 4-4 4"/><path d="m12 8-4 4 4 4"/></svg>
-                    </div>
+        <!-- Volontairement HORS de #zoom-content : ni le trait ni le bouton ne doivent
+             changer de taille avec le zoom (voir repositionSliderHandle()). Sa position
+             (left, en px) est recalculee a chaque pan/zoom pour suivre le meme point de
+             l'image ; top:0/bottom:0 la fait toujours couvrir tout l'ecran visible. -->
+        <div id="slider-handle">
+            <div id="slider-button-wrapper" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
+                <div id="slider-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h8"/><path d="m12 8 4 4-4 4"/><path d="m12 8-4 4 4 4"/></svg>
                 </div>
             </div>
         </div>
@@ -575,7 +579,7 @@ const state = {
             zoomContent.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
             const invScale = 1 / scale;
             document.querySelectorAll('.poi-wrapper').forEach(w => w.style.transform = `scale(${invScale})`);
-            document.getElementById('slider-button-wrapper').style.transform = `translate(-50%, -50%) scale(${invScale})`;
+            repositionSliderHandle();
         }
 
         function constrainPan() {
@@ -639,13 +643,24 @@ const state = {
         const sliderHandle = document.getElementById('slider-handle');
         let isSliding = false;
 
+        let sliderPercent = 50; // position du curseur de comparaison, en % de la largeur du CONTENU (stable, independant du zoom/pan courant)
+
         function updateSlider(clientX) {
             const rect = zoomContent.getBoundingClientRect();
             let x = (clientX - rect.left) / scale;
             x = Math.max(0, Math.min(x, zoomContent.offsetWidth));
-            let percent = (x / zoomContent.offsetWidth) * 100;
-            imgRight.style.clipPath = `inset(0 0 0 ${percent}%)`;
-            sliderHandle.style.left = `${percent}%`;
+            sliderPercent = (x / zoomContent.offsetWidth) * 100;
+            imgRight.style.clipPath = `inset(0 0 0 ${sliderPercent}%)`;
+            repositionSliderHandle();
+        }
+
+        // Place la barre (HORS de #zoom-content, donc jamais mise a l'echelle) au pixel
+        // exact du viewport correspondant a sliderPercent sur l'image actuellement
+        // affichee (pan + zoom courants) : le trait suit toujours le meme point de
+        // l'image, sans jamais changer d'epaisseur ni de taille de bouton.
+        function repositionSliderHandle() {
+            const leftPx = panX + (sliderPercent / 100) * zoomContent.offsetWidth * scale;
+            sliderHandle.style.left = `${leftPx}px`;
         }
 
 
