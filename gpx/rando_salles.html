@@ -479,7 +479,15 @@ window.addEventListener('DOMContentLoaded', async function () {
     const textBack = document.getElementById('text-back');
     if (textBack) textBack.textContent = T[currentLang].back;
     const btnBack = document.getElementById('btn-back');
-    if (btnBack) btnBack.href = `../index.html?logement=${currentLogement}&lang=${currentLang.toUpperCase()}`;
+    if (btnBack) {
+      // Conserve tous les parametres d'arrivee (poi, zoom, pos, dates, etc.),
+      // on ne force que logement/lang pour refleter l'etat courant de cette page.
+      const backParams = new URLSearchParams(window.location.search);
+      ['lng', 'listing', 'l', 'id'].forEach(k => backParams.delete(k));
+      backParams.set('logement', currentLogement);
+      backParams.set('lang', currentLang.toUpperCase());
+      btnBack.href = `../index.html?${backParams.toString()}`;
+    }
 
     renderStats();
     if(isEditMode) { renderPhotos(); renderPois(); }
