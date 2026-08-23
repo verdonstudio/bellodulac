@@ -8975,6 +8975,7 @@ window.POIS = [
     ],
     "scale": 1.1,
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9130,6 +9131,7 @@ window.POIS = [
       52.179
     ],
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9225,6 +9227,7 @@ window.POIS = [
       44.74
     ],
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9301,6 +9304,7 @@ window.POIS = [
       ]
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9342,6 +9346,7 @@ window.POIS = [
       "desc": "Ligging van de accommodatie ten opzichte van het meer."
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9401,6 +9406,7 @@ window.POIS = [
       ]
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9437,6 +9443,7 @@ window.POIS = [
       "desc": "Ligging van de accommodatie ten opzichte van het meer."
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9511,6 +9518,7 @@ window.POIS = [
       ]
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9582,6 +9590,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9616,6 +9625,7 @@ window.POIS = [
       "desc": "Strand van het dorp Sainte-Croix-du-Verdon, aan het westelijke uiteinde van het meer. Turquoise water, rustige omgeving."
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9659,6 +9669,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9694,6 +9705,7 @@ window.POIS = [
       "desc": "Tweede brug, net voor de stuwdam, waarmee je het meer kunt oversteken tussen Baudinard en Sainte-Croix-du-Verdon."
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9737,6 +9749,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9780,6 +9793,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9824,6 +9838,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9893,6 +9908,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -9970,6 +9986,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -10045,6 +10062,7 @@ window.POIS = [
       ]
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -10138,6 +10156,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -10213,6 +10232,7 @@ window.POIS = [
       ]
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -10272,6 +10292,7 @@ window.POIS = [
       ]
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -10316,6 +10337,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],
@@ -10360,6 +10382,7 @@ window.POIS = [
       "urlLabel": "Meer informatie"
     },
     "backintime": {
+      "noClick": true,
       "ville": [
         "lac"
       ],

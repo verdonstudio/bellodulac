@@ -515,6 +515,13 @@ const state = {
             let isFirstLoad = false; // On ajoute un petit marqueur
 
             if (!hasCentered) {
+                // Garantit un affichage plein ecran des le chargement ET a chaque
+                // changement d'orientation (portrait <-> paysage) : contentW/contentH
+                // couvrent deja tout le viewport a scale=1 (calcul ci-dessus), donc tout
+                // scale < 1 laisse forcement apparaitre un bord de fond (#111) sur au
+                // moins un axe. Un scale >= 1 preserve aussi le defilement horizontal
+                // (l'image, plus large que haute, deborde toujours en largeur).
+                scale = Math.max(scale, 1);
                 const scaledWidth = contentW * scale;
                 const scaledHeight = contentH * scale;
 
