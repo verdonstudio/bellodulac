@@ -1239,7 +1239,7 @@ const state = {
             updateImages(); // Ceci va aussi appeler updateSizing() une fois chargé !
 
             // Re-dimensionner si l'utilisateur pivote son téléphone
-            window.addEventListener('resize', () => {
+            function checkOrientationAndResize() {
                 // Changement d'orientation (portrait <-> paysage) : on reinitialise le
                 // zoom/pan a l'etat plein ecran par defaut plutot que de garder le zoom
                 // manuel de l'orientation precedente (qui pourrait laisser des bords vides
@@ -1251,6 +1251,15 @@ const state = {
                     hasCentered = false;
                 }
                 updateSizing();
+            }
+            window.addEventListener('resize', checkOrientationAndResize);
+            // Sur mobile, apres une rotation, la hauteur reelle du viewport (100dvh,
+            // barre d'adresse qui apparait/disparait) met parfois un instant a se
+            // stabiliser : on revalide a plusieurs reprises juste apres l'evenement
+            // pour rattraper le cas ou le premier recalcul se serait fait sur des
+            // dimensions pas encore a jour (typiquement observe paysage -> portrait).
+            window.addEventListener('orientationchange', () => {
+                [50, 200, 500].forEach(delay => setTimeout(checkOrientationAndResize, delay));
             });
 
             // Menu retractable (utile en paysage mobile pour gagner de la hauteur).
