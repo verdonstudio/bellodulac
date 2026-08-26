@@ -256,6 +256,15 @@
     return SITE_BASE_URL + url.replace(/^\//, '');
   }
 
+  // Ajoute (ou force) "tv=1" sur une URL relative ou absolue, sans toucher aux autres parametres.
+  function withTvFlag(url) {
+    if (!url) return null;
+    const [path, qs] = url.split('?');
+    const p = new URLSearchParams(qs || '');
+    p.set('tv', '1');
+    return `${path}?${p.toString()}`;
+  }
+
   const I18N = {
     heroTitle: { FR: 'Bienvenue !', EN: 'Welcome!', DE: 'Willkommen!', NL: 'Welkom!' },
     welcomeGuest: { FR: 'Bienvenue', EN: 'Welcome', DE: 'Willkommen', NL: 'Welkom' },
@@ -427,10 +436,15 @@
       const desc = tile.desc || (builtin && builtin.desc) || { FR: '', EN: '', DE: '', NL: '' };
       const type = tile.type || (builtin && builtin.type) || 'link';
       const href = resolveTileHref(tile, builtin);
+      // La vignette "carte interactive" (index.html) a plus de 130 pins : une telecommande TV ne
+      // peut pas viser un pin precisement. Le clic SUR LA TV passe donc par ?tv=1, qui active une
+      // liste de POI navigable au D-pad a cote de la carte (voir index.html, renderTvPoiList()).
+      // Le QR code (scanne par un telephone tactile) garde le lien normal, sans ce mode.
+      const tvHref = (tile.key === 'map' && href) ? withTvFlag(href) : href;
 
       const a = document.createElement('a');
       a.className = 'tile' + (href ? '' : ' disabled');
-      a.href = href || '#';
+      a.href = tvHref || '#';
 
       if (type === 'qr') {
         const dataUrl = qrDataUrl(toAbsoluteUrl(href));

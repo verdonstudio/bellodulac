@@ -140,6 +140,37 @@
     @media (min-width: 640px)  { #leaflet-map { height: 500px; } }
     @media (min-width: 1024px) { #leaflet-map { height: 600px; } }
     .leaflet-container { font-family: 'Inter', system-ui, sans-serif; }
+
+    /* ======== MODE TV (?tv=1) : liste des POI navigable au D-pad, a cote de la carte ======== */
+    .map-tv-layout { display: block; }
+    #tv-poi-list { display: none; }
+    body.tv-mode .map-tv-layout {
+      display: flex; align-items: stretch; gap: 14px;
+    }
+    body.tv-mode #map-wrapper { flex: 1 1 58%; min-width: 0; }
+    body.tv-mode #tv-poi-list {
+      display: flex; flex-direction: column; gap: 6px;
+      flex: 0 0 320px; overflow-y: auto; padding: 4px;
+    }
+    .tv-poi-item {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; text-align: left; border: 1px solid var(--c-border);
+      background: var(--c-card); border-radius: 14px; padding: 10px 12px;
+      font-family: 'Inter', sans-serif; font-size: 13px; color: var(--c-ink);
+      cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .tv-poi-item:hover { background: var(--c-primary-soft); }
+    .tv-poi-item:focus, .tv-poi-item.is-active {
+      outline: none; border-color: var(--c-primary);
+      background: var(--c-primary-soft);
+      box-shadow: 0 0 0 3px rgba(2,132,199,0.35);
+    }
+    .tv-poi-item__emoji {
+      width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff;
+    }
+    .tv-poi-item__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+    .tv-poi-empty { font-size: 13px; color: var(--c-muted); padding: 10px; }
     
     /* Popups Map Modernisés */
     .leaflet-popup-content-wrapper { 
@@ -524,11 +555,18 @@
               <a id="map-open" target="_self" class="text-[var(--c-primary)] font-medium" data-i18n="map_open">Ouvrir dans Google Maps →</a>
             </div>
 
-            <div id="map-wrapper" class="relative">
-              <button id="btn-fullscreen" type="button" aria-label="Plein écran" title="Plein écran">⛶</button>
-              <button id="btn-trace" type="button" aria-label="Afficher/Masquer le chemin" title="Afficher/Masquer le chemin" style="display:none;">🚶</button>
-              <button id="btn-trace-edit" type="button" aria-label="Tracer un chemin" title="Tracer un chemin" style="display:none;">🖍️ Tracer</button>
-              <div id="leaflet-map" role="application" aria-label="Carte interactive"></div>
+            <!-- #map-tv-layout : en usage normal, simple conteneur (aucun effet visuel). En mode
+                 TV (?tv=1, body.tv-mode), passe en 2 colonnes : la carte + une liste des POI
+                 visibles a cote, navigable au D-pad -- une telecommande ne peut pas viser
+                 precisement un pin sur la carte (voir renderTvPoiList()). -->
+            <div id="map-tv-layout" class="map-tv-layout">
+              <div id="map-wrapper" class="relative">
+                <button id="btn-fullscreen" type="button" aria-label="Plein écran" title="Plein écran">⛶</button>
+                <button id="btn-trace" type="button" aria-label="Afficher/Masquer le chemin" title="Afficher/Masquer le chemin" style="display:none;">🚶</button>
+                <button id="btn-trace-edit" type="button" aria-label="Tracer un chemin" title="Tracer un chemin" style="display:none;">🖍️ Tracer</button>
+                <div id="leaflet-map" role="application" aria-label="Carte interactive"></div>
+              </div>
+              <div id="tv-poi-list" class="tv-poi-list" role="listbox" aria-label="Liste des lieux"></div>
             </div>
 
             <div id="trace-edit-panel">
@@ -1511,7 +1549,11 @@
     // Affiche, quand une pin est posee (?pin=true), un itineraire piéton entre le
     // logement courant et la pin -- active via ?trace=true (voir readUrlParams).
     // Fonctionne avec ou sans ?edit=1.
-    traceHome: false
+    traceHome: false,
+    // Mode "TV" (?tv=1, utilise par tv.html/l'appli Android TV) : une telecommande ne peut pas
+    // viser precisement un pin sur la carte, donc on affiche en plus une liste des POI visibles,
+    // navigable au clavier/D-pad (boutons natifs), a cote de la carte -- voir renderTvPoiList().
+    tvMode: false
   };
 
   // -------- helpers
@@ -1555,6 +1597,7 @@
     const rawTrace   = p.get('trace');
     const rawFullscreen = p.get('fullscreen') || p.get('fs');
     const rawEdit    = p.get('edit');
+    const rawTv      = p.get('tv');
 
     let catsArray = null;
     if (rawCats) {
@@ -1593,7 +1636,8 @@
       traceId: (rawTrace && rawTrace !== 'true' && rawTrace !== '1') ? rawTrace.trim() : null,
       traceHome: rawTrace === 'true' || rawTrace === '1',
       fullscreen: rawFullscreen === 'true' || rawFullscreen === '1',
-      edit: rawEdit === 'true' || rawEdit === '1'
+      edit: rawEdit === 'true' || rawEdit === '1',
+      tv: rawTv === 'true' || rawTv === '1'
     };
   }
 
@@ -1839,6 +1883,46 @@ function syncUrl(replace = true) {
       const mapEl = document.getElementById('leaflet-map');
       if (mapEl) mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+  }
+
+  // Mode TV (?tv=1) : liste des POI actuellement visibles sur la carte (respecte les filtres
+  // categorie/etoiles en cours, comme syncRecosWithFilters), sous forme de boutons natifs --
+  // contrairement aux pins de la carte (positionnes par transform CSS), des <button> dans une
+  // liste verticale sont correctement navigables au D-pad/Tab par le navigateur de la TV.
+  function renderTvPoiList(visiblePois) {
+    const container = document.getElementById('tv-poi-list');
+    if (!container) return;
+    if (!state.tvMode) { container.innerHTML = ''; return; }
+
+    const pois = (visiblePois || []).filter(poi => !poiHasCat(poi, 'toponyme'));
+    container.innerHTML = '';
+
+    if (!pois.length) {
+      const empty = document.createElement('p');
+      empty.className = 'tv-poi-empty';
+      empty.textContent = (I18N[state.lang] && I18N[state.lang].tv_poi_empty) || 'Aucun lieu a afficher.';
+      container.appendChild(empty);
+      return;
+    }
+
+    pois.forEach(poi => {
+      const cat = window.POI_CATEGORIES[getPoiPrimaryCat(poi)] || { color: '#64748b', emoji: '📍' };
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'tv-poi-item';
+      btn.setAttribute('role', 'option');
+      btn.dataset.poiId = poi.id;
+      btn.innerHTML = `
+        <span class="tv-poi-item__emoji" style="background:${cat.color}">${cat.emoji}</span>
+        <span class="tv-poi-item__name">${getPoiContent(poi).name}</span>
+      `;
+      btn.addEventListener('click', () => {
+        highlightPoiOnMap(poi.id, { scroll: true });
+        container.querySelectorAll('.tv-poi-item.is-active').forEach(el => el.classList.remove('is-active'));
+        btn.classList.add('is-active');
+      });
+      container.appendChild(btn);
+    });
   }
 
   function unhighlightPoiOnMap() {
@@ -3007,7 +3091,8 @@ function getPoiLinks(content, poi) {
     const tpl = visible <= 1 ? T.filter_count_one : T.filter_count_many;
     $('#map-counter').textContent = tpl.replace('{n}', visible);
     syncRecosWithFilters(allCats, star, visiblePois);
-    
+    renderTvPoiList(visiblePois);
+
     syncUrl();
   }
 
@@ -3093,6 +3178,11 @@ function getPoiLinks(content, poi) {
     if (urlParams.traceHome) state.traceHome = true;
     if (urlParams.fullscreen) state.mapFullscreen = true;
     if (urlParams.edit) state.editMode = true;
+    if (urlParams.tv) {
+      state.tvMode = true;
+      document.body.classList.add('tv-mode');
+      state.scrollToMap = true; // mode TV : on arrive directement sur la carte + la liste
+    }
 
     if (urlParams.cats && urlParams.cats.length > 0) {
       mapState.activeCats = new Set(urlParams.cats);
