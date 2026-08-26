@@ -17,7 +17,8 @@ android {
         salles {
             dimension "property"
             applicationId "com.bellodulac.tv.salles"
-            resValue "string", "app_name", "Bell'O du Lac"
+            // Le nom de l'app ("Bell'O du Lac") est defini dans src/salles/res/values/strings.xml
+            // (pas ici via resValue, qui n'echappe pas correctement l'apostrophe pour aapt).
             // Fichier de config lu au demarrage (URL a afficher). Modifiable a tout moment
             // directement sur GitHub : androidtv/config-salles.json
             buildConfigField "String", "CONFIG_URL", "\"https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-salles.json\""
@@ -27,7 +28,8 @@ android {
         moustiers {
             dimension "property"
             applicationId "com.bellodulac.tv.moustiers"
-            resValue "string", "app_name", "Bell'Étoile"
+            // Le nom de l'app ("Bell'Étoile") est defini dans src/moustiers/res/values/strings.xml
+            // (pas ici via resValue, qui n'echappe pas correctement l'apostrophe pour aapt).
             // Fichier de config lu au demarrage (URL a afficher). Modifiable a tout moment
             // directement sur GitHub : androidtv/config-moustiers.json
             buildConfigField "String", "CONFIG_URL", "\"https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-moustiers.json\""
