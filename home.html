@@ -317,8 +317,8 @@
   ];
 
   const I18N = {
-    heroTitle: { FR: 'Bienvenue !', EN: 'Welcome!', DE: 'Willkommen!', NL: 'Welkom!' },
-    welcomeGuest: { FR: 'Bienvenue', EN: 'Welcome', DE: 'Willkommen', NL: 'Welkom' },
+    heroTitle: { FR: 'Bonjour', EN: 'Hello', DE: 'Hallo', NL: 'Hallo' },
+    welcomeGuest: { FR: 'Bonjour', EN: 'Hello', DE: 'Hallo', NL: 'Hallo' },
     heroSubtitle: {
       FR: 'Planifiez vos activités pendant votre séjour.',
       EN: 'Plan your activities during your stay.',
@@ -338,7 +338,7 @@
   document.documentElement.lang = lang.toLowerCase();
   document.getElementById('btn-selogers-label').textContent = I18N.seLoger[lang];
   document.getElementById('hero-title').textContent = todaysGuestName
-    ? (lang === 'FR' ? `${I18N.welcomeGuest.FR} ${todaysGuestName} !` : `${I18N.welcomeGuest[lang]} ${todaysGuestName}!`)
+    ? `${I18N.welcomeGuest[lang]} ${todaysGuestName}`
     : I18N.heroTitle[lang];
   document.getElementById('hero-subtitle').textContent = I18N.heroSubtitle[lang];
   document.getElementById('lang-select').value = lang;
