@@ -292,6 +292,20 @@
             }
         }
 
+        // Force la meilleure qualite disponible (1080p, sinon 720p, sinon "large"). YouTube ne
+        // garantit pas de la respecter -- son algorithme peut redescendre en qualite si la
+        // bande passante ne suit pas -- mais c'est le seul levier disponible via l'API publique
+        // (le parametre d'URL "vq" est ignore la plupart du temps).
+        function forceHqQuality(player) {
+            try {
+                const levels = player.getAvailableQualityLevels ? player.getAvailableQualityLevels() : [];
+                const preferred = ['hd1080', 'hd720', 'large'].find(q => levels.length === 0 || levels.includes(q));
+                if (preferred) player.setPlaybackQuality(preferred);
+            } catch (e) {
+                console.warn('Impossible de forcer la qualite video HD :', e);
+            }
+        }
+
         function initVideo() {
             const vidPlayer = document.getElementById('main-video');
             const ytPlayer = document.getElementById('youtube-player');
@@ -326,22 +340,29 @@
                 // bouton "Passer l'intro" venait justement recouvrir.
                 const origin = encodeURIComponent(window.location.origin);
                 const muteParam = state.nextUrl ? '0' : '1';
-                ytPlayer.src = `https://www.youtube-nocookie.com/embed/${state.youtubeId}?autoplay=1&mute=${muteParam}&playsinline=1&rel=0&enablejsapi=1&origin=${origin}`;
+                // "vq=hd1080" est un parametre d'URL historique, ignore par YouTube dans la
+                // majorite des cas aujourd'hui -- on le laisse en best-effort, mais c'est
+                // l'appel a setPlaybackQuality() via l'API JS ci-dessous qui a le plus de chance
+                // de fonctionner.
+                ytPlayer.src = `https://www.youtube-nocookie.com/embed/${state.youtubeId}?autoplay=1&mute=${muteParam}&playsinline=1&rel=0&enablejsapi=1&vq=hd1080&origin=${origin}`;
 
-                // La detection de fin de video (onStateChange) n'est necessaire que si on doit
-                // enchainer automatiquement sur "next" -- sinon, on ne charge meme pas l'API JS
-                // externe (moins de dependances reseau, comportement identique a avant).
-                if (state.nextUrl) {
-                    loadYoutubeIframeApi(() => {
-                        ytPlayerApi = new YT.Player('youtube-player', {
-                            events: {
-                                onStateChange: (e) => {
-                                    if (e.data === YT.PlayerState.ENDED) goToNext();
-                                }
+                // On charge toujours l'API JS pour forcer la qualite HD (voir forceHqQuality) et,
+                // en mode TV ("next" fourni), detecter aussi la fin de la video (onStateChange
+                // -> ENDED) pour enchainer automatiquement.
+                loadYoutubeIframeApi(() => {
+                    ytPlayerApi = new YT.Player('youtube-player', {
+                        events: {
+                            onReady: (e) => forceHqQuality(e.target),
+                            onStateChange: (e) => {
+                                // On retente au demarrage effectif de la lecture : YouTube peut
+                                // ignorer l'appel fait dans onReady s'il arrive trop tot, avant
+                                // que les niveaux de qualite disponibles soient connus.
+                                if (e.data === YT.PlayerState.PLAYING) forceHqQuality(e.target);
+                                if (state.nextUrl && e.data === YT.PlayerState.ENDED) goToNext();
                             }
-                        });
+                        }
                     });
-                }
+                });
             } else if (state.videoFile) {
                 vidPlayer.src = `https://bellodulac.netlify.app/images/${state.videoFile}`;
                 vidPlayer.load();
