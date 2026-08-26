@@ -215,14 +215,24 @@
     return null;
   }
 
-  const todaysReservation = urlParams.get('res') ? null : todayReservationMatch();
+  // Retrouve dans reservations.js l'entree dont le champ "code" correspond exactement au "res"
+  // de l'URL (cas normal : lien genere/flyer avec un code de reservation deja connu).
+  function reservationByCode(code) {
+    if (!code || typeof window.RESERVATIONS === 'undefined' || !Array.isArray(window.RESERVATIONS)) return null;
+    return window.RESERVATIONS.find(r => r.code === code) || null;
+  }
+
+  const urlResCode = urlParams.get('res');
+  // Priorite au "res" de l'URL (lien deja identifie a un voyageur precis) ; sinon, on essaie de
+  // deviner via les dates (cas Google TV sur home.html, sans code dans l'URL).
+  const todaysReservation = urlResCode ? reservationByCode(urlResCode) : todayReservationMatch();
 
   // Meme logique de repli que display.html : sans "res" (ou reservation inconnue), on retombe
   // sur l'entree "default" de redirect.js plutot que de ne rien afficher. Le code de la
   // reservation reconnue via reservations.js (ci-dessus) est prioritaire sur "default" des que
   // l'URL elle-meme ne precise pas deja "res" -- ca permet a la langue et aux liens (carte,
   // evenements, programme...) de suivre automatiquement le bon voyageur.
-  const resCode = urlParams.get('res') || (todaysReservation && todaysReservation.code) || 'default';
+  const resCode = urlResCode || (todaysReservation && todaysReservation.code) || 'default';
   const reservationData = (typeof reservations !== 'undefined' && (reservations[resCode] || reservations['default'])) || {};
 
   // Si "lang" n'est pas precise sur l'URL de home.html elle-meme (lien raccourci, saisi a la
@@ -318,7 +328,7 @@
 
   const I18N = {
     heroTitle: { FR: 'Bonjour', EN: 'Hello', DE: 'Hallo', NL: 'Hallo' },
-    welcomeGuest: { FR: 'Bonjour', EN: 'Hello', DE: 'Hallo', NL: 'Hallo' },
+    welcomeGuest: { FR: 'Bienvenue', EN: 'Welcome', DE: 'Willkommen', NL: 'Welkom' },
     heroSubtitle: {
       FR: 'Planifiez vos activités pendant votre séjour.',
       EN: 'Plan your activities during your stay.',
@@ -338,7 +348,7 @@
   document.documentElement.lang = lang.toLowerCase();
   document.getElementById('btn-selogers-label').textContent = I18N.seLoger[lang];
   document.getElementById('hero-title').textContent = todaysGuestName
-    ? `${I18N.welcomeGuest[lang]} ${todaysGuestName}`
+    ? `${I18N.welcomeGuest[lang]} ${todaysGuestName}!`
     : I18N.heroTitle[lang];
   document.getElementById('hero-subtitle').textContent = I18N.heroSubtitle[lang];
   document.getElementById('lang-select').value = lang;
