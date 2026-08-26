@@ -1,5 +1,5 @@
 {
-  "url": "https://bellodulac.vercel.app/tv.html",
+  "url": "https://bellodulac.vercel.app/tv.html?logement=moustiers",
   "mapUrl": "https://bellodulac.vercel.app/index.html?logement=moustiers&lang=FR",
   "panoramaUrl": "https://bellodulac.vercel.app/panorama.html?logement=moustiers&lang=FR"
 }
