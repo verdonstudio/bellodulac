@@ -1,0 +1,57 @@
+name: Build Android TV APKs
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "androidtv/**"
+      - ".github/workflows/build-android-tv.yml"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: androidtv
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: "8.7"
+
+      # Les deux variantes ("flavors") du meme projet : salles = Bell'O du Lac,
+      # moustiers = Bell'Étoile. Chacune a son propre applicationId, nom, icone
+      # et bannière (voir androidtv/app/build.gradle et androidtv/app/src/<flavor>/res).
+      - name: Build APK - Bell'O du Lac (Les Salles-sur-Verdon)
+        run: gradle :app:assembleSallesDebug --stacktrace
+
+      - name: Build APK - Bell'Étoile (Moustiers-Sainte-Marie)
+        run: gradle :app:assembleMoustiersDebug --stacktrace
+
+      - name: Upload APK - Bell'O du Lac
+        uses: actions/upload-artifact@v4
+        with:
+          name: bellodulac-tv-salles
+          path: androidtv/app/build/outputs/apk/salles/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload APK - Bell'Étoile
+        uses: actions/upload-artifact@v4
+        with:
+          name: bellodulac-tv-moustiers
+          path: androidtv/app/build/outputs/apk/moustiers/debug/*.apk
+          if-no-files-found: error

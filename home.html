@@ -13,6 +13,12 @@
 <script src="redirect.js"></script>
 <script src="logements.js"></script>
 
+<!-- Fichier de correspondance "voyageur du jour" (Annonce/Nom/Arrivée/Départ), utilisé
+     pour afficher "Bienvenue {Nom} !" sur cette page quand la date du jour tombe dans le
+     séjour d'un voyageur pour ce logement (ex : Google TV, qui n'a pas de code réservation
+     dans l'URL). Voir reservations.js pour le format et comment ajouter une entrée. -->
+<script src="reservations.js"></script>
+
 <style>
   :root {
     --c-bg:        #fdfbf7;
@@ -141,6 +147,63 @@
   const logementId = urlParams.get('logement') || paramFromReservation('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
   const listing = LOGEMENTS[logementId];
 
+  // --- "Bienvenue {Nom} !" : reconnaissance du voyageur du jour via reservations.js ---
+  // (pense pour Google TV notamment, qui affiche home.html sans code "res" dans l'URL :
+  // on ne peut pas savoir QUI regarde, seulement QUAND et sur QUEL logement.)
+  function todayLocalISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  // Accepte "YYYY-MM-DD" (recommande) ou "JJ/MM/AAAA" (plus naturel a taper a la main) et
+  // renvoie toujours "YYYY-MM-DD", pour que la comparaison de chaines fonctionne telle quelle.
+  function parseFlexibleDate(str) {
+    if (!str) return null;
+    str = String(str).trim();
+    let m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+    m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+    return null;
+  }
+
+  // "Annonce" est un texte libre (ex: "Bell'Étoile (Moustiers)", "Bell'O du Lac 8P") : on
+  // le rapproche du logement courant par mots-cles, en affinant par 6/8 personnes quand
+  // c'est precise. Pour un rapprochement garanti, on peut aussi ecrire directement l'id
+  // exact ("moustiers" / "salles6" / "salles8") dans le champ "annonce".
+  function annonceMatchesLogement(annonce, targetLogementId) {
+    const norm = String(annonce || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    // Version "compacte" (sans espaces/apostrophes/ponctuation) pour reconnaitre "Bell'O",
+    // "Bell O", "Bello" etc. de la meme facon, meme si l'apostrophe casse un includes() simple.
+    const compact = norm.replace(/[^a-z0-9]/g, '');
+    if (norm === targetLogementId) return true;
+    if (targetLogementId.includes('moustiers')) {
+      return norm.includes('moustiers') || norm.includes('etoile');
+    }
+    const isSallesFamily = norm.includes('salles') || norm.includes('lac') || compact.includes('bello');
+    if (!isSallesFamily) return false;
+    const has6 = /\b6\b/.test(norm) || norm.includes('6p') || norm.includes('6 pers');
+    const has8 = /\b8\b/.test(norm) || norm.includes('8p') || norm.includes('8 pers');
+    if (targetLogementId === 'salles6' && has8) return false;
+    if (targetLogementId === 'salles8' && has6) return false;
+    return true; // pas de precision de capacite dans le texte -> on considere que ca correspond
+  }
+
+  function todayGuestName() {
+    if (typeof window.RESERVATIONS === 'undefined' || !Array.isArray(window.RESERVATIONS)) return null;
+    const today = todayLocalISO();
+    const match = window.RESERVATIONS.find(r => {
+      const arrivee = parseFlexibleDate(r.arrivee);
+      const depart = parseFlexibleDate(r.depart);
+      if (!arrivee || !depart) return false;
+      if (today < arrivee || today > depart) return false;
+      return annonceMatchesLogement(r.annonce, logementId);
+    });
+    return (match && match.nom) ? match.nom : null;
+  }
+
+  const todaysGuestName = todayGuestName();
+
   // "Retour vers le futur" (remonter le temps) : page distincte selon le secteur, comme
   // sur index.html (bouton #btn-backintime) -- moustiers_backintime.html ou
   // salles_backintime.html, avec juste lang/logement (ces pages n'ont pas besoin des
@@ -214,6 +277,7 @@
 
   const I18N = {
     heroTitle: { FR: 'Bienvenue !', EN: 'Welcome!', DE: 'Willkommen!', NL: 'Welkom!' },
+    welcomeGuest: { FR: 'Bienvenue', EN: 'Welcome', DE: 'Willkommen', NL: 'Welkom' },
     heroSubtitle: {
       FR: 'Planifiez vos activités pendant votre séjour.',
       EN: 'Plan your activities during your stay.',
@@ -232,7 +296,9 @@
 
   document.documentElement.lang = lang.toLowerCase();
   document.getElementById('btn-selogers-label').textContent = I18N.seLoger[lang];
-  document.getElementById('hero-title').textContent = I18N.heroTitle[lang];
+  document.getElementById('hero-title').textContent = todaysGuestName
+    ? (lang === 'FR' ? `${I18N.welcomeGuest.FR} ${todaysGuestName} !` : `${I18N.welcomeGuest[lang]} ${todaysGuestName}!`)
+    : I18N.heroTitle[lang];
   document.getElementById('hero-subtitle').textContent = I18N.heroSubtitle[lang];
   document.getElementById('lang-select').value = lang;
 

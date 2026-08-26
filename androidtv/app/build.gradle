@@ -1,0 +1,66 @@
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+
+android {
+    namespace "com.bellodulac.tv"
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    flavorDimensions "property"
+    productFlavors {
+        salles {
+            dimension "property"
+            applicationId "com.bellodulac.tv.salles"
+            resValue "string", "app_name", "Bell'O du Lac"
+            // Fichier de config lu au demarrage (URL a afficher). Modifiable a tout moment
+            // directement sur GitHub : androidtv/config-salles.json
+            buildConfigField "String", "CONFIG_URL", "\"https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-salles.json\""
+            // Utilisee si le fichier de config est injoignable au demarrage (pas de reseau, etc.)
+            buildConfigField "String", "DEFAULT_URL", "\"https://bellodulac.vercel.app/home.html?logement=salles8&lang=FR\""
+        }
+        moustiers {
+            dimension "property"
+            applicationId "com.bellodulac.tv.moustiers"
+            resValue "string", "app_name", "Bell'Étoile"
+            // Fichier de config lu au demarrage (URL a afficher). Modifiable a tout moment
+            // directement sur GitHub : androidtv/config-moustiers.json
+            buildConfigField "String", "CONFIG_URL", "\"https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-moustiers.json\""
+            // Utilisee si le fichier de config est injoignable au demarrage (pas de reseau, etc.)
+            buildConfigField "String", "DEFAULT_URL", "\"https://bellodulac.vercel.app/home.html?logement=moustiers&lang=FR\""
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    implementation "androidx.core:core-ktx:1.13.1"
+    implementation "androidx.appcompat:appcompat:1.7.0"
+}
