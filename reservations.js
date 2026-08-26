@@ -35,12 +35,12 @@
    ========================================================================== */
 
 window.RESERVATIONS = [
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Thomas Szulevicz",   voyageurs: 3, arrivee: "16/10/2026", depart: "19/10/2026", code: "HMFFSNS4BJ" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Michelle Bush",      voyageurs: 4, arrivee: "01/10/2026", depart: "04/10/2026", code: "HMAZKZK5XA" },
-  { annonce: "Maison Bell'O 6P",        nom: "Julie Etienne",      voyageurs: 6, arrivee: "25/09/2026", depart: "27/09/2026", code: "HMDXYHZQZN" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Franziska Nonnast",  voyageurs: 2, arrivee: "10/09/2026", depart: "13/09/2026", code: "HM9FT3XCJQ" },
-  { annonce: "Maison Bell'O 6P",        nom: "Marylène Lebas",     voyageurs: 3, arrivee: "08/09/2026", depart: "14/09/2026", code: "HMMBAKWMFD" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Anais Galisson",     voyageurs: 2, arrivee: "31/08/2026", depart: "05/09/2026", code: "HMYRZQWQNF" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Nathalie Gireaud",   voyageurs: 4, arrivee: "25/08/2026", depart: "28/08/2026", code: "HMB2JRYYN5" },
-  { annonce: "Maison Bell'O 8P",        nom: "Sylvia Schneider",   voyageurs: 4, arrivee: "22/08/2026", depart: "29/08/2026", code: "HMKZPX4TMA" }
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Thomas",   voyageurs: 3, arrivee: "16/10/2026", depart: "19/10/2026", code: "HMFFSNS4BJ" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Michelle",      voyageurs: 4, arrivee: "01/10/2026", depart: "04/10/2026", code: "HMAZKZK5XA" },
+  { annonce: "Maison Bell'O 6P",        nom: "Julie",      voyageurs: 6, arrivee: "25/09/2026", depart: "27/09/2026", code: "HMDXYHZQZN" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Franziska",  voyageurs: 2, arrivee: "10/09/2026", depart: "13/09/2026", code: "HM9FT3XCJQ" },
+  { annonce: "Maison Bell'O 6P",        nom: "Marylène",     voyageurs: 3, arrivee: "08/09/2026", depart: "14/09/2026", code: "HMMBAKWMFD" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Anais",     voyageurs: 2, arrivee: "31/08/2026", depart: "05/09/2026", code: "HMYRZQWQNF" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Nathalie",   voyageurs: 4, arrivee: "25/08/2026", depart: "28/08/2026", code: "HMB2JRYYN5" },
+  { annonce: "Maison Bell'O 8P",        nom: "Sylvia",   voyageurs: 4, arrivee: "22/08/2026", depart: "29/08/2026", code: "HMKZPX4TMA" }
 ];
