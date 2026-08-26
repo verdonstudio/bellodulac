@@ -52,6 +52,15 @@ séjour et langue du voyageur incluses) — `evenements`→`evenements`, `highli
 dans `redirect.js` comme `backintime`), elle retombe sur un lien par défaut calculé
 automatiquement (`?logement=...&lang=...`, langue = FR si aucun séjour en cours).
 
+**Que fait le clic sur une vignette "qr", directement sur la TV** (le scan au téléphone, lui,
+ouvre toujours le lien normal) : par défaut (`"onClick": "modal"`, ou rien du tout), le QR code
+s'agrande en plein écran pour faciliter le scan à distance depuis le canapé. Avec
+`"onClick": "link"`, le clic ouvre directement le lien sur la TV elle-même (utile par exemple
+pour `map`, qui affiche alors une liste de POI navigable à la télécommande à côté de la carte).
+```json
+{ "key": "panorama", "type": "qr", "onClick": "link" }
+```
+
 **Ajouter une vignette entièrement nouvelle** (pas dans la liste ci-dessus) : donner en plus
 `"title"` (par langue), `"icon"` et `"defaultUrl"` directement dans la config, par exemple :
 ```json
