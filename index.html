@@ -2148,10 +2148,9 @@ function syncUrl(replace = true) {
     return getPoiCats(poi).includes(key);
   }
 
-  // -------- Lien "Y aller" de secours : ajouté automatiquement pour les POI de ces
-  // catégories qui n'ont aucun lien défini dans pois.js (url/url2/.../links). Les autres
-  // catégories (restaurants, commerces avec fiche dédiée, etc.) gardent leur comportement
-  // actuel inchangé, puisqu'elles ont déjà un lien.
+  // -------- Lien "Y aller" : ajouté systématiquement pour les POI de ces catégories, en
+  // plus des liens déjà définis dans pois.js (ex. "Plus d'informations"). Les autres
+  // catégories (restaurants, pharmacies, etc.) ne sont pas concernées.
   const POI_NAV_FALLBACK_CATS = [
     'nature', 'equitation', 'parking_gratuit', 'parking_zonebleu', 'parking_payant',
     'visite', 'laverie', 'relais', 'ordures', 'commerce', 'station', 'plage', 'sportaquatique'
@@ -2218,9 +2217,11 @@ function getPoiLinks(content, poi) {
       }
     }
 
-    // Lien "Y aller" de secours : uniquement si le POI n'a aucun lien du tout et appartient
-    // à l'une des catégories concernées (voir POI_NAV_FALLBACK_CATS ci-dessus).
-    if (!links.length && poi && poi.coords && getPoiCats(poi).some(c => POI_NAV_FALLBACK_CATS.includes(c))) {
+    // Lien "Y aller" : ajouté systématiquement (en plus des liens existants, ex. "Plus
+    // d'informations") pour les POI des catégories concernées (voir POI_NAV_FALLBACK_CATS
+    // ci-dessus), tant qu'il n'y en a pas déjà un.
+    if (poi && poi.coords && getPoiCats(poi).some(c => POI_NAV_FALLBACK_CATS.includes(c))
+        && !links.some(l => l.label === I18N[state.lang].go_there)) {
       links.push({
         url: buildGoToUrl(poi.coords[0], poi.coords[1], content.name || ''),
         label: I18N[state.lang].go_there
