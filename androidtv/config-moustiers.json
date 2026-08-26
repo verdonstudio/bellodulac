@@ -7,6 +7,6 @@
     { "key": "map", "type": "qr" },
     { "key": "panorama", "type": "qr" },
     { "key": "backintime", "type": "qr" },
-    { "trash": "trash", "type": "qr" }
+    { "key": "trash", "type": "qr" }
   ]
 }

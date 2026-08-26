@@ -337,6 +337,14 @@
       type: 'qr',
       source: null,
       defaultUrl: backintimeDefaultUrl
+    },
+    trash: {
+      icon: '🗑️',
+      title: { FR: 'Poubelles', EN: 'Bins', DE: 'Mülltonnen', NL: 'Afvalcontainers' },
+      desc: { FR: 'Où déposer vos ordures pendant votre séjour.', EN: 'Where to take your rubbish during your stay.', DE: 'Wo Sie Ihren Müll während Ihres Aufenthalts entsorgen können.', NL: 'Waar u uw afval tijdens uw verblijf kunt afgeven.' },
+      type: 'qr',
+      source: 'trash',
+      defaultUrl: (id, l) => `index.html?logement=${encodeURIComponent(id)}&lang=${l}&cat=ordures`
     }
   };
 
