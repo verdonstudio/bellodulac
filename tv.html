@@ -194,6 +194,16 @@
     return `${path}?${p.toString()}`;
   }
 
+  // Les liens des vignettes (evenements.html?..., index.html?...) sont relatifs -- parfait pour
+  // un clic sur la TV elle-meme (meme origine), mais un QR code doit encoder une URL ABSOLUE
+  // pour etre ouvrable depuis l'appareil photo/scanner d'un telephone.
+  const SITE_BASE_URL = 'https://bellodulac.vercel.app/';
+  function toAbsoluteUrl(url) {
+    if (!url) return null;
+    if (/^https?:\/\//i.test(url)) return url; // deja absolue (ex: defaultUrl personnalisee dans la config)
+    return SITE_BASE_URL + url.replace(/^\//, '');
+  }
+
   const I18N = {
     heroTitle: { FR: 'Bienvenue !', EN: 'Welcome!', DE: 'Willkommen!', NL: 'Welkom!' },
     welcomeGuest: { FR: 'Bienvenue', EN: 'Welcome', DE: 'Willkommen', NL: 'Welkom' },
@@ -363,7 +373,7 @@
       a.href = href || '#';
 
       if (type === 'qr') {
-        const dataUrl = qrDataUrl(href);
+        const dataUrl = qrDataUrl(toAbsoluteUrl(href));
         a.innerHTML = `
           <div class="tile-icon">${icon}</div>
           <div class="tile-title">${title[lang] || title.FR}</div>
