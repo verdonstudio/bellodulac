@@ -8,6 +8,11 @@ on:
       - ".github/workflows/build-android-tv.yml"
   workflow_dispatch: {}
 
+# Necessaire pour que l'etape "Publier/mettre a jour la Release" puisse creer/modifier
+# une Release GitHub avec le GITHUB_TOKEN par defaut.
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -42,16 +47,47 @@ jobs:
       - name: Build APK - Bell'Étoile (Moustiers-Sainte-Marie)
         run: gradle :app:assembleMoustiersDebug --stacktrace
 
-      - name: Upload APK - Bell'O du Lac
+      # Renomme les APK generes (noms Gradle par defaut, ex: app-salles-debug.apk) en
+      # noms stables, pour avoir un lien de telechargement qui ne change jamais.
+      - name: Renommer les APK avec un nom stable
+        run: |
+          mkdir -p release-apks
+          cp app/build/outputs/apk/salles/debug/*.apk release-apks/bellodulac-tv-salles.apk
+          cp app/build/outputs/apk/moustiers/debug/*.apk release-apks/bellodulac-tv-moustiers.apk
+
+      - name: Upload APK - Bell'O du Lac (artifact de build)
         uses: actions/upload-artifact@v4
         with:
           name: bellodulac-tv-salles
-          path: androidtv/app/build/outputs/apk/salles/debug/*.apk
+          path: androidtv/release-apks/bellodulac-tv-salles.apk
           if-no-files-found: error
 
-      - name: Upload APK - Bell'Étoile
+      - name: Upload APK - Bell'Étoile (artifact de build)
         uses: actions/upload-artifact@v4
         with:
           name: bellodulac-tv-moustiers
-          path: androidtv/app/build/outputs/apk/moustiers/debug/*.apk
+          path: androidtv/release-apks/bellodulac-tv-moustiers.apk
           if-no-files-found: error
+
+      # Publie (ou met a jour si elle existe deja) une Release GitHub a tag fixe
+      # "android-tv" avec les 2 APK attaches. Ca donne un lien public STABLE (pas besoin
+      # d'etre connecte a GitHub), a coller directement dans l'appli "Downloader" sur la
+      # Google TV :
+      #   https://github.com/verdonstudio/bellodulac/releases/download/android-tv/bellodulac-tv-salles.apk
+      #   https://github.com/verdonstudio/bellodulac/releases/download/android-tv/bellodulac-tv-moustiers.apk
+      - name: Publier/mettre a jour la Release "android-tv"
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-tv
+          name: "Bell'O du Lac / Bell'Étoile — Android TV"
+          body: >
+            APK a jour pour les applications Google TV (WebView kiosk), reconstruites
+            automatiquement a chaque changement dans androidtv/. Liens stables a coller
+            dans l'appli "Downloader" sur la TV :
+            bellodulac-tv-salles.apk (Les Salles-sur-Verdon) et
+            bellodulac-tv-moustiers.apk (Moustiers-Sainte-Marie).
+          files: |
+            androidtv/release-apks/bellodulac-tv-salles.apk
+            androidtv/release-apks/bellodulac-tv-moustiers.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

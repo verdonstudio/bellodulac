@@ -21,29 +21,39 @@ Chaque application affiche simplement le site `home.html`, avec le logement déj
 Le message "Bienvenue {Nom} !" affiché sur `home.html` est géré entièrement côté site web
 (voir `reservations.js` à la racine du dépôt) — il n'y a rien à faire côté application Android.
 
-## Récupérer les APK (sans installer Android Studio)
+## Installer l'APK sur la Google TV (méthode recommandée : appli "Downloader")
 
 Un workflow GitHub Actions (`.github/workflows/build-android-tv.yml`) reconstruit automatiquement
-les deux APK à chaque modification du dossier `androidtv/`, ou à la demande :
+les deux APK à chaque modification du dossier `androidtv/`, et les publie avec un **lien de
+téléchargement public et stable** (pas besoin d'être connecté à GitHub, ni de dézipper quoi que
+ce soit) :
 
-1. Sur GitHub, onglet **Actions** → workflow **"Build Android TV APKs"**.
-2. Cliquer sur **"Run workflow"** (bouton en haut à droite) pour le lancer manuellement, si besoin.
-3. Une fois le run terminé (icône verte), l'ouvrir puis descendre jusqu'à la section **Artifacts** :
-   - `bellodulac-tv-salles` → l'APK pour la TV des Salles-sur-Verdon (Bell'O du Lac)
-   - `bellodulac-tv-moustiers` → l'APK pour la TV de Moustiers (Bell'Étoile)
-4. Télécharger le `.zip`, il contient le fichier `.apk` à l'intérieur.
+- Bell'O du Lac (Les Salles-sur-Verdon) :
+  `https://github.com/verdonstudio/bellodulac/releases/download/android-tv/bellodulac-tv-salles.apk`
+- Bell'Étoile (Moustiers-Sainte-Marie) :
+  `https://github.com/verdonstudio/bellodulac/releases/download/android-tv/bellodulac-tv-moustiers.apk`
 
-## Installer l'APK sur la Google TV
+Ces liens restent toujours les mêmes : à chaque nouveau build, le fichier est simplement remplacé
+à la même adresse.
 
-Le plus simple est d'utiliser un outil comme **"Send files to TV"** ou **ADB** :
-- Activer le mode développeur sur la Google TV (Paramètres → À propos → cliquer 7 fois sur
-  "Build") puis activer le débogage réseau ADB, ou
-- Copier l'APK sur une clé USB et utiliser un gestionnaire de fichiers TV (ex: "X-plore",
-  "Send Files to TV") pour l'installer directement.
+**Sur la TV :**
+1. Installer l'application **"Downloader"** (AFTVnews) depuis le Play Store de la TV.
+2. Au premier lancement, autoriser Downloader à installer des sources inconnues si demandé.
+3. Dans Downloader, coller le lien correspondant à la maison (voir ci-dessus) et valider.
+4. Une fois le téléchargement terminé, l'installation de l'APK se lance automatiquement — suivre
+   les invites à l'écran.
+
+**Alternative (si "Downloader" n'est pas disponible) :** copier l'APK sur une clé USB depuis un
+ordinateur, puis utiliser un gestionnaire de fichiers TV (ex: "X-plore", "Send Files to TV") pour
+l'installer directement.
 
 Les deux applications ont des identifiants différents (`com.bellodulac.tv.salles` et
 `com.bellodulac.tv.moustiers`), elles peuvent donc être installées côte à côte sans conflit —
 mais en pratique chaque TV n'a besoin que de la sienne.
+
+Pour lancer un build manuellement (par exemple pour forcer une mise à jour sans toucher aux
+fichiers) : onglet **Actions** sur GitHub → workflow **"Build Android TV APKs"** → **"Run
+workflow"**.
 
 ## Structure du projet
 
