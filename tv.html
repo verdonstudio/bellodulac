@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Bell'O du Lac™ & Bell'Étoile™ — TV</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script src="analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Source des liens (map/evenements/highlights/panorama) pour la reservation en cours -->
+<script src="redirect.js"></script>
+<script src="logements.js"></script>
+
+<!-- Fichier de correspondance "voyageur du jour" (Annonce/Nom/Arrivée/Départ/Code), utilisé
+     pour reconnaitre automatiquement quelle reservation est en cours sur ce logement (la
+     Google TV n'a pas de code reservation dans son URL, juste ?logement=...&lang=...) et
+     retrouver sa langue + ses liens (via le champ "code", cle dans redirect.js). Voir
+     reservations.js pour le format et comment ajouter une entrée. -->
+<script src="reservations.js"></script>
+
+<style>
+  :root {
+    --c-bg:        #0b1220;
+    --c-ink:       #f8fafc;
+    --c-muted:     #94a3b8;
+    --c-primary:   #38bdf8;
+    --c-border:    rgba(148, 163, 184, 0.18);
+    --c-card:      #111a2e;
+  }
+  body { font-family: 'Inter', sans-serif; margin: 0; background: var(--c-bg); color: var(--c-ink); }
+  .font-display { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+  .topbar {
+    background: linear-gradient(180deg, rgba(11,18,32,0.95) 0%, rgba(11,18,32,0.85) 100%);
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .hero {
+    background: radial-gradient(1200px 400px at 50% -100px, rgba(56,189,248,0.18), transparent), var(--c-bg);
+  }
+
+  .tv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 1000px) { .tv-grid { grid-template-columns: 1fr; } }
+
+  .tv-panel {
+    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 24px;
+    padding: 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .tv-panel h2 {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 24px;
+    display: flex; align-items: center; gap: 10px; margin: 0;
+  }
+  .tv-panel iframe {
+    width: 100%; height: 58vh; min-height: 420px; border: 0; border-radius: 16px;
+    background: #f8fafc;
+  }
+
+  .tv-qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 28px; }
+  @media (max-width: 1000px) { .tv-qr-grid { grid-template-columns: 1fr; } }
+
+  .tv-qr-card {
+    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 24px;
+    padding: 28px; box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;
+  }
+  .tv-qr-card h3 {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 22px;
+    display: flex; align-items: center; gap: 10px; margin: 0;
+  }
+  .tv-qr-card .qr-box {
+    background: #ffffff; border-radius: 16px; padding: 14px;
+    display: flex; align-items: center; justify-content: center;
+    min-width: 220px; min-height: 220px;
+  }
+  .tv-qr-card .qr-box img { display: block; width: 220px; height: 220px; image-rendering: pixelated; }
+  .tv-qr-card .qr-caption { font-size: 15px; color: var(--c-muted); max-width: 280px; }
+  .qr-skeleton {
+    width: 220px; height: 220px; border-radius: 8px;
+    background: linear-gradient(100deg, #e2e8f0 30%, #f1f5f9 50%, #e2e8f0 70%);
+    background-size: 200% 100%; animation: qr-shimmer 1.4s ease-in-out infinite;
+  }
+  @keyframes qr-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+</style>
+</head>
+<body>
+
+<header class="topbar w-full">
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center gap-3">
+    <img id="topbar-logo" src="" alt="" class="w-9 h-9 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+    <span id="label-title" class="font-display font-semibold text-[17px] truncate">Bell'O du Lac & Bell'Étoile</span>
+  </div>
+</header>
+
+<section class="hero pt-12 pb-8 px-6 text-center">
+  <h1 id="hero-title" class="font-display font-bold text-3xl sm:text-4xl">—</h1>
+  <p id="hero-subtitle" class="text-base sm:text-lg text-[var(--c-muted)] mt-3 max-w-xl mx-auto">—</p>
+</section>
+
+<main class="max-w-6xl mx-auto px-6 pb-16">
+  <div class="tv-grid">
+    <div class="tv-panel">
+      <h2><span>📅</span><span id="title-evenements">Évènements locaux</span></h2>
+      <iframe id="iframe-evenements" title="Évènements locaux" loading="lazy"></iframe>
+    </div>
+    <div class="tv-panel">
+      <h2><span>✨</span><span id="title-programme">Votre programme</span></h2>
+      <iframe id="iframe-programme" title="Votre programme" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="tv-qr-grid">
+    <div class="tv-qr-card">
+      <h3><span>🗺️</span><span id="title-qr-map">Carte interactive</span></h3>
+      <div class="qr-box"><div class="qr-skeleton" id="qr-map-slot"></div></div>
+      <p class="qr-caption" id="caption-qr-map">Scannez avec votre téléphone pour ouvrir la carte.</p>
+    </div>
+    <div class="tv-qr-card">
+      <h3><span>🌄</span><span id="title-qr-panorama">Panorama 360°</span></h3>
+      <div class="qr-box"><div class="qr-skeleton" id="qr-panorama-slot"></div></div>
+      <p class="qr-caption" id="caption-qr-panorama">Scannez avec votre téléphone pour ouvrir le panorama.</p>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  const LOGEMENTS = (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings) || {};
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // logementId : necessaire AVANT de savoir quelle reservation "matche" aujourd'hui, donc on
+  // se base uniquement sur l'URL ici. En pratique, l'URL utilisee par la Google TV fournit
+  // toujours ?logement=...&lang=... explicitement (voir androidtv/config-salles.json /
+  // config-moustiers.json).
+  const logementId = urlParams.get('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
+  const listing = LOGEMENTS[logementId];
+
+  // --- Reconnaissance de la reservation en cours via reservations.js (memes fonctions que
+  // home.html), mais on recupere ici l'objet complet (nom + code) plutot que juste le nom. ---
+  function todayLocalISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function parseFlexibleDate(str) {
+    if (!str) return null;
+    str = String(str).trim();
+    let m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+    m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+    return null;
+  }
+
+  function annonceMatchesLogement(annonce, targetLogementId) {
+    const norm = String(annonce || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const compact = norm.replace(/[^a-z0-9]/g, '');
+    if (norm === targetLogementId) return true;
+    if (targetLogementId.includes('moustiers')) {
+      return norm.includes('moustiers') || norm.includes('etoile');
+    }
+    const isSallesFamily = norm.includes('salles') || norm.includes('lac') || compact.includes('bello');
+    if (!isSallesFamily) return false;
+    const has6 = /\b6\b/.test(norm) || norm.includes('6p') || norm.includes('6 pers');
+    const has8 = /\b8\b/.test(norm) || norm.includes('8p') || norm.includes('8 pers');
+    if (targetLogementId === 'salles6' && has8) return false;
+    if (targetLogementId === 'salles8' && has6) return false;
+    return true;
+  }
+
+  function todayReservationMatch() {
+    if (typeof window.RESERVATIONS === 'undefined' || !Array.isArray(window.RESERVATIONS)) return null;
+    const today = todayLocalISO();
+    return window.RESERVATIONS.find(r => {
+      const arrivee = parseFlexibleDate(r.arrivee);
+      const depart = parseFlexibleDate(r.depart);
+      if (!arrivee || !depart) return false;
+      if (today < arrivee || today > depart) return false;
+      return annonceMatchesLogement(r.annonce, logementId);
+    }) || null;
+  }
+
+  // Si un code reservation est deja fourni explicitement dans l'URL (?res=...), on ne cherche
+  // pas a deviner via les dates -- comportement identique a home.html (le "res" de l'URL est
+  // toujours prioritaire).
+  const todaysReservation = urlParams.get('res') ? null : todayReservationMatch();
+  const resCode = urlParams.get('res') || (todaysReservation && todaysReservation.code) || 'default';
+  const reservationData = (typeof reservations !== 'undefined' && (reservations[resCode] || reservations['default'])) || {};
+
+  function paramFromReservation(paramName) {
+    const candidates = ['home', 'map', 'evenements', 'highlights', 'panorama'];
+    for (const key of candidates) {
+      const url = reservationData[key];
+      if (!url) continue;
+      const qs = url.split('?')[1] || '';
+      const value = new URLSearchParams(qs).get(paramName);
+      if (value) return value;
+    }
+    return null;
+  }
+
+  let lang = (urlParams.get('lang') || paramFromReservation('lang') || 'FR').toUpperCase();
+  if (!['FR', 'EN', 'DE', 'NL'].includes(lang)) lang = 'FR';
+
+  const todaysGuestName = todaysReservation ? todaysReservation.nom : null;
+
+  // Reconstruit une URL de redirect.js (deja quasi-complete) en s'assurant qu'elle porte bien
+  // la langue resolue ci-dessus et le logement courant -- utile surtout pour l'entree "default"
+  // de redirect.js, qui ne precise pas toujours logement/lang.
+  function withResolvedLangAndLogement(url) {
+    if (!url) return null;
+    const [path, qs] = url.split('?');
+    const p = new URLSearchParams(qs || '');
+    p.set('lang', lang);
+    if (!p.get('logement')) p.set('logement', logementId);
+    return `${path}?${p.toString()}`;
+  }
+
+  const I18N = {
+    heroTitle: { FR: 'Bienvenue !', EN: 'Welcome!', DE: 'Willkommen!', NL: 'Welkom!' },
+    welcomeGuest: { FR: 'Bienvenue', EN: 'Welcome', DE: 'Willkommen', NL: 'Welkom' },
+    heroSubtitle: {
+      FR: 'Ce qu’il se passe près de chez vous, et votre programme du séjour.',
+      EN: 'What’s happening nearby, and your stay’s programme.',
+      DE: 'Was in der Nähe passiert, und Ihr Aufenthaltsprogramm.',
+      NL: 'Wat er in de buurt gebeurt, en uw verblijfsprogramma.'
+    },
+    evenements: { FR: 'Évènements locaux', EN: 'Local events', DE: 'Lokale Veranstaltungen', NL: 'Lokale evenementen' },
+    programme: { FR: 'Votre programme', EN: 'Your programme', DE: 'Ihr Programm', NL: 'Uw programma' },
+    map: { FR: 'Carte interactive', EN: 'Interactive map', DE: 'Interaktive Karte', NL: 'Interactieve kaart' },
+    panorama: { FR: 'Panorama 360°', EN: '360° panorama', DE: '360°-Panorama', NL: '360°-panorama' },
+    scanMap: {
+      FR: 'Scannez avec votre téléphone pour ouvrir la carte.',
+      EN: 'Scan with your phone to open the map.',
+      DE: 'Scannen Sie mit Ihrem Handy, um die Karte zu öffnen.',
+      NL: 'Scan met uw telefoon om de kaart te openen.'
+    },
+    scanPanorama: {
+      FR: 'Scannez avec votre téléphone pour ouvrir le panorama.',
+      EN: 'Scan with your phone to open the panorama.',
+      DE: 'Scannen Sie mit Ihrem Handy, um das Panorama zu öffnen.',
+      NL: 'Scan met uw telefoon om het panorama te openen.'
+    }
+  };
+
+  document.documentElement.lang = lang.toLowerCase();
+  document.getElementById('hero-title').textContent = todaysGuestName
+    ? (lang === 'FR' ? `${I18N.welcomeGuest.FR} ${todaysGuestName} !` : `${I18N.welcomeGuest[lang]} ${todaysGuestName}!`)
+    : I18N.heroTitle[lang];
+  document.getElementById('hero-subtitle').textContent = I18N.heroSubtitle[lang];
+  document.getElementById('title-evenements').textContent = I18N.evenements[lang];
+  document.getElementById('title-programme').textContent = I18N.programme[lang];
+  document.getElementById('title-qr-map').textContent = I18N.map[lang];
+  document.getElementById('title-qr-panorama').textContent = I18N.panorama[lang];
+  document.getElementById('caption-qr-map').textContent = I18N.scanMap[lang];
+  document.getElementById('caption-qr-panorama').textContent = I18N.scanPanorama[lang];
+
+  if (listing) {
+    document.getElementById('label-title').textContent = listing.brand ? (listing.brand[lang] || listing.brand.FR) : listing.id;
+    const logoEl = document.getElementById('topbar-logo');
+    if (listing.logo) { logoEl.src = listing.logo; logoEl.classList.remove('hidden'); }
+  }
+
+  // --- Évènements locaux / Votre programme : on reutilise directement les pages existantes
+  // (evenements.html / highlights.html), avec les memes liens que redirect.js genere deja pour
+  // cette reservation (dates de sejour incluses), ou l'entree "default" (vue "aujourd'hui")
+  // s'il n'y a pas de reservation en cours. ---
+  const evenementsUrl = withResolvedLangAndLogement(reservationData.evenements) || `evenements.html?lang=${lang}&logement=${encodeURIComponent(logementId)}&showevents=today`;
+  const programmeUrl = withResolvedLangAndLogement(reservationData.highlights) || `highlights.html?lang=${lang}&logement=${encodeURIComponent(logementId)}&showevents=today&showpois=today&from=evenements`;
+  document.getElementById('iframe-evenements').src = evenementsUrl;
+  document.getElementById('iframe-programme').src = programmeUrl;
+
+  // --- QR codes carte interactive / panorama : le lien cible vient TOUJOURS du fichier de
+  // config Android (config-salles.json / config-moustiers.json sur GitHub), pas de la
+  // reservation en cours -- ce sont des liens fixes par logement, modifiables directement sur
+  // GitHub sans toucher au code. ---
+  const CONFIG_URLS = {
+    salles: 'https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-salles.json',
+    moustiers: 'https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-moustiers.json'
+  };
+  const propertyFamily = logementId.includes('moustiers') ? 'moustiers' : 'salles';
+
+  function fallbackQrLinks() {
+    return {
+      mapUrl: `${window.location.origin}${window.location.pathname.replace(/tv\.html$/, '')}index.html?logement=${encodeURIComponent(logementId)}&lang=${lang}`,
+      panoramaUrl: `${window.location.origin}${window.location.pathname.replace(/tv\.html$/, '')}panorama.html?logement=${encodeURIComponent(logementId)}&lang=${lang}`
+    };
+  }
+
+  async function fetchQrLinks() {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+      const res = await fetch(CONFIG_URLS[propertyFamily], { signal: controller.signal, cache: 'no-store' });
+      clearTimeout(timeout);
+      if (!res.ok) return fallbackQrLinks();
+      const json = await res.json();
+      const fb = fallbackQrLinks();
+      return {
+        mapUrl: json.mapUrl || fb.mapUrl,
+        panoramaUrl: json.panoramaUrl || fb.panoramaUrl
+      };
+    } catch (e) {
+      console.warn('Config Android injoignable, utilisation des liens de secours.', e);
+      return fallbackQrLinks();
+    }
+  }
+
+  // Meme technique de rendu que url-generator.html (bibliotheque qrcode-generator, 100% locale).
+  function drawQrToCanvas(qr, cellSize, marginModules) {
+    const moduleCount = qr.getModuleCount();
+    const size = (moduleCount + marginModules * 2) * cellSize;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#000000';
+    for (let row = 0; row < moduleCount; row++) {
+      for (let col = 0; col < moduleCount; col++) {
+        if (qr.isDark(row, col)) {
+          ctx.fillRect((col + marginModules) * cellSize, (row + marginModules) * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+    return canvas;
+  }
+
+  function renderQr(slotId, url, altText) {
+    const slot = document.getElementById(slotId);
+    if (!slot || !url || typeof qrcode !== 'function') return;
+    try {
+      const qr = qrcode(0, 'H');
+      qr.addData(url);
+      qr.make();
+      const canvas = drawQrToCanvas(qr, 6, 3);
+      const img = document.createElement('img');
+      img.alt = altText;
+      img.src = canvas.toDataURL('image/png');
+      slot.replaceWith(img);
+    } catch (err) {
+      console.warn('QR code non genere pour', slotId, err);
+    }
+  }
+
+  fetchQrLinks().then(links => {
+    renderQr('qr-map-slot', links.mapUrl, I18N.map[lang]);
+    renderQr('qr-panorama-slot', links.panoramaUrl, I18N.panorama[lang]);
+  });
+})();
+</script>
+</body>
+</html>

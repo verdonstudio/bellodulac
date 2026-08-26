@@ -1,25 +1,48 @@
 # Bell'O du Lac / Bell'Étoile — Applications Android TV
 
 Deux applications "kiosk" (WebView plein écran) pour Google TV / Android TV, une par logement.
-Chaque application affiche simplement le site `home.html`, avec le logement déjà pré-sélectionné.
+Chaque application affiche simplement une page du site (par défaut `home.html`, ou `tv.html`
+pour la vue orientée grand écran — voir plus bas), avec le logement déjà pré-sélectionné.
 
 ## Comment ça marche
 
 1. Au démarrage, l'application va chercher un petit fichier JSON sur GitHub :
    - Bell'O du Lac (Les Salles-sur-Verdon) → [`config-salles.json`](./config-salles.json)
    - Bell'Étoile (Moustiers-Sainte-Marie) → [`config-moustiers.json`](./config-moustiers.json)
-2. Ce fichier contient juste l'URL à afficher, par exemple :
+2. Ce fichier contient l'URL à afficher, plus deux liens fixes utilisés par les QR codes de
+   `tv.html` (carte interactive et panorama 360°) :
    ```json
-   { "url": "https://bellodulac.vercel.app/home.html?logement=salles8&lang=FR" }
+   {
+     "url": "https://bellodulac.vercel.app/home.html?logement=salles8&lang=FR",
+     "mapUrl": "https://bellodulac.vercel.app/index.html?logement=salles8&lang=FR",
+     "panoramaUrl": "https://bellodulac.vercel.app/panorama.html?logement=salles8&lang=FR"
+   }
    ```
-3. **Pour changer l'URL affichée (changer la langue par défaut, etc.), il suffit de modifier
-   ce fichier directement sur GitHub.** Pas besoin de reconstruire ni de réinstaller
-   l'application — au prochain démarrage, la TV ira chercher la nouvelle URL.
+3. **Pour changer l'URL affichée (changer la langue par défaut, passer sur `tv.html`, changer
+   les liens des QR codes, etc.), il suffit de modifier ce fichier directement sur GitHub.**
+   Pas besoin de reconstruire ni de réinstaller l'application — au prochain démarrage, la TV
+   ira chercher la nouvelle configuration.
 4. Si le fichier est injoignable au démarrage (pas de réseau, etc.), l'application affiche une
    URL de secours codée en dur dans l'app (`androidtv/app/build.gradle`, champ `DEFAULT_URL`).
 
-Le message "Bienvenue {Nom} !" affiché sur `home.html` est géré entièrement côté site web
+Le message "Bienvenue {Nom} !" (sur `home.html` et `tv.html`) est géré entièrement côté site web
 (voir `reservations.js` à la racine du dépôt) — il n'y a rien à faire côté application Android.
+
+## `home.html` ou `tv.html` ?
+
+- `home.html` : la page "mobile" classique, grille de tuiles cliquables (carte, évènements,
+  programme, panorama, retour vers le futur...). Pensée pour un écran tactile.
+- `tv.html` : vue pensée pour un grand écran vu à distance, sans interaction tactile. Affiche
+  directement les évènements locaux et le programme personnalisé du séjour en cours (repris de
+  `evenements.html` / `highlights.html`), plus deux QR codes (carte interactive, panorama 360°)
+  à scanner avec le téléphone — leurs liens viennent des champs `mapUrl` / `panoramaUrl` ci-dessus.
+  La reconnaissance du séjour en cours (nom du voyageur affiché, langue de la page, dates prises
+  en compte pour "votre programme") se fait via `reservations.js` (champ `code`, qui doit
+  correspondre à une entrée existante dans `redirect.js`) exactement comme sur `home.html`.
+
+Pour utiliser `tv.html` au lieu de `home.html` sur une TV, il suffit de changer `"url"` dans le
+fichier de config correspondant, par exemple :
+`"url": "https://bellodulac.vercel.app/tv.html?logement=salles8&lang=FR"`.
 
 ## Installer l'APK sur la Google TV (méthode recommandée : appli "Downloader")
 
