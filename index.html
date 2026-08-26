@@ -2764,9 +2764,8 @@ function getPoiLinks(content, poi) {
       );
     }, { passive: false });
 
-    Lglobal.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    Lglobal.tileLayer('https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_28w0_1_319d7c4de46fc3f092132b06', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
       maxZoom: 19
     }).addTo(mapState.map);
 
