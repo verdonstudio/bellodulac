@@ -29,6 +29,20 @@ distance, avec le logement déjà pré-sélectionné.
    URL de secours codée en dur dans l'app (`androidtv/app/build.gradle`, champ `DEFAULT_URL`),
    et `tv.html` affiche lui-même 5 vignettes par défaut si sa propre lecture de la config échoue.
 
+## Vidéo d'intro au lancement (optionnel)
+
+Le champ `"url"` peut pointer vers `video.html` au lieu de `tv.html` directement, pour jouer une
+vidéo (YouTube ou fichier) avant d'arriver sur l'écran normal. Il faut alors ajouter `next=...`
+(encodé en URL) avec la page à ouvrir une fois la vidéo terminée :
+```
+https://bellodulac.vercel.app/video.html?youtube=https%3A%2F%2Fyoutu.be%2FfroZQJeAMr0&logement=moustiers&next=tv.html%3Flogement%3Dmoustiers
+```
+Un bouton "Passer l'intro" apparaît automatiquement en haut à droite dès qu'un `next` est fourni
+(sécurité si la vidéo ne se termine jamais correctement) ; l'app enchaîne aussi automatiquement
+sur `next` au bout de 3 minutes maximum, au cas où. C'est actuellement utilisé pour l'app
+Moustiers uniquement (`config-moustiers.json`) — retirer `youtube=...&next=...` et faire pointer
+`"url"` directement vers `tv.html?logement=...` pour désactiver l'intro.
+
 Le message "Bienvenue {Nom} !" est géré entièrement côté site web (voir `reservations.js` à la
 racine du dépôt) — il n'y a rien à faire côté application Android.
 

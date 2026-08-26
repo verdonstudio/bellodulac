@@ -88,6 +88,13 @@
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen></iframe>
 
+        <!-- Bouton "Passer l'intro" : uniquement visible si ?next=... est fourni dans l'URL
+             (usage TV : video d'intro au lancement de l'app, avant de continuer vers tv.html).
+             Navigue immediatement vers "next" sans attendre la fin de la video. -->
+        <a id="btn-skip" href="#" class="absolute top-4 right-4 z-20 hidden inline-flex items-center gap-1.5 bg-white/90 hover:bg-white text-[var(--c-ink)] text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg transition-colors">
+            <span id="text-skip">Passer l'intro →</span>
+        </a>
+
         <!-- Ajout de l'ID "text-overlay" pour pouvoir mesurer sa taille -->
         <div id="text-overlay" class="absolute bottom-20 sm:bottom-24 left-4 right-4 sm:left-8 sm:right-8 z-10 pointer-events-none transition-opacity duration-300">
             <span id="video-badge" class="inline-block bg-[var(--c-primary)] text-white text-[10px] font-bold px-2.5 py-1 rounded-full mb-2 uppercase tracking-wide hidden">Vidéo</span>
@@ -108,13 +115,15 @@
         // repli en dur au cas ou le fichier de config n'aurait pas pu etre charge du tout.
         let DEFAULT_LISTING_ID = 'salles6';
 
-        const state = { lang: 'FR', logement: null, poiId: null, videoFile: null, youtubeId: null };
+        const state = { lang: 'FR', logement: null, poiId: null, videoFile: null, youtubeId: null, nextUrl: null };
+        let ytPlayerApi = null;
+        let hasNavigatedToNext = false;
 
         const I18N = {
-            FR: { back: "Retour", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Vidéo introuvable", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés. Marques déposées." },
-            EN: { back: "Back", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Video not found", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. All rights reserved. Registered Trademarks." },
-            DE: { back: "Zurück", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Video nicht gefunden", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Alle Rechte vorbehalten. Eingetragene Marken." },
-            NL: { back: "Terug", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Video niet gevonden", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Alle rechten voorbehouden. Geregistreerde handelsmerken." }
+            FR: { back: "Retour", skip: "Passer l'intro →", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Vidéo introuvable", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés. Marques déposées." },
+            EN: { back: "Back", skip: "Skip intro →", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Video not found", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. All rights reserved. Registered Trademarks." },
+            DE: { back: "Zurück", skip: "Intro überspringen →", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Video nicht gefunden", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Alle Rechte vorbehalten. Eingetragene Marken." },
+            NL: { back: "Terug", skip: "Intro overslaan →", brand: "Bell'O du Lac™ & Bell'Étoile™", error: "Video niet gevonden", footer_legal: "© 2026 Bell'O du Lac™ & Bell'Étoile™. Alle rechten voorbehouden. Geregistreerde handelsmerken." }
         };
 
         // Le titre en bas reste visible 5 secondes au chargement, puis s'efface.
@@ -146,6 +155,10 @@
             if (p.get('poi')) state.poiId = p.get('poi');
             if (p.get('video')) state.videoFile = p.get('video');
             if (p.get('youtube')) state.youtubeId = extractYoutubeId(p.get('youtube'));
+            // "next" : URL a ouvrir automatiquement une fois la video terminee (usage TV -- video
+            // d'intro au lancement de l'app, avant de continuer vers tv.html). URLSearchParams
+            // decode deja le "%3F"/"%3D" etc. de l'URL d'origine.
+            if (p.get('next')) state.nextUrl = p.get('next');
 
             // Logement : accepte les alias habituels (logement/listing/l/id, comme index.html),
             // sinon le logement par defaut fourni par logements.js (DEFAULT_LISTING_ID).
@@ -212,9 +225,18 @@
 			*/
         }
 
+        // Navigue vers "next" (une seule fois -- evite un double-appel si "ended" ET le
+        // minuteur de secours se declenchent tous les deux).
+        function goToNext() {
+            if (!state.nextUrl || hasNavigatedToNext) return;
+            hasNavigatedToNext = true;
+            window.location.href = state.nextUrl;
+        }
+
         function applyI18n() {
             document.getElementById('lang-select').value = state.lang;
             document.getElementById('text-back').textContent = I18N[state.lang].back;
+            document.getElementById('text-skip').textContent = I18N[state.lang].skip;
             document.getElementById('label-title').textContent = I18N[state.lang].brand;
             document.getElementById('video-footer-text').textContent = I18N[state.lang].footer_legal;
 
@@ -236,23 +258,61 @@
             checkOverlaySize();
         }
 
+        // Charge l'API JS officielle de YouTube (une seule fois), pour pouvoir detecter la fin
+        // de la video (onStateChange -> ENDED) et enchainer automatiquement sur "next". Sans
+        // "next" fourni, le lecteur fonctionne exactement comme avant (simple embed).
+        function loadYoutubeIframeApi(onReady) {
+            if (window.YT && window.YT.Player) { onReady(); return; }
+            const previous = window.onYouTubeIframeAPIReady;
+            window.onYouTubeIframeAPIReady = function () {
+                if (typeof previous === 'function') previous();
+                onReady();
+            };
+            if (!document.getElementById('youtube-iframe-api')) {
+                const tag = document.createElement('script');
+                tag.id = 'youtube-iframe-api';
+                tag.src = 'https://www.youtube.com/iframe_api';
+                document.head.appendChild(tag);
+            }
+        }
+
         function initVideo() {
             const vidPlayer = document.getElementById('main-video');
             const ytPlayer = document.getElementById('youtube-player');
+            const btnSkip = document.getElementById('btn-skip');
+
+            if (state.nextUrl) {
+                btnSkip.classList.remove('hidden');
+                btnSkip.addEventListener('click', (e) => { e.preventDefault(); goToNext(); });
+                // Filet de securite : si "ended" ne se declenche jamais (erreur de lecture,
+                // API indisponible...), on continue quand meme au bout d'un temps raisonnable
+                // plutot que de rester bloque sur l'intro indefiniment.
+                setTimeout(goToNext, 3 * 60 * 1000);
+            }
 
             if (state.youtubeId) {
-                // YouTube n'autorise l'autoplay avec son que si la video est mute au depart ;
-                // les controles restent disponibles pour reactiver le son.
+                ytPlayer.classList.remove('hidden');
+                vidPlayer.classList.add('hidden');
                 // youtube-nocookie.com (au lieu de youtube.com) + referrerpolicy ci-dessus
                 // evitent l'erreur 153 ("Erreur de configuration du lecteur video") qui
                 // survient quand YouTube ne recoit pas de header Referer valide (notamment
                 // en ouvrant la page en local via file:// plutot que via http/https).
-                ytPlayer.src = `https://www.youtube-nocookie.com/embed/${state.youtubeId}?autoplay=1&mute=1&playsinline=1&rel=0`;
-                ytPlayer.classList.remove('hidden');
-                vidPlayer.classList.add('hidden');
+                loadYoutubeIframeApi(() => {
+                    ytPlayerApi = new YT.Player('youtube-player', {
+                        videoId: state.youtubeId,
+                        host: 'https://www.youtube-nocookie.com',
+                        playerVars: { autoplay: 1, mute: 1, playsinline: 1, rel: 0 },
+                        events: {
+                            onStateChange: (e) => {
+                                if (e.data === YT.PlayerState.ENDED) goToNext();
+                            }
+                        }
+                    });
+                });
             } else if (state.videoFile) {
                 vidPlayer.src = `https://bellodulac.netlify.app/images/${state.videoFile}`;
                 vidPlayer.load();
+                vidPlayer.addEventListener('ended', goToNext);
             }
         }
 

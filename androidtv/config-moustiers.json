@@ -1,5 +1,5 @@
 {
-  "url": "https://bellodulac.vercel.app/tv.html?logement=moustiers",
+  "url": "https://bellodulac.vercel.app/video.html?youtube=https%3A%2F%2Fyoutu.be%2FfroZQJeAMr0&logement=moustiers&next=tv.html%3Flogement%3Dmoustiers",
 
   "tiles": [
     { "key": "evenements", "type": "link" },
