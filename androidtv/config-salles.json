@@ -1,5 +1,6 @@
 {
-  "url": "https://bellodulac.vercel.app/tv.html?logement=salles8",
+  "url": "https://bellodulac.vercel.app/video.html?youtube=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DxnTTuKloRXk&logement=salles8&next=tv.html",
+  
 
   "tiles": [
     { "key": "evenements", "type": "link" },
