@@ -191,12 +191,20 @@
                 console.warn("Mise à jour URL bloquée en local (file://). Ouvrez via le serveur Python pour l'activer.");
             }
 
-            // Configuration propre du lien de retour vers index.html : on repart de l'URL
-            // deja normalisee (lang + logement resolus) pour ne rien perdre au retour.
-            const backParams = new URLSearchParams(p.toString());
-            backParams.delete('video');
-            backParams.delete('youtube');
-            document.getElementById('btn-back').href = `index.html?${backParams.toString()}`;
+            // Mode TV (video d'intro au lancement, "next" fourni) : pas de page "precedente" a
+            // proprement parler -- le bouton Retour ramene directement vers "next" (ex. tv.html),
+            // comme le bouton "Passer l'intro". Sinon (usage normal, video de POI...), il ramene
+            // vers index.html comme avant.
+            if (state.nextUrl) {
+                document.getElementById('btn-back').href = state.nextUrl;
+            } else {
+                // Configuration propre du lien de retour vers index.html : on repart de l'URL
+                // deja normalisee (lang + logement resolus) pour ne rien perdre au retour.
+                const backParams = new URLSearchParams(p.toString());
+                backParams.delete('video');
+                backParams.delete('youtube');
+                document.getElementById('btn-back').href = `index.html?${backParams.toString()}`;
+            }
         }
 
         // Fonction pour vérifier l'orientation ET la taille du bloc texte
@@ -234,7 +242,15 @@
         }
 
         function applyI18n() {
-            document.getElementById('lang-select').value = state.lang;
+            // Mode TV (video d'intro, "next" fourni) : pas de selecteur de langue -- la langue
+            // suit deja celle de la reservation/config, et ce n'est pas navigable a la
+            // telecommande de toute facon (voir tv.html, meme choix).
+            const langSelect = document.getElementById('lang-select');
+            if (state.nextUrl) {
+                langSelect.classList.add('hidden');
+            } else {
+                langSelect.value = state.lang;
+            }
             document.getElementById('text-back').textContent = I18N[state.lang].back;
             document.getElementById('text-skip').textContent = I18N[state.lang].skip;
             document.getElementById('label-title').textContent = I18N[state.lang].brand;
@@ -301,8 +317,16 @@
                 // origin permettent ensuite, si besoin (voir plus bas), de brancher l'API JS en
                 // lecture seule sur CET iframe deja fonctionnel plutot que de laisser l'API le
                 // recreer elle-meme (peu fiable quand la cible est deja un <iframe> existant).
+                //
+                // Son : mute=1 par defaut (necessaire pour l'autoplay dans un navigateur normal,
+                // ex. telephone via QR code -- l'utilisateur reactive le son via les controles).
+                // En mode TV ("next" fourni), l'appli Android configure sa WebView avec
+                // mediaPlaybackRequiresUserGesture=false (voir MainActivity.kt), qui autorise
+                // l'autoplay AVEC le son -- pas besoin du mute/bouton "activer le son" que le
+                // bouton "Passer l'intro" venait justement recouvrir.
                 const origin = encodeURIComponent(window.location.origin);
-                ytPlayer.src = `https://www.youtube-nocookie.com/embed/${state.youtubeId}?autoplay=1&mute=1&playsinline=1&rel=0&enablejsapi=1&origin=${origin}`;
+                const muteParam = state.nextUrl ? '0' : '1';
+                ytPlayer.src = `https://www.youtube-nocookie.com/embed/${state.youtubeId}?autoplay=1&mute=${muteParam}&playsinline=1&rel=0&enablejsapi=1&origin=${origin}`;
 
                 // La detection de fin de video (onStateChange) n'est necessaire que si on doit
                 // enchainer automatiquement sur "next" -- sinon, on ne charge meme pas l'API JS
