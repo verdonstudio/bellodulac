@@ -16,9 +16,9 @@
 
 <!-- Fichier de correspondance "voyageur du jour" (Annonce/Nom/Arrivée/Départ/Code), utilisé
      pour reconnaitre automatiquement quelle reservation est en cours sur ce logement (la
-     Google TV n'a pas de code reservation dans son URL, juste ?logement=...&lang=...) et
-     retrouver sa langue + ses liens (via le champ "code", cle dans redirect.js). Voir
-     reservations.js pour le format et comment ajouter une entrée. -->
+     Google TV n'a pas de code reservation dans son URL, juste ?logement=...) et retrouver sa
+     langue + ses liens (via le champ "code", cle dans redirect.js). Voir reservations.js pour
+     le format et comment ajouter une entrée. -->
 <script src="reservations.js"></script>
 
 <style>
@@ -42,48 +42,43 @@
     background: radial-gradient(1200px 400px at 50% -100px, rgba(56,189,248,0.18), transparent), var(--c-bg);
   }
 
-  .tv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  @media (max-width: 1000px) { .tv-grid { grid-template-columns: 1fr; } }
+  .tile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
 
-  .tv-panel {
-    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 24px;
-    padding: 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-    display: flex; flex-direction: column; gap: 14px;
+  .tile {
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;
+    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 22px;
+    padding: 26px 20px; text-decoration: none; color: inherit;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .tv-panel h2 {
-    font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 24px;
-    display: flex; align-items: center; gap: 10px; margin: 0;
-  }
-  .tv-panel iframe {
-    width: 100%; height: 58vh; min-height: 420px; border: 0; border-radius: 16px;
-    background: #f8fafc;
-  }
-
-  .tv-qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 28px; }
-  @media (max-width: 1000px) { .tv-qr-grid { grid-template-columns: 1fr; } }
-
-  .tv-qr-card {
-    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 24px;
-    padding: 28px; box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-    display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;
-  }
-  .tv-qr-card h3 {
-    font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 22px;
-    display: flex; align-items: center; gap: 10px; margin: 0;
-  }
-  .tv-qr-card .qr-box {
-    background: #ffffff; border-radius: 16px; padding: 14px;
+  .tile:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,0.45); }
+  .tile.disabled { opacity: 0.4; pointer-events: none; }
+  .tile .tile-icon {
+    width: 56px; height: 56px; border-radius: 16px;
     display: flex; align-items: center; justify-content: center;
-    min-width: 220px; min-height: 220px;
+    font-size: 28px; background: rgba(56,189,248,0.12);
   }
-  .tv-qr-card .qr-box img { display: block; width: 220px; height: 220px; image-rendering: pixelated; }
-  .tv-qr-card .qr-caption { font-size: 15px; color: var(--c-muted); max-width: 280px; }
+  .tile .tile-title { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 19px; }
+  .tile .tile-desc { font-size: 13px; color: var(--c-muted); line-height: 1.4; }
+  .tile .tile-arrow { font-size: 13px; font-weight: 700; color: var(--c-primary); margin-top: auto; }
+
+  .tile .qr-box {
+    background: #ffffff; border-radius: 14px; padding: 10px;
+    display: flex; align-items: center; justify-content: center;
+    width: 150px; height: 150px;
+  }
+  .tile .qr-box img { display: block; width: 130px; height: 130px; image-rendering: pixelated; }
   .qr-skeleton {
-    width: 220px; height: 220px; border-radius: 8px;
+    width: 130px; height: 130px; border-radius: 6px;
     background: linear-gradient(100deg, #e2e8f0 30%, #f1f5f9 50%, #e2e8f0 70%);
     background-size: 200% 100%; animation: qr-shimmer 1.4s ease-in-out infinite;
   }
   @keyframes qr-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  .data-missing {
+    max-width: 640px; margin: 0 auto 20px; background:#3f1d1d; border:1px solid #7f1d1d; color:#fecaca;
+    padding:12px 16px; border-radius:12px; font-size:0.85rem;
+  }
 </style>
 </head>
 <body>
@@ -101,29 +96,8 @@
 </section>
 
 <main class="max-w-6xl mx-auto px-6 pb-16">
-  <div class="tv-grid">
-    <div class="tv-panel">
-      <h2><span>📅</span><span id="title-evenements">Évènements locaux</span></h2>
-      <iframe id="iframe-evenements" title="Évènements locaux" loading="lazy"></iframe>
-    </div>
-    <div class="tv-panel">
-      <h2><span>✨</span><span id="title-programme">Votre programme</span></h2>
-      <iframe id="iframe-programme" title="Votre programme" loading="lazy"></iframe>
-    </div>
-  </div>
-
-  <div class="tv-qr-grid">
-    <div class="tv-qr-card">
-      <h3><span>🗺️</span><span id="title-qr-map">Carte interactive</span></h3>
-      <div class="qr-box"><div class="qr-skeleton" id="qr-map-slot"></div></div>
-      <p class="qr-caption" id="caption-qr-map">Scannez avec votre téléphone pour ouvrir la carte.</p>
-    </div>
-    <div class="tv-qr-card">
-      <h3><span>🌄</span><span id="title-qr-panorama">Panorama 360°</span></h3>
-      <div class="qr-box"><div class="qr-skeleton" id="qr-panorama-slot"></div></div>
-      <p class="qr-caption" id="caption-qr-panorama">Scannez avec votre téléphone pour ouvrir le panorama.</p>
-    </div>
-  </div>
+  <div id="data-missing" class="data-missing" style="display:none;"></div>
+  <div class="tile-grid" id="tile-grid"><!-- rempli en JS, a partir de config-salles.json / config-moustiers.json --></div>
 </main>
 
 <script>
@@ -135,8 +109,8 @@
 
   // logementId : necessaire AVANT de savoir quelle reservation "matche" aujourd'hui, donc on
   // se base uniquement sur l'URL ici. En pratique, l'URL utilisee par la Google TV fournit
-  // toujours ?logement=...&lang=... explicitement (voir androidtv/config-salles.json /
-  // config-moustiers.json).
+  // toujours ?logement=... explicitement (voir androidtv/config-salles.json /
+  // config-moustiers.json, champ "url").
   const logementId = urlParams.get('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
   const listing = LOGEMENTS[logementId];
 
@@ -209,9 +183,8 @@
 
   const todaysGuestName = todaysReservation ? todaysReservation.nom : null;
 
-  // Reconstruit une URL de redirect.js (deja quasi-complete) en s'assurant qu'elle porte bien
-  // la langue resolue ci-dessus et le logement courant -- utile surtout pour l'entree "default"
-  // de redirect.js, qui ne precise pas toujours logement/lang.
+  // Reconstruit une URL (relative ou absolue, venant de redirect.js ou de la config Android) en
+  // s'assurant qu'elle porte bien la langue resolue ci-dessus et le logement courant.
   function withResolvedLangAndLogement(url) {
     if (!url) return null;
     const [path, qs] = url.split('?');
@@ -225,26 +198,18 @@
     heroTitle: { FR: 'Bienvenue !', EN: 'Welcome!', DE: 'Willkommen!', NL: 'Welkom!' },
     welcomeGuest: { FR: 'Bienvenue', EN: 'Welcome', DE: 'Willkommen', NL: 'Welkom' },
     heroSubtitle: {
-      FR: 'Ce qu’il se passe près de chez vous, et votre programme du séjour.',
-      EN: 'What’s happening nearby, and your stay’s programme.',
-      DE: 'Was in der Nähe passiert, und Ihr Aufenthaltsprogramm.',
-      NL: 'Wat er in de buurt gebeurt, en uw verblijfsprogramma.'
+      FR: 'Planifiez vos activités pendant votre séjour.',
+      EN: 'Plan your activities during your stay.',
+      DE: 'Planen Sie Ihre Aktivitäten während Ihres Aufenthalts.',
+      NL: 'Plan uw activiteiten tijdens uw verblijf.'
     },
-    evenements: { FR: 'Évènements locaux', EN: 'Local events', DE: 'Lokale Veranstaltungen', NL: 'Lokale evenementen' },
-    programme: { FR: 'Votre programme', EN: 'Your programme', DE: 'Ihr Programm', NL: 'Uw programma' },
-    map: { FR: 'Carte interactive', EN: 'Interactive map', DE: 'Interaktive Karte', NL: 'Interactieve kaart' },
-    panorama: { FR: 'Panorama 360°', EN: '360° panorama', DE: '360°-Panorama', NL: '360°-panorama' },
-    scanMap: {
-      FR: 'Scannez avec votre téléphone pour ouvrir la carte.',
-      EN: 'Scan with your phone to open the map.',
-      DE: 'Scannen Sie mit Ihrem Handy, um die Karte zu öffnen.',
-      NL: 'Scan met uw telefoon om de kaart te openen.'
-    },
-    scanPanorama: {
-      FR: 'Scannez avec votre téléphone pour ouvrir le panorama.',
-      EN: 'Scan with your phone to open the panorama.',
-      DE: 'Scannen Sie mit Ihrem Handy, um das Panorama zu öffnen.',
-      NL: 'Scan met uw telefoon om het panorama te openen.'
+    ouvrir: { FR: 'Ouvrir →', EN: 'Open →', DE: 'Öffnen →', NL: 'Openen →' },
+    scan: { FR: 'Scannez avec votre téléphone', EN: 'Scan with your phone', DE: 'Scannen Sie mit Ihrem Handy', NL: 'Scan met uw telefoon' },
+    missing: {
+      FR: '⚠️ La configuration des vignettes (config-salles.json / config-moustiers.json) n’a pas pu être chargée — vignettes par défaut affichées.',
+      EN: '⚠️ The tile configuration (config-salles.json / config-moustiers.json) could not be loaded — showing default tiles.',
+      DE: '⚠️ Die Kachel-Konfiguration (config-salles.json / config-moustiers.json) konnte nicht geladen werden — Standardkacheln werden angezeigt.',
+      NL: '⚠️ De tegelconfiguratie (config-salles.json / config-moustiers.json) kon niet worden geladen — standaardtegels worden getoond.'
     }
   };
 
@@ -253,12 +218,6 @@
     ? (lang === 'FR' ? `${I18N.welcomeGuest.FR} ${todaysGuestName} !` : `${I18N.welcomeGuest[lang]} ${todaysGuestName}!`)
     : I18N.heroTitle[lang];
   document.getElementById('hero-subtitle').textContent = I18N.heroSubtitle[lang];
-  document.getElementById('title-evenements').textContent = I18N.evenements[lang];
-  document.getElementById('title-programme').textContent = I18N.programme[lang];
-  document.getElementById('title-qr-map').textContent = I18N.map[lang];
-  document.getElementById('title-qr-panorama').textContent = I18N.panorama[lang];
-  document.getElementById('caption-qr-map').textContent = I18N.scanMap[lang];
-  document.getElementById('caption-qr-panorama').textContent = I18N.scanPanorama[lang];
 
   if (listing) {
     document.getElementById('label-title').textContent = listing.brand ? (listing.brand[lang] || listing.brand.FR) : listing.id;
@@ -266,52 +225,95 @@
     if (listing.logo) { logoEl.src = listing.logo; logoEl.classList.remove('hidden'); }
   }
 
-  // --- Évènements locaux / Votre programme : on reutilise directement les pages existantes
-  // (evenements.html / highlights.html), avec les memes liens que redirect.js genere deja pour
-  // cette reservation (dates de sejour incluses), ou l'entree "default" (vue "aujourd'hui")
-  // s'il n'y a pas de reservation en cours. ---
-  const evenementsUrl = withResolvedLangAndLogement(reservationData.evenements) || `evenements.html?lang=${lang}&logement=${encodeURIComponent(logementId)}&showevents=today`;
-  const programmeUrl = withResolvedLangAndLogement(reservationData.highlights) || `highlights.html?lang=${lang}&logement=${encodeURIComponent(logementId)}&showevents=today&showpois=today&from=evenements`;
-  document.getElementById('iframe-evenements').src = evenementsUrl;
-  document.getElementById('iframe-programme').src = programmeUrl;
+  // ==========================================================================
+  // Vignettes : entierement pilotees par la config Android (config-salles.json /
+  // config-moustiers.json, champ "tiles"). Ajouter une vignette = ajouter une entree
+  // dans ce tableau JSON, directement sur GitHub -- aucun changement de code necessaire
+  // pour les 5 vignettes "standard" ci-dessous (evenements/highlights/map/panorama/
+  // backintime) : la config peut alors se limiter a {"key":"...", "type":"link"|"qr"}.
+  // Pour une vignette entierement nouvelle, la config peut fournir directement "title"
+  // (par langue), "icon" et "defaultUrl".
+  // ==========================================================================
 
-  // --- QR codes carte interactive / panorama : le lien cible vient TOUJOURS du fichier de
-  // config Android (config-salles.json / config-moustiers.json sur GitHub), pas de la
-  // reservation en cours -- ce sont des liens fixes par logement, modifiables directement sur
-  // GitHub sans toucher au code. ---
-  const CONFIG_URLS = {
-    salles: 'https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-salles.json',
-    moustiers: 'https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-moustiers.json'
-  };
-  const propertyFamily = logementId.includes('moustiers') ? 'moustiers' : 'salles';
-
-  function fallbackQrLinks() {
-    return {
-      mapUrl: `${window.location.origin}${window.location.pathname.replace(/tv\.html$/, '')}index.html?logement=${encodeURIComponent(logementId)}&lang=${lang}`,
-      panoramaUrl: `${window.location.origin}${window.location.pathname.replace(/tv\.html$/, '')}panorama.html?logement=${encodeURIComponent(logementId)}&lang=${lang}`
-    };
+  function backintimeDefaultUrl(id, l) {
+    const ville = id.includes('moustiers') ? 'moustiers' : 'salles';
+    return `${ville}_backintime.html?logement=${encodeURIComponent(id)}&lang=${l}`;
   }
 
-  async function fetchQrLinks() {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-      const res = await fetch(CONFIG_URLS[propertyFamily], { signal: controller.signal, cache: 'no-store' });
-      clearTimeout(timeout);
-      if (!res.ok) return fallbackQrLinks();
-      const json = await res.json();
-      const fb = fallbackQrLinks();
-      return {
-        mapUrl: json.mapUrl || fb.mapUrl,
-        panoramaUrl: json.panoramaUrl || fb.panoramaUrl
-      };
-    } catch (e) {
-      console.warn('Config Android injoignable, utilisation des liens de secours.', e);
-      return fallbackQrLinks();
+  const BUILTIN_TILES = {
+    evenements: {
+      icon: '📅',
+      title: { FR: 'Évènements locaux', EN: 'Local events', DE: 'Lokale Veranstaltungen', NL: 'Lokale evenementen' },
+      desc: {
+        FR: 'Tous les évènements du coin, jour par jour.',
+        EN: 'All local events, day by day.',
+        DE: 'Alle Veranstaltungen der Umgebung, Tag für Tag.',
+        NL: 'Alle evenementen in de omgeving, dag na dag.'
+      },
+      type: 'link',
+      source: 'evenements',
+      defaultUrl: (id, l) => `evenements.html?logement=${encodeURIComponent(id)}&lang=${l}&showevents=today`
+    },
+    highlights: {
+      icon: '✨',
+      title: { FR: 'Votre programme', EN: 'Your programme', DE: 'Ihr Programm', NL: 'Uw programma' },
+      desc: {
+        FR: 'Une sélection d’évènements et de lieux rien que pour vous.',
+        EN: 'A selection of events and spots picked just for you.',
+        DE: 'Eine Auswahl an Veranstaltungen und Orten, nur für Sie.',
+        NL: 'Een selectie van evenementen en plekken speciaal voor u.'
+      },
+      type: 'link',
+      source: 'highlights',
+      defaultUrl: (id, l) => `highlights.html?logement=${encodeURIComponent(id)}&lang=${l}&showevents=today&showpois=today&from=evenements`
+    },
+    map: {
+      icon: '🗺️',
+      title: { FR: 'Carte interactive', EN: 'Interactive map', DE: 'Interaktive Karte', NL: 'Interactieve kaart' },
+      desc: { FR: 'Plus de 130 lieux autour du lac et des villages.', EN: 'Over 130 spots around the lake and villages.', DE: 'Über 130 Orte rund um den See und die Dörfer.', NL: 'Meer dan 130 plekken rond het meer en de dorpen.' },
+      type: 'qr',
+      source: 'map',
+      defaultUrl: (id, l) => `index.html?logement=${encodeURIComponent(id)}&lang=${l}`
+    },
+    panorama: {
+      icon: '🌄',
+      title: { FR: 'Panorama 360°', EN: '360° panorama', DE: '360°-Panorama', NL: '360°-panorama' },
+      desc: { FR: 'Les logements et les environs en vue à 360°.', EN: 'The homes and surroundings in 360° view.', DE: 'Die Unterkünfte und die Umgebung in der 360°-Ansicht.', NL: 'De woningen en de omgeving in 360°-weergave.' },
+      type: 'qr',
+      source: 'panorama',
+      defaultUrl: (id, l) => `panorama.html?logement=${encodeURIComponent(id)}&lang=${l}`
+    },
+    backintime: {
+      icon: '🕰️',
+      title: { FR: 'Retour vers le futur', EN: 'Back to the future', DE: 'Zurück in die Zukunft', NL: 'Terug naar de toekomst' },
+      desc: { FR: 'Comparez le village et le lac d’hier à aujourd’hui.', EN: 'Compare the village and the lake, then and now.', DE: 'Vergleichen Sie das Dorf und den See von früher mit heute.', NL: 'Vergelijk het dorp en het meer van vroeger met nu.' },
+      type: 'qr',
+      source: null,
+      defaultUrl: backintimeDefaultUrl
     }
+  };
+
+  const DEFAULT_TILES = [
+    { key: 'evenements' },
+    { key: 'highlights' },
+    { key: 'map' },
+    { key: 'panorama' },
+    { key: 'backintime' }
+  ];
+
+  // Resout le lien d'une vignette : en priorite le lien de la reservation en cours (dates +
+  // langue du sejour deja correctes dans redirect.js), sinon le lien par defaut (fourni par la
+  // config Android, ou calcule automatiquement pour les 5 vignettes standard).
+  function resolveTileHref(tile, builtin) {
+    const sourceKey = ('source' in tile) ? tile.source : (builtin && builtin.source);
+    if (sourceKey && resCode !== 'default' && reservationData[sourceKey]) {
+      return withResolvedLangAndLogement(reservationData[sourceKey]);
+    }
+    let raw = tile.defaultUrl || null;
+    if (!raw && builtin && typeof builtin.defaultUrl === 'function') raw = builtin.defaultUrl(logementId, lang);
+    return raw ? withResolvedLangAndLogement(raw) : null;
   }
 
-  // Meme technique de rendu que url-generator.html (bibliotheque qrcode-generator, 100% locale).
   function drawQrToCanvas(qr, cellSize, marginModules) {
     const moduleCount = qr.getModuleCount();
     const size = (moduleCount + marginModules * 2) * cellSize;
@@ -332,27 +334,83 @@
     return canvas;
   }
 
-  function renderQr(slotId, url, altText) {
-    const slot = document.getElementById(slotId);
-    if (!slot || !url || typeof qrcode !== 'function') return;
+  function qrDataUrl(url) {
+    if (!url || typeof qrcode !== 'function') return null;
     try {
       const qr = qrcode(0, 'H');
       qr.addData(url);
       qr.make();
-      const canvas = drawQrToCanvas(qr, 6, 3);
-      const img = document.createElement('img');
-      img.alt = altText;
-      img.src = canvas.toDataURL('image/png');
-      slot.replaceWith(img);
+      return drawQrToCanvas(qr, 4, 3).toDataURL('image/png');
     } catch (err) {
-      console.warn('QR code non genere pour', slotId, err);
+      console.warn('QR code non genere pour', url, err);
+      return null;
     }
   }
 
-  fetchQrLinks().then(links => {
-    renderQr('qr-map-slot', links.mapUrl, I18N.map[lang]);
-    renderQr('qr-panorama-slot', links.panoramaUrl, I18N.panorama[lang]);
-  });
+  function renderTiles(tiles) {
+    const grid = document.getElementById('tile-grid');
+    grid.innerHTML = '';
+    tiles.forEach(tile => {
+      const builtin = BUILTIN_TILES[tile.key];
+      const icon = tile.icon || (builtin && builtin.icon) || '🔗';
+      const title = tile.title || (builtin && builtin.title) || { FR: tile.key, EN: tile.key, DE: tile.key, NL: tile.key };
+      const desc = tile.desc || (builtin && builtin.desc) || { FR: '', EN: '', DE: '', NL: '' };
+      const type = tile.type || (builtin && builtin.type) || 'link';
+      const href = resolveTileHref(tile, builtin);
+
+      const a = document.createElement('a');
+      a.className = 'tile' + (href ? '' : ' disabled');
+      a.href = href || '#';
+
+      if (type === 'qr') {
+        const dataUrl = qrDataUrl(href);
+        a.innerHTML = `
+          <div class="tile-icon">${icon}</div>
+          <div class="tile-title">${title[lang] || title.FR}</div>
+          <div class="qr-box">${dataUrl ? `<img src="${dataUrl}" alt="${title[lang] || title.FR}">` : '<div class="qr-skeleton"></div>'}</div>
+          <div class="tile-desc">${I18N.scan[lang]}</div>
+        `;
+      } else {
+        a.innerHTML = `
+          <div class="tile-icon">${icon}</div>
+          <div class="tile-title">${title[lang] || title.FR}</div>
+          <div class="tile-desc">${desc[lang] || desc.FR}</div>
+          <div class="tile-arrow">${I18N.ouvrir[lang]}</div>
+        `;
+      }
+      grid.appendChild(a);
+    });
+  }
+
+  const CONFIG_URLS = {
+    salles: 'https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-salles.json',
+    moustiers: 'https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-moustiers.json'
+  };
+  const propertyFamily = logementId.includes('moustiers') ? 'moustiers' : 'salles';
+
+  async function fetchTilesConfig() {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+      const res = await fetch(CONFIG_URLS[propertyFamily], { signal: controller.signal, cache: 'no-store' });
+      clearTimeout(timeout);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      if (Array.isArray(json.tiles) && json.tiles.length) return json.tiles;
+      return DEFAULT_TILES;
+    } catch (e) {
+      console.warn('Config Android injoignable, vignettes par defaut utilisees.', e);
+      const missingEl = document.getElementById('data-missing');
+      missingEl.textContent = I18N.missing[lang];
+      missingEl.style.display = 'block';
+      return DEFAULT_TILES;
+    }
+  }
+
+  // Affiche d'abord les vignettes "link" tout de suite (pas besoin d'attendre la config pour
+  // celles-ci en mode degrade), puis remplace par la vraie config une fois recuperee.
+  renderTiles(DEFAULT_TILES);
+  fetchTilesConfig().then(renderTiles);
 })();
 </script>
 </body>

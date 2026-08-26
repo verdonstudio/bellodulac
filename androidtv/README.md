@@ -1,48 +1,68 @@
 # Bell'O du Lac / Bell'Étoile — Applications Android TV
 
 Deux applications "kiosk" (WebView plein écran) pour Google TV / Android TV, une par logement.
-Chaque application affiche simplement une page du site (par défaut `home.html`, ou `tv.html`
-pour la vue orientée grand écran — voir plus bas), avec le logement déjà pré-sélectionné.
+Chaque application affiche `tv.html`, une vue en vignettes pensée pour un grand écran vu à
+distance, avec le logement déjà pré-sélectionné.
 
 ## Comment ça marche
 
 1. Au démarrage, l'application va chercher un petit fichier JSON sur GitHub :
    - Bell'O du Lac (Les Salles-sur-Verdon) → [`config-salles.json`](./config-salles.json)
    - Bell'Étoile (Moustiers-Sainte-Marie) → [`config-moustiers.json`](./config-moustiers.json)
-2. Ce fichier contient l'URL à afficher, plus deux liens fixes utilisés par les QR codes de
-   `tv.html` (carte interactive et panorama 360°) :
+2. Ce fichier contient l'URL à afficher, et la liste des vignettes affichées sur `tv.html` :
    ```json
    {
-     "url": "https://bellodulac.vercel.app/home.html?logement=salles8&lang=FR",
-     "mapUrl": "https://bellodulac.vercel.app/index.html?logement=salles8&lang=FR",
-     "panoramaUrl": "https://bellodulac.vercel.app/panorama.html?logement=salles8&lang=FR"
+     "url": "https://bellodulac.vercel.app/tv.html?logement=salles8",
+     "tiles": [
+       { "key": "evenements", "type": "link" },
+       { "key": "highlights", "type": "link" },
+       { "key": "map", "type": "qr" },
+       { "key": "panorama", "type": "qr" },
+       { "key": "backintime", "type": "qr" }
+     ]
    }
    ```
-3. **Pour changer l'URL affichée (changer la langue par défaut, passer sur `tv.html`, changer
-   les liens des QR codes, etc.), il suffit de modifier ce fichier directement sur GitHub.**
-   Pas besoin de reconstruire ni de réinstaller l'application — au prochain démarrage, la TV
-   ira chercher la nouvelle configuration.
+3. **Pour changer l'URL affichée, ajouter/retirer/réordonner une vignette, il suffit de
+   modifier ce fichier directement sur GitHub.** Pas besoin de reconstruire ni de réinstaller
+   l'application — au prochain démarrage, la TV ira chercher la nouvelle configuration.
 4. Si le fichier est injoignable au démarrage (pas de réseau, etc.), l'application affiche une
-   URL de secours codée en dur dans l'app (`androidtv/app/build.gradle`, champ `DEFAULT_URL`).
+   URL de secours codée en dur dans l'app (`androidtv/app/build.gradle`, champ `DEFAULT_URL`),
+   et `tv.html` affiche lui-même 5 vignettes par défaut si sa propre lecture de la config échoue.
 
-Le message "Bienvenue {Nom} !" (sur `home.html` et `tv.html`) est géré entièrement côté site web
-(voir `reservations.js` à la racine du dépôt) — il n'y a rien à faire côté application Android.
+Le message "Bienvenue {Nom} !" est géré entièrement côté site web (voir `reservations.js` à la
+racine du dépôt) — il n'y a rien à faire côté application Android.
 
-## `home.html` ou `tv.html` ?
+## Les vignettes de `tv.html`
 
-- `home.html` : la page "mobile" classique, grille de tuiles cliquables (carte, évènements,
-  programme, panorama, retour vers le futur...). Pensée pour un écran tactile.
-- `tv.html` : vue pensée pour un grand écran vu à distance, sans interaction tactile. Affiche
-  directement les évènements locaux et le programme personnalisé du séjour en cours (repris de
-  `evenements.html` / `highlights.html`), plus deux QR codes (carte interactive, panorama 360°)
-  à scanner avec le téléphone — leurs liens viennent des champs `mapUrl` / `panoramaUrl` ci-dessus.
-  La reconnaissance du séjour en cours (nom du voyageur affiché, langue de la page, dates prises
-  en compte pour "votre programme") se fait via `reservations.js` (champ `code`, qui doit
-  correspondre à une entrée existante dans `redirect.js`) exactement comme sur `home.html`.
+Chaque entrée de `"tiles"` est un objet `{ "key": "...", "type": "link"|"qr" }` :
+- `type: "link"` — vignette cliquable classique (comme sur `home.html`) : ouvre la page
+  directement sur la TV. Utilisé pour "Évènements locaux" et "Votre programme".
+- `type: "qr"` — vignette avec un QR code intégré, à scanner avec le téléphone (en plus de
+  rester cliquable sur la TV elle-même). Utilisé pour "Carte interactive", "Panorama 360°" et
+  "Retour vers le futur".
 
-Pour utiliser `tv.html` au lieu de `home.html` sur une TV, il suffit de changer `"url"` dans le
-fichier de config correspondant, par exemple :
-`"url": "https://bellodulac.vercel.app/tv.html?logement=salles8&lang=FR"`.
+Cinq vignettes "standard" sont reconnues par leur seul `key` (icône, titre en 4 langues et lien
+déjà tout définis dans `tv.html`, aucune config supplémentaire nécessaire) :
+`evenements`, `highlights`, `map`, `panorama`, `backintime`.
+
+**Lien affiché par vignette :** si un séjour est en cours (voir `reservations.js`), la vignette
+utilise en priorité le lien déjà calculé pour cette réservation dans `redirect.js` (dates du
+séjour et langue du voyageur incluses) — `evenements`→`evenements`, `highlights`→`highlights`,
+`map`→`map`, `panorama`→`panorama`. Sinon (pas de séjour en cours, ou vignette sans équivalent
+dans `redirect.js` comme `backintime`), elle retombe sur un lien par défaut calculé
+automatiquement (`?logement=...&lang=...`, langue = FR si aucun séjour en cours).
+
+**Ajouter une vignette entièrement nouvelle** (pas dans la liste ci-dessus) : donner en plus
+`"title"` (par langue), `"icon"` et `"defaultUrl"` directement dans la config, par exemple :
+```json
+{
+  "key": "parking",
+  "type": "qr",
+  "icon": "🅿️",
+  "title": { "FR": "Parking", "EN": "Parking", "DE": "Parkplatz", "NL": "Parkeren" },
+  "defaultUrl": "index.html?logement=salles8&lang=FR&cat=parking_gratuit"
+}
+```
 
 ## Installer l'APK sur la Google TV (méthode recommandée : appli "Downloader")
 

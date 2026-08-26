@@ -23,7 +23,7 @@ android {
             // directement sur GitHub : androidtv/config-salles.json
             buildConfigField "String", "CONFIG_URL", "\"https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-salles.json\""
             // Utilisee si le fichier de config est injoignable au demarrage (pas de reseau, etc.)
-            buildConfigField "String", "DEFAULT_URL", "\"https://bellodulac.vercel.app/home.html?logement=salles8&lang=FR\""
+            buildConfigField "String", "DEFAULT_URL", "\"https://bellodulac.vercel.app/tv.html?logement=salles8\""
         }
         moustiers {
             dimension "property"
@@ -34,7 +34,7 @@ android {
             // directement sur GitHub : androidtv/config-moustiers.json
             buildConfigField "String", "CONFIG_URL", "\"https://raw.githubusercontent.com/verdonstudio/bellodulac/main/androidtv/config-moustiers.json\""
             // Utilisee si le fichier de config est injoignable au demarrage (pas de reseau, etc.)
-            buildConfigField "String", "DEFAULT_URL", "\"https://bellodulac.vercel.app/home.html?logement=moustiers&lang=FR\""
+            buildConfigField "String", "DEFAULT_URL", "\"https://bellodulac.vercel.app/tv.html?logement=moustiers\""
         }
     }
 
