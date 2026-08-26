@@ -120,31 +120,10 @@
   const LOGEMENTS = (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings) || {};
   const urlParams = new URLSearchParams(window.location.search);
 
-  // Meme logique de repli que display.html : sans "res" (ou reservation inconnue),
-  // on retombe sur l'entree "default" de redirect.js plutot que de ne rien afficher.
-  const resCode = urlParams.get('res') || 'default';
-  const reservationData = (typeof reservations !== 'undefined' && (reservations[resCode] || reservations['default'])) || {};
-
-  // Si "lang"/"logement" ne sont pas precises sur l'URL de home.html elle-meme (lien
-  // raccourci, saisi a la main, etc.), on les retrouve dans les autres liens deja
-  // stockes pour cette reservation dans redirect.js, plutot que de supposer FR/un
-  // logement par defaut qui ne correspondrait pas forcement au bon voyageur.
-  function paramFromReservation(paramName) {
-    const candidates = ['home', 'map', 'evenements', 'highlights', 'panorama'];
-    for (const key of candidates) {
-      const url = reservationData[key];
-      if (!url) continue;
-      const qs = url.split('?')[1] || '';
-      const value = new URLSearchParams(qs).get(paramName);
-      if (value) return value;
-    }
-    return null;
-  }
-
-  let lang = (urlParams.get('lang') || paramFromReservation('lang') || 'FR').toUpperCase();
-  if (!['FR', 'EN', 'DE', 'NL'].includes(lang)) lang = 'FR';
-
-  const logementId = urlParams.get('logement') || paramFromReservation('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
+  // logementId : necessaire AVANT de savoir quelle reservation "matche" aujourd'hui, donc on
+  // se base uniquement sur l'URL ici (les liens generes dans redirect.js incluent toujours
+  // "logement=" explicitement, voir url-generator.html).
+  const logementId = urlParams.get('logement') || (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.default) || 'moustiers';
   const listing = LOGEMENTS[logementId];
 
   // --- "Bienvenue {Nom} !" : reconnaissance du voyageur du jour via reservations.js ---
@@ -189,20 +168,82 @@
     return true; // pas de precision de capacite dans le texte -> on considere que ca correspond
   }
 
-  function todayGuestName() {
+  // Heure a partir de laquelle un voyageur qui part AUJOURD'HUI n'est plus affiche (comme un
+  // horaire de checkout). Utilise pour geree les jours de "turnover" (un voyageur part le
+  // matin, un autre arrive le meme jour) : le nom/langue affiches basculent de celui qui part
+  // a celui qui arrive a partir de cette heure.
+  const CHECKOUT_CUTOFF = '11:00';
+  function currentTimeHHMM() {
+    const d = new Date();
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  }
+
+  function todayReservationMatch() {
     if (typeof window.RESERVATIONS === 'undefined' || !Array.isArray(window.RESERVATIONS)) return null;
     const today = todayLocalISO();
-    const match = window.RESERVATIONS.find(r => {
+    const candidates = window.RESERVATIONS.filter(r => {
       const arrivee = parseFlexibleDate(r.arrivee);
       const depart = parseFlexibleDate(r.depart);
       if (!arrivee || !depart) return false;
       if (today < arrivee || today > depart) return false;
       return annonceMatchesLogement(r.annonce, logementId);
     });
-    return (match && match.nom) ? match.nom : null;
+    if (!candidates.length) return null;
+
+    if (candidates.length === 1) {
+      const only = candidates[0];
+      const departsToday = parseFlexibleDate(only.depart) === today;
+      const arrivesToday = parseFlexibleDate(only.arrivee) === today;
+      // Un seul voyageur ce jour-la : cas normal (milieu de sejour, ou arrivee seule) -> affiche
+      // toute la journee. Sauf s'il s'agit uniquement d'un depart (personne d'autre n'arrive) :
+      // dans ce cas, affiche seulement jusqu'a 11h, puis bascule sur l'affichage par defaut.
+      if (departsToday && !arrivesToday && currentTimeHHMM() >= CHECKOUT_CUTOFF) return null;
+      return only;
+    }
+
+    // Jour de "turnover" (un depart + une arrivee le meme jour, pour ce meme logement) : le
+    // voyageur qui part est affiche le matin (jusqu'a 11h), celui qui arrive prend le relais
+    // a partir de 11h.
+    const departing = candidates.find(r => parseFlexibleDate(r.depart) === today && parseFlexibleDate(r.arrivee) !== today);
+    const arriving = candidates.find(r => parseFlexibleDate(r.arrivee) === today && parseFlexibleDate(r.depart) !== today);
+    if (currentTimeHHMM() < CHECKOUT_CUTOFF) {
+      if (departing) return departing;
+      if (arriving) return arriving;
+    } else if (arriving) {
+      return arriving;
+    }
+    return null;
   }
 
-  const todaysGuestName = todayGuestName();
+  const todaysReservation = urlParams.get('res') ? null : todayReservationMatch();
+
+  // Meme logique de repli que display.html : sans "res" (ou reservation inconnue), on retombe
+  // sur l'entree "default" de redirect.js plutot que de ne rien afficher. Le code de la
+  // reservation reconnue via reservations.js (ci-dessus) est prioritaire sur "default" des que
+  // l'URL elle-meme ne precise pas deja "res" -- ca permet a la langue et aux liens (carte,
+  // evenements, programme...) de suivre automatiquement le bon voyageur.
+  const resCode = urlParams.get('res') || (todaysReservation && todaysReservation.code) || 'default';
+  const reservationData = (typeof reservations !== 'undefined' && (reservations[resCode] || reservations['default'])) || {};
+
+  // Si "lang" n'est pas precise sur l'URL de home.html elle-meme (lien raccourci, saisi a la
+  // main, etc.), on le retrouve dans les autres liens deja stockes pour cette reservation dans
+  // redirect.js, plutot que de supposer FR.
+  function paramFromReservation(paramName) {
+    const candidates = ['home', 'map', 'evenements', 'highlights', 'panorama'];
+    for (const key of candidates) {
+      const url = reservationData[key];
+      if (!url) continue;
+      const qs = url.split('?')[1] || '';
+      const value = new URLSearchParams(qs).get(paramName);
+      if (value) return value;
+    }
+    return null;
+  }
+
+  let lang = (urlParams.get('lang') || paramFromReservation('lang') || 'FR').toUpperCase();
+  if (!['FR', 'EN', 'DE', 'NL'].includes(lang)) lang = 'FR';
+
+  const todaysGuestName = todaysReservation ? todaysReservation.nom : null;
 
   // "Retour vers le futur" (remonter le temps) : page distincte selon le secteur, comme
   // sur index.html (bouton #btn-backintime) -- moustiers_backintime.html ou

@@ -42,34 +42,36 @@
     background: radial-gradient(1200px 400px at 50% -100px, rgba(56,189,248,0.18), transparent), var(--c-bg);
   }
 
-  .tile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  /* minmax(180px,1fr) : ~6 vignettes tiennent sur une seule ligne, sans avoir a scroller,
+     sur la largeur d'un ecran TV classique. */
+  .tile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
 
   .tile {
-    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;
-    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 22px;
-    padding: 26px 20px; text-decoration: none; color: inherit;
-    box-shadow: 0 10px 32px rgba(0,0,0,0.35);
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;
+    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 16px;
+    padding: 16px 12px; text-decoration: none; color: inherit;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .tile:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,0.45); }
+  .tile:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
   .tile.disabled { opacity: 0.4; pointer-events: none; }
   .tile .tile-icon {
-    width: 56px; height: 56px; border-radius: 16px;
+    width: 40px; height: 40px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 28px; background: rgba(56,189,248,0.12);
+    font-size: 20px; background: rgba(56,189,248,0.12);
   }
-  .tile .tile-title { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 19px; }
-  .tile .tile-desc { font-size: 13px; color: var(--c-muted); line-height: 1.4; }
-  .tile .tile-arrow { font-size: 13px; font-weight: 700; color: var(--c-primary); margin-top: auto; }
+  .tile .tile-title { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 14px; line-height: 1.25; }
+  .tile .tile-desc { font-size: 11px; color: var(--c-muted); line-height: 1.3; }
+  .tile .tile-arrow { font-size: 11px; font-weight: 700; color: var(--c-primary); margin-top: auto; }
 
   .tile .qr-box {
-    background: #ffffff; border-radius: 14px; padding: 10px;
+    background: #ffffff; border-radius: 10px; padding: 6px;
     display: flex; align-items: center; justify-content: center;
-    width: 150px; height: 150px;
+    width: 96px; height: 96px;
   }
-  .tile .qr-box img { display: block; width: 130px; height: 130px; image-rendering: pixelated; }
+  .tile .qr-box img { display: block; width: 80px; height: 80px; image-rendering: pixelated; }
   .qr-skeleton {
-    width: 130px; height: 130px; border-radius: 6px;
+    width: 80px; height: 80px; border-radius: 6px;
     background: linear-gradient(100deg, #e2e8f0 30%, #f1f5f9 50%, #e2e8f0 70%);
     background-size: 200% 100%; animation: qr-shimmer 1.4s ease-in-out infinite;
   }
@@ -84,18 +86,18 @@
 <body>
 
 <header class="topbar w-full">
-  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center gap-3">
-    <img id="topbar-logo" src="" alt="" class="w-9 h-9 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
-    <span id="label-title" class="font-display font-semibold text-[17px] truncate">Bell'O du Lac & Bell'Étoile</span>
+  <div class="max-w-[1680px] mx-auto px-6 h-14 flex items-center gap-3">
+    <img id="topbar-logo" src="" alt="" class="w-8 h-8 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+    <span id="label-title" class="font-display font-semibold text-[15px] truncate">Bell'O du Lac & Bell'Étoile</span>
   </div>
 </header>
 
-<section class="hero pt-12 pb-8 px-6 text-center">
-  <h1 id="hero-title" class="font-display font-bold text-3xl sm:text-4xl">—</h1>
-  <p id="hero-subtitle" class="text-base sm:text-lg text-[var(--c-muted)] mt-3 max-w-xl mx-auto">—</p>
+<section class="hero pt-6 pb-4 px-6 text-center">
+  <h1 id="hero-title" class="font-display font-bold text-2xl sm:text-3xl">—</h1>
+  <p id="hero-subtitle" class="text-sm sm:text-base text-[var(--c-muted)] mt-2 max-w-xl mx-auto">—</p>
 </section>
 
-<main class="max-w-6xl mx-auto px-6 pb-16">
+<main class="max-w-[1680px] mx-auto px-6 pb-10">
   <div id="data-missing" class="data-missing" style="display:none;"></div>
   <div class="tile-grid" id="tile-grid"><!-- rempli en JS, a partir de config-salles.json / config-moustiers.json --></div>
 </main>
@@ -147,16 +149,51 @@
     return true;
   }
 
+  // Heure a partir de laquelle un voyageur qui part AUJOURD'HUI n'est plus affiche (comme un
+  // horaire de checkout). Utilise pour gerer les jours de "turnover" (un voyageur part le
+  // matin, un autre arrive le meme jour) : le nom/langue affiches basculent de celui qui part
+  // a celui qui arrive a partir de cette heure.
+  const CHECKOUT_CUTOFF = '11:00';
+  function currentTimeHHMM() {
+    const d = new Date();
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  }
+
   function todayReservationMatch() {
     if (typeof window.RESERVATIONS === 'undefined' || !Array.isArray(window.RESERVATIONS)) return null;
     const today = todayLocalISO();
-    return window.RESERVATIONS.find(r => {
+    const candidates = window.RESERVATIONS.filter(r => {
       const arrivee = parseFlexibleDate(r.arrivee);
       const depart = parseFlexibleDate(r.depart);
       if (!arrivee || !depart) return false;
       if (today < arrivee || today > depart) return false;
       return annonceMatchesLogement(r.annonce, logementId);
-    }) || null;
+    });
+    if (!candidates.length) return null;
+
+    if (candidates.length === 1) {
+      const only = candidates[0];
+      const departsToday = parseFlexibleDate(only.depart) === today;
+      const arrivesToday = parseFlexibleDate(only.arrivee) === today;
+      // Un seul voyageur ce jour-la : cas normal (milieu de sejour, ou arrivee seule) -> affiche
+      // toute la journee. Sauf s'il s'agit uniquement d'un depart (personne d'autre n'arrive) :
+      // dans ce cas, affiche seulement jusqu'a 11h, puis bascule sur l'affichage par defaut.
+      if (departsToday && !arrivesToday && currentTimeHHMM() >= CHECKOUT_CUTOFF) return null;
+      return only;
+    }
+
+    // Jour de "turnover" (un depart + une arrivee le meme jour, pour ce meme logement) : le
+    // voyageur qui part est affiche le matin (jusqu'a 11h), celui qui arrive prend le relais
+    // a partir de 11h.
+    const departing = candidates.find(r => parseFlexibleDate(r.depart) === today && parseFlexibleDate(r.arrivee) !== today);
+    const arriving = candidates.find(r => parseFlexibleDate(r.arrivee) === today && parseFlexibleDate(r.depart) !== today);
+    if (currentTimeHHMM() < CHECKOUT_CUTOFF) {
+      if (departing) return departing;
+      if (arriving) return arriving;
+    } else if (arriving) {
+      return arriving;
+    }
+    return null;
   }
 
   // Si un code reservation est deja fourni explicitement dans l'URL (?res=...), on ne cherche
