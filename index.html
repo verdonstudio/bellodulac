@@ -838,6 +838,7 @@
       contact_send: "Envoyer le message",
     recos_empty: "Aucun lieu ne correspond aux filtres sélectionnés.",
     learn_more: "En savoir plus",
+    go_there: "Y aller",
     show_walking_path: "Afficher le chemin",
     exit_fullscreen: "Quitter le plein écran",
     fullscreen_label: "Plein écran",
@@ -905,6 +906,7 @@
       contact_send: "Send message",
     recos_empty: "No place matches the selected filters.",
     learn_more: "Learn more",
+    go_there: "Get directions",
     show_walking_path: "Show the walking path",
     exit_fullscreen: "Exit fullscreen",
     fullscreen_label: "Fullscreen",
@@ -970,6 +972,7 @@
       contact_send: "Nachricht senden",
       recos_empty: "Kein Ort entspricht den ausgewählten Filtern.",
       learn_more: "Mehr erfahren",
+      go_there: "Route planen",
       show_walking_path: "Fußweg anzeigen",
       exit_fullscreen: "Vollbild beenden",
       fullscreen_label: "Vollbild",
@@ -1035,6 +1038,7 @@
       contact_send: "Bericht verzenden",
       recos_empty: "Geen enkele plaats komt overeen met de geselecteerde filters.",
       learn_more: "Meer informatie",
+      go_there: "Route uitstippelen",
       show_walking_path: "Wandelroute tonen",
       exit_fullscreen: "Volledig scherm sluiten",
       fullscreen_label: "Volledig scherm",
@@ -2144,8 +2148,33 @@ function syncUrl(replace = true) {
     return getPoiCats(poi).includes(key);
   }
 
+  // -------- Lien "Y aller" de secours : ajouté automatiquement pour les POI de ces
+  // catégories qui n'ont aucun lien défini dans pois.js (url/url2/.../links). Les autres
+  // catégories (restaurants, commerces avec fiche dédiée, etc.) gardent leur comportement
+  // actuel inchangé, puisqu'elles ont déjà un lien.
+  const POI_NAV_FALLBACK_CATS = [
+    'nature', 'equitation', 'parking_gratuit', 'parking_zonebleu', 'parking_payant',
+    'visite', 'laverie', 'relais', 'ordures', 'commerce', 'station', 'plage', 'sportaquatique'
+  ];
 
-
+  // Construit un lien d'itinéraire qui laisse le choix de l'appli de navigation sur mobile
+  // (Android : "geo:" fait proposer par le système toutes les applis installées capables de
+  // le gérer, Google Maps/Waze/etc. ; iOS : maps.apple.com est le lien "universel" qu'iOS
+  // redirige vers l'appli de navigation par défaut choisie par l'utilisateur), et ouvre
+  // Google Maps directement sur PC/TV où il n'y a de toute façon aucune appli native.
+  function buildGoToUrl(lat, lng, label) {
+    const encLabel = encodeURIComponent(label || '');
+    const ua = (navigator.userAgent || '');
+    const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    const isAndroid = /Android/i.test(ua);
+    if (isAndroid) {
+      return `geo:${lat},${lng}?q=${lat},${lng}(${encLabel})`;
+    }
+    if (isIOS) {
+      return `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}`;
+    }
+    return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  }
 
 function getPoiLinks(content, poi) {
     const buildFullUrl = (rawUrl) => {
@@ -2187,6 +2216,15 @@ function getPoiLinks(content, poi) {
           });
         }
       }
+    }
+
+    // Lien "Y aller" de secours : uniquement si le POI n'a aucun lien du tout et appartient
+    // à l'une des catégories concernées (voir POI_NAV_FALLBACK_CATS ci-dessus).
+    if (!links.length && poi && poi.coords && getPoiCats(poi).some(c => POI_NAV_FALLBACK_CATS.includes(c))) {
+      links.push({
+        url: buildGoToUrl(poi.coords[0], poi.coords[1], content.name || ''),
+        label: I18N[state.lang].go_there
+      });
     }
 
     // Interception spécifique pour la catégorie logement (comme dans panorama ou backintime)
@@ -2258,8 +2296,9 @@ function getPoiLinks(content, poi) {
 
 			// Liste des domaines susceptibles d'ouvrir une application native sur iOS/Android
 			const appDomains = [
-			  'google.com/maps', 
-			  'maps.google.com', 
+			  'google.com/maps',
+			  'maps.google.com',
+			  'maps.apple.com',   // Lien "Y aller" iOS (voir buildGoToUrl)
 			  'tripadvisor.fr',       // Application TripAdvisor
 			  'tripadvisor.com',
 			  'airbnb.fr',            // Application Airbnb

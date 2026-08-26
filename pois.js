@@ -811,27 +811,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/parking-lerins-gratuit.jpg",
     "fr": {
       "name": "Avenue de Lérins",
-      "desc": "Parking gratuit (30 places). Quelques places le long de l'avenue en redescendant jusqu'à la pharmacie.",
-      "url": "https://www.google.com/maps/@43.8453212,6.2212093,3a,75y,236.88h,94.65t/data=!3m7!1e1!3m5!1sc2kIprlzPuefDQ0jXZICaw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-4.65257664656275%26panoid%3Dc2kIprlzPuefDQ0jXZICaw%26yaw%3D236.87653873400427!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Parking gratuit (30 places). Quelques places le long de l'avenue en redescendant jusqu'à la pharmacie."
     },
     "en": {
       "name": "Avenue de Lérins",
-      "desc": "Free parking (30 places). A few spaces along the avenue, going down to the pharmacy.",
-      "url": "https://www.google.com/maps/@43.8453212,6.2212093,3a,75y,236.88h,94.65t/data=!3m7!1e1!3m5!1sc2kIprlzPuefDQ0jXZICaw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-4.65257664656275%26panoid%3Dc2kIprlzPuefDQ0jXZICaw%26yaw%3D236.87653873400427!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Free parking (30 places). A few spaces along the avenue, going down to the pharmacy."
     },
     "de": {
       "name": "Avenue de Lérins",
-      "desc": "Kostenloser Parkplatz (30 Plätze). Einige Plätze entlang der Allee, bergab bis zur Apotheke.",
-      "url": "https://www.google.com/maps/@43.8453212,6.2212093,3a,75y,236.88h,94.65t/data=!3m7!1e1!3m5!1sc2kIprlzPuefDQ0jXZICaw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-4.65257664656275%26panoid%3Dc2kIprlzPuefDQ0jXZICaw%26yaw%3D236.87653873400427!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Kostenloser Parkplatz (30 Plätze). Einige Plätze entlang der Allee, bergab bis zur Apotheke."
     },
     "nl": {
       "name": "Avenue de Lérins",
-      "desc": "Gratis parkeren (30 plaatsen). Enkele plaatsen langs de laan, richting de apotheek.",
-      "url": "https://www.google.com/maps/@43.8453212,6.2212093,3a,75y,236.88h,94.65t/data=!3m7!1e1!3m5!1sc2kIprlzPuefDQ0jXZICaw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-4.65257664656275%26panoid%3Dc2kIprlzPuefDQ0jXZICaw%26yaw%3D236.87653873400427!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Gratis parkeren (30 plaatsen). Enkele plaatsen langs de laan, richting de apotheek."
     },
     "trace": {
       "logements": [
@@ -924,27 +916,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/parking_maire.jpg",
     "fr": {
       "name": "Parking de La Maïre",
-      "desc": "Type : Parking gratuit. Situé au rond-point en bas de la route D952. Plus éloigné du village, idéal pour un covoiturage ou un départ de randonnée.",
-      "url": "https://www.google.com/maps/place/Moustiers-Sainte-Marie/@43.8447189,6.2184867,3a,75y,0.62h,97.46t/data=!3m7!1e1!3m5!1scZZB-jOhPo-yIk4D-BE8Zg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-7.463770753353828%26panoid%3DcZZB-jOhPo-yIk4D-BE8Zg%26yaw%3D0.6238241531946755!7i16384!8i8192!4m10!1m2!2m1!1sParking+moustiers!3m6!1s0x12cbee0ced172943:0x80c849fc72df5ef2!8m2!3d43.8449437!4d6.2182351!15sChFQYXJraW5nIG1vdXN0aWVyc1oTIhFwYXJraW5nIG1vdXN0aWVyc5IBC3BhcmtpbmdfbG90mgEjQ2haRFNVaE5NRzluUzBWSlEwRm5TVU5JTjFwVGExcFJFQUXgAQD6AQQIABBM!16s%2Fg%2F11hbg9x6w7?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Type : Parking gratuit. Situé au rond-point en bas de la route D952. Plus éloigné du village, idéal pour un covoiturage ou un départ de randonnée."
     },
     "en": {
       "name": "La Maïre Parking",
-      "desc": "Type: Free parking. Located at the roundabout at the bottom of the D952 road. Further from the village, ideal for carpooling or hiking.",
-      "url": "https://www.google.com/maps/place/Moustiers-Sainte-Marie/@43.8447189,6.2184867,3a,75y,0.62h,97.46t/data=!3m7!1e1!3m5!1scZZB-jOhPo-yIk4D-BE8Zg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-7.463770753353828%26panoid%3DcZZB-jOhPo-yIk4D-BE8Zg%26yaw%3D0.6238241531946755!7i16384!8i8192!4m10!1m2!2m1!1sParking+moustiers!3m6!1s0x12cbee0ced172943:0x80c849fc72df5ef2!8m2!3d43.8449437!4d6.2182351!15sChFQYXJraW5nIG1vdXN0aWVyc1oTIhFwYXJraW5nIG1vdXN0aWVyc5IBC3BhcmtpbmdfbG90mgEjQ2haRFNVaE5NRzluUzBWSlEwRm5TVU5JTjFwVGExcFJFQUXgAQD6AQQIABBM!16s%2Fg%2F11hbg9x6w7?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Type: Free parking. Located at the roundabout at the bottom of the D952 road. Further from the village, ideal for carpooling or hiking."
     },
     "de": {
       "name": "Parkplatz La Maïre",
-      "desc": "Typ: Kostenloser Parkplatz. Am Kreisverkehr am Ende der D952 gelegen. Etwas außerhalb des Dorfes, ideal für Fahrgemeinschaften oder als Ausgangspunkt für Wanderungen.",
-      "url": "https://www.google.com/maps/place/Moustiers-Sainte-Marie/@43.8447189,6.2184867,3a,75y,0.62h,97.46t/data=!3m7!1e1!3m5!1scZZB-jOhPo-yIk4D-BE8Zg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-7.463770753353828%26panoid%3DcZZB-jOhPo-yIk4D-BE8Zg%26yaw%3D0.6238241531946755!7i16384!8i8192!4m10!1m2!2m1!1sParking+moustiers!3m6!1s0x12cbee0ced172943:0x80c849fc72df5ef2!8m2!3d43.8449437!4d6.2182351!15sChFQYXJraW5nIG1vdXN0aWVyc1oTIhFwYXJraW5nIG1vdXN0aWVyc5IBC3BhcmtpbmdfbG90mgEjQ2haRFNVaE5NRzluUzBWSlEwRm5TVU5JTjFwVGExcFJFQUXgAQD6AQQIABBM!16s%2Fg%2F11hbg9x6w7?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Typ: Kostenloser Parkplatz. Am Kreisverkehr am Ende der D952 gelegen. Etwas außerhalb des Dorfes, ideal für Fahrgemeinschaften oder als Ausgangspunkt für Wanderungen."
     },
     "nl": {
       "name": "Parkeerplaats La Maïre",
-      "desc": "Type: Gratis parkeren. Gelegen bij de rotonde aan het einde van de D952. Verder van het dorp, ideaal om te carpoolen of als vertrekpunt voor wandelingen.",
-      "url": "https://www.google.com/maps/place/Moustiers-Sainte-Marie/@43.8447189,6.2184867,3a,75y,0.62h,97.46t/data=!3m7!1e1!3m5!1scZZB-jOhPo-yIk4D-BE8Zg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-7.463770753353828%26panoid%3DcZZB-jOhPo-yIk4D-BE8Zg%26yaw%3D0.6238241531946755!7i16384!8i8192!4m10!1m2!2m1!1sParking+moustiers!3m6!1s0x12cbee0ced172943:0x80c849fc72df5ef2!8m2!3d43.8449437!4d6.2182351!15sChFQYXJraW5nIG1vdXN0aWVyc1oTIhFwYXJraW5nIG1vdXN0aWVyc5IBC3BhcmtpbmdfbG90mgEjQ2haRFNVaE5NRzluUzBWSlEwRm5TVU5JTjFwVGExcFJFQUXgAQD6AQQIABBM!16s%2Fg%2F11hbg9x6w7?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Type: Gratis parkeren. Gelegen bij de rotonde aan het einde van de D952. Verder van het dorp, ideaal om te carpoolen of als vertrekpunt voor wandelingen."
     },
     "trace": {
       "logements": [
@@ -1169,27 +1153,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/parking-calade-tempesta.png",
     "fr": {
       "name": "Parking Calade Tempesta",
-      "desc": "Parking gratuit le long de la rue (53 places)",
-      "url": "https://www.google.com/maps/@43.8442594,6.2219702,3a,75y,28.01h,102.09t/data=!3m7!1e1!3m5!1sXSUnrZ71xBL1fKhwU2yE6Q!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-12.092694173398286%26panoid%3DXSUnrZ71xBL1fKhwU2yE6Q%26yaw%3D28.014824410760696!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Parking gratuit le long de la rue (53 places)"
     },
     "en": {
       "name": "Calade Tempesta Parking",
-      "desc": "Free parking along the road (53 places)",
-      "url": "https://www.google.com/maps/@43.8442594,6.2219702,3a,75y,28.01h,102.09t/data=!3m7!1e1!3m5!1sXSUnrZ71xBL1fKhwU2yE6Q!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-12.092694173398286%26panoid%3DXSUnrZ71xBL1fKhwU2yE6Q%26yaw%3D28.014824410760696!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Free parking along the road (53 places)"
     },
     "de": {
       "name": "Parkplatz Calade Tempesta",
-      "desc": "Kostenloses Parken entlang der Straße (53 Plätze)",
-      "url": "https://www.google.com/maps/@43.8442594,6.2219702,3a,75y,28.01h,102.09t/data=!3m7!1e1!3m5!1sXSUnrZ71xBL1fKhwU2yE6Q!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-12.092694173398286%26panoid%3DXSUnrZ71xBL1fKhwU2yE6Q%26yaw%3D28.014824410760696!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Kostenloses Parken entlang der Straße (53 Plätze)"
     },
     "nl": {
       "name": "Parkeerplaats Calade Tempesta",
-      "desc": "Gratis parkeren langs de straat (53 plaatsen)",
-      "url": "https://www.google.com/maps/@43.8442594,6.2219702,3a,75y,28.01h,102.09t/data=!3m7!1e1!3m5!1sXSUnrZ71xBL1fKhwU2yE6Q!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-12.092694173398286%26panoid%3DXSUnrZ71xBL1fKhwU2yE6Q%26yaw%3D28.014824410760696!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Gratis parkeren langs de straat (53 plaatsen)"
     },
     "trace": {
       "logements": [
@@ -1358,27 +1334,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/parking-riez-gratuit1.png",
     "fr": {
       "name": "Petit Parking Route de Riez",
-      "desc": "Type : Parking gratuit. Quelques places le long de la route. À environ 15 min à pied du centre, il évite les embouteillages l'été. Navette petit train disponible en haute saison.",
-      "url": "https://www.google.com/maps/@43.8425107,6.2198476,3a,75y,298.44h,95.95t/data=!3m7!1e1!3m5!1siEZ59wE1fYGlPS3dJZ7JOg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-5.950627119086306%26panoid%3DiEZ59wE1fYGlPS3dJZ7JOg%26yaw%3D298.44094239668993!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Type : Parking gratuit. Quelques places le long de la route. À environ 15 min à pied du centre, il évite les embouteillages l'été. Navette petit train disponible en haute saison."
     },
     "en": {
       "name": "Route de Riez Car Park",
-      "desc": "Type: Free parking. Some places along the road. About 15 min walk to the center. Tourist shuttle train available in peak season.",
-      "url": "https://www.google.com/maps/@43.8425107,6.2198476,3a,75y,298.44h,95.95t/data=!3m7!1e1!3m5!1siEZ59wE1fYGlPS3dJZ7JOg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-5.950627119086306%26panoid%3DiEZ59wE1fYGlPS3dJZ7JOg%26yaw%3D298.44094239668993!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Type: Free parking. Some places along the road. About 15 min walk to the center. Tourist shuttle train available in peak season."
     },
     "de": {
       "name": "Parkplatz Route de Riez",
-      "desc": "Typ: Kostenloser Parkplatz. Einige Plätze entlang der Straße. Etwa 15 Gehminuten vom Zentrum entfernt, vermeidet die sommerlichen Staus. In der Hochsaison verkehrt ein kleiner Touristenzug.",
-      "url": "https://www.google.com/maps/@43.8425107,6.2198476,3a,75y,298.44h,95.95t/data=!3m7!1e1!3m5!1siEZ59wE1fYGlPS3dJZ7JOg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-5.950627119086306%26panoid%3DiEZ59wE1fYGlPS3dJZ7JOg%26yaw%3D298.44094239668993!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Typ: Kostenloser Parkplatz. Einige Plätze entlang der Straße. Etwa 15 Gehminuten vom Zentrum entfernt, vermeidet die sommerlichen Staus. In der Hochsaison verkehrt ein kleiner Touristenzug."
     },
     "nl": {
       "name": "Parkeerplaats Route de Riez",
-      "desc": "Type: Gratis parkeren. Enkele plaatsen langs de weg. Ongeveer 15 minuten lopen van het centrum, zo vermijdt u de zomerse drukte. In het hoogseizoen rijdt er een toeristentreintje.",
-      "url": "https://www.google.com/maps/@43.8425107,6.2198476,3a,75y,298.44h,95.95t/data=!3m7!1e1!3m5!1siEZ59wE1fYGlPS3dJZ7JOg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-5.950627119086306%26panoid%3DiEZ59wE1fYGlPS3dJZ7JOg%26yaw%3D298.44094239668993!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Type: Gratis parkeren. Enkele plaatsen langs de weg. Ongeveer 15 minuten lopen van het centrum, zo vermijdt u de zomerse drukte. In het hoogseizoen rijdt er een toeristentreintje."
     },
     "trace": {
       "logements": [
@@ -1619,27 +1587,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/parking-riez-gratuit2.jpg",
     "fr": {
       "name": "Parking du stade",
-      "desc": "Parking gratuit (3 places).Le long de la route. À environ 15 min à pied du centre, il évite les embouteillages l'été. Navette petit train disponible en haute saison.",
-      "url": "https://www.google.com/maps/@43.8434926,6.2193708,3a,75y,302.99h,92.75t/data=!3m10!1e1!3m8!1s7DxtMIDXbHylCF_KmEWKgQ!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-2.748729741877014%26panoid%3D7DxtMIDXbHylCF_KmEWKgQ%26yaw%3D302.98623854638294!7i16384!8i8192!9m2!1b1!2i40?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Parking gratuit (3 places).Le long de la route. À environ 15 min à pied du centre, il évite les embouteillages l'été. Navette petit train disponible en haute saison."
     },
     "en": {
       "name": "Stadium Parking",
-      "desc": "Free parking (3 places). Along the road. About 15 min walk to the center. Tourist shuttle train available in peak season.",
-      "url": "https://www.google.com/maps/@43.8434926,6.2193708,3a,75y,302.99h,92.75t/data=!3m10!1e1!3m8!1s7DxtMIDXbHylCF_KmEWKgQ!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-2.748729741877014%26panoid%3D7DxtMIDXbHylCF_KmEWKgQ%26yaw%3D302.98623854638294!7i16384!8i8192!9m2!1b1!2i40?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Free parking (3 places). Along the road. About 15 min walk to the center. Tourist shuttle train available in peak season."
     },
     "de": {
       "name": "Parkplatz am Stadion",
-      "desc": "Kostenloser Parkplatz (3 Plätze). Entlang der Straße. Etwa 15 Gehminuten vom Zentrum entfernt, vermeidet die sommerlichen Staus. In der Hochsaison verkehrt ein kleiner Touristenzug.",
-      "url": "https://www.google.com/maps/@43.8434926,6.2193708,3a,75y,302.99h,92.75t/data=!3m10!1e1!3m8!1s7DxtMIDXbHylCF_KmEWKgQ!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-2.748729741877014%26panoid%3D7DxtMIDXbHylCF_KmEWKgQ%26yaw%3D302.98623854638294!7i16384!8i8192!9m2!1b1!2i40?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Kostenloser Parkplatz (3 Plätze). Entlang der Straße. Etwa 15 Gehminuten vom Zentrum entfernt, vermeidet die sommerlichen Staus. In der Hochsaison verkehrt ein kleiner Touristenzug."
     },
     "nl": {
       "name": "Parkeerplaats bij het stadion",
-      "desc": "Gratis parkeren (3 plaatsen). Langs de weg. Ongeveer 15 minuten lopen van het centrum, zo vermijdt u de zomerse drukte. In het hoogseizoen rijdt er een toeristentreintje.",
-      "url": "https://www.google.com/maps/@43.8434926,6.2193708,3a,75y,302.99h,92.75t/data=!3m10!1e1!3m8!1s7DxtMIDXbHylCF_KmEWKgQ!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-2.748729741877014%26panoid%3D7DxtMIDXbHylCF_KmEWKgQ%26yaw%3D302.98623854638294!7i16384!8i8192!9m2!1b1!2i40?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Gratis parkeren (3 plaatsen). Langs de weg. Ongeveer 15 minuten lopen van het centrum, zo vermijdt u de zomerse drukte. In het hoogseizoen rijdt er een toeristentreintje."
     },
     "trace": {
       "logements": [
@@ -1864,27 +1824,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/parking_3places.jpg",
     "fr": {
       "name": "Parking 3 places",
-      "desc": "Type : Parking gratuit.Le long de la route. Seulement 3 places à proximité immédiate du logement.",
-      "url": "https://www.google.com/maps/@43.847518,6.2204303,3a,90y,225.05h,99.17t/data=!3m10!1e1!3m8!1srLxknkZ4qjXKg09gagqUvw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-9.173335441444806%26panoid%3DrLxknkZ4qjXKg09gagqUvw%26yaw%3D225.0466952080189!7i16384!8i8192!9m2!1b1!2i31?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Type : Parking gratuit.Le long de la route. Seulement 3 places à proximité immédiate du logement."
     },
     "en": {
       "name": "3 places parking",
-      "desc": "Type : Free parking.Along the road. Only 3 places in the immediate vicinity of the accommodation.",
-      "url": "https://www.google.com/maps/@43.847518,6.2204303,3a,90y,225.05h,99.17t/data=!3m10!1e1!3m8!1srLxknkZ4qjXKg09gagqUvw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-9.173335441444806%26panoid%3DrLxknkZ4qjXKg09gagqUvw%26yaw%3D225.0466952080189!7i16384!8i8192!9m2!1b1!2i31?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Type : Free parking.Along the road. Only 3 places in the immediate vicinity of the accommodation."
     },
     "de": {
       "name": "Parkplatz mit 3 Plätzen",
-      "desc": "Typ: Kostenloser Parkplatz. Entlang der Straße. Nur 3 Plätze in unmittelbarer Nähe der Unterkunft.",
-      "url": "https://www.google.com/maps/@43.847518,6.2204303,3a,90y,225.05h,99.17t/data=!3m10!1e1!3m8!1srLxknkZ4qjXKg09gagqUvw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-9.173335441444806%26panoid%3DrLxknkZ4qjXKg09gagqUvw%26yaw%3D225.0466952080189!7i16384!8i8192!9m2!1b1!2i31?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Typ: Kostenloser Parkplatz. Entlang der Straße. Nur 3 Plätze in unmittelbarer Nähe der Unterkunft."
     },
     "nl": {
       "name": "Parkeerplaats met 3 plekken",
-      "desc": "Type: Gratis parkeren. Langs de weg. Slechts 3 plekken vlak bij de accommodatie.",
-      "url": "https://www.google.com/maps/@43.847518,6.2204303,3a,90y,225.05h,99.17t/data=!3m10!1e1!3m8!1srLxknkZ4qjXKg09gagqUvw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-9.173335441444806%26panoid%3DrLxknkZ4qjXKg09gagqUvw%26yaw%3D225.0466952080189!7i16384!8i8192!9m2!1b1!2i31?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Type: Gratis parkeren. Langs de weg. Slechts 3 plekken vlak bij de accommodatie."
     },
     "trace": {
       "logements": [
@@ -1929,27 +1881,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/parking-lerins-zonebleu.png",
     "fr": {
       "name": "Avenue de Lérins",
-      "desc": "Type : Parking gratuit limité à 1H. Quelques places le long de l'avenue, juste après les emplacements réservés au petit train.",
-      "url": "https://www.google.com/maps/@43.8457994,6.2212576,3a,75y,239.45h,97.25t/data=!3m7!1e1!3m5!1ssGHM_0EFNYF7HDz4Tab7Rw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-7.248803413390817%26panoid%3DsGHM_0EFNYF7HDz4Tab7Rw%26yaw%3D239.44917299414527!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Type : Parking gratuit limité à 1H. Quelques places le long de l'avenue, juste après les emplacements réservés au petit train."
     },
     "en": {
       "name": "Avenue de Lérins",
-      "desc": "Type: Free parking. A few spaces along the avenue, just after the spots reserved for the tourist train.",
-      "url": "https://www.google.com/maps/@43.8457994,6.2212576,3a,75y,239.45h,97.25t/data=!3m7!1e1!3m5!1ssGHM_0EFNYF7HDz4Tab7Rw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-7.248803413390817%26panoid%3DsGHM_0EFNYF7HDz4Tab7Rw%26yaw%3D239.44917299414527!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Type: Free parking. A few spaces along the avenue, just after the spots reserved for the tourist train."
     },
     "de": {
       "name": "Avenue de Lérins",
-      "desc": "Typ: Kostenloses Parken, auf 1 Stunde begrenzt. Einige Plätze entlang der Allee, direkt nach den für den kleinen Touristenzug reservierten Stellplätzen.",
-      "url": "https://www.google.com/maps/@43.8457994,6.2212576,3a,75y,239.45h,97.25t/data=!3m7!1e1!3m5!1ssGHM_0EFNYF7HDz4Tab7Rw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-7.248803413390817%26panoid%3DsGHM_0EFNYF7HDz4Tab7Rw%26yaw%3D239.44917299414527!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Typ: Kostenloses Parken, auf 1 Stunde begrenzt. Einige Plätze entlang der Allee, direkt nach den für den kleinen Touristenzug reservierten Stellplätzen."
     },
     "nl": {
       "name": "Avenue de Lérins",
-      "desc": "Type: Gratis parkeren, beperkt tot 1 uur. Enkele plaatsen langs de laan, net na de plekken die gereserveerd zijn voor het toeristentreintje.",
-      "url": "https://www.google.com/maps/@43.8457994,6.2212576,3a,75y,239.45h,97.25t/data=!3m7!1e1!3m5!1ssGHM_0EFNYF7HDz4Tab7Rw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-7.248803413390817%26panoid%3DsGHM_0EFNYF7HDz4Tab7Rw%26yaw%3D239.44917299414527!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Type: Gratis parkeren, beperkt tot 1 uur. Enkele plaatsen langs de laan, net na de plekken die gereserveerd zijn voor het toeristentreintje."
     },
     "trace": {
       "logements": [
@@ -2074,27 +2018,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/depose_minute_15mins.jpg",
     "fr": {
       "name": "Dépose minute",
-      "desc": "Type : Parking gratuit 15 minutes. Pour déposer et charger les bagages et les courses.",
-      "url": "https://www.google.com/maps/@43.8471674,6.2207608,3a,75y,173.06h,94.65t/data=!3m10!1e1!3m8!1sWijBRmvTs4f3b_fWgPh6Cg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-4.645023307795114%26panoid%3DWijBRmvTs4f3b_fWgPh6Cg%26yaw%3D173.05717634638071!7i16384!8i8192!9m2!1b1!2i40?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Type : Parking gratuit 15 minutes. Pour déposer et charger les bagages et les courses."
     },
     "en": {
       "name": "Drop off zone",
-      "desc": "Type : Free parking 15 minutes. To drop off and load luggage and shopping.",
-      "url": "https://www.google.com/maps/@43.8471674,6.2207608,3a,75y,173.06h,94.65t/data=!3m10!1e1!3m8!1sWijBRmvTs4f3b_fWgPh6Cg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-4.645023307795114%26panoid%3DWijBRmvTs4f3b_fWgPh6Cg%26yaw%3D173.05717634638071!7i16384!8i8192!9m2!1b1!2i40?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Type : Free parking 15 minutes. To drop off and load luggage and shopping."
     },
     "de": {
       "name": "Kurzzeitparkzone",
-      "desc": "Typ: Kostenloses Parken für 15 Minuten. Zum Ein- und Ausladen von Gepäck und Einkäufen.",
-      "url": "https://www.google.com/maps/@43.8471674,6.2207608,3a,75y,173.06h,94.65t/data=!3m10!1e1!3m8!1sWijBRmvTs4f3b_fWgPh6Cg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-4.645023307795114%26panoid%3DWijBRmvTs4f3b_fWgPh6Cg%26yaw%3D173.05717634638071!7i16384!8i8192!9m2!1b1!2i40?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Typ: Kostenloses Parken für 15 Minuten. Zum Ein- und Ausladen von Gepäck und Einkäufen."
     },
     "nl": {
       "name": "Kortparkeerzone",
-      "desc": "Type: Gratis parkeren voor 15 minuten. Om bagage en boodschappen in en uit te laden.",
-      "url": "https://www.google.com/maps/@43.8471674,6.2207608,3a,75y,173.06h,94.65t/data=!3m10!1e1!3m8!1sWijBRmvTs4f3b_fWgPh6Cg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-4.645023307795114%26panoid%3DWijBRmvTs4f3b_fWgPh6Cg%26yaw%3D173.05717634638071!7i16384!8i8192!9m2!1b1!2i40?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Type: Gratis parkeren voor 15 minuten. Om bagage en boodschappen in en uit te laden."
     }
   },
   {
@@ -2108,27 +2044,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/pont-zonebleu.jpg",
     "fr": {
       "name": "Dépose minute",
-      "desc": "Type : Parking gratuit 30 minutes. toute l'année, tous les jours de 10h à 19h, durée de stationnement 30mn, stationnement interdit sauf livraisons, tous les jours de 6h à 10h.",
-      "url": "https://www.google.com/maps/@43.8470896,6.2212575,3a,75y,167.19h,91.75t/data=!3m10!1e1!3m8!1s7isH_QqwCL6eY13L9aMH8A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-1.7536543646196776%26panoid%3D7isH_QqwCL6eY13L9aMH8A%26yaw%3D167.1946146605006!7i16384!8i8192!9m2!1b1!2i31?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Type : Parking gratuit 30 minutes. toute l'année, tous les jours de 10h à 19h, durée de stationnement 30mn, stationnement interdit sauf livraisons, tous les jours de 6h à 10h."
     },
     "en": {
       "name": "Drop off zone",
-      "desc": "Type : Free parking 30 minutes. All year round, every day from 10am to 7pm, parking time 30min, parking prohibited except deliveries, every day from 6am to 10am.",
-      "url": "https://www.google.com/maps/@43.8470896,6.2212575,3a,75y,167.19h,91.75t/data=!3m10!1e1!3m8!1s7isH_QqwCL6eY13L9aMH8A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-1.7536543646196776%26panoid%3D7isH_QqwCL6eY13L9aMH8A%26yaw%3D167.1946146605006!7i16384!8i8192!9m2!1b1!2i31?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Type : Free parking 30 minutes. All year round, every day from 10am to 7pm, parking time 30min, parking prohibited except deliveries, every day from 6am to 10am."
     },
     "de": {
       "name": "Kurzzeitparkzone",
-      "desc": "Typ: Kostenloses Parken für 30 Minuten. Ganzjährig, täglich von 10 bis 19 Uhr, Höchstparkdauer 30 Minuten; von 6 bis 10 Uhr ist das Parken außer für Lieferungen untersagt.",
-      "url": "https://www.google.com/maps/@43.8470896,6.2212575,3a,75y,167.19h,91.75t/data=!3m10!1e1!3m8!1s7isH_QqwCL6eY13L9aMH8A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-1.7536543646196776%26panoid%3D7isH_QqwCL6eY13L9aMH8A%26yaw%3D167.1946146605006!7i16384!8i8192!9m2!1b1!2i31?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Typ: Kostenloses Parken für 30 Minuten. Ganzjährig, täglich von 10 bis 19 Uhr, Höchstparkdauer 30 Minuten; von 6 bis 10 Uhr ist das Parken außer für Lieferungen untersagt."
     },
     "nl": {
       "name": "Kortparkeerzone",
-      "desc": "Type: Gratis parkeren voor 30 minuten. Het hele jaar door, dagelijks van 10.00 tot 19.00 uur, parkeertijd 30 minuten; van 6.00 tot 10.00 uur is parkeren verboden, behalve voor leveringen.",
-      "url": "https://www.google.com/maps/@43.8470896,6.2212575,3a,75y,167.19h,91.75t/data=!3m10!1e1!3m8!1s7isH_QqwCL6eY13L9aMH8A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-1.7536543646196776%26panoid%3D7isH_QqwCL6eY13L9aMH8A%26yaw%3D167.1946146605006!7i16384!8i8192!9m2!1b1!2i31?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Type: Gratis parkeren voor 30 minuten. Het hele jaar door, dagelijks van 10.00 tot 19.00 uur, parkeertijd 30 minuten; van 6.00 tot 10.00 uur is parkeren verboden, behalve voor leveringen."
     },
     "trace": {
       "logements": [
@@ -2201,27 +2129,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/parking-magnant-haut.jpg",
     "fr": {
       "name": "Parking Magnant Haut et bas",
-      "desc": "Type : Payant derrière et devant le Proxy.",
-      "url": "https://www.google.com/maps/place/Parking+Magnans+Haut/@43.8431226,6.2210481,3a,75y,28.54h,89.58t/data=!3m7!1e1!3m5!1sExWemoEJQ9_6Bl_2obzcZg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0.41992226104532904%26panoid%3DExWemoEJQ9_6Bl_2obzcZg%26yaw%3D28.53800050858365!7i16384!8i8192!4m14!1m7!3m6!1s0x12cbefe910cb754f:0xafbbe1f14466224d!2sParking+Magnans+Haut!8m2!3d43.8434902!4d6.2209272!16s%2Fg%2F11rwl2frnv!3m5!1s0x12cbefe910cb754f:0xafbbe1f14466224d!8m2!3d43.8434902!4d6.2209272!16s%2Fg%2F11rwl2frnv?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Type : Payant derrière et devant le Proxy."
     },
     "en": {
       "name": "Magnant Haut & bas Parking",
-      "desc": "Type: Paid parking behind and in front of Proxi.",
-      "url": "https://www.google.com/maps/place/Parking+Magnans+Haut/@43.8431226,6.2210481,3a,75y,28.54h,89.58t/data=!3m7!1e1!3m5!1sExWemoEJQ9_6Bl_2obzcZg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0.41992226104532904%26panoid%3DExWemoEJQ9_6Bl_2obzcZg%26yaw%3D28.53800050858365!7i16384!8i8192!4m14!1m7!3m6!1s0x12cbefe910cb754f:0xafbbe1f14466224d!2sParking+Magnans+Haut!8m2!3d43.8434902!4d6.2209272!16s%2Fg%2F11rwl2frnv!3m5!1s0x12cbefe910cb754f:0xafbbe1f14466224d!8m2!3d43.8434902!4d6.2209272!16s%2Fg%2F11rwl2frnv?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Type: Paid parking behind and in front of Proxi."
     },
     "de": {
       "name": "Parkplatz Magnant Haut & Bas",
-      "desc": "Typ: Kostenpflichtiger Parkplatz hinter und vor dem Proxi-Supermarkt.",
-      "url": "https://www.google.com/maps/place/Parking+Magnans+Haut/@43.8431226,6.2210481,3a,75y,28.54h,89.58t/data=!3m7!1e1!3m5!1sExWemoEJQ9_6Bl_2obzcZg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0.41992226104532904%26panoid%3DExWemoEJQ9_6Bl_2obzcZg%26yaw%3D28.53800050858365!7i16384!8i8192!4m14!1m7!3m6!1s0x12cbefe910cb754f:0xafbbe1f14466224d!2sParking+Magnans+Haut!8m2!3d43.8434902!4d6.2209272!16s%2Fg%2F11rwl2frnv!3m5!1s0x12cbefe910cb754f:0xafbbe1f14466224d!8m2!3d43.8434902!4d6.2209272!16s%2Fg%2F11rwl2frnv?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Typ: Kostenpflichtiger Parkplatz hinter und vor dem Proxi-Supermarkt."
     },
     "nl": {
       "name": "Parkeerplaats Magnant Haut & Bas",
-      "desc": "Type: Betaald parkeren achter en voor de Proxi-supermarkt.",
-      "url": "https://www.google.com/maps/place/Parking+Magnans+Haut/@43.8431226,6.2210481,3a,75y,28.54h,89.58t/data=!3m7!1e1!3m5!1sExWemoEJQ9_6Bl_2obzcZg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0.41992226104532904%26panoid%3DExWemoEJQ9_6Bl_2obzcZg%26yaw%3D28.53800050858365!7i16384!8i8192!4m14!1m7!3m6!1s0x12cbefe910cb754f:0xafbbe1f14466224d!2sParking+Magnans+Haut!8m2!3d43.8434902!4d6.2209272!16s%2Fg%2F11rwl2frnv!3m5!1s0x12cbefe910cb754f:0xafbbe1f14466224d!8m2!3d43.8434902!4d6.2209272!16s%2Fg%2F11rwl2frnv?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Type: Betaald parkeren achter en voor de Proxi-supermarkt."
     },
     "trace": {
       "logements": [
@@ -2446,27 +2366,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/parking-haut-moustiers.jpg",
     "fr": {
       "name": "Parking haut Moustiers",
-      "desc": "Type : Parking payant.",
-      "url": "https://www.google.com/maps/place/Parking+payant+Haut+de+Moustiers-Sainte-Marie/@43.8456376,6.2223637,3a,90y,136.09h,95.02t/data=!3m10!1e1!3m8!1sLjvqL_7KWNmZN7lu7dSP5A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-5.016035130308964%26panoid%3DLjvqL_7KWNmZN7lu7dSP5A%26yaw%3D136.0902660330998!7i16384!8i8192!9m2!1b1!2i43!4m6!3m5!1s0x12cbee0ec7126b89:0xe9d21a7f7a632d57!8m2!3d43.8459934!4d6.222739!16s%2Fg%2F11gfh_rsxs?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Y aller"
+      "desc": "Type : Parking payant."
     },
     "en": {
       "name": "Parking haut Moustiers",
-      "desc": "Type: Paid parking.",
-      "url": "https://www.google.com/maps/place/Parking+payant+Haut+de+Moustiers-Sainte-Marie/@43.8456376,6.2223637,3a,90y,136.09h,95.02t/data=!3m10!1e1!3m8!1sLjvqL_7KWNmZN7lu7dSP5A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-5.016035130308964%26panoid%3DLjvqL_7KWNmZN7lu7dSP5A%26yaw%3D136.0902660330998!7i16384!8i8192!9m2!1b1!2i43!4m6!3m5!1s0x12cbee0ec7126b89:0xe9d21a7f7a632d57!8m2!3d43.8459934!4d6.222739!16s%2Fg%2F11gfh_rsxs?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Directions"
+      "desc": "Type: Paid parking."
     },
     "de": {
       "name": "Parking haut Moustiers",
-      "desc": "Typ: Kostenpflichtiger Parkplatz.",
-      "url": "https://www.google.com/maps/place/Parking+payant+Haut+de+Moustiers-Sainte-Marie/@43.8456376,6.2223637,3a,90y,136.09h,95.02t/data=!3m10!1e1!3m8!1sLjvqL_7KWNmZN7lu7dSP5A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-5.016035130308964%26panoid%3DLjvqL_7KWNmZN7lu7dSP5A%26yaw%3D136.0902660330998!7i16384!8i8192!9m2!1b1!2i43!4m6!3m5!1s0x12cbee0ec7126b89:0xe9d21a7f7a632d57!8m2!3d43.8459934!4d6.222739!16s%2Fg%2F11gfh_rsxs?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Anfahrt"
+      "desc": "Typ: Kostenpflichtiger Parkplatz."
     },
     "nl": {
       "name": "Parking haut Moustiers",
-      "desc": "Type: Betaald parkeren.",
-      "url": "https://www.google.com/maps/place/Parking+payant+Haut+de+Moustiers-Sainte-Marie/@43.8456376,6.2223637,3a,90y,136.09h,95.02t/data=!3m10!1e1!3m8!1sLjvqL_7KWNmZN7lu7dSP5A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D-5.016035130308964%26panoid%3DLjvqL_7KWNmZN7lu7dSP5A%26yaw%3D136.0902660330998!7i16384!8i8192!9m2!1b1!2i43!4m6!3m5!1s0x12cbee0ec7126b89:0xe9d21a7f7a632d57!8m2!3d43.8459934!4d6.222739!16s%2Fg%2F11gfh_rsxs?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D",
-      "urlLabel": "Route"
+      "desc": "Type: Betaald parkeren."
     },
     "trace": {
       "logements": [
