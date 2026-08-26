@@ -297,18 +297,27 @@
                 // evitent l'erreur 153 ("Erreur de configuration du lecteur video") qui
                 // survient quand YouTube ne recoit pas de header Referer valide (notamment
                 // en ouvrant la page en local via file:// plutot que via http/https).
-                loadYoutubeIframeApi(() => {
-                    ytPlayerApi = new YT.Player('youtube-player', {
-                        videoId: state.youtubeId,
-                        host: 'https://www.youtube-nocookie.com',
-                        playerVars: { autoplay: 1, mute: 1, playsinline: 1, rel: 0 },
-                        events: {
-                            onStateChange: (e) => {
-                                if (e.data === YT.PlayerState.ENDED) goToNext();
+                // On fixe le src DIRECTEMENT (comme avant, methode fiable) -- enablejsapi=1 +
+                // origin permettent ensuite, si besoin (voir plus bas), de brancher l'API JS en
+                // lecture seule sur CET iframe deja fonctionnel plutot que de laisser l'API le
+                // recreer elle-meme (peu fiable quand la cible est deja un <iframe> existant).
+                const origin = encodeURIComponent(window.location.origin);
+                ytPlayer.src = `https://www.youtube-nocookie.com/embed/${state.youtubeId}?autoplay=1&mute=1&playsinline=1&rel=0&enablejsapi=1&origin=${origin}`;
+
+                // La detection de fin de video (onStateChange) n'est necessaire que si on doit
+                // enchainer automatiquement sur "next" -- sinon, on ne charge meme pas l'API JS
+                // externe (moins de dependances reseau, comportement identique a avant).
+                if (state.nextUrl) {
+                    loadYoutubeIframeApi(() => {
+                        ytPlayerApi = new YT.Player('youtube-player', {
+                            events: {
+                                onStateChange: (e) => {
+                                    if (e.data === YT.PlayerState.ENDED) goToNext();
+                                }
                             }
-                        }
+                        });
                     });
-                });
+                }
             } else if (state.videoFile) {
                 vidPlayer.src = `https://bellodulac.netlify.app/images/${state.videoFile}`;
                 vidPlayer.load();
