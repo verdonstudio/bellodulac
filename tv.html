@@ -568,9 +568,14 @@
       // veut aussi pouvoir ouvrir soi-meme sur la TV (ex. poubelles, parking).
       if (type === 'qr' || type === 'qr_and_link') {
         const dataUrl = qrDataUrl(toAbsoluteUrl(href), 4);
+        // "qr_and_link" seulement : si une description est definie, on l'affiche au-dessus du QR
+        // code (utile puisque le clic ouvre directement le lien, contrairement a "qr" simple).
+        const descText = desc[lang] || desc.FR || '';
+        const descHtml = (type === 'qr_and_link' && descText) ? `<div class="tile-desc">${descText}</div>` : '';
         a.innerHTML = `
           <div class="tile-icon"${iconStyle}>${icon}</div>
           <div class="tile-title">${title[lang] || title.FR}</div>
+          ${descHtml}
           <div class="qr-box">${dataUrl ? `<img src="${dataUrl}" alt="${title[lang] || title.FR}">` : '<div class="qr-skeleton"></div>'}</div>
           <div class="tile-desc">${I18N.scan[lang]}</div>
         `;
