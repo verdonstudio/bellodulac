@@ -14,6 +14,10 @@
 <script src="redirect.js"></script>
 <script src="logements.js"></script>
 
+<!-- POI_CATEGORIES (icone/titre/couleur par categorie) : utilise pour les vignettes
+     "dynamiques" (cle absente de BUILTIN_TILES, voir categoryInfoFromUrl plus bas). -->
+<script src="pois.js"></script>
+
 <!-- Fichier de correspondance "voyageur du jour" (Annonce/Nom/Arrivée/Départ/Code), utilisé
      pour reconnaitre automatiquement quelle reservation est en cours sur ce logement (la
      Google TV n'a pas de code reservation dans son URL, juste ?logement=...) et retrouver sa
@@ -412,15 +416,46 @@
 
   // Resout le lien d'une vignette : en priorite le lien de la reservation en cours (dates +
   // langue du sejour deja correctes dans redirect.js), sinon le lien par defaut (fourni par la
-  // config Android, ou calcule automatiquement pour les 5 vignettes standard).
+  // config Android, ou calcule automatiquement pour les 5 vignettes standard), sinon (vignette
+  // "dynamique", cle absente de BUILTIN_TILES et sans defaultUrl fourni dans la config) le tag
+  // "default" de redirect.js pour ce meme champ.
+  //
+  // Pour une vignette dynamique, sourceKey retombe directement sur tile.key : ajouter
+  // { "key": "parking", "type": "link" } dans la config Android suffit donc a recuperer le champ
+  // "parking" de redirect.js (voir reservations en cours ET tag "default"), sans avoir a le
+  // redefinir ici -- aucune modification de tv.html n'est necessaire pour une nouvelle categorie.
   function resolveTileHref(tile, builtin) {
-    const sourceKey = ('source' in tile) ? tile.source : (builtin && builtin.source);
+    const sourceKey = ('source' in tile) ? tile.source : (builtin ? builtin.source : tile.key);
+    // 1) Reservation en cours (logique de correspondance/turnover inchangee, voir
+    //    todayReservationMatch ci-dessus) : priorite absolue si le champ existe pour elle.
     if (sourceKey && resCode !== 'default' && reservationData[sourceKey]) {
       return withResolvedLangAndLogement(reservationData[sourceKey]);
     }
+    // 2) Lien par defaut calcule localement (vignette standard, ou config Android avec
+    //    "defaultUrl" explicite) : logement + langue toujours corrects, prefere donc au tag
+    //    "default" generique de redirect.js quand il est disponible.
     let raw = tile.defaultUrl || null;
     if (!raw && builtin && typeof builtin.defaultUrl === 'function') raw = builtin.defaultUrl(logementId, lang);
-    return raw ? withResolvedLangAndLogement(raw) : null;
+    if (raw) return withResolvedLangAndLogement(raw);
+    // 3) Vignette dynamique sans aucun lien local calculable : tag "default" de redirect.js.
+    if (sourceKey && reservationData[sourceKey]) {
+      return withResolvedLangAndLogement(reservationData[sourceKey]);
+    }
+    return null;
+  }
+
+  // Vignette dynamique (cle absente de BUILTIN_TILES) sans icone/titre fournis dans la config :
+  // on les derive automatiquement depuis pois.js (POI_CATEGORIES), a partir de la premiere
+  // categorie du parametre "cat" de l'URL resolue (ex. "cat=parking_gratuit,..." dans le lien
+  // "parking" de redirect.js -> POI_CATEGORIES.parking_gratuit : icone, titre 4 langues, couleur).
+  function categoryInfoFromUrl(url) {
+    if (!url) return null;
+    const qs = url.split('?')[1] || '';
+    const catParam = new URLSearchParams(qs).get('cat');
+    if (!catParam) return null;
+    const firstCat = catParam.split(',')[0].trim();
+    const categories = window.POI_CATEGORIES || {};
+    return categories[firstCat] || null;
   }
 
   function drawQrToCanvas(qr, cellSize, marginModules) {
@@ -494,11 +529,21 @@
     grid.innerHTML = '';
     tiles.forEach((tile, i) => {
       const builtin = BUILTIN_TILES[tile.key];
-      const icon = tile.icon || (builtin && builtin.icon) || '🔗';
-      const title = tile.title || (builtin && builtin.title) || { FR: tile.key, EN: tile.key, DE: tile.key, NL: tile.key };
+      const href = resolveTileHref(tile, builtin);
+      // Vignette dynamique (cle absente de BUILTIN_TILES) sans icone/titre fournis dans la
+      // config Android : on les derive automatiquement depuis pois.js via l'URL resolue
+      // ci-dessus (voir categoryInfoFromUrl). Inutile de calculer autoCat pour une vignette
+      // standard, ou si la config fournit deja icone ET titre explicitement.
+      const autoCat = (!builtin && (!tile.icon || !tile.title)) ? categoryInfoFromUrl(href) : null;
+      const icon = tile.icon || (builtin && builtin.icon) || (autoCat && autoCat.emoji) || '🔗';
+      const title = tile.title || (builtin && builtin.title)
+        || (autoCat && { FR: autoCat.fr, EN: autoCat.en, DE: autoCat.de, NL: autoCat.nl })
+        || { FR: tile.key, EN: tile.key, DE: tile.key, NL: tile.key };
       const desc = tile.desc || (builtin && builtin.desc) || { FR: '', EN: '', DE: '', NL: '' };
       const type = tile.type || (builtin && builtin.type) || 'link';
-      const href = resolveTileHref(tile, builtin);
+      // Couleur de categorie (pois.js) pour l'icone d'une vignette dynamique -- les vignettes
+      // standard gardent leur fond neutre habituel (var(--c-primary-soft), voir CSS .tile-icon).
+      const iconStyle = (autoCat && autoCat.color) ? ` style="background:${autoCat.color}22;"` : '';
       // La vignette "carte interactive" (index.html) a plus de 130 pins : une telecommande TV ne
       // peut pas viser un pin precisement. Le clic SUR LA TV (mode "link") passe donc par ?tv=1,
       // qui active une liste de POI navigable au D-pad a cote de la carte (voir index.html,
@@ -518,7 +563,7 @@
       if (type === 'qr') {
         const dataUrl = qrDataUrl(toAbsoluteUrl(href), 4);
         a.innerHTML = `
-          <div class="tile-icon">${icon}</div>
+          <div class="tile-icon"${iconStyle}>${icon}</div>
           <div class="tile-title">${title[lang] || title.FR}</div>
           <div class="qr-box">${dataUrl ? `<img src="${dataUrl}" alt="${title[lang] || title.FR}">` : '<div class="qr-skeleton"></div>'}</div>
           <div class="tile-desc">${I18N.scan[lang]}</div>
@@ -535,7 +580,7 @@
       } else {
         a.href = tvHref || '#';
         a.innerHTML = `
-          <div class="tile-icon">${icon}</div>
+          <div class="tile-icon"${iconStyle}>${icon}</div>
           <div class="tile-title">${title[lang] || title.FR}</div>
           <div class="tile-desc">${desc[lang] || desc.FR}</div>
           <div class="tile-arrow">${I18N.ouvrir[lang]}</div>
