@@ -48,29 +48,45 @@ racine du dépôt) — il n'y a rien à faire côté application Android.
 
 ## Les vignettes de `tv.html`
 
-Chaque entrée de `"tiles"` est un objet `{ "key": "...", "type": "link"|"qr" }` :
+Chaque entrée de `"tiles"` est un objet `{ "key": "...", "type": "link"|"qr"|"qr_and_link" }` :
 - `type: "link"` — vignette cliquable classique (comme sur `home.html`) : ouvre la page
   directement sur la TV. Utilisé pour "Évènements locaux" et "Votre programme".
-- `type: "qr"` — vignette avec un QR code intégré, à scanner avec le téléphone (en plus de
-  rester cliquable sur la TV elle-même). Utilisé pour "Carte interactive", "Panorama 360°" et
-  "Retour vers le futur".
+- `type: "qr"` — vignette avec un QR code intégré, à scanner avec le téléphone. Le clic sur la TV
+  elle-même agrandit le QR code par défaut (voir `onClick` plus bas). Utilisé pour "Carte
+  interactive", "Panorama 360°" et "Retour vers le futur".
+- `type: "qr_and_link"` — comme `"qr"` (QR code scannable au téléphone), mais le clic sur la TV
+  ouvre **toujours** directement le lien, jamais d'agrandissement du QR code. Utilisé pour
+  "Poubelles" et "Parking" : pratique à scanner depuis le téléphone, mais aussi consultable
+  directement sur la TV.
 
-Cinq vignettes "standard" sont reconnues par leur seul `key` (icône, titre en 4 langues et lien
+Six vignettes "standard" sont reconnues par leur seul `key` (icône, titre en 4 langues et lien
 déjà tout définis dans `tv.html`, aucune config supplémentaire nécessaire) :
-`evenements`, `highlights`, `map`, `panorama`, `backintime`.
+`evenements`, `highlights`, `map`, `panorama`, `backintime`, `trash`.
 
 **Lien affiché par vignette :** si un séjour est en cours (voir `reservations.js`), la vignette
 utilise en priorité le lien déjà calculé pour cette réservation dans `redirect.js` (dates du
-séjour et langue du voyageur incluses) — `evenements`→`evenements`, `highlights`→`highlights`,
-`map`→`map`, `panorama`→`panorama`. Sinon (pas de séjour en cours, ou vignette sans équivalent
-dans `redirect.js` comme `backintime`), elle retombe sur un lien par défaut calculé
-automatiquement (`?logement=...&lang=...`, langue = FR si aucun séjour en cours).
+séjour et langue du voyageur incluses) — le champ recherché dans `redirect.js` est le `key` de la
+vignette lui-même (`evenements`→`evenements`, `parking`→`parking`, etc.), sauf pour les 6
+vignettes standard qui peuvent avoir un lien par défaut calculé automatiquement
+(`?logement=...&lang=...`) à la place. Sinon (pas de séjour en cours, ou vignette sans lien par
+défaut calculable), elle retombe sur le tag `"default"` de `redirect.js` pour ce même champ.
+
+**Vignette dont la `key` n'est pas dans la liste des 6 standard** (ex. `parking`) : si la config
+ne fournit pas `"icon"`/`"title"` explicitement, ils sont déduits automatiquement de `pois.js`
+(icône, titre 4 langues, couleur), à partir de la première catégorie du paramètre `cat=...` de
+l'URL récupérée dans `redirect.js`. Aucune modification de `tv.html` n'est donc nécessaire pour
+ajouter une nouvelle vignette de ce type, du moment que le champ correspondant existe dans
+`redirect.js` (voir `parking` par exemple) :
+```json
+{ "key": "parking", "type": "qr_and_link" }
+```
 
 **Que fait le clic sur une vignette "qr", directement sur la TV** (le scan au téléphone, lui,
 ouvre toujours le lien normal) : par défaut (`"onClick": "modal"`, ou rien du tout), le QR code
 s'agrande en plein écran pour faciliter le scan à distance depuis le canapé. Avec
 `"onClick": "link"`, le clic ouvre directement le lien sur la TV elle-même (utile par exemple
 pour `map`, qui affiche alors une liste de POI navigable à la télécommande à côté de la carte).
+Sans effet sur `"qr_and_link"`, qui ouvre toujours directement le lien.
 ```json
 { "key": "panorama", "type": "qr", "onClick": "link" }
 ```

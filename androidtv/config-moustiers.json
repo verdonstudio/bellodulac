@@ -7,7 +7,7 @@
     { "key": "map", "type": "qr" },
     { "key": "panorama", "type": "qr" },
     { "key": "backintime", "type": "qr" },
-    { "key": "trash", "type": "link" },
-    { "key": "parking", "type": "link" }
+    { "key": "trash", "type": "qr_and_link" },
+    { "key": "parking", "type": "qr_and_link" }
   ]
 }

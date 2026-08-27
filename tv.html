@@ -553,14 +553,20 @@
       // Pour une vignette "qr" : que fait le clic SUR LA TV elle-meme (pas le scan au telephone,
       // qui utilise toujours le QR code) ? "modal" (par defaut) agrandit le QR code a l'ecran
       // pour faciliter le scan a distance ; "link" ouvre directement le lien sur la TV. Reglable
-      // par vignette via la config Android (champ "onClick": "modal" | "link").
+      // par vignette via la config Android (champ "onClick": "modal" | "link"). Sans effet sur
+      // "qr_and_link" (voir ci-dessous), qui ouvre toujours directement le lien.
       const onClickMode = tile.onClick || (builtin && builtin.onClick) || 'modal';
 
       const a = document.createElement('a');
       a.id = `tile-${tile.key}-${i}`;
       a.className = 'tile' + (href ? '' : ' disabled');
 
-      if (type === 'qr') {
+      // "qr" : QR code scannable au telephone + clic sur la TV agrandit le QR (par defaut) ou
+      // ouvre le lien, selon onClick.
+      // "qr_and_link" : meme QR code scannable au telephone, mais le clic sur la TV ouvre
+      // TOUJOURS directement le lien (jamais d'agrandissement) -- utile pour une vignette qu'on
+      // veut aussi pouvoir ouvrir soi-meme sur la TV (ex. poubelles, parking).
+      if (type === 'qr' || type === 'qr_and_link') {
         const dataUrl = qrDataUrl(toAbsoluteUrl(href), 4);
         a.innerHTML = `
           <div class="tile-icon"${iconStyle}>${icon}</div>
@@ -568,7 +574,7 @@
           <div class="qr-box">${dataUrl ? `<img src="${dataUrl}" alt="${title[lang] || title.FR}">` : '<div class="qr-skeleton"></div>'}</div>
           <div class="tile-desc">${I18N.scan[lang]}</div>
         `;
-        if (href && onClickMode === 'modal') {
+        if (type === 'qr' && href && onClickMode === 'modal') {
           a.href = '#';
           a.addEventListener('click', (e) => {
             e.preventDefault();
