@@ -2717,6 +2717,27 @@ function getPoiLinks(content, poi) {
     }
   }
 
+  // -------- Toaster POI toujours visible sur la carte (image, titre et boutons d'action
+  // accessibles), quels que soient la taille et l'orientation de l'écran. Même principe
+  // que le mode "compact" de panorama.html (voir isCompactViewport là-bas) : sur mobile en
+  // paysage, la fenêtre visible est trop basse pour la boîte de carte intégrée (420px) --
+  // on bascule alors automatiquement la carte en plein écran pour lui donner toute la
+  // hauteur disponible, et dans tous les cas on limite la hauteur du popup à celle du
+  // conteneur réel (avec défilement interne) pour garantir que rien ne déborde jamais.
+  function needsMapFullscreenForPopup() {
+    return window.innerHeight <= 500 && !state.mapFullscreen;
+  }
+
+  function fitPopupToMapContainer(marker) {
+    const popup = marker && marker.getPopup ? marker.getPopup() : null;
+    const mapEl = document.getElementById('leaflet-map');
+    if (!popup || !mapEl) return;
+    // Marge pour le "tip" du popup et le padding d'autoPan (autoPanPaddingTopLeft/
+    // BottomRight ci-dessous) : sans cette marge, un popup aussi haut que le conteneur
+    // ne pourrait jamais être entièrement pan-é à l'écran.
+    popup.options.maxHeight = Math.max(160, mapEl.clientHeight - 90);
+  }
+
   // -------- plein ecran de la carte
   let mapFsPushed = false;
 
@@ -2835,6 +2856,14 @@ function getPoiLinks(content, poi) {
 
       m.on('popupopen', () => {
         prioritizePoiImage(poi); // le POI vient d'être sélectionné : son image passe en priorité haute
+        // Écran trop bas (mobile en paysage, etc.) pour la boîte de carte intégrée : on
+        // bascule en plein écran avant de calculer la hauteur du popup, pour lui donner un
+        // maximum de place plutôt que de le laisser se retrouver coincé dans 420px.
+        if (needsMapFullscreenForPopup()) {
+          enterMapFullscreen();
+          if (mapState.map) mapState.map.invalidateSize();
+        }
+        fitPopupToMapContainer(m);
         m.setPopupContent(buildPopupHTML(poi));
         maybeClearTraceOnSelection(poi.id);
         // traceAutoShow : affiche le tracé immediatement, sans passer par le bouton "🚶".
@@ -3263,6 +3292,17 @@ function getPoiLinks(content, poi) {
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && state.mapFullscreen) exitMapFullscreen();
+    });
+
+    // Rotation d'écran pendant qu'un popup POI est ouvert : on ré-adapte sa hauteur max au
+    // nouveau conteneur (ex. portrait -> paysage sans fermer le popup au préalable).
+    window.addEventListener('resize', () => {
+      if (!state.poiId) return;
+      const entry = (mapState.markers || []).find(en => en.poi.id === state.poiId);
+      if (!entry) return;
+      fitPopupToMapContainer(entry.marker);
+      const popup = entry.marker.getPopup();
+      if (popup && popup.isOpen()) popup.update();
     });
 
     document.addEventListener('click', (e) => {
