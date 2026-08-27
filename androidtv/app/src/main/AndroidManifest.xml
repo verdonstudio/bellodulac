@@ -17,12 +17,21 @@
         android:banner="@drawable/banner"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:logo="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.BellODuLacTV"
         android:usesCleartextTraffic="false">
 
+        <!-- banner/icon repetes ici (en plus du tag application ci-dessus) : sur certaines
+             versions du lanceur Google TV, seule l'activite portant l'intent LEANBACK_LAUNCHER
+             est consultee ; si elle n'a pas sa propre banniere, le lanceur l'ignore et affiche
+             une tuile noire generee avec juste l'icone au milieu. (roundIcon/logo ne sont pas
+             des attributs valides sur activity, uniquement sur application ; aapt2 rejette
+             le build s'ils y sont ajoutes.) -->
         <activity
             android:name=".MainActivity"
+            android:banner="@drawable/banner"
+            android:icon="@mipmap/ic_launcher"
             android:exported="true"
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize|uiMode"
