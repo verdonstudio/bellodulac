@@ -7,7 +7,16 @@
     { "key": "map", "type": "qr" },
     { "key": "panorama", "type": "qr" },
     { "key": "backintime", "type": "qr" },
-    { "key": "trash", "type": "qr_and_link" },
+    {
+      "key": "trash",
+      "type": "qr_and_link",
+      "desc": {
+        "FR": "Où déposer vos ordures pendant votre séjour.",
+        "EN": "Where to take your rubbish during your stay.",
+        "DE": "Wo Sie Ihren Müll während Ihres Aufenthalts entsorgen können.",
+        "NL": "Waar u uw afval tijdens uw verblijf kunt afgeven."
+      }
+    },
     { "key": "parking", "type": "qr_and_link" }
   ]
 }
