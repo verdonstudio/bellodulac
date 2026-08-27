@@ -17,6 +17,15 @@
         "NL": "Waar u uw afval tijdens uw verblijf kunt afgeven."
       }
     },
-    { "key": "parking", "type": "qr_and_link" }
+    {
+      "key": "parking",
+      "type": "qr_and_link",
+      "desc": {
+        "FR": "Où vous garer durant votre séjour.",
+        "EN": "Where to park during your stay.",
+        "DE": "Wo Sie während Ihres Aufenthalts parken können.",
+        "NL": "Waar u tijdens uw verblijf kunt parkeren."
+      }
+    }
   ]
 }
