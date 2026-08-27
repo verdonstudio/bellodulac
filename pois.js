@@ -5683,27 +5683,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/DECHETERIE/moustier",
     "fr": {
       "name": "Déchèterie de Moustiers",
-      "desc": "Déchèterie intercommunale, lieu-dit Saint-Clair, D957 vers Les Salles. Bois, déchets verts, cartons, gravats, encombrants, ferraille, électroménager, ampoules. Mar/jeu/sam 8h30-12h, mer/ven 13h30-17h. Colonnes verre, papier et emballages sur place. Tél 04 92 79 81 67.",
-      "url": "https://maps.google.com/?q=43.815923,6.226185",
-      "urlLabel": "Y aller"
+      "desc": "Déchèterie intercommunale, lieu-dit Saint-Clair, D957 vers Les Salles. Bois, déchets verts, cartons, gravats, encombrants, ferraille, électroménager, ampoules. Mar/jeu/sam 8h30-12h, mer/ven 13h30-17h. Colonnes verre, papier et emballages sur place. Tél 04 92 79 81 67."
     },
     "en": {
       "name": "Moustiers recycling centre",
-      "desc": "Intercommunal recycling centre, Saint-Clair, D957 towards Les Salles. Wood, garden waste, cardboard, rubble, bulky items, scrap metal, appliances, bulbs. Tue/Thu/Sat 8:30am-12pm, Wed/Fri 1:30-5pm. Glass, paper and packaging bins on site. Tel +33 4 92 79 81 67.",
-      "url": "https://maps.google.com/?q=43.815923,6.226185",
-      "urlLabel": "Directions"
+      "desc": "Intercommunal recycling centre, Saint-Clair, D957 towards Les Salles. Wood, garden waste, cardboard, rubble, bulky items, scrap metal, appliances, bulbs. Tue/Thu/Sat 8:30am-12pm, Wed/Fri 1:30-5pm. Glass, paper and packaging bins on site. Tel +33 4 92 79 81 67."
     },
     "de": {
       "name": "Wertstoffhof Moustiers",
-      "desc": "Interkommunaler Wertstoffhof, Saint-Clair, D957 Richtung Les Salles. Holz, Grünabfälle, Kartons, Bauschutt, Sperrmüll, Schrott, Elektrogeräte, Lampen. Di/Do/Sa 8:30–12 Uhr, Mi/Fr 13:30–17 Uhr. Container für Glas, Papier und Verpackungen vor Ort. Tel. +33 4 92 79 81 67.",
-      "url": "https://maps.google.com/?q=43.815923,6.226185",
-      "urlLabel": "Anfahrt"
+      "desc": "Interkommunaler Wertstoffhof, Saint-Clair, D957 Richtung Les Salles. Holz, Grünabfälle, Kartons, Bauschutt, Sperrmüll, Schrott, Elektrogeräte, Lampen. Di/Do/Sa 8:30–12 Uhr, Mi/Fr 13:30–17 Uhr. Container für Glas, Papier und Verpackungen vor Ort. Tel. +33 4 92 79 81 67."
     },
     "nl": {
       "name": "Milieustraat Moustiers",
-      "desc": "Intercommunale milieustraat, Saint-Clair, D957 richting Les Salles. Hout, tuinafval, karton, puin, grofvuil, schroot, apparatuur, lampen. Di/do/za 8.30-12.00 uur, wo/vr 13.30-17.00 uur. Containers voor glas, papier en verpakkingen ter plaatse. Tel. +33 4 92 79 81 67.",
-      "url": "https://maps.google.com/?q=43.815923,6.226185",
-      "urlLabel": "Route"
+      "desc": "Intercommunale milieustraat, Saint-Clair, D957 richting Les Salles. Hout, tuinafval, karton, puin, grofvuil, schroot, apparatuur, lampen. Di/do/za 8.30-12.00 uur, wo/vr 13.30-17.00 uur. Containers voor glas, papier en verpakkingen ter plaatse. Tel. +33 4 92 79 81 67."
     }
   },
   {
@@ -5717,27 +5709,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127135343.jpg",
     "fr": {
       "name": "Tri – 16 %",
-      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, verre. Colonnes aériennes.",
-      "url": "https://maps.google.com/?q=43.841146,6.210743",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, verre. Colonnes aériennes."
     },
     "en": {
       "name": "Recycling – 16 %",
-      "desc": "Sorting bins: household waste, packaging, paper, glass. Above-ground bins.",
-      "url": "https://maps.google.com/?q=43.841146,6.210743",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: household waste, packaging, paper, glass. Above-ground bins."
     },
     "de": {
       "name": "Recycling – 16 %",
-      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Glas. Oberirdische Container.",
-      "url": "https://maps.google.com/?q=43.841146,6.210743",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Glas. Oberirdische Container."
     },
     "nl": {
       "name": "Recycling – 16 %",
-      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, glas. Bovengrondse containers.",
-      "url": "https://maps.google.com/?q=43.841146,6.210743",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, glas. Bovengrondse containers."
     }
   },
   {
@@ -5751,27 +5735,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127141050.jpg",
     "fr": {
       "name": "Tri – Aire de camping-car",
-      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, verre. Colonnes aériennes.",
-      "url": "https://maps.google.com/?q=43.843591,6.218806",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, verre. Colonnes aériennes."
     },
     "en": {
       "name": "Recycling – Aire de camping-car",
-      "desc": "Sorting bins: household waste, packaging, paper, glass. Above-ground bins.",
-      "url": "https://maps.google.com/?q=43.843591,6.218806",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: household waste, packaging, paper, glass. Above-ground bins."
     },
     "de": {
       "name": "Recycling – Aire de camping-car",
-      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Glas. Oberirdische Container.",
-      "url": "https://maps.google.com/?q=43.843591,6.218806",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Glas. Oberirdische Container."
     },
     "nl": {
       "name": "Recycling – Aire de camping-car",
-      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, glas. Bovengrondse containers.",
-      "url": "https://maps.google.com/?q=43.843591,6.218806",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, glas. Bovengrondse containers."
     },
     "trace": {
       "logements": [
@@ -6028,27 +6004,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127141905.jpg",
     "fr": {
       "name": "Tri – Cimetière",
-      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, carton, verre, déchets verts (compostage). Colonnes aériennes.",
-      "url": "https://maps.google.com/?q=43.844103,6.222923",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, carton, verre, déchets verts (compostage). Colonnes aériennes."
     },
     "en": {
       "name": "Recycling – Cimetière",
-      "desc": "Sorting bins: household waste, packaging, paper, cardboard, glass, garden waste (composting). Above-ground bins.",
-      "url": "https://maps.google.com/?q=43.844103,6.222923",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: household waste, packaging, paper, cardboard, glass, garden waste (composting). Above-ground bins."
     },
     "de": {
       "name": "Recycling – Cimetière",
-      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Karton, Glas, Grünabfälle (Kompostierung). Oberirdische Container.",
-      "url": "https://maps.google.com/?q=43.844103,6.222923",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Karton, Glas, Grünabfälle (Kompostierung). Oberirdische Container."
     },
     "nl": {
       "name": "Recycling – Cimetière",
-      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, karton, glas, tuinafval (compostering). Bovengrondse containers.",
-      "url": "https://maps.google.com/?q=43.844103,6.222923",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, karton, glas, tuinafval (compostering). Bovengrondse containers."
     },
     "trace": {
       "logements": [
@@ -6273,27 +6241,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127145634.jpg",
     "fr": {
       "name": "Tri – Étoile",
-      "desc": "Colonnes de tri : emballages, verre. Colonnes aériennes.",
-      "url": "https://maps.google.com/?q=43.803814,6.247161",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : emballages, verre. Colonnes aériennes."
     },
     "en": {
       "name": "Recycling – Étoile",
-      "desc": "Sorting bins: packaging, glass. Above-ground bins.",
-      "url": "https://maps.google.com/?q=43.803814,6.247161",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: packaging, glass. Above-ground bins."
     },
     "de": {
       "name": "Recycling – Étoile",
-      "desc": "Sortierbehälter: Verpackungen, Glas. Oberirdische Container.",
-      "url": "https://maps.google.com/?q=43.803814,6.247161",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Verpackungen, Glas. Oberirdische Container."
     },
     "nl": {
       "name": "Recycling – Étoile",
-      "desc": "Sorteercontainers: verpakkingen, glas. Bovengrondse containers.",
-      "url": "https://maps.google.com/?q=43.803814,6.247161",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: verpakkingen, glas. Bovengrondse containers."
     }
   },
   {
@@ -6307,27 +6267,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127145155.jpg",
     "fr": {
       "name": "Tri – La Cadeno",
-      "desc": "Colonnes de tri : emballages, verre. Colonnes aériennes.",
-      "url": "https://maps.google.com/?q=43.805921,6.234103",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : emballages, verre. Colonnes aériennes."
     },
     "en": {
       "name": "Recycling – La Cadeno",
-      "desc": "Sorting bins: packaging, glass. Above-ground bins.",
-      "url": "https://maps.google.com/?q=43.805921,6.234103",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: packaging, glass. Above-ground bins."
     },
     "de": {
       "name": "Recycling – La Cadeno",
-      "desc": "Sortierbehälter: Verpackungen, Glas. Oberirdische Container.",
-      "url": "https://maps.google.com/?q=43.805921,6.234103",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Verpackungen, Glas. Oberirdische Container."
     },
     "nl": {
       "name": "Recycling – La Cadeno",
-      "desc": "Sorteercontainers: verpakkingen, glas. Bovengrondse containers.",
-      "url": "https://maps.google.com/?q=43.805921,6.234103",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: verpakkingen, glas. Bovengrondse containers."
     }
   },
   {
@@ -6341,27 +6293,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127140536.jpg",
     "fr": {
       "name": "Tri – Parking des bus",
-      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, carton, verre. Colonnes semi-enterrées.",
-      "url": "https://maps.google.com/?q=43.846112,6.217372",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, carton, verre. Colonnes semi-enterrées."
     },
     "en": {
       "name": "Recycling – Parking des bus",
-      "desc": "Sorting bins: household waste, packaging, paper, cardboard, glass. Semi-underground bins.",
-      "url": "https://maps.google.com/?q=43.846112,6.217372",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: household waste, packaging, paper, cardboard, glass. Semi-underground bins."
     },
     "de": {
       "name": "Recycling – Parking des bus",
-      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Karton, Glas. Halb unterirdische Container.",
-      "url": "https://maps.google.com/?q=43.846112,6.217372",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Karton, Glas. Halb unterirdische Container."
     },
     "nl": {
       "name": "Recycling – Parking des bus",
-      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, karton, glas. Halfondergrondse containers.",
-      "url": "https://maps.google.com/?q=43.846112,6.217372",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, karton, glas. Halfondergrondse containers."
     },
     "trace": {
       "logements": [
@@ -6554,27 +6498,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127151140.jpg",
     "fr": {
       "name": "Tri – Parking de délestage",
-      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, carton, verre, déchets verts (compostage). Colonnes semi-enterrées.",
-      "url": "https://maps.google.com/?q=43.845118,6.218331",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, carton, verre, déchets verts (compostage). Colonnes semi-enterrées."
     },
     "en": {
       "name": "Recycling – Parking de délestage",
-      "desc": "Sorting bins: household waste, packaging, paper, cardboard, glass, garden waste (composting). Semi-underground bins.",
-      "url": "https://maps.google.com/?q=43.845118,6.218331",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: household waste, packaging, paper, cardboard, glass, garden waste (composting). Semi-underground bins."
     },
     "de": {
       "name": "Recycling – Parking de délestage",
-      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Karton, Glas, Grünabfälle (Kompostierung). Halb unterirdische Container.",
-      "url": "https://maps.google.com/?q=43.845118,6.218331",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Karton, Glas, Grünabfälle (Kompostierung). Halb unterirdische Container."
     },
     "nl": {
       "name": "Recycling – Parking de délestage",
-      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, karton, glas, tuinafval (compostering). Halfondergrondse containers.",
-      "url": "https://maps.google.com/?q=43.845118,6.218331",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, karton, glas, tuinafval (compostering). Halfondergrondse containers."
     },
     "trace": {
       "logements": [
@@ -6827,27 +6763,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127141448.jpg",
     "fr": {
       "name": "Tri – Parking des Magnans",
-      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, verre.",
-      "url": "https://maps.google.com/?q=43.843206,6.220933",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, verre."
     },
     "en": {
       "name": "Recycling – Parking des Magnans",
-      "desc": "Sorting bins: household waste, packaging, paper, glass.",
-      "url": "https://maps.google.com/?q=43.843206,6.220933",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: household waste, packaging, paper, glass."
     },
     "de": {
       "name": "Recycling – Parking des Magnans",
-      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Glas.",
-      "url": "https://maps.google.com/?q=43.843206,6.220933",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Glas."
     },
     "nl": {
       "name": "Recycling – Parking des Magnans",
-      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, glas.",
-      "url": "https://maps.google.com/?q=43.843206,6.220933",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, glas."
     },
     "trace": {
       "logements": [
@@ -7068,27 +6996,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127150419.jpg",
     "fr": {
       "name": "Tri – Parking Saint-Saturnin",
-      "desc": "Colonnes de tri : ordures ménagères, emballages, verre. Colonnes aériennes.",
-      "url": "https://maps.google.com/?q=43.811706,6.227031",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : ordures ménagères, emballages, verre. Colonnes aériennes."
     },
     "en": {
       "name": "Recycling – Parking Saint-Saturnin",
-      "desc": "Sorting bins: household waste, packaging, glass. Above-ground bins.",
-      "url": "https://maps.google.com/?q=43.811706,6.227031",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: household waste, packaging, glass. Above-ground bins."
     },
     "de": {
       "name": "Recycling – Parking Saint-Saturnin",
-      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Glas. Oberirdische Container.",
-      "url": "https://maps.google.com/?q=43.811706,6.227031",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Glas. Oberirdische Container."
     },
     "nl": {
       "name": "Recycling – Parking Saint-Saturnin",
-      "desc": "Sorteercontainers: huisvuil, verpakkingen, glas. Bovengrondse containers.",
-      "url": "https://maps.google.com/?q=43.811706,6.227031",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: huisvuil, verpakkingen, glas. Bovengrondse containers."
     }
   },
   {
@@ -7102,27 +7022,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127145854.jpg",
     "fr": {
       "name": "Tri – Pont du Galetas",
-      "desc": "Colonnes de tri : ordures ménagères, emballages, verre. Colonnes aériennes.",
-      "url": "https://maps.google.com/?q=43.802477,6.249657",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : ordures ménagères, emballages, verre. Colonnes aériennes."
     },
     "en": {
       "name": "Recycling – Pont du Galetas",
-      "desc": "Sorting bins: household waste, packaging, glass. Above-ground bins.",
-      "url": "https://maps.google.com/?q=43.802477,6.249657",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: household waste, packaging, glass. Above-ground bins."
     },
     "de": {
       "name": "Recycling – Pont du Galetas",
-      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Glas. Oberirdische Container.",
-      "url": "https://maps.google.com/?q=43.802477,6.249657",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Glas. Oberirdische Container."
     },
     "nl": {
       "name": "Recycling – Pont du Galetas",
-      "desc": "Sorteercontainers: huisvuil, verpakkingen, glas. Bovengrondse containers.",
-      "url": "https://maps.google.com/?q=43.802477,6.249657",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: huisvuil, verpakkingen, glas. Bovengrondse containers."
     }
   },
   {
@@ -7136,27 +7048,19 @@ window.POIS = [
     "img": "https://sitmahp.geosphere.fr/donnees/photos/PAA/OM/04135/20250127152309.jpg",
     "fr": {
       "name": "Tri – Venascle",
-      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, verre. Colonnes aériennes.",
-      "url": "https://maps.google.com/?q=43.855043,6.191441",
-      "urlLabel": "Y aller"
+      "desc": "Colonnes de tri : ordures ménagères, emballages, papier, verre. Colonnes aériennes."
     },
     "en": {
       "name": "Recycling – Venascle",
-      "desc": "Sorting bins: household waste, packaging, paper, glass. Above-ground bins.",
-      "url": "https://maps.google.com/?q=43.855043,6.191441",
-      "urlLabel": "Directions"
+      "desc": "Sorting bins: household waste, packaging, paper, glass. Above-ground bins."
     },
     "de": {
       "name": "Recycling – Venascle",
-      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Glas. Oberirdische Container.",
-      "url": "https://maps.google.com/?q=43.855043,6.191441",
-      "urlLabel": "Anfahrt"
+      "desc": "Sortierbehälter: Hausmüll, Verpackungen, Papier, Glas. Oberirdische Container."
     },
     "nl": {
       "name": "Recycling – Venascle",
-      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, glas. Bovengrondse containers.",
-      "url": "https://maps.google.com/?q=43.855043,6.191441",
-      "urlLabel": "Route"
+      "desc": "Sorteercontainers: huisvuil, verpakkingen, papier, glas. Bovengrondse containers."
     }
   },
   {
@@ -7355,27 +7259,19 @@ window.POIS = [
     "img": "https://bellodulac.netlify.app/images/tri-salles.jpg",
     "fr": {
       "name": "Tri selectif les Salles sur Verdon",
-      "desc": "Tri selectif les Salles sur Verdon: 19 Rue Pierre Blanche Les Salles-sur-Verdon 83630. 🍾Verre ♻️Plastique 📰Papier  ⚙️Métaux",
-      "url": "https://google.com/maps/dir/?api=1&destination=43.77656,6.2089686",
-      "urlLabel": "Y aller"
+      "desc": "Tri selectif les Salles sur Verdon: 19 Rue Pierre Blanche Les Salles-sur-Verdon 83630. 🍾Verre ♻️Plastique 📰Papier  ⚙️Métaux"
     },
     "en": {
       "name": "Selective Sorting les Salles sur Verdon",
-      "desc": "Sort selective les Salles sur Verdon: 19 Rue Pierre Blanche Les Salles-sur-Verdon 83630. 🍾Glass ♻️Plastic 📰Paper ⚙️Metals",
-      "url": "https://google.com/maps/dir/?api=1&destination=43.77656,6.2089686",
-      "urlLabel": "Directions"
+      "desc": "Sort selective les Salles sur Verdon: 19 Rue Pierre Blanche Les Salles-sur-Verdon 83630. 🍾Glass ♻️Plastic 📰Paper ⚙️Metals"
     },
     "de": {
       "name": "Mülltrennung Les Salles-sur-Verdon",
-      "desc": "Wertstoffsammelstelle Les Salles-sur-Verdon: 19 Rue Pierre Blanche, Les Salles-sur-Verdon 83630. 🍾Glas ♻️Kunststoff 📰Papier ⚙️Metalle",
-      "url": "https://google.com/maps/dir/?api=1&destination=43.77656,6.2089686",
-      "urlLabel": "Anfahrt"
+      "desc": "Wertstoffsammelstelle Les Salles-sur-Verdon: 19 Rue Pierre Blanche, Les Salles-sur-Verdon 83630. 🍾Glas ♻️Kunststoff 📰Papier ⚙️Metalle"
     },
     "nl": {
       "name": "Afvalscheiding Les Salles-sur-Verdon",
-      "desc": "Afvalscheidingspunt Les Salles-sur-Verdon: 19 Rue Pierre Blanche, Les Salles-sur-Verdon 83630. 🍾Glas ♻️Plastic 📰Papier ⚙️Metaal",
-      "url": "https://google.com/maps/dir/?api=1&destination=43.77656,6.2089686",
-      "urlLabel": "Routebeschrijving"
+      "desc": "Afvalscheidingspunt Les Salles-sur-Verdon: 19 Rue Pierre Blanche, Les Salles-sur-Verdon 83630. 🍾Glas ♻️Plastic 📰Papier ⚙️Metaal"
     },
     "pano": [
       22.371,
