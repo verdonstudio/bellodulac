@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fond blanc explicite : sans icone adaptative, Android 8+/Google TV encadre les icones
+         "legacy" (PNG simple) d'un fond noir par defaut, rendant le texte du logo illisible. -->
+    <background android:drawable="@android:color/white"/>
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+</adaptive-icon>
