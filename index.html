@@ -839,9 +839,6 @@
     recos_empty: "Aucun lieu ne correspond aux filtres sélectionnés.",
     learn_more: "En savoir plus",
     go_there: "Y aller",
-    nav_google: "🧭 Google Maps",
-    nav_waze: "🧭 Waze",
-    nav_apple: "🧭 Plans",
     show_walking_path: "Afficher le chemin",
     exit_fullscreen: "Quitter le plein écran",
     fullscreen_label: "Plein écran",
@@ -910,9 +907,6 @@
     recos_empty: "No place matches the selected filters.",
     learn_more: "Learn more",
     go_there: "Get directions",
-    nav_google: "🧭 Google Maps",
-    nav_waze: "🧭 Waze",
-    nav_apple: "🧭 Apple Maps",
     show_walking_path: "Show the walking path",
     exit_fullscreen: "Exit fullscreen",
     fullscreen_label: "Fullscreen",
@@ -979,9 +973,6 @@
       recos_empty: "Kein Ort entspricht den ausgewählten Filtern.",
       learn_more: "Mehr erfahren",
       go_there: "Route planen",
-      nav_google: "🧭 Google Maps",
-      nav_waze: "🧭 Waze",
-      nav_apple: "🧭 Karten",
       show_walking_path: "Fußweg anzeigen",
       exit_fullscreen: "Vollbild beenden",
       fullscreen_label: "Vollbild",
@@ -1048,9 +1039,6 @@
       recos_empty: "Geen enkele plaats komt overeen met de geselecteerde filters.",
       learn_more: "Meer informatie",
       go_there: "Route uitstippelen",
-      nav_google: "🧭 Google Maps",
-      nav_waze: "🧭 Waze",
-      nav_apple: "🧭 Kaarten",
       show_walking_path: "Wandelroute tonen",
       exit_fullscreen: "Volledig scherm sluiten",
       fullscreen_label: "Volledig scherm",
@@ -2169,23 +2157,24 @@ function syncUrl(replace = true) {
     'pharmacie'
   ];
 
-  // Liens d'itinéraire "Y aller" : on ne parie plus sur une seule appli détectée via
-  // l'user-agent (iOS n'a pas de notion de "navigateur par défaut" pilotable depuis le web --
-  // maps.apple.com ouvre toujours Apple Plans, jamais Waze même si c'est l'appli préférée de
-  // la personne). On propose donc explicitement plusieurs liens universels (Google Maps,
-  // Waze, Apple Plans) et c'est la personne qui choisit son appli en tapant dessus -- chacun
-  // ouvre l'appli correspondante si elle est installée, sinon la version web/App Store.
-  function buildGoToUrls(lat, lng, label) {
+  // Construit un lien d'itinéraire unique qui laisse le choix de l'appli de navigation sur
+  // mobile (Android : "geo:" fait proposer par le système toutes les applis installées
+  // capables de le gérer, Google Maps/Waze/etc. ; iOS : maps.apple.com est le lien qu'iOS
+  // ouvre avec l'appli de navigation par défaut), et ouvre Google Maps directement sur
+  // PC/TV où il n'y a de toute façon aucune appli native. Un seul lien "Y aller" (plusieurs
+  // liens distincts par appli surchargeait trop la fiche du lieu).
+  function buildGoToUrl(lat, lng, label) {
     const encLabel = encodeURIComponent(label || '');
-    const urls = {
-      google: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
-      waze: `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`
-    };
     const ua = (navigator.userAgent || '');
     const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-    // Apple Plans n'a de sens que sur iOS/macOS (le lien ne fait rien d'utile ailleurs).
-    if (isIOS) urls.apple = `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}`;
-    return urls;
+    const isAndroid = /Android/i.test(ua);
+    if (isAndroid) {
+      return `geo:${lat},${lng}?q=${lat},${lng}(${encLabel})`;
+    }
+    if (isIOS) {
+      return `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}`;
+    }
+    return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
   }
 
 function getPoiLinks(content, poi) {
@@ -2230,17 +2219,15 @@ function getPoiLinks(content, poi) {
       }
     }
 
-    // Liens "Y aller" : ajoutés systématiquement (en plus des liens existants, ex. "Plus
+    // Lien "Y aller" : ajouté systématiquement (en plus des liens existants, ex. "Plus
     // d'informations") pour les POI des catégories concernées (voir POI_NAV_FALLBACK_CATS
-    // ci-dessus), tant qu'ils n'y sont pas déjà. Plusieurs liens explicites (Google Maps,
-    // Waze, Apple Plans sur iOS) plutôt qu'un seul choisi automatiquement : c'est la
-    // personne qui choisit son appli de navigation, pas nous.
+    // ci-dessus), tant qu'il n'y en a pas déjà un.
     if (poi && poi.coords && getPoiCats(poi).some(c => POI_NAV_FALLBACK_CATS.includes(c))
-        && !links.some(l => l.label === I18N[state.lang].nav_google)) {
-      const navUrls = buildGoToUrls(poi.coords[0], poi.coords[1], content.name || '');
-      links.push({ url: navUrls.google, label: I18N[state.lang].nav_google });
-      links.push({ url: navUrls.waze, label: I18N[state.lang].nav_waze });
-      if (navUrls.apple) links.push({ url: navUrls.apple, label: I18N[state.lang].nav_apple });
+        && !links.some(l => l.label === I18N[state.lang].go_there)) {
+      links.push({
+        url: buildGoToUrl(poi.coords[0], poi.coords[1], content.name || ''),
+        label: I18N[state.lang].go_there
+      });
     }
 
     // Interception spécifique pour la catégorie logement (comme dans panorama ou backintime)
@@ -2314,8 +2301,7 @@ function getPoiLinks(content, poi) {
 			const appDomains = [
 			  'google.com/maps',
 			  'maps.google.com',
-			  'maps.apple.com',   // Lien "Y aller" Apple Plans (voir buildGoToUrls)
-			  'waze.com',         // Lien "Y aller" Waze (voir buildGoToUrls)
+			  'maps.apple.com',   // Lien "Y aller" iOS (voir buildGoToUrl)
 			  'tripadvisor.fr',       // Application TripAdvisor
 			  'tripadvisor.com',
 			  'airbnb.fr',            // Application Airbnb
