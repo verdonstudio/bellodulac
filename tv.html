@@ -62,12 +62,12 @@
 
   /* repeat(4, 1fr) fixe : 8 vignettes tiennent sur 2 lignes de 4, sans avoir a scroller,
      tout en laissant a chaque vignette plus de place qu'un alignement sur une seule ligne. */
-  .tile-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .tile-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 
   .tile {
-    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px;
-    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 18px;
-    padding: 12px 10px; text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px;
+    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 16px;
+    padding: 6px 8px; text-decoration: none; color: inherit;
     box-shadow: 0 4px 20px rgba(2,132,199,0.06);
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
   }
@@ -85,9 +85,9 @@
   /* padding reduit au minimum pour garder le QR code (80x80) a taille identique
      tout en reduisant l'espace total occupe par la vignette. */
   .tile .qr-box {
-    background: #ffffff; border-radius: 10px; padding: 5px;
+    background: #ffffff; border-radius: 10px; padding: 3px;
     display: flex; align-items: center; justify-content: center;
-    width: 90px; height: 90px;
+    width: 86px; height: 86px;
     border: 1px solid var(--c-border);
   }
   .tile .qr-box img { display: block; width: 80px; height: 80px; image-rendering: pixelated; }
