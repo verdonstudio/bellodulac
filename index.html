@@ -2157,24 +2157,75 @@ function syncUrl(replace = true) {
     'pharmacie'
   ];
 
-  // Construit un lien d'itinéraire unique qui laisse le choix de l'appli de navigation sur
-  // mobile (Android : "geo:" fait proposer par le système toutes les applis installées
-  // capables de le gérer, Google Maps/Waze/etc. ; iOS : maps.apple.com est le lien qu'iOS
-  // ouvre avec l'appli de navigation par défaut), et ouvre Google Maps directement sur
-  // PC/TV où il n'y a de toute façon aucune appli native. Un seul lien "Y aller" (plusieurs
-  // liens distincts par appli surchargeait trop la fiche du lieu).
-  function buildGoToUrl(lat, lng, label) {
+  // Distance a vol d'oiseau entre le logement courant et un POI, pour decider si le lien
+  // "Y aller" doit privilegier un itineraire pieton ou voiture (meme seuil que sur
+  // commerces.html : en dessous de 1,2 km, on suppose que la personne ira a pied).
+  function haversineMeters(lat1, lon1, lat2, lon2) {
+    const R = 6371000;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+  function isWalkingDistance(poi) {
+    const listing = LISTINGS && LISTINGS[state.listingId];
+    if (!listing || !listing.coords || !poi || !poi.coords) return false;
+    return haversineMeters(listing.coords.lat, listing.coords.lon, poi.coords[0], poi.coords[1]) <= 1200;
+  }
+
+  // Ouvre en cascade une liste de liens : chacun est tente a son tour, et si la page est
+  // toujours visible passe un court delai (l'appli correspondante n'est donc pas installee,
+  // iOS ne signale pas d'echec autrement), on tente le suivant. Le dernier lien de la liste
+  // est un repli universel (Apple Plans) qui fonctionne toujours.
+  window.__navChains = {};
+  let navChainSeq = 0;
+  window.openNavChain = function (urls) {
+    if (!Array.isArray(urls) || !urls.length) return;
+    let i = 0;
+    function tryNext() {
+      if (i >= urls.length - 1) {
+        window.location.href = urls[urls.length - 1];
+        return;
+      }
+      let left = false;
+      const markLeft = () => { left = true; };
+      document.addEventListener('visibilitychange', markLeft, { once: true });
+      window.addEventListener('pagehide', markLeft, { once: true });
+      window.location.href = urls[i];
+      setTimeout(() => {
+        document.removeEventListener('visibilitychange', markLeft);
+        window.removeEventListener('pagehide', markLeft);
+        if (!left) { i++; tryNext(); }
+      }, 600);
+    }
+    tryNext();
+  };
+
+  // Construit le(s) lien(s) d'itinéraire "Y aller". Android : "geo:" fait proposer par le
+  // système toutes les applis installées capables de le gérer (Google Maps/Waze/etc.) -- un
+  // seul lien suffit. iOS n'a en revanche aucun équivalent système ("maps.apple.com" ouvre
+  // toujours Apple Plans, jamais l'appli preferee de la personne) : on essaie donc en
+  // cascade les schemas d'URL propres a chaque appli (Waze puis Google Maps en voiture,
+  // Google Maps puis Apple Plans a pied), avec Apple Plans en tout dernier repli garanti.
+  // PC/TV : Google Maps directement, seule option utilisable sans appli native.
+  function buildGoToUrl(lat, lng, label, walking) {
     const encLabel = encodeURIComponent(label || '');
     const ua = (navigator.userAgent || '');
     const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
     const isAndroid = /Android/i.test(ua);
     if (isAndroid) {
-      return `geo:${lat},${lng}?q=${lat},${lng}(${encLabel})`;
+      return { href: `geo:${lat},${lng}?q=${lat},${lng}(${encLabel})` };
     }
     if (isIOS) {
-      return `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}`;
+      const appleUrl = `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}&dirflg=${walking ? 'w' : 'd'}`;
+      const gmapsUrl = `comgooglemaps://?daddr=${lat},${lng}&q=${encLabel}&directionsmode=${walking ? 'walking' : 'driving'}`;
+      const wazeUrl = `waze://?ll=${lat},${lng}&navigate=yes`;
+      const chain = walking ? [gmapsUrl, appleUrl] : [wazeUrl, gmapsUrl, appleUrl];
+      return { href: appleUrl, chain };
     }
-    return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    return { href: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}` };
   }
 
 function getPoiLinks(content, poi) {
@@ -2224,9 +2275,11 @@ function getPoiLinks(content, poi) {
     // ci-dessus), tant qu'il n'y en a pas déjà un.
     if (poi && poi.coords && getPoiCats(poi).some(c => POI_NAV_FALLBACK_CATS.includes(c))
         && !links.some(l => l.label === I18N[state.lang].go_there)) {
+      const nav = buildGoToUrl(poi.coords[0], poi.coords[1], content.name || '', isWalkingDistance(poi));
       links.push({
-        url: buildGoToUrl(poi.coords[0], poi.coords[1], content.name || ''),
-        label: I18N[state.lang].go_there
+        url: nav.href,
+        label: I18N[state.lang].go_there,
+        chain: nav.chain
       });
     }
 
@@ -2246,7 +2299,8 @@ function getPoiLinks(content, poi) {
     // Applique l'URL construite de manière sécurisée
     return links.map(l => ({
       url: buildFullUrl(l.url),
-      label: l.label
+      label: l.label,
+      chain: l.chain
     }));
   }
 
@@ -2318,7 +2372,17 @@ function getPoiLinks(content, poi) {
 			const target = (isInternal || isApp) ? '_self' : '_blank';
 			const rel = (isInternal || isApp) ? '' : 'rel="noopener"';
 
-			return `<a class="ov-popup__link" href="${l.url}" target="${target}" ${rel} style="color: white; background-color: ${catColor};">${l.label || defaultLabel}</a>`;
+			// Lien "Y aller" iOS (voir buildGoToUrl) : plusieurs schemas d'appli sont tentes en
+			// cascade avant le repli Apple Plans -- l.url reste le href (utile si le JS ne
+			// s'execute pas), mais le clic passe par openNavChain.
+			let chainAttr = '';
+			if (Array.isArray(l.chain) && l.chain.length) {
+			  const chainId = 'nav' + (navChainSeq++);
+			  window.__navChains[chainId] = l.chain;
+			  chainAttr = ` onclick="window.openNavChain(window.__navChains['${chainId}']); return false;"`;
+			}
+
+			return `<a class="ov-popup__link" href="${l.url}" target="${target}" ${rel}${chainAttr} style="color: white; background-color: ${catColor};">${l.label || defaultLabel}</a>`;
         }).join('')}</div>`
       : '';
     return `<div class="ov-popup">${img}<div class="ov-popup__body">
