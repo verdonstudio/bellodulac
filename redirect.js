@@ -214,6 +214,7 @@ const reservations = {
         "martel": "index.html?lang=FR&logement=moustiers&edatestart=2026-10-16&edateend=2026-10-19&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
     },
     "default": {
+        "today": "highlights.html?from=evenements&showevents=today&showpois=today",
         "evenements": "evenements.html?lang=FR&showevents=today",
         "map": "index.html?lang=FR",
         "highlights": "highlights.html?lang=FR&showevents=today&showpois=today&from=evenements",
