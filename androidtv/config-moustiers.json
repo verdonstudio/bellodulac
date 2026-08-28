@@ -28,6 +28,16 @@
       }
     },
     {
+      "key": "map",
+      "type": "qr",
+      "desc": {
+        "FR": "Plus de 130 lieux autour du lac et des villages.",
+        "EN": "Over 130 spots around the lake and villages.",
+        "DE": "Über 130 Orte rund um den See und die Dörfer.",
+        "NL": "Meer dan 130 plekken rond het meer en de dorpen."
+      }
+    },
+    {
       "key": "infos",
       "type": "qr_and_link",
       "defaultUrl": "infos.html",
