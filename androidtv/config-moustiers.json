@@ -2,7 +2,17 @@
   "url": "https://bellodulac.vercel.app/video.html?youtube=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DyKsw_kV7RGs&logement=moustiers&next=tv.html%3Flogement%3Dmoustiers",
 
   "tiles": [
-    { "key": "today", "type": "qr_and_link" },
+    { "key": "today",
+      "type": "qr_and_link",
+      "icon": "☀️",
+      "title": { "FR": "Aujourd'hui", "EN": "Today", "DE": "Heute", "NL": "Vandaag" },
+      "desc": {
+        "FR": "Plus de 130 lieux autour du lac et des villages.",
+        "EN": "Over 130 spots around the lake and villages.",
+        "DE": "Über 130 Orte rund um den See und die Dörfer.",
+        "NL": "Meer dan 130 plekken rond het meer en de dorpen."
+      }
+    },
     { "key": "highlights", "type": "qr_and_link" },
     { "key": "evenements", "type": "qr_and_link" },
     {
