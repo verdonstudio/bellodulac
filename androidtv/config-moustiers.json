@@ -2,8 +2,9 @@
   "url": "https://bellodulac.vercel.app/video.html?youtube=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DyKsw_kV7RGs&logement=moustiers&next=tv.html%3Flogement%3Dmoustiers",
 
   "tiles": [
-    { "key": "evenements", "type": "qr_and_link" },
+    { "key": "today", "type": "qr_and_link" },
     { "key": "highlights", "type": "qr_and_link" },
+    { "key": "evenements", "type": "qr_and_link" },
     {
       "key": "map",
       "type": "qr",
