@@ -165,7 +165,7 @@
 
 <script>
 (function () {
-    const state = { lang: 'FR', logement: 'salles6' };
+    const state = { lang: 'FR', logement: 'salles6', arrivee: null, depart: null };
 
     const LOGO_DATA = {
         moustiers: { src: "https://bellodulac.netlify.app/images/bell-etoile-logo.png" },
@@ -235,19 +235,28 @@
         if (rawLang && I18N[rawLang.toUpperCase()]) state.lang = rawLang.toUpperCase();
         const rawLogement = p.get('logement') || p.get('listing') || p.get('l') || p.get('id');
         state.logement = resolveLogement(rawLogement);
+        // Dates de sejour (arrivee/depart) transmises par tv.html (voir withResolvedLangAndLogement) --
+        // on les recupere ici pour pouvoir les retransmettre a leur tour dans les QR code de chaque
+        // commerce, afin que le contexte complet de la reservation suive le voyageur jusqu'au POI.
+        state.arrivee = p.get('arrivee') || null;
+        state.depart = p.get('depart') || null;
+    }
+
+    function withReservationParams(p) {
+        p.set('logement', state.logement);
+        p.set('lang', state.lang);
+        if (state.arrivee) p.set('arrivee', state.arrivee);
+        if (state.depart) p.set('depart', state.depart);
+        return p;
     }
 
     function buildBackUrl() {
-        const p = new URLSearchParams();
-        p.set('lang', state.lang);
-        p.set('logement', state.logement);
+        const p = withReservationParams(new URLSearchParams());
         return `index.html?${p.toString()}`;
     }
 
     function poiIndexUrl(poi) {
-        const p = new URLSearchParams();
-        p.set('logement', state.logement);
-        p.set('lang', state.lang);
+        const p = withReservationParams(new URLSearchParams());
         p.set('poi', poi.id);
         return `index.html?${p.toString()}`;
     }

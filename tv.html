@@ -271,14 +271,23 @@
 
   const todaysGuestName = todaysReservation ? todaysReservation.nom : null;
 
+  // Dates de sejour (arrivee/depart) du voyageur du jour, si detecte -- a transmettre elles
+  // aussi dans les URL/QR code des vignettes (langue + logement + dates), pour que toute page
+  // en aval (ex. commerces.html) puisse reconstruire le contexte complet de la reservation.
+  const stayArrivee = (todaysReservation && todaysReservation.arrivee) || null;
+  const stayDepart = (todaysReservation && todaysReservation.depart) || null;
+
   // Reconstruit une URL (relative ou absolue, venant de redirect.js ou de la config Android) en
-  // s'assurant qu'elle porte bien la langue resolue ci-dessus et le logement courant.
+  // s'assurant qu'elle porte bien la langue resolue ci-dessus, le logement courant, et -- quand
+  // elles sont connues -- les dates d'arrivee/depart de la reservation du jour.
   function withResolvedLangAndLogement(url) {
     if (!url) return null;
     const [path, qs] = url.split('?');
     const p = new URLSearchParams(qs || '');
     p.set('lang', lang);
     if (!p.get('logement')) p.set('logement', logementId);
+    if (stayArrivee && !p.get('arrivee')) p.set('arrivee', stayArrivee);
+    if (stayDepart && !p.get('depart')) p.set('depart', stayDepart);
     return `${path}?${p.toString()}`;
   }
 
