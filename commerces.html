@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script src="analytics.js"></script>
 <script src="pois.js"></script>
+<script src="logements.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -77,6 +78,7 @@
         font-size: 46px; background: var(--c-primary-soft) center/cover no-repeat;
     }
     .tile .tile-title { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 15px; line-height: 1.25; color: var(--c-ink); }
+    .tile .tile-distance { font-size: 12px; font-weight: 600; color: var(--c-primary-2); }
     .tile .tile-desc { font-size: 11.5px; color: var(--c-muted); line-height: 1.3; }
 
     .tile .qr-box {
@@ -110,6 +112,15 @@
     .qr-modal__qr-box { background: #fff; border-radius: 20px; padding: 20px; }
     .qr-modal__qr-box img { display: block; width: min(60vh, 420px); height: min(60vh, 420px); image-rendering: pixelated; }
     .qr-modal__caption { font-size: 15px; color: var(--c-muted); text-align: center; }
+    /* Lien "Y aller" : ouvre l'appli de navigation choisie par l'utilisateur (voir
+       buildGoToUrl), pas systematiquement Google Maps. */
+    .qr-modal__go {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 10px 22px; border-radius: 999px;
+        background: var(--c-primary); color: #fff; font-weight: 700; font-size: 14px;
+        text-decoration: none; transition: background 0.2s ease;
+    }
+    .qr-modal__go:hover, .qr-modal__go:focus { background: var(--c-primary-2); outline: none; }
 
     #empty-state { display: none; text-align: center; padding: 40px 16px; color: var(--c-muted); font-size: 14px; }
     #empty-state.visible { display: block; }
@@ -160,6 +171,7 @@
         <div id="qr-modal-title" class="qr-modal__title"></div>
         <div class="qr-modal__qr-box"><img id="qr-modal-img" alt=""></div>
         <div id="qr-modal-caption" class="qr-modal__caption"></div>
+        <a id="qr-modal-go" class="qr-modal__go" href="#" rel="noopener">🧭 <span id="qr-modal-go-label"></span></a>
     </div>
 </div>
 
@@ -193,28 +205,36 @@
             pageTitle: "Commerces & services",
             pageSubtitle: "Les commerces et services utiles autour de votre logement.",
             empty: "Aucun commerce référencé pour le moment.",
-            scan: "Scannez avec votre téléphone"
+            scan: "Scannez avec votre téléphone",
+            goThere: "Y aller",
+            min: "min"
         },
         EN: {
             back: "Back", label: "Shops & services",
             pageTitle: "Shops & services",
             pageSubtitle: "Useful shops and services near your accommodation.",
             empty: "No shop listed yet.",
-            scan: "Scan with your phone"
+            scan: "Scan with your phone",
+            goThere: "Get directions",
+            min: "min"
         },
         DE: {
             back: "Zurück", label: "Geschäfte & Dienstleistungen",
             pageTitle: "Geschäfte & Dienstleistungen",
             pageSubtitle: "Nützliche Geschäfte und Dienstleistungen in der Nähe Ihrer Unterkunft.",
             empty: "Noch keine Geschäfte gelistet.",
-            scan: "Scannen Sie mit Ihrem Handy"
+            scan: "Scannen Sie mit Ihrem Handy",
+            goThere: "Route planen",
+            min: "Min."
         },
         NL: {
             back: "Terug", label: "Winkels & diensten",
             pageTitle: "Winkels & diensten",
             pageSubtitle: "Nuttige winkels en diensten in de buurt van uw accommodatie.",
             empty: "Nog geen winkels vermeld.",
-            scan: "Scan met uw telefoon"
+            scan: "Scan met uw telefoon",
+            goThere: "Routebeschrijving",
+            min: "min"
         }
     };
 
@@ -263,6 +283,54 @@
 
     function poiContent(poi) {
         return poi[state.lang.toLowerCase()] || poi.fr;
+    }
+
+    // -------- Distance / temps depuis le logement (a vol d'oiseau) --------
+    // Meme logique que le lien "Y aller" de index.html : on estime un temps de trajet
+    // indicatif sans dependre d'une API de routage externe. En dessous de 1,2 km on
+    // suppose un trajet a pied (~4,5 km/h), au-dela un trajet en voiture (~45 km/h,
+    // vitesse moyenne raisonnable sur les petites routes autour du lac).
+    function haversineKm(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) ** 2 +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon / 2) ** 2;
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+    function homeCoords() {
+        const listing = window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings && window.LOGEMENTS_DATA.listings[state.logement];
+        return listing && listing.coords ? { lat: listing.coords.lat, lng: listing.coords.lon } : null;
+    }
+    function distanceInfo(poi, home) {
+        if (!home || !poi.coords) return null;
+        const km = haversineKm(home.lat, home.lng, poi.coords[0], poi.coords[1]);
+        const speedKmh = km <= 1.2 ? 4.5 : 45;
+        const minutes = Math.max(1, Math.round((km / speedKmh) * 60));
+        return { km, minutes };
+    }
+    function formatDistanceInfo(info) {
+        if (!info) return '';
+        const L = I18N[state.lang];
+        const kmLabel = info.km < 10 ? info.km.toFixed(1).replace('.', ',') : Math.round(info.km).toString();
+        return `${kmLabel} km · ${info.minutes} ${L.min}`;
+    }
+
+    // Construit un lien d'itineraire qui laisse le choix de l'appli de navigation sur mobile
+    // (Android : "geo:" fait proposer par le systeme toutes les applis installees capables de
+    // le gerer, Google Maps/Waze/etc. ; iOS : maps.apple.com est le lien "universel" qu'iOS
+    // redirige vers l'appli de navigation par defaut choisie par l'utilisateur), et ouvre
+    // Google Maps directement sur PC/TV ou il n'y a de toute facon aucune appli native.
+    // Identique a buildGoToUrl dans index.html.
+    function buildGoToUrl(lat, lng, label) {
+        const encLabel = encodeURIComponent(label || '');
+        const ua = (navigator.userAgent || '');
+        const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+        const isAndroid = /Android/i.test(ua);
+        if (isAndroid) return `geo:${lat},${lng}?q=${lat},${lng}(${encLabel})`;
+        if (isIOS) return `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}`;
+        return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
     }
 
     function poiCategoryInfo(poi) {
@@ -325,11 +393,13 @@
         }
     }
 
-    function openQrModal(titleText, url, captionText) {
+    function openQrModal(titleText, url, captionText, goUrl, goLabel) {
         const modal = $('#qr-modal');
         const img = $('#qr-modal-img');
         const titleEl = $('#qr-modal-title');
         const captionEl = $('#qr-modal-caption');
+        const goEl = $('#qr-modal-go');
+        const goLabelEl = $('#qr-modal-go-label');
         if (!modal || !img) return;
         const dataUrl = qrDataUrl(toAbsoluteUrl(url), 10);
         if (!dataUrl) return;
@@ -337,6 +407,17 @@
         img.alt = titleText || '';
         titleEl.textContent = titleText || '';
         captionEl.textContent = captionText || '';
+        // Lien "Y aller" : ouvre l'appli de navigation choisie par l'utilisateur (voir
+        // buildGoToUrl), en plus du QR code qui renvoie vers la fiche du lieu sur la carte.
+        if (goEl) {
+            if (goUrl) {
+                goEl.href = goUrl;
+                goEl.style.display = 'inline-flex';
+                if (goLabelEl) goLabelEl.textContent = goLabel || '';
+            } else {
+                goEl.style.display = 'none';
+            }
+        }
         modal.style.display = 'flex';
         const closeBtn = $('#qr-modal-close');
         if (closeBtn) closeBtn.focus();
@@ -360,25 +441,31 @@
 
         const pois = (window.POIS || []).filter(p => Array.isArray(p.shops) && p.shops.includes(state.logement));
 
-        const catOrder = Object.keys(window.POI_CATEGORIES || {});
-        pois.sort((a, b) => {
-            const ca = catOrder.indexOf(a.cat), cb = catOrder.indexOf(b.cat);
-            if (ca !== cb) return ca - cb;
-            const na = poiContent(a).name || '', nb = poiContent(b).name || '';
+        // Distance/temps depuis le logement courant, puis tri par distance croissante
+        // (au lieu du tri par categorie utilise precedemment).
+        const home = homeCoords();
+        const withDistance = pois.map(poi => ({ poi, info: distanceInfo(poi, home) }));
+        withDistance.sort((a, b) => {
+            if (a.info && b.info) return a.info.km - b.info.km;
+            if (a.info) return -1;
+            if (b.info) return 1;
+            const na = poiContent(a.poi).name || '', nb = poiContent(b.poi).name || '';
             return na.localeCompare(nb);
         });
 
-        if (!pois.length) {
+        if (!withDistance.length) {
             empty.classList.add('visible');
             return;
         }
         empty.classList.remove('visible');
 
-        pois.forEach(poi => {
+        withDistance.forEach(({ poi, info }) => {
             const content = poiContent(poi);
             const catInfo = poiCategoryInfo(poi);
             const url = poiIndexUrl(poi);
             const dataUrl = qrDataUrl(toAbsoluteUrl(url), 4);
+            const distanceText = formatDistanceInfo(info);
+            const goUrl = poi.coords ? buildGoToUrl(poi.coords[0], poi.coords[1], content.name || '') : null;
 
             // Selection plus evidente (comme sur tv.html) : l'image du commerce remplace
             // l'emoji generique de la categorie quand elle est disponible.
@@ -392,10 +479,11 @@
             tile.innerHTML = `
                 <div class="tile-icon"${iconStyle}>${iconContent}</div>
                 <div class="tile-title">${content.name}</div>
+                ${distanceText ? `<div class="tile-distance">${distanceText}</div>` : ''}
                 <div class="qr-box">${dataUrl ? `<img src="${dataUrl}" alt="${content.name}">` : '<div class="qr-skeleton"></div>'}</div>
                 <div class="tile-desc">${L.scan}</div>
             `;
-            const openModal = () => openQrModal(content.name, url, L.scan);
+            const openModal = () => openQrModal(content.name, url, L.scan, goUrl, L.goThere);
             tile.addEventListener('click', openModal);
             tile.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(); } });
             grid.appendChild(tile);
