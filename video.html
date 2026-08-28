@@ -50,6 +50,15 @@
             margin-top: 56px;
             height: calc(100dvh - 56px);
         }
+
+        /* Mode TV (video d'intro au lancement de l'app, "next" fourni) : plein ecran force --
+           topbar masquee (le bouton Retour est redondant avec "Passer l'intro", deja present
+           en superposition) et la video occupe alors 100% de la hauteur, sans bande reservee. */
+        body.tv-intro-fullscreen .topbar { display: none; }
+        body.tv-intro-fullscreen #video-viewport {
+            margin-top: 0;
+            height: 100dvh;
+        }
     </style>
 </head>
 <body class="h-[100dvh] w-screen relative">
@@ -248,6 +257,9 @@
             const langSelect = document.getElementById('lang-select');
             if (state.nextUrl) {
                 langSelect.classList.add('hidden');
+                // Plein ecran force : la topbar (Retour + titre) est masquee, redondante avec
+                // "Passer l'intro" deja affiche en superposition (voir CSS body.tv-intro-fullscreen).
+                document.body.classList.add('tv-intro-fullscreen');
             } else {
                 langSelect.value = state.lang;
             }
