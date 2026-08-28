@@ -12641,5 +12641,73 @@ window.POIS = [
       "url": "https://www.moustiers.fr/en/fiche/le-petit-train-des-alpes-3/",
       "urlLabel": "Meer informatie"
     }
+  },
+  {
+    "id": "commerce-boulangerie-michon",
+    "cat": "commerce",
+    "coords": [
+      43.84705,
+      6.22146
+    ],
+    "stars": 1,
+    "img": "https://bellodulac.vercel.app/images/moustiers_boulangerie.jpeg",
+    "fr": {
+      "name": "Boulangerie Le Michon",
+      "desc": "Type : Boulangerie / Pâtisserie. Au cœur de Moustiers-Sainte-Marie, idéale pour acheter votre pain frais, vos viennoiseries pour le petit-déjeuner ou de quoi préparer vos pique-niques avant de partir en balade.",
+      "url": "https://www.google.com/maps/place/Le+Michon/@43.8471046,6.2215214,17z/data=!3m1!4b1!4m6!3m5!1s0x12cbee0be116eaaf:0xe57e9a0725d79001!8m2!3d43.8471046!4d6.2215214!16s%2Fg%2F11fx7nd1nm?entry=ttu&g_ep=EgoyMDI2MDgyNS4wIKXMDSoASAFQAw%3D%3D",
+      "urlLabel": "Voir sur la carte"
+    },
+    "en": {
+      "name": "Le Michon Bakery",
+      "desc": "Type: Bakery / Pastry shop. In the heart of Moustiers-Sainte-Marie, ideal for buying fresh bread, breakfast pastries, or picnic supplies before heading out to explore.",
+      "url": "https://www.google.com/maps/place/Le+Michon/@43.8471046,6.2215214,17z/data=!3m1!4b1!4m6!3m5!1s0x12cbee0be116eaaf:0xe57e9a0725d79001!8m2!3d43.8471046!4d6.2215214!16s%2Fg%2F11fx7nd1nm?entry=ttu&g_ep=EgoyMDI2MDgyNS4wIKXMDSoASAFQAw%3D%3D",
+      "urlLabel": "View on map"
+    },
+    "de": {
+      "name": "Bäckerei Le Michon",
+      "desc": "Typ: Bäckerei / Konditorei. Mitten in Moustiers-Sainte-Marie gelegen, ideal um frisches Brot, Frühstücksgebäck oder Proviant für ein Picknick zu kaufen, bevor man auf Entdeckungstour geht.",
+      "url": "https://www.google.com/maps/place/Le+Michon/@43.8471046,6.2215214,17z/data=!3m1!4b1!4m6!3m5!1s0x12cbee0be116eaaf:0xe57e9a0725d79001!8m2!3d43.8471046!4d6.2215214!16s%2Fg%2F11fx7nd1nm?entry=ttu&g_ep=EgoyMDI2MDgyNS4wIKXMDSoASAFQAw%3D%3D",
+      "urlLabel": "Auf der Karte ansehen"
+    },
+    "nl": {
+      "name": "Bakkerij Le Michon",
+      "desc": "Type: Bakkerij / Banketbakkerij. In het hart van Moustiers-Sainte-Marie, ideaal om vers brood, ontbijtgebak of picknickproviand te kopen voordat je op ontdekking gaat.",
+      "url": "https://www.google.com/maps/place/Le+Michon/@43.8471046,6.2215214,17z/data=!3m1!4b1!4m6!3m5!1s0x12cbee0be116eaaf:0xe57e9a0725d79001!8m2!3d43.8471046!4d6.2215214!16s%2Fg%2F11fx7nd1nm?entry=ttu&g_ep=EgoyMDI2MDgyNS4wIKXMDSoASAFQAw%3D%3D",
+      "urlLabel": "Bekijk op de kaart"
+    }
+  },
+  {
+    "id": "commerce-boucherie-bondil",
+    "cat": "commerce",
+    "coords": [
+      43.847317,
+      6.22142
+    ],
+    "stars": 1,
+    "img": "https://bellodulac.vercel.app/images/moustiers_boucherie.jpeg",
+    "fr": {
+      "name": "Maison Bondil",
+      "desc": "Type : Boucherie / Charcuterie / Traiteur. Boucherie familiale depuis cinq générations, installée dans les arcades en pierres de la rue du Courtil. Spécialités de Provence, charcuterie de pays, plats cuisinés et conserves maison.",
+      "url": "https://www.maison-bondil.fr/",
+      "urlLabel": "Plus d'informations"
+    },
+    "en": {
+      "name": "Maison Bondil",
+      "desc": "Type: Butcher / Delicatessen / Caterer. Family-run butcher's shop for five generations, set in the stone arcades of Rue du Courtil. Provençal specialities, local charcuterie, ready meals and homemade preserves.",
+      "url": "https://www.maison-bondil.fr/",
+      "urlLabel": "More details"
+    },
+    "de": {
+      "name": "Maison Bondil",
+      "desc": "Typ: Metzgerei / Feinkost / Traiteur. Seit fünf Generationen familiengeführte Metzgerei in den Steinarkaden der Rue du Courtil. Provenzalische Spezialitäten, regionale Wurstwaren, fertige Gerichte und hausgemachte Konserven.",
+      "url": "https://www.maison-bondil.fr/",
+      "urlLabel": "Weitere Informationen"
+    },
+    "nl": {
+      "name": "Maison Bondil",
+      "desc": "Type: Slagerij / Fijnkost / Traiteur. Al vijf generaties een familieslagerij, gevestigd in de stenen arcaden van de Rue du Courtil. Provençaalse specialiteiten, lokale charcuterie, kant-en-klare gerechten en zelfgemaakte conserven.",
+      "url": "https://www.maison-bondil.fr/",
+      "urlLabel": "Meer informatie"
+    }
   }
 ];

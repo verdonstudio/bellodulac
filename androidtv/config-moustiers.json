@@ -7,10 +7,10 @@
       "icon": "☀️",
       "title": { "FR": "Aujourd'hui", "EN": "Today", "DE": "Heute", "NL": "Vandaag" },
       "desc": {
-        "FR": "Plus de 130 lieux autour du lac et des villages.",
-        "EN": "Over 130 spots around the lake and villages.",
-        "DE": "Über 130 Orte rund um den See und die Dörfer.",
-        "NL": "Meer dan 130 plekken rond het meer en de dorpen."
+        "FR": "Les activités prévues aujourd'hui dans le village et aux alentours",
+        "EN": "Today's planned activities in the village and surrounding area",
+        "DE": "Die für heute geplanten Aktivitäten im Dorf und der Umgebung",
+        "NL": "De geplande activiteiten van vandaag in het dorp en de omgeving"
       }
     },
     { "key": "highlights", "type": "qr_and_link" },
