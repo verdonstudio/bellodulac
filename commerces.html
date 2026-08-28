@@ -112,15 +112,6 @@
     .qr-modal__qr-box { background: #fff; border-radius: 20px; padding: 20px; }
     .qr-modal__qr-box img { display: block; width: min(60vh, 420px); height: min(60vh, 420px); image-rendering: pixelated; }
     .qr-modal__caption { font-size: 15px; color: var(--c-muted); text-align: center; }
-    /* Lien "Y aller" : ouvre l'appli de navigation choisie par l'utilisateur (voir
-       buildGoToUrl), pas systematiquement Google Maps. */
-    .qr-modal__go {
-        display: inline-flex; align-items: center; gap: 8px;
-        padding: 10px 22px; border-radius: 999px;
-        background: var(--c-primary); color: #fff; font-weight: 700; font-size: 14px;
-        text-decoration: none; transition: background 0.2s ease;
-    }
-    .qr-modal__go:hover, .qr-modal__go:focus { background: var(--c-primary-2); outline: none; }
 
     #empty-state { display: none; text-align: center; padding: 40px 16px; color: var(--c-muted); font-size: 14px; }
     #empty-state.visible { display: block; }
@@ -171,7 +162,6 @@
         <div id="qr-modal-title" class="qr-modal__title"></div>
         <div class="qr-modal__qr-box"><img id="qr-modal-img" alt=""></div>
         <div id="qr-modal-caption" class="qr-modal__caption"></div>
-        <a id="qr-modal-go" class="qr-modal__go" href="#" rel="noopener">🧭 <span id="qr-modal-go-label"></span></a>
     </div>
 </div>
 
@@ -206,7 +196,6 @@
             pageSubtitle: "Les commerces et services utiles autour de votre logement.",
             empty: "Aucun commerce référencé pour le moment.",
             scan: "Scannez avec votre téléphone",
-            goThere: "Y aller",
             min: "min"
         },
         EN: {
@@ -215,7 +204,6 @@
             pageSubtitle: "Useful shops and services near your accommodation.",
             empty: "No shop listed yet.",
             scan: "Scan with your phone",
-            goThere: "Get directions",
             min: "min"
         },
         DE: {
@@ -224,7 +212,6 @@
             pageSubtitle: "Nützliche Geschäfte und Dienstleistungen in der Nähe Ihrer Unterkunft.",
             empty: "Noch keine Geschäfte gelistet.",
             scan: "Scannen Sie mit Ihrem Handy",
-            goThere: "Route planen",
             min: "Min."
         },
         NL: {
@@ -233,7 +220,6 @@
             pageSubtitle: "Nuttige winkels en diensten in de buurt van uw accommodatie.",
             empty: "Nog geen winkels vermeld.",
             scan: "Scan met uw telefoon",
-            goThere: "Routebeschrijving",
             min: "min"
         }
     };
@@ -304,6 +290,12 @@
         return listing && listing.coords ? { lat: listing.coords.lat, lng: listing.coords.lon } : null;
     }
     function distanceInfo(poi, home) {
+        // Certains trajets (ex. Moustiers <-> Les Salles-sur-Verdon, en passant par le
+        // barrage du Galetas, ou Moustiers <-> Riez) sont bien plus longs par la route qu'a
+        // vol d'oiseau (relief, lac). Quand une valeur reelle a ete verifiee pour ce
+        // logement, on l'utilise en priorite plutot que l'estimation a vol d'oiseau.
+        const override = poi.distanceOverride && poi.distanceOverride[state.logement];
+        if (override) return { km: override.km, minutes: override.min };
         if (!home || !poi.coords) return null;
         const km = haversineKm(home.lat, home.lng, poi.coords[0], poi.coords[1]);
         const speedKmh = km <= 1.2 ? 4.5 : 45;
@@ -316,22 +308,9 @@
         const kmLabel = info.km < 10 ? info.km.toFixed(1).replace('.', ',') : Math.round(info.km).toString();
         return `${kmLabel} km · ${info.minutes} ${L.min}`;
     }
-
-    // Construit un lien d'itineraire qui laisse le choix de l'appli de navigation sur mobile
-    // (Android : "geo:" fait proposer par le systeme toutes les applis installees capables de
-    // le gerer, Google Maps/Waze/etc. ; iOS : maps.apple.com est le lien "universel" qu'iOS
-    // redirige vers l'appli de navigation par defaut choisie par l'utilisateur), et ouvre
-    // Google Maps directement sur PC/TV ou il n'y a de toute facon aucune appli native.
-    // Identique a buildGoToUrl dans index.html.
-    function buildGoToUrl(lat, lng, label) {
-        const encLabel = encodeURIComponent(label || '');
-        const ua = (navigator.userAgent || '');
-        const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-        const isAndroid = /Android/i.test(ua);
-        if (isAndroid) return `geo:${lat},${lng}?q=${lat},${lng}(${encLabel})`;
-        if (isIOS) return `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}`;
-        return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-    }
+    // Note : le lien "Y aller" (choix libre de l'appli de navigation) vit desormais sur la
+    // fiche du POI elle-meme (index.html, cf. buildGoToUrl + POI_NAV_FALLBACK_CATS), pas ici --
+    // le QR code de cette page renvoie justement vers cette fiche.
 
     function poiCategoryInfo(poi) {
         const key = poi.cat;
@@ -393,13 +372,11 @@
         }
     }
 
-    function openQrModal(titleText, url, captionText, goUrl, goLabel) {
+    function openQrModal(titleText, url, captionText) {
         const modal = $('#qr-modal');
         const img = $('#qr-modal-img');
         const titleEl = $('#qr-modal-title');
         const captionEl = $('#qr-modal-caption');
-        const goEl = $('#qr-modal-go');
-        const goLabelEl = $('#qr-modal-go-label');
         if (!modal || !img) return;
         const dataUrl = qrDataUrl(toAbsoluteUrl(url), 10);
         if (!dataUrl) return;
@@ -407,17 +384,6 @@
         img.alt = titleText || '';
         titleEl.textContent = titleText || '';
         captionEl.textContent = captionText || '';
-        // Lien "Y aller" : ouvre l'appli de navigation choisie par l'utilisateur (voir
-        // buildGoToUrl), en plus du QR code qui renvoie vers la fiche du lieu sur la carte.
-        if (goEl) {
-            if (goUrl) {
-                goEl.href = goUrl;
-                goEl.style.display = 'inline-flex';
-                if (goLabelEl) goLabelEl.textContent = goLabel || '';
-            } else {
-                goEl.style.display = 'none';
-            }
-        }
         modal.style.display = 'flex';
         const closeBtn = $('#qr-modal-close');
         if (closeBtn) closeBtn.focus();
@@ -465,7 +431,6 @@
             const url = poiIndexUrl(poi);
             const dataUrl = qrDataUrl(toAbsoluteUrl(url), 4);
             const distanceText = formatDistanceInfo(info);
-            const goUrl = poi.coords ? buildGoToUrl(poi.coords[0], poi.coords[1], content.name || '') : null;
 
             // Selection plus evidente (comme sur tv.html) : l'image du commerce remplace
             // l'emoji generique de la categorie quand elle est disponible.
@@ -483,7 +448,7 @@
                 <div class="qr-box">${dataUrl ? `<img src="${dataUrl}" alt="${content.name}">` : '<div class="qr-skeleton"></div>'}</div>
                 <div class="tile-desc">${L.scan}</div>
             `;
-            const openModal = () => openQrModal(content.name, url, L.scan, goUrl, L.goThere);
+            const openModal = () => openQrModal(content.name, url, L.scan);
             tile.addEventListener('click', openModal);
             tile.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(); } });
             grid.appendChild(tile);

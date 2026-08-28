@@ -732,7 +732,17 @@ window.POIS = [
       "moustiers",
       "salles6",
       "salles8"
-    ]
+    ],
+    "distanceOverride": {
+      "salles6": {
+        "km": 14,
+        "min": 15
+      },
+      "salles8": {
+        "km": 14,
+        "min": 15
+      }
+    }
   },
   {
     "id": "trottinette-salles",
@@ -2656,7 +2666,13 @@ window.POIS = [
       "moustiers",
       "salles6",
       "salles8"
-    ]
+    ],
+    "distanceOverride": {
+      "moustiers": {
+        "km": 14,
+        "min": 15
+      }
+    }
   },
   {
     "id": "relais-salles",
@@ -2732,7 +2748,13 @@ window.POIS = [
       "moustiers",
       "salles6",
       "salles8"
-    ]
+    ],
+    "distanceOverride": {
+      "moustiers": {
+        "km": 14,
+        "min": 15
+      }
+    }
   },
   {
     "id": "laverie-salles",
@@ -2808,7 +2830,13 @@ window.POIS = [
       "moustiers",
       "salles6",
       "salles8"
-    ]
+    ],
+    "distanceOverride": {
+      "moustiers": {
+        "km": 14,
+        "min": 15
+      }
+    }
   },
   {
     "id": "laverie-riez",
@@ -2882,7 +2910,13 @@ window.POIS = [
     "scale": 0.8,
     "shops": [
       "moustiers"
-    ]
+    ],
+    "distanceOverride": {
+      "moustiers": {
+        "km": 17,
+        "min": 20
+      }
+    }
   },
   {
     "id": "station-aups",
@@ -2925,7 +2959,17 @@ window.POIS = [
     "shops": [
       "salles6",
       "salles8"
-    ]
+    ],
+    "distanceOverride": {
+      "salles6": {
+        "km": 21,
+        "min": 23
+      },
+      "salles8": {
+        "km": 21,
+        "min": 23
+      }
+    }
   },
   {
     "id": "station-riez",
@@ -2967,7 +3011,13 @@ window.POIS = [
     "scale": 0.8,
     "shops": [
       "moustiers"
-    ]
+    ],
+    "distanceOverride": {
+      "moustiers": {
+        "km": 17,
+        "min": 20
+      }
+    }
   },
   {
     "id": "commerce-magnans",
@@ -3802,7 +3852,17 @@ window.POIS = [
     "shops": [
       "salles6",
       "salles8"
-    ]
+    ],
+    "distanceOverride": {
+      "salles6": {
+        "km": 21,
+        "min": 23
+      },
+      "salles8": {
+        "km": 21,
+        "min": 23
+      }
+    }
   },
   {
     "id": "commerce-riez",
@@ -3844,7 +3904,13 @@ window.POIS = [
     "scale": 0.8,
     "shops": [
       "moustiers"
-    ]
+    ],
+    "distanceOverride": {
+      "moustiers": {
+        "km": 17,
+        "min": 20
+      }
+    }
   },
   {
     "id": "parapente-verdon",
