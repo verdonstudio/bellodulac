@@ -10,6 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="pois.js"></script>
+    <!-- reservations.js + redirect.js : permettent de retrouver la langue de la reservation en
+         cours (meme logique que tv.html), pour que la video d'intro TV (lancee sans "?lang="
+         dans son URL) demarre directement dans la bonne langue plutot qu'en francais par defaut. -->
+    <script src="reservations.js"></script>
+    <script src="redirect.js"></script>
 
     <style>
         :root {
@@ -100,7 +105,7 @@
         <!-- Bouton "Passer l'intro" : uniquement visible si ?next=... est fourni dans l'URL
              (usage TV : video d'intro au lancement de l'app, avant de continuer vers tv.html).
              Navigue immediatement vers "next" sans attendre la fin de la video. -->
-        <a id="btn-skip" href="#" class="absolute top-4 right-4 z-20 hidden inline-flex items-center gap-1.5 bg-white/90 hover:bg-white text-[var(--c-ink)] text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg transition-colors">
+        <a id="btn-skip" href="#" class="absolute top-4 right-4 z-20 hidden inline-flex items-center gap-1.5 bg-white/90 hover:bg-white text-[var(--c-ink)] text-sm font-semibold px-4 py-2.5 rounded-full shadow-lg transition-colors focus:outline-none focus:ring-4 focus:ring-white focus:ring-offset-2 focus:ring-offset-black/40">
             <span id="text-skip">Passer l'intro →</span>
         </a>
 
@@ -156,11 +161,89 @@
             return null;
         }
 
+        // --- Reconnaissance de la reservation en cours (meme logique que tv.html), utilisee ici
+        // uniquement pour recuperer la langue de sejour du voyageur actuel : permet a la video
+        // d'intro TV (lancee par l'appli sans "?lang=" dans son URL) de demarrer directement
+        // dans la bonne langue plutot que de retomber sur le francais par defaut.
+        function todayLocalISO() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+        function parseFlexibleDate(str) {
+            if (!str) return null;
+            str = String(str).trim();
+            let m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+            m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+            return null;
+        }
+        function annonceMatchesLogement(annonce, targetLogementId) {
+            const norm = String(annonce || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+            const compact = norm.replace(/[^a-z0-9]/g, '');
+            if (norm === targetLogementId) return true;
+            if (targetLogementId.includes('moustiers')) {
+                return norm.includes('moustiers') || norm.includes('etoile');
+            }
+            const isSallesFamily = norm.includes('salles') || norm.includes('lac') || compact.includes('bello');
+            if (!isSallesFamily) return false;
+            const has6 = /\b6\b/.test(norm) || norm.includes('6p') || norm.includes('6 pers');
+            const has8 = /\b8\b/.test(norm) || norm.includes('8p') || norm.includes('8 pers');
+            if (targetLogementId === 'salles6' && has8) return false;
+            if (targetLogementId === 'salles8' && has6) return false;
+            return true;
+        }
+        const CHECKOUT_CUTOFF = '11:00';
+        function currentTimeHHMM() {
+            const d = new Date();
+            return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        }
+        function todayReservationMatch(logementId) {
+            if (typeof window.RESERVATIONS === 'undefined' || !Array.isArray(window.RESERVATIONS)) return null;
+            const today = todayLocalISO();
+            const candidates = window.RESERVATIONS.filter(r => {
+                const arrivee = parseFlexibleDate(r.arrivee);
+                const depart = parseFlexibleDate(r.depart);
+                if (!arrivee || !depart) return false;
+                if (today < arrivee || today > depart) return false;
+                return annonceMatchesLogement(r.annonce, logementId);
+            });
+            if (!candidates.length) return null;
+            if (candidates.length === 1) {
+                const only = candidates[0];
+                const departsToday = parseFlexibleDate(only.depart) === today;
+                const arrivesToday = parseFlexibleDate(only.arrivee) === today;
+                if (departsToday && !arrivesToday && currentTimeHHMM() >= CHECKOUT_CUTOFF) return null;
+                return only;
+            }
+            const departing = candidates.find(r => parseFlexibleDate(r.depart) === today && parseFlexibleDate(r.arrivee) !== today);
+            const arriving = candidates.find(r => parseFlexibleDate(r.arrivee) === today && parseFlexibleDate(r.depart) !== today);
+            if (currentTimeHHMM() < CHECKOUT_CUTOFF) {
+                if (departing) return departing;
+                if (arriving) return arriving;
+            } else if (arriving) {
+                return arriving;
+            }
+            return null;
+        }
+        function languageFromReservation(logementId) {
+            const todaysReservation = todayReservationMatch(logementId);
+            const resCode = (todaysReservation && todaysReservation.code) || 'default';
+            const reservationData = (typeof reservations !== 'undefined' && (reservations[resCode] || reservations['default'])) || {};
+            const candidates = ['home', 'map', 'evenements', 'highlights', 'panorama'];
+            for (const key of candidates) {
+                const url = reservationData[key];
+                if (!url) continue;
+                const qs = url.split('?')[1] || '';
+                const value = new URLSearchParams(qs).get('lang');
+                if (value) return value;
+            }
+            return null;
+        }
+
         function readUrlParams() {
             const p = new URLSearchParams(window.location.search);
             const rawLang = p.get('lang') || p.get('lng');
-            if (rawLang) state.lang = rawLang.toUpperCase();
-            if (!['FR', 'EN', 'DE', 'NL'].includes(state.lang)) state.lang = 'FR';
             if (p.get('poi')) state.poiId = p.get('poi');
             if (p.get('video')) state.videoFile = p.get('video');
             if (p.get('youtube')) state.youtubeId = extractYoutubeId(p.get('youtube'));
@@ -173,6 +256,12 @@
             // sinon le logement par defaut fourni par logements.js (DEFAULT_LISTING_ID).
             const rawLogement = p.get('logement') || p.get('listing') || p.get('l') || p.get('id');
             state.logement = rawLogement || DEFAULT_LISTING_ID;
+
+            // Langue : URL explicite ("?lang=") > langue de la reservation en cours pour ce
+            // logement (utile en mode TV, ou l'URL de la video d'intro ne porte pas de langue) >
+            // francais par defaut.
+            state.lang = (rawLang || languageFromReservation(state.logement) || 'FR').toUpperCase();
+            if (!['FR', 'EN', 'DE', 'NL'].includes(state.lang)) state.lang = 'FR';
 
             // Configuration dynamique du logo
             const logoEl = document.getElementById('topbar-logo');
@@ -330,6 +419,11 @@
                 // API indisponible...), on continue quand meme au bout d'un temps raisonnable
                 // plutot que de rester bloque sur l'intro indefiniment.
                 setTimeout(goToNext, 3 * 60 * 1000);
+                // Preselectionne le bouton "Passer l'intro" pour la telecommande TV : l'utilisateur
+                // peut valider directement avec OK/Entree, sans avoir a naviguer jusqu'au bouton.
+                // requestAnimationFrame laisse le temps au navigateur de "demasquer" le bouton
+                // (retrait de la classe hidden) avant de tenter de lui donner le focus.
+                requestAnimationFrame(() => btnSkip.focus());
             }
 
             if (state.youtubeId) {
