@@ -13,7 +13,7 @@
         "NL": "De geplande activiteiten van vandaag in het dorp en de omgeving"
       }
     },
-    { "key": "highlights", "type": "qr_and_link" },
+    { "key": "evenements", "type": "qr_and_link" },
     {
       "key": "shops",
       "type": "qr_and_link",
