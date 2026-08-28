@@ -727,7 +727,12 @@ window.POIS = [
           6.22121
         ]
       ]
-    }
+    },
+    "shops": [
+      "moustiers",
+      "salles6",
+      "salles8"
+    ]
   },
   {
     "id": "trottinette-salles",
@@ -2604,7 +2609,10 @@ window.POIS = [
       43.791,
       52.775
     ],
-    "scale": 0.8
+    "scale": 0.8,
+    "shops": [
+      "moustiers"
+    ]
   },
   {
     "id": "station-salles",
@@ -2643,7 +2651,12 @@ window.POIS = [
       21.486,
       66.206
     ],
-    "scale": 1.6
+    "scale": 1.6,
+    "shops": [
+      "moustiers",
+      "salles6",
+      "salles8"
+    ]
   },
   {
     "id": "relais-salles",
@@ -2714,7 +2727,12 @@ window.POIS = [
       21.22,
       62.38
     ],
-    "scale": 1.6
+    "scale": 1.6,
+    "shops": [
+      "moustiers",
+      "salles6",
+      "salles8"
+    ]
   },
   {
     "id": "laverie-salles",
@@ -2785,7 +2803,12 @@ window.POIS = [
       20.835,
       66.206
     ],
-    "scale": 1.6
+    "scale": 1.6,
+    "shops": [
+      "moustiers",
+      "salles6",
+      "salles8"
+    ]
   },
   {
     "id": "laverie-riez",
@@ -2856,7 +2879,10 @@ window.POIS = [
       24.979,
       45.106
     ],
-    "scale": 0.8
+    "scale": 0.8,
+    "shops": [
+      "moustiers"
+    ]
   },
   {
     "id": "station-aups",
@@ -2895,7 +2921,11 @@ window.POIS = [
       99.56,
       45.308
     ],
-    "scale": 0.7
+    "scale": 0.7,
+    "shops": [
+      "salles6",
+      "salles8"
+    ]
   },
   {
     "id": "station-riez",
@@ -2934,7 +2964,10 @@ window.POIS = [
       24.535,
       45.207
     ],
-    "scale": 0.8
+    "scale": 0.8,
+    "shops": [
+      "moustiers"
+    ]
   },
   {
     "id": "commerce-magnans",
@@ -3172,7 +3205,10 @@ window.POIS = [
           6.22139
         ]
       ]
-    }
+    },
+    "shops": [
+      "moustiers"
+    ]
   },
   {
     "id": "commerce-super-village",
@@ -3258,7 +3294,10 @@ window.POIS = [
           6.22146
         ]
       ]
-    }
+    },
+    "shops": [
+      "moustiers"
+    ]
   },
   {
     "id": "commerce-orapi-salles",
@@ -3565,7 +3604,11 @@ window.POIS = [
           6.21768
         ]
       ]
-    }
+    },
+    "shops": [
+      "salles6",
+      "salles8"
+    ]
   },
   {
     "id": "commerce-proxi-salles",
@@ -3712,7 +3755,11 @@ window.POIS = [
           6.21135
         ]
       ]
-    }
+    },
+    "shops": [
+      "salles6",
+      "salles8"
+    ]
   },
   {
     "id": "commerce-aups",
@@ -3751,7 +3798,11 @@ window.POIS = [
       99.936,
       44.904
     ],
-    "scale": 0.7
+    "scale": 0.7,
+    "shops": [
+      "salles6",
+      "salles8"
+    ]
   },
   {
     "id": "commerce-riez",
@@ -3790,7 +3841,10 @@ window.POIS = [
       24.263,
       44.4
     ],
-    "scale": 0.8
+    "scale": 0.8,
+    "shops": [
+      "moustiers"
+    ]
   },
   {
     "id": "parapente-verdon",
@@ -10657,7 +10711,11 @@ window.POIS = [
           6.20927
         ]
       ]
-    }
+    },
+    "shops": [
+      "salles6",
+      "salles8"
+    ]
   },
   {
     "id": "resto-auberge-des-salles",
@@ -12674,7 +12732,10 @@ window.POIS = [
       "desc": "Type: Bakkerij / Banketbakkerij. In het hart van Moustiers-Sainte-Marie, ideaal om vers brood, ontbijtgebak of picknickproviand te kopen voordat je op ontdekking gaat.",
       "url": "https://www.google.com/maps/place/Le+Michon/@43.8471046,6.2215214,17z/data=!3m1!4b1!4m6!3m5!1s0x12cbee0be116eaaf:0xe57e9a0725d79001!8m2!3d43.8471046!4d6.2215214!16s%2Fg%2F11fx7nd1nm?entry=ttu&g_ep=EgoyMDI2MDgyNS4wIKXMDSoASAFQAw%3D%3D",
       "urlLabel": "Bekijk op de kaart"
-    }
+    },
+    "shops": [
+      "moustiers"
+    ]
   },
   {
     "id": "commerce-boucherie-bondil",
@@ -12708,6 +12769,9 @@ window.POIS = [
       "desc": "Type: Slagerij / Fijnkost / Traiteur. Al vijf generaties een familieslagerij, gevestigd in de stenen arcaden van de Rue du Courtil. Provençaalse specialiteiten, lokale charcuterie, kant-en-klare gerechten en zelfgemaakte conserven.",
       "url": "https://www.maison-bondil.fr/",
       "urlLabel": "Meer informatie"
-    }
+    },
+    "shops": [
+      "moustiers"
+    ]
   }
 ];

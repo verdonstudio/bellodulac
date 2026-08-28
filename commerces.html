@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Commerces & services — Bell'O du Lac™ & Bell'Étoile™</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="analytics.js"></script>
+<script src="pois.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --c-bg:        #fdfbf7;
+        --c-ink:       #1e293b;
+        --c-muted:     #64748b;
+        --c-primary:   #0284c7;
+        --c-primary-2: #0369a1;
+        --c-primary-soft: #f0f9ff;
+        --c-border:    rgba(14, 165, 233, 0.1);
+        --c-card:      #ffffff;
+    }
+    html, body {
+        background: linear-gradient(180deg, #fdfbf7 0%, #fff7ed 100%);
+        min-height: 100vh;
+    }
+    body { font-family: 'Inter', sans-serif; margin: 0; color: var(--c-ink); }
+    .font-display { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+    .topbar {
+        background-color: rgba(253, 251, 247, 0.85);
+        -webkit-backdrop-filter: saturate(200%) blur(24px);
+        backdrop-filter: saturate(200%) blur(24px);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        z-index: 50;
+    }
+    .chip { transition: all 0.2s ease; }
+    .chip:hover { background: var(--c-primary-soft); transform: scale(1.02); }
+
+    .btn-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 999px;
+        background: #f1f5f9; border: 1px solid rgba(0,0,0,0.05);
+        font-size: 12px; font-weight: 600; color: #334155;
+        transition: all 0.2s; text-decoration: none;
+    }
+    .btn-back:hover { background: #e2e8f0; color: #0f172a; }
+
+    #content { margin-top: 56px; padding-bottom: 48px; }
+
+    .card {
+        position: relative;
+        background: var(--c-card); border: 1px solid var(--c-border); border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(2,132,199,0.05); overflow: hidden;
+        transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+        display: flex; flex-direction: column;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(2,132,199,0.10); }
+
+    .hl-media {
+        height: 160px; background: var(--c-primary-soft);
+        display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .hl-media-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hl-media-img.is-logo {
+        width: 84px; height: 84px; object-fit: contain; border-radius: 999px;
+        background: #fff; padding: 10px; box-shadow: 0 2px 8px rgba(2,132,199,0.15);
+    }
+
+    .hl-category { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--c-muted); margin: 0 0 4px; display: flex; align-items: center; gap: 5px; }
+    .hl-title { font-size: 16px; font-weight: 700; margin: 0 0 6px; font-family: 'Fraunces', Georgia, serif; line-height: 1.3; color: var(--c-ink); }
+    .hl-place { display: flex; align-items: flex-start; gap: 6px; font-size: 12.5px; color: var(--c-muted); font-weight: 500; margin: 0 0 14px; line-height: 1.4; }
+    .hl-place svg { width: 13px; height: 13px; flex-shrink: 0; margin-top: 2px; }
+
+    .btn-listing {
+        display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+        border: none; cursor: pointer; white-space: nowrap; text-decoration: none;
+        font-size: 12.5px; font-weight: 600; line-height: 1;
+        padding: 10px 16px; border-radius: 999px;
+        transition: all 0.2s ease;
+    }
+    .btn-listing-primary {
+        background: var(--c-primary); color: #fff;
+        box-shadow: 0 2px 10px rgba(2,132,199,0.25);
+    }
+    .btn-listing-primary:hover { background: var(--c-primary-2); }
+
+    #empty-state { display: none; text-align: center; padding: 40px 16px; color: var(--c-muted); font-size: 14px; }
+    #empty-state.visible { display: block; }
+</style>
+</head>
+<body>
+
+<header class="topbar fixed top-0 w-full">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+        <a id="btn-back" href="index.html" class="btn-back shrink-0 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <span id="text-back">Retour</span>
+        </a>
+
+        <div class="flex items-center gap-2 min-w-0 flex-1 justify-center">
+            <img id="topbar-logo" src="" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+            <span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Commerces &amp; services</span>
+        </div>
+
+        <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
+            <option value="FR">FR</option>
+            <option value="EN">EN</option>
+            <option value="DE">DE</option>
+            <option value="NL">NL</option>
+        </select>
+    </div>
+</header>
+
+<main id="content" class="max-w-5xl mx-auto px-4">
+
+    <div class="mt-6 mb-6">
+        <h1 id="page-title" class="text-2xl sm:text-3xl font-bold font-display text-[var(--c-ink)]">Commerces &amp; services</h1>
+        <p id="page-subtitle" class="text-sm text-[var(--c-muted)] mt-1">Les commerces et services utiles autour de votre logement.</p>
+    </div>
+
+    <div id="shops-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    <p id="empty-state">—</p>
+
+    <p class="text-[10px] text-[var(--c-muted)]/70 text-center pb-6 mt-10">© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés. Marques déposées.</p>
+
+</main>
+
+<script>
+(function () {
+    const state = { lang: 'FR', logement: 'salles6' };
+
+    const LOGO_DATA = {
+        moustiers: { src: "https://bellodulac.netlify.app/images/bell-etoile-logo.png" },
+        salles:    { src: "https://bellodulac.netlify.app/images/bellodulac-logo.png" }
+    };
+
+    // Alias reconnus pour le logement, alignes sur ceux d'index.html/highlights.html
+    // (LISTING_ALIASES) : on conserve la valeur precise (salles6/salles8/moustiers), qui
+    // correspond exactement aux valeurs utilisees dans le champ "shops" de pois.js.
+    const LISTING_ALIASES = {
+        moustiers: 'moustiers', moustier: 'moustiers',
+        'bell-etoile': 'moustiers', belletoile: 'moustiers', etoile: 'moustiers',
+        salles6: 'salles6', 'salles-6': 'salles6', 'salles6p': 'salles6', 'salles-6p': 'salles6', bello6: 'salles6', 'bello-6': 'salles6',
+        salles8: 'salles8', 'salles-8': 'salles8', 'salles8p': 'salles8', 'salles-8p': 'salles8', bello8: 'salles8', 'bello-8': 'salles8',
+        salles: 'salles6'
+    };
+    function resolveLogement(raw) {
+        const key = (raw || '').toString().trim().toLowerCase().replace(/[_\s]+/g, '-');
+        return LISTING_ALIASES[key] || 'salles6';
+    }
+    function logoFamily(logement) {
+        return (logement || '').includes('moustiers') ? 'moustiers' : 'salles';
+    }
+
+    const I18N = {
+        FR: {
+            back: "Retour", label: "Commerces & services",
+            pageTitle: "Commerces & services",
+            pageSubtitle: "Les commerces et services utiles autour de votre logement.",
+            empty: "Aucun commerce référencé pour le moment.",
+            viewOnMap: "Voir sur la carte"
+        },
+        EN: {
+            back: "Back", label: "Shops & services",
+            pageTitle: "Shops & services",
+            pageSubtitle: "Useful shops and services near your accommodation.",
+            empty: "No shop listed yet.",
+            viewOnMap: "View on map"
+        },
+        DE: {
+            back: "Zurück", label: "Geschäfte & Dienstleistungen",
+            pageTitle: "Geschäfte & Dienstleistungen",
+            pageSubtitle: "Nützliche Geschäfte und Dienstleistungen in der Nähe Ihrer Unterkunft.",
+            empty: "Noch keine Geschäfte gelistet.",
+            viewOnMap: "Auf der Karte ansehen"
+        },
+        NL: {
+            back: "Terug", label: "Winkels & diensten",
+            pageTitle: "Winkels & diensten",
+            pageSubtitle: "Nuttige winkels en diensten in de buurt van uw accommodatie.",
+            empty: "Nog geen winkels vermeld.",
+            viewOnMap: "Bekijk op de kaart"
+        }
+    };
+
+    function $(sel) { return document.querySelector(sel); }
+
+    function readUrlParams() {
+        const p = new URLSearchParams(window.location.search);
+        const rawLang = p.get('lang') || p.get('lng');
+        if (rawLang && I18N[rawLang.toUpperCase()]) state.lang = rawLang.toUpperCase();
+        const rawLogement = p.get('logement') || p.get('listing') || p.get('l') || p.get('id');
+        state.logement = resolveLogement(rawLogement);
+    }
+
+    function buildBackUrl() {
+        const p = new URLSearchParams();
+        p.set('lang', state.lang);
+        p.set('logement', state.logement);
+        return `index.html?${p.toString()}`;
+    }
+
+    function poiIndexUrl(poi) {
+        const p = new URLSearchParams();
+        p.set('logement', state.logement);
+        p.set('lang', state.lang);
+        p.set('poi', poi.id);
+        return `index.html?${p.toString()}`;
+    }
+
+    function poiContent(poi) {
+        return poi[state.lang.toLowerCase()] || poi.fr;
+    }
+
+    function poiCategoryInfo(poi) {
+        const key = poi.cat;
+        const cd = key && window.POI_CATEGORIES && window.POI_CATEGORIES[key];
+        if (!cd) return null;
+        return { label: cd[state.lang.toLowerCase()] || cd.fr || cd.en, emoji: cd.emoji, color: cd.color };
+    }
+
+    function pinIcon() {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
+    }
+
+    function applyI18n() {
+        const L = I18N[state.lang];
+        $('#lang-select').value = state.lang;
+        $('#text-back').textContent = L.back;
+        $('#label-title').textContent = L.label;
+        $('#page-title').textContent = L.pageTitle;
+        $('#page-subtitle').textContent = L.pageSubtitle;
+        $('#empty-state').textContent = L.empty;
+        document.title = `${L.label} — Bell'O du Lac™ & Bell'Étoile™`;
+        document.documentElement.lang = state.lang.toLowerCase();
+
+        const family = logoFamily(state.logement);
+        const logoEl = $('#topbar-logo');
+        if (LOGO_DATA[family]) {
+            logoEl.src = LOGO_DATA[family].src;
+            logoEl.classList.remove('hidden');
+        }
+        $('#btn-back').href = buildBackUrl();
+    }
+
+    function renderShops() {
+        const L = I18N[state.lang];
+        const grid = $('#shops-grid');
+        const empty = $('#empty-state');
+        grid.innerHTML = '';
+
+        const pois = (window.POIS || []).filter(p => Array.isArray(p.shops) && p.shops.includes(state.logement));
+
+        // Tri : regroupe par categorie (ordre naturel de POI_CATEGORIES), puis par nom.
+        const catOrder = Object.keys(window.POI_CATEGORIES || {});
+        pois.sort((a, b) => {
+            const ca = catOrder.indexOf(a.cat), cb = catOrder.indexOf(b.cat);
+            if (ca !== cb) return ca - cb;
+            const na = poiContent(a).name || '', nb = poiContent(b).name || '';
+            return na.localeCompare(nb);
+        });
+
+        if (!pois.length) {
+            empty.classList.add('visible');
+            return;
+        }
+        empty.classList.remove('visible');
+
+        const logo = LOGO_DATA[logoFamily(state.logement)] ? LOGO_DATA[logoFamily(state.logement)].src : '';
+
+        pois.forEach(poi => {
+            const content = poiContent(poi);
+            const hasImg = !!poi.img;
+            const imgSrc = hasImg ? poi.img : logo;
+            const catInfo = poiCategoryInfo(poi);
+            const url = poiIndexUrl(poi);
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="hl-media">
+                    <a class="hl-media-link" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;" href="${url}" target="_blank" rel="noopener">
+                        <img class="hl-media-img${hasImg ? '' : ' is-logo'}" src="${imgSrc}" alt="" loading="lazy" />
+                    </a>
+                </div>
+                <div class="p-4 flex flex-col flex-1">
+                    <p class="hl-category">${catInfo ? `<span>${catInfo.emoji}</span><span>${catInfo.label}</span>` : ''}</p>
+                    <h2 class="hl-title">${content.name}</h2>
+                    ${content.desc ? `<p class="hl-place">${pinIcon()}<span>${content.desc}</span></p>` : ''}
+                    <a href="${url}" target="_blank" rel="noopener" class="btn-listing btn-listing-primary mt-auto self-start">
+                        <span>📍</span><span>${L.viewOnMap}</span>
+                    </a>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function start() {
+        readUrlParams();
+        applyI18n();
+        renderShops();
+
+        $('#lang-select').addEventListener('change', (e) => {
+            state.lang = e.target.value;
+            applyI18n();
+            renderShops();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
+</body>
+</html>

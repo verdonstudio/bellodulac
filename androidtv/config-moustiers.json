@@ -64,6 +64,32 @@
         "DE": "Wo Sie während Ihres Aufenthalts parken können.",
         "NL": "Waar u tijdens uw verblijf kunt parkeren."
       }
+    },
+    {
+      "key": "shops",
+      "type": "qr_and_link",
+      "defaultUrl": "commerces.html",
+      "icon": "🏪",
+      "title": { "FR": "Commerces & services", "EN": "Shops & services", "DE": "Geschäfte & Dienstleistungen", "NL": "Winkels & diensten" },
+      "desc": {
+        "FR": "Les commerces et services utiles autour de votre logement.",
+        "EN": "Useful shops and services near your accommodation.",
+        "DE": "Nützliche Geschäfte und Dienstleistungen in der Nähe Ihrer Unterkunft.",
+        "NL": "Nuttige winkels en diensten in de buurt van uw accommodatie."
+      }
+    },
+    {
+      "key": "infos",
+      "type": "qr_and_link",
+      "defaultUrl": "infos.html",
+      "icon": "🌤️",
+      "title": { "FR": "Infos pratiques", "EN": "Practical info", "DE": "Praktische Informationen", "NL": "Praktische informatie" },
+      "desc": {
+        "FR": "Météo et numéros utiles pour votre séjour.",
+        "EN": "Weather and useful numbers for your stay.",
+        "DE": "Wetter und nützliche Nummern für Ihren Aufenthalt.",
+        "NL": "Weer en nuttige nummers voor uw verblijf."
+      }
     }
   ]
 }

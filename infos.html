@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Infos pratiques — Bell'O du Lac™ & Bell'Étoile™</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="analytics.js"></script>
+<script src="logements.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --c-bg:        #fdfbf7;
+        --c-ink:       #1e293b;
+        --c-ink-soft:  #334155;
+        --c-muted:     #64748b;
+        --c-primary:   #0284c7;
+        --c-primary-2: #0369a1;
+        --c-primary-soft: #f0f9ff;
+        --c-border:    rgba(14, 165, 233, 0.1);
+        --c-card:      #ffffff;
+        --c-warm:      #dc2626;
+        --c-warm-soft: #fee2e2;
+    }
+    html, body {
+        background: linear-gradient(180deg, #fdfbf7 0%, #fff7ed 100%);
+        min-height: 100vh;
+    }
+    body { font-family: 'Inter', sans-serif; margin: 0; color: var(--c-ink); }
+    .font-display { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+    .topbar {
+        background-color: rgba(253, 251, 247, 0.85);
+        -webkit-backdrop-filter: saturate(200%) blur(24px);
+        backdrop-filter: saturate(200%) blur(24px);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        z-index: 50;
+    }
+    .chip { transition: all 0.2s ease; }
+    .chip:hover { background: var(--c-primary-soft); transform: scale(1.02); }
+
+    .btn-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 999px;
+        background: #f1f5f9; border: 1px solid rgba(0,0,0,0.05);
+        font-size: 12px; font-weight: 600; color: #334155;
+        transition: all 0.2s; text-decoration: none;
+    }
+    .btn-back:hover { background: #e2e8f0; color: #0f172a; }
+
+    #content { margin-top: 56px; padding-bottom: 48px; }
+
+    .card {
+        background: var(--c-card); border: 1px solid var(--c-border); border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(2,132,199,0.05);
+    }
+
+    .weather-strip::-webkit-scrollbar { display: none; }
+    .weather-strip { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+<body>
+
+<header class="topbar fixed top-0 w-full">
+    <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+        <a id="btn-back" href="index.html" class="btn-back shrink-0 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <span id="text-back">Retour</span>
+        </a>
+
+        <div class="flex items-center gap-2 min-w-0 flex-1 justify-center">
+            <img id="topbar-logo" src="" alt="" class="w-7 h-7 rounded-full object-cover ring-1 ring-[var(--c-border)] shrink-0 hidden" />
+            <span id="label-title" class="font-display font-semibold text-[14px] sm:text-[15px] truncate text-[var(--c-ink)]">Infos pratiques</span>
+        </div>
+
+        <select id="lang-select" class="chip text-[12px] font-medium border border-gray-200 bg-white pl-2.5 pr-7 py-1.5 rounded-full appearance-none cursor-pointer shadow-sm shrink-0" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
+            <option value="FR">FR</option>
+            <option value="EN">EN</option>
+            <option value="DE">DE</option>
+            <option value="NL">NL</option>
+        </select>
+    </div>
+</header>
+
+<main id="content" class="max-w-3xl mx-auto px-4">
+
+    <div class="mt-6 mb-6">
+        <h1 id="page-title" class="text-2xl sm:text-3xl font-bold font-display text-[var(--c-ink)]">Infos pratiques</h1>
+        <p id="page-subtitle" class="text-sm text-[var(--c-muted)] mt-1">Météo et numéros utiles pour votre séjour.</p>
+    </div>
+
+    <div class="card p-5">
+        <div class="flex items-center justify-between">
+            <h2 id="weather-title" class="text-base font-semibold font-display">Météo 7 jours</h2>
+            <span id="weather-place" class="text-xs text-[var(--c-muted)]">—</span>
+        </div>
+        <div id="weather-content" class="mt-4 text-sm text-[var(--c-muted)]">Chargement de la météo...</div>
+    </div>
+
+    <div class="card divide-y divide-[var(--c-border)] mt-6">
+        <div class="p-4 bg-gray-50/50 rounded-t-20">
+            <p id="useful-contacts-title" class="text-xs uppercase tracking-wider text-[var(--c-muted)] font-semibold">Contacts utiles</p>
+        </div>
+        <a href="tel:112" class="flex items-center justify-between p-4 hover:bg-[var(--c-primary-soft)]/50 transition">
+            <span id="emergency-eu-label" class="text-sm font-medium text-[var(--c-ink-soft)]">Urgences (Europe)</span>
+            <span class="text-sm font-bold text-[var(--c-warm)] bg-[var(--c-warm-soft)] px-3 py-1 rounded-lg">112</span>
+        </a>
+        <a href="tel:15" class="flex items-center justify-between p-4 hover:bg-[var(--c-primary-soft)]/50 transition">
+            <span id="emergency-samu-label" class="text-sm font-medium text-[var(--c-ink-soft)]">SAMU</span>
+            <span class="text-sm font-bold text-[var(--c-warm)] bg-[var(--c-warm-soft)] px-3 py-1 rounded-lg">15</span>
+        </a>
+        <a href="tel:18" class="flex items-center justify-between p-4 hover:bg-[var(--c-primary-soft)]/50 transition">
+            <span id="emergency-fire-label" class="text-sm font-medium text-[var(--c-ink-soft)]">Pompiers</span>
+            <span class="text-sm font-bold text-[var(--c-warm)] bg-[var(--c-warm-soft)] px-3 py-1 rounded-lg">18</span>
+        </a>
+        <a href="tel:17" class="flex items-center justify-between p-4 hover:bg-[var(--c-primary-soft)]/50 transition">
+            <span id="emergency-police-label" class="text-sm font-medium text-[var(--c-ink-soft)]">Police / Gendarmerie</span>
+            <span class="text-sm font-bold text-[var(--c-warm)] bg-[var(--c-warm-soft)] px-3 py-1 rounded-lg">17</span>
+        </a>
+        <a id="pharmacie-row" href="tel:0492746061" class="flex items-center justify-between p-4 hover:bg-[var(--c-primary-soft)]/50 transition">
+            <span id="pharmacie-label" class="text-sm font-medium text-[var(--c-ink-soft)]">Pharmacie du Verdon</span>
+            <span class="text-sm font-bold text-[var(--c-primary-2)] bg-[var(--c-primary-soft)] px-3 py-1 rounded-lg">04 92 74 60 61</span>
+        </a>
+    </div>
+
+    <p class="text-[10px] text-[var(--c-muted)]/70 text-center pb-6 mt-10">© 2026 Bell'O du Lac™ & Bell'Étoile™. Tous droits réservés. Marques déposées.</p>
+
+</main>
+
+<script>
+(function () {
+    const state = { lang: 'FR', logement: 'salles6' };
+
+    const LOGO_DATA = {
+        moustiers: { src: "https://bellodulac.netlify.app/images/bell-etoile-logo.png" },
+        salles:    { src: "https://bellodulac.netlify.app/images/bellodulac-logo.png" }
+    };
+
+    const LISTING_ALIASES = {
+        moustiers: 'moustiers', moustier: 'moustiers',
+        'bell-etoile': 'moustiers', belletoile: 'moustiers', etoile: 'moustiers',
+        salles6: 'salles6', 'salles-6': 'salles6', 'salles6p': 'salles6', 'salles-6p': 'salles6', bello6: 'salles6', 'bello-6': 'salles6',
+        salles8: 'salles8', 'salles-8': 'salles8', 'salles8p': 'salles8', 'salles-8p': 'salles8', bello8: 'salles8', 'bello-8': 'salles8',
+        salles: 'salles6'
+    };
+    function resolveLogement(raw) {
+        const key = (raw || '').toString().trim().toLowerCase().replace(/[_\s]+/g, '-');
+        return LISTING_ALIASES[key] || 'salles6';
+    }
+    function logoFamily(logement) {
+        return (logement || '').includes('moustiers') ? 'moustiers' : 'salles';
+    }
+
+    const I18N = {
+        FR: {
+            back: "Retour", label: "Infos pratiques",
+            pageTitle: "Infos pratiques",
+            pageSubtitle: "Météo et numéros utiles pour votre séjour.",
+            weather_title: "Météo 7 jours", weather_loading: "Chargement de la météo...", weather_error: "Météo indisponible pour le moment.",
+            today: "Aujourd'hui", tomorrow: "Demain",
+            weekdays: ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"],
+            useful_contacts: "Contacts utiles",
+            emergency_eu: "Urgences (Europe)", emergency_samu: "SAMU", emergency_fire: "Pompiers", emergency_police: "Police / Gendarmerie",
+            pharmacie: "Pharmacie du Verdon"
+        },
+        EN: {
+            back: "Back", label: "Practical info",
+            pageTitle: "Practical info",
+            pageSubtitle: "Weather and useful numbers for your stay.",
+            weather_title: "7-day weather", weather_loading: "Loading weather...", weather_error: "Weather unavailable right now.",
+            today: "Today", tomorrow: "Tomorrow",
+            weekdays: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+            useful_contacts: "Useful contacts",
+            emergency_eu: "Emergencies (Europe)", emergency_samu: "SAMU (Medical)", emergency_fire: "Fire brigade", emergency_police: "Police / Gendarmerie",
+            pharmacie: "Pharmacie du Verdon"
+        },
+        DE: {
+            back: "Zurück", label: "Praktische Informationen",
+            pageTitle: "Praktische Informationen",
+            pageSubtitle: "Wetter und nützliche Nummern für Ihren Aufenthalt.",
+            weather_title: "Wetter für 7 Tage", weather_loading: "Wetter wird geladen...", weather_error: "Wetter derzeit nicht verfügbar.",
+            today: "Heute", tomorrow: "Morgen",
+            weekdays: ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],
+            useful_contacts: "Nützliche Kontakte",
+            emergency_eu: "Notfälle (Europa)", emergency_samu: "Notarzt (SAMU)", emergency_fire: "Feuerwehr", emergency_police: "Polizei / Gendarmerie",
+            pharmacie: "Pharmacie du Verdon"
+        },
+        NL: {
+            back: "Terug", label: "Praktische informatie",
+            pageTitle: "Praktische informatie",
+            pageSubtitle: "Weer en nuttige nummers voor uw verblijf.",
+            weather_title: "Weer voor 7 dagen", weather_loading: "Weer wordt geladen...", weather_error: "Weer momenteel niet beschikbaar.",
+            today: "Vandaag", tomorrow: "Morgen",
+            weekdays: ["Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag"],
+            useful_contacts: "Nuttige contacten",
+            emergency_eu: "Noodgevallen (Europa)", emergency_samu: "SAMU (Medische hulp)", emergency_fire: "Brandweer", emergency_police: "Politie / Gendarmerie",
+            pharmacie: "Pharmacie du Verdon"
+        }
+    };
+
+    function $(sel) { return document.querySelector(sel); }
+    const langText = (obj) => (obj && typeof obj === 'object') ? (obj[state.lang] || obj.FR || obj.fr || obj.en || '') : (obj || '');
+
+    function readUrlParams() {
+        const p = new URLSearchParams(window.location.search);
+        const rawLang = p.get('lang') || p.get('lng');
+        if (rawLang && I18N[rawLang.toUpperCase()]) state.lang = rawLang.toUpperCase();
+        const rawLogement = p.get('logement') || p.get('listing') || p.get('l') || p.get('id');
+        state.logement = resolveLogement(rawLogement);
+    }
+
+    function buildBackUrl() {
+        const p = new URLSearchParams();
+        p.set('lang', state.lang);
+        p.set('logement', state.logement);
+        return `index.html?${p.toString()}`;
+    }
+
+    function applyI18n() {
+        const L = I18N[state.lang];
+        $('#lang-select').value = state.lang;
+        $('#text-back').textContent = L.back;
+        $('#label-title').textContent = L.label;
+        $('#page-title').textContent = L.pageTitle;
+        $('#page-subtitle').textContent = L.pageSubtitle;
+        $('#weather-title').textContent = L.weather_title;
+        $('#useful-contacts-title').textContent = L.useful_contacts;
+        $('#emergency-eu-label').textContent = L.emergency_eu;
+        $('#emergency-samu-label').textContent = L.emergency_samu;
+        $('#emergency-fire-label').textContent = L.emergency_fire;
+        $('#emergency-police-label').textContent = L.emergency_police;
+        $('#pharmacie-label').textContent = L.pharmacie;
+        document.title = `${L.label} — Bell'O du Lac™ & Bell'Étoile™`;
+        document.documentElement.lang = state.lang.toLowerCase();
+
+        const family = logoFamily(state.logement);
+        const logoEl = $('#topbar-logo');
+        if (LOGO_DATA[family]) {
+            logoEl.src = LOGO_DATA[family].src;
+            logoEl.classList.remove('hidden');
+        }
+        $('#btn-back').href = buildBackUrl();
+    }
+
+    function wxEmoji(code) {
+        if (code === 0) return '☀️';
+        if ([1, 2].includes(code)) return '🌤️';
+        if (code === 3) return '☁️';
+        if ([45, 48].includes(code)) return '🌫️';
+        if ([51, 53, 55, 56, 57].includes(code)) return '🌦️';
+        if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return '🌧️';
+        if ([71, 73, 75, 77, 85, 86].includes(code)) return '❄️';
+        if ([95, 96, 99].includes(code)) return '⛈️';
+        return '🌥️';
+    }
+
+    // Meme logique/API que le dernier onglet ("Outils") de index.html : Open-Meteo,
+    // coordonnees + nom du logement issus de logements.js (source de verite partagee).
+    async function loadWeather() {
+        const listings = (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings) || {};
+        const L = listings[state.logement];
+        const dict = I18N[state.lang];
+        const wp = $('#weather-place');
+        const wc = $('#weather-content');
+        wc.innerHTML = `<span>${dict.weather_loading}</span>`;
+        if (!L || !L.coords) {
+            wc.innerHTML = `<span class="text-[var(--c-warm)]">${dict.weather_error}</span>`;
+            return;
+        }
+        wp.textContent = langText(L.place);
+        try {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${L.coords.lat}&longitude=${L.coords.lon}`
+                      + `&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe%2FParis&forecast_days=7`;
+            const res = await fetch(url);
+            const data = await res.json();
+            const d = data.daily;
+            if (!d) throw new Error('no data');
+            const strip = document.createElement('div');
+            strip.className = 'weather-strip flex gap-2 overflow-x-auto -mx-1 px-1 pb-1';
+            d.time.forEach((iso, i) => {
+                const date = new Date(iso);
+                let label;
+                if (i === 0) label = dict.today;
+                else if (i === 1) label = dict.tomorrow;
+                else label = dict.weekdays[date.getDay()];
+                const code = d.weather_code[i];
+                const emoji = wxEmoji(code);
+                const tmax = Math.round(d.temperature_2m_max[i]);
+                const tmin = Math.round(d.temperature_2m_min[i]);
+                const cell = document.createElement('div');
+                cell.className = 'shrink-0 w-[68px] text-center bg-[var(--c-primary-soft)]/60 rounded-xl py-3 px-1';
+                cell.innerHTML = `
+                    <div class="text-[11px] text-[var(--c-muted)] font-medium">${label}</div>
+                    <div class="text-2xl my-1">${emoji}</div>
+                    <div class="text-[13px] font-semibold">${tmax}°</div>
+                    <div class="text-[11px] text-[var(--c-muted)]">${tmin}°</div>
+                `;
+                strip.appendChild(cell);
+            });
+            wc.innerHTML = '';
+            wc.appendChild(strip);
+        } catch (e) {
+            wc.innerHTML = `<span class="text-[var(--c-warm)]">${dict.weather_error}</span>`;
+        }
+    }
+
+    function start() {
+        readUrlParams();
+        applyI18n();
+        loadWeather();
+
+        $('#lang-select').addEventListener('change', (e) => {
+            state.lang = e.target.value;
+            applyI18n();
+            loadWeather();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', start);
+})();
+</script>
+</body>
+</html>
