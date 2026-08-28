@@ -60,34 +60,35 @@
     border-bottom: 1px solid var(--c-border);
   }
 
-  /* minmax(180px,1fr) : ~6 vignettes tiennent sur une seule ligne, sans avoir a scroller,
-     sur la largeur d'un ecran TV classique. */
-  .tile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+  /* repeat(8, 1fr) fixe : garantit que les 8 vignettes tiennent toujours sur une seule
+     ligne (au lieu de auto-fit/minmax, dont le nombre de colonnes depend de la largeur
+     reelle de l'ecran TV et peut faire passer la 8e a la ligne suivante). */
+  .tile-grid { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; }
 
   .tile {
-    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 5px;
-    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 16px;
-    padding: 10px 10px; text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px;
+    background: var(--c-card); border: 1px solid var(--c-border); border-radius: 14px;
+    padding: 8px 6px; text-decoration: none; color: inherit;
     box-shadow: 0 4px 20px rgba(2,132,199,0.06);
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
   }
   .tile:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 12px 30px rgba(2,132,199,0.14); }
   .tile.disabled { opacity: 0.45; pointer-events: none; }
   .tile .tile-icon {
-    width: 32px; height: 32px; border-radius: 10px;
+    width: 28px; height: 28px; border-radius: 9px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 17px; background: var(--c-primary-soft);
+    font-size: 15px; background: var(--c-primary-soft);
   }
-  .tile .tile-title { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 13px; line-height: 1.2; color: var(--c-ink); }
-  .tile .tile-desc { font-size: 10px; color: var(--c-muted); line-height: 1.25; }
+  .tile .tile-title { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 12px; line-height: 1.15; color: var(--c-ink); }
+  .tile .tile-desc { font-size: 9px; color: var(--c-muted); line-height: 1.2; }
   .tile .tile-arrow { font-size: 11px; font-weight: 700; color: var(--c-primary); margin-top: auto; }
 
   /* padding reduit au minimum pour garder le QR code (80x80) a taille identique
      tout en reduisant l'espace total occupe par la vignette. */
   .tile .qr-box {
-    background: #ffffff; border-radius: 8px; padding: 3px;
+    background: #ffffff; border-radius: 8px; padding: 2px;
     display: flex; align-items: center; justify-content: center;
-    width: 86px; height: 86px;
+    width: 84px; height: 84px;
     border: 1px solid var(--c-border);
   }
   .tile .qr-box img { display: block; width: 80px; height: 80px; image-rendering: pixelated; }
