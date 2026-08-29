@@ -436,6 +436,10 @@ window.addEventListener('DOMContentLoaded', async function () {
     currentLang = lang;
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(`btn-${lang}`).classList.add('active');
+    // Un popup POI/photo deja ouvert n'est pas re-rendu par updateTexts() (ce n'est pas un
+    // marqueur "vivant" mais un popup independant cree a l'ouverture) -- on le ferme donc
+    // ici pour eviter qu'il reste affiche dans l'ancienne langue apres un changement.
+    if (typeof map !== 'undefined' && map.closePopup) map.closePopup();
     updateTexts();
   }
 
@@ -978,7 +982,7 @@ window.addEventListener('DOMContentLoaded', async function () {
   <time>2026-08-29T07:20:21Z</time>
  </metadata>
  <trk>
-  <name>Marche le matin</name>
+  <name>Sentier botanique de Tréguier</name>
   <type>walking</type>
   <trkseg>
    <trkpt lat="43.8471470" lon="6.2212040">

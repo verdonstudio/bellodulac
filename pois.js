@@ -12893,13 +12893,13 @@ window.POIS = [
     "id": "rando_sentiertreguier",
     "cat": "rando",
     "coords": [
-      43.84556937774747,
-      6.222341599449604
+      43.847147,
+      6.221204
     ],
     "stars": 3,
     "fr": {
       "name": "Rando : Sentier botanique de Tréguier",
-      "desc": "Boucle du sentier botanique de Tréguier, au départ du village : environ 4,2 km et 130 m de dénivelé, ponctuée de 9 panneaux sur la faïence, le patrimoine, la flore, la géologie et de superbes points de vue sur le lac de Sainte-Croix.",
+      "desc": "Boucle du sentier botanique de Tréguier, au départ de la maison : environ 5,1 km et 217 m de dénivelé (~1h15), ponctuée de 9 panneaux sur la faïence, le patrimoine, la flore, la géologie et de superbes points de vue sur le lac de Sainte-Croix.",
       "links": [
         {
           "url": "gpx/rando_sentiertreguier.html",
@@ -12909,7 +12909,7 @@ window.POIS = [
     },
     "en": {
       "name": "Hike: Tréguier botanical trail",
-      "desc": "Loop of the Tréguier botanical trail, starting from the village: about 4.2 km and 130 m of elevation gain, with 9 information panels on faience pottery, heritage, flora, geology and stunning viewpoints over Lake Sainte-Croix.",
+      "desc": "Loop of the Tréguier botanical trail, starting from the house: about 5.1 km and 217 m of elevation gain (~1h15), with 9 information panels on faience pottery, heritage, flora, geology and stunning viewpoints over Lake Sainte-Croix.",
       "links": [
         {
           "url": "gpx/rando_sentiertreguier.html",
@@ -12919,7 +12919,7 @@ window.POIS = [
     },
     "de": {
       "name": "Wanderung: Botanischer Pfad von Tréguier",
-      "desc": "Rundweg des botanischen Pfads von Tréguier, ab dem Dorf: rund 4,2 km und 130 Höhenmeter, mit 9 Infotafeln zu Fayencekunst, Kulturerbe, Flora, Geologie und herrlichen Aussichten auf den Lac de Sainte-Croix.",
+      "desc": "Rundweg des botanischen Pfads von Tréguier, ab dem Haus: rund 5,1 km und 217 Höhenmeter (~1 Std. 15), mit 9 Infotafeln zu Fayencekunst, Kulturerbe, Flora, Geologie und herrlichen Aussichten auf den Lac de Sainte-Croix.",
       "links": [
         {
           "url": "gpx/rando_sentiertreguier.html",
@@ -12929,7 +12929,7 @@ window.POIS = [
     },
     "nl": {
       "name": "Wandeling: Botanisch pad van Tréguier",
-      "desc": "Lus van het botanische pad van Tréguier, vanaf het dorp: ongeveer 4,2 km en 130 hoogtemeters, met 9 informatieborden over faience-aardewerk, erfgoed, flora, geologie en prachtige uitzichten op het meer van Sainte-Croix.",
+      "desc": "Lus van het botanische pad van Tréguier, vanaf het huis: ongeveer 5,1 km en 217 hoogtemeters (~1u15), met 9 informatieborden over faience-aardewerk, erfgoed, flora, geologie en prachtige uitzichten op het meer van Sainte-Croix.",
       "links": [
         {
           "url": "gpx/rando_sentiertreguier.html",
