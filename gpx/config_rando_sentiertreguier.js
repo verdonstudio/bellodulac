@@ -18,7 +18,11 @@ window.PARCOURS_CONFIG = {
   basemap:  "voyager", // topo, voyager, osm, positron
   showStats: true,
   editMode: false,
-  photos: [],
+
+  
+    photos: [
+    { src: "data/photos/33.jpeg", lat: 43.833536, lng: 6.234956 }
+  ],
 
   pois: [
     { lat: 43.847179, lng: 6.220829, logo: "images/bell-etoile-logo.png", badgeFr: "🏡 Votre séjour", badgeEn: "🏡 Your stay", badgeDe: "🏡 Ihr Aufenthalt", badgeNl: "🏡 Uw verblijf", titleFr: "Bell'Étoile", titleEn: "Bell'Étoile", titleDe: "Bell'Étoile", titleNl: "Bell'Étoile", descFr: "Moustiers-Sainte-Marie, Provence", descEn: "Moustiers-Sainte-Marie, Provence", descDe: "Moustiers-Sainte-Marie, Provence", descNl: "Moustiers-Sainte-Marie, Provence" },
