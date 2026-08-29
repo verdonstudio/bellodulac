@@ -515,12 +515,28 @@ window.addEventListener('DOMContentLoaded', async function () {
     `).join('');
   }
 
-  if (cfg.editMode === true) { document.getElementById('edit-controls-panel').style.display = 'flex'; }
+  // Edition ouverte soit via la config (editMode: true), soit via ?edit=1 dans l'URL --
+  // permet de positionner les photos/POI sur le trace et de generer le bloc a coller
+  // dans le fichier de config, sans avoir a modifier ce fichier pour l'activer.
+  const editRequestedViaUrl = ['1', 'true'].includes((urlParams.get('edit') || '').toLowerCase());
+  if (cfg.editMode === true || editRequestedViaUrl) {
+    document.getElementById('edit-controls-panel').style.display = 'flex';
+  }
+  if (editRequestedViaUrl) {
+    isEditMode = true;
+    document.getElementById('toggle-edit-mode').classList.add('btn--active');
+    document.getElementById('add-photo-btn').style.display = 'inline-block';
+    document.getElementById('add-poi-btn').style.display = 'inline-block';
+    document.getElementById('export-config-btn').style.display = 'inline-block';
+    updateTexts();
+  }
 
   // ───── MAP SETUP (Correction de l'Erreur Leaflet) ───────────────────
+  // Memes tuiles CARTO Voyager + cle API que sur index.html (evite les limites de debit
+  // du service anonyme) -- topo/osm restent sur leurs fournisseurs gratuits respectifs.
   const BASEMAPS = {
-    voyager: { url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', attribution: '&copy; OSM' },
-    positron: { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attribution: '&copy; OSM' },
+    voyager: { url: 'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_28w0_1_319d7c4de46fc3f092132b06', attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>' },
+    positron: { url: 'https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=cb1_28w0_1_319d7c4de46fc3f092132b06', attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>' },
     topo: { url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', attribution: '&copy; OSM', maxZoom: 17 },
     osm: { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: '&copy; OSM' }
   };

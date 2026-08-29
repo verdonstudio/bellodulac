@@ -12839,5 +12839,54 @@ window.POIS = [
     "shops": [
       "moustiers"
     ]
+  },
+  {
+    "id": "rando_clauxbas",
+    "cat": "rando",
+    "coords": [
+      43.847712,
+      6.220388
+    ],
+    "stars": 2,
+    "fr": {
+      "name": "Rando : Tour du village par les Claux",
+      "desc": "Boucle depuis la maison Bell'Étoile par la colline des Claux et ses oliveraies : le circuit panoramique idéal pour découvrir toute la beauté du village de Moustiers-Sainte-Marie !",
+      "links": [
+        {
+          "url": "gpx/rando_clauxbas.html",
+          "label": "Parcours GPX"
+        }
+      ]
+    },
+    "en": {
+      "name": "Hike: Village loop via Les Claux",
+      "desc": "A loop from the Bell'Étoile house via the Claux hill and its olive groves: the perfect panoramic circuit to discover the full beauty of the village of Moustiers-Sainte-Marie!",
+      "links": [
+        {
+          "url": "gpx/rando_clauxbas.html",
+          "label": "GPX route"
+        }
+      ]
+    },
+    "de": {
+      "name": "Wanderung: Dorfrundgang über Les Claux",
+      "desc": "Eine Rundtour ab dem Haus Bell'Étoile über den Hügel Les Claux und seine Olivenhaine: der ideale Panoramarundweg, um die ganze Schönheit des Dorfes Moustiers-Sainte-Marie zu entdecken!",
+      "links": [
+        {
+          "url": "gpx/rando_clauxbas.html",
+          "label": "GPX-Strecke"
+        }
+      ]
+    },
+    "nl": {
+      "name": "Wandeling: Dorpsronde via Les Claux",
+      "desc": "Een lus vanaf het huis Bell'Étoile via de heuvel Les Claux en zijn olijfgaarden: het ideale panoramische parcours om de volledige schoonheid van het dorp Moustiers-Sainte-Marie te ontdekken!",
+      "links": [
+        {
+          "url": "gpx/rando_clauxbas.html",
+          "label": "GPX-parcours"
+        }
+      ]
+    }
   }
 ];
