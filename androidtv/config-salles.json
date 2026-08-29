@@ -2,8 +2,18 @@
   "url": "https://bellodulac.vercel.app/video.html?youtube=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DLCLQH5uqLcU&logement=salles8&next=tv.html%3Flogement%3Dsalles8",
 
   "tiles": [
-    { "key": "evenements", "type": "qr_and_link" },
-    { "key": "highlights", "type": "qr_and_link" },
+
+    { "key": "today",
+      "type": "qr_and_link",
+      "icon": "☀️",
+      "title": { "FR": "Aujourd'hui", "EN": "Today", "DE": "Heute", "NL": "Vandaag" },
+      "desc": {
+        "FR": "Les activités prévues aujourd'hui dans le village et aux alentours",
+        "EN": "Today's planned activities in the village and surrounding area",
+        "DE": "Die für heute geplanten Aktivitäten im Dorf und der Umgebung",
+        "NL": "De geplande activiteiten van vandaag in het dorp en de omgeving"
+      }
+    },
     {
       "key": "map",
       "type": "qr",
@@ -14,26 +24,7 @@
         "NL": "Meer dan 130 plekken rond het meer en de dorpen."
       }
     },
-    {
-      "key": "panorama",
-      "type": "qr",
-      "desc": {
-        "FR": "Les logements et les environs en vue à 360°.",
-        "EN": "The homes and surroundings in 360° view.",
-        "DE": "Die Unterkünfte und die Umgebung in der 360°-Ansicht.",
-        "NL": "De woningen en de omgeving in 360°-weergave."
-      }
-    },
-    {
-      "key": "backintime",
-      "type": "qr",
-      "desc": {
-        "FR": "Comparez le village et le lac d’hier à aujourd’hui.",
-        "EN": "Compare the village and the lake, then and now.",
-        "DE": "Vergleichen Sie das Dorf und den See von früher mit heute.",
-        "NL": "Vergelijk het dorp en het meer van vroeger met nu."
-      }
-    },
+    { "key": "evenements", "type": "qr_and_link" },
     {
       "key": "shops",
       "type": "qr_and_link",
@@ -58,6 +49,27 @@
         "EN": "Weather and useful numbers for your stay.",
         "DE": "Wetter und nützliche Nummern für Ihren Aufenthalt.",
         "NL": "Weer en nuttige nummers voor uw verblijf."
+      }
+    },
+    { "key": "highlights", "type": "qr_and_link" },
+    {
+      "key": "panorama",
+      "type": "qr",
+      "desc": {
+        "FR": "Les logements et les environs en vue à 360°.",
+        "EN": "The homes and surroundings in 360° view.",
+        "DE": "Die Unterkünfte und die Umgebung in der 360°-Ansicht.",
+        "NL": "De woningen en de omgeving in 360°-weergave."
+      }
+    },
+    {
+      "key": "backintime",
+      "type": "qr",
+      "desc": {
+        "FR": "Comparez le village et le lac d’hier à aujourd’hui.",
+        "EN": "Compare the village and the lake, then and now.",
+        "DE": "Vergleichen Sie das Dorf und den See von früher mit heute.",
+        "NL": "Vergelijk het dorp en het meer van vroeger met nu."
       }
     }
   ]
