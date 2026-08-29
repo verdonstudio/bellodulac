@@ -362,8 +362,8 @@ window.addEventListener('DOMContentLoaded', async function () {
       resolve();
     }
     if (window.LOGEMENTS_DATA) { applyConfig(); return; }
-    const EXTERNAL_URL = "logements.js";
-    const LOCAL_URL = "logements.js";
+    const EXTERNAL_URL = "../logements.js";
+    const LOCAL_URL = "../logements.js";
     function loadLocal() {
       const s = document.createElement('script');
       s.src = LOCAL_URL;
@@ -523,12 +523,15 @@ window.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('edit-controls-panel').style.display = 'flex';
   }
   if (editRequestedViaUrl) {
+    // isEditMode = true ici seulement (pas d'appel a updateTexts()/renderPhotos() a ce stade) :
+    // le GPX n'est pas encore analyse (totalDist n'existe pas tant que le parsing plus bas
+    // n'a pas tourne) -- le rendu se fera naturellement via les renderPhotos()/renderPois()
+    // et le updateTexts() de fin de script, une fois le trace pret.
     isEditMode = true;
     document.getElementById('toggle-edit-mode').classList.add('btn--active');
     document.getElementById('add-photo-btn').style.display = 'inline-block';
     document.getElementById('add-poi-btn').style.display = 'inline-block';
     document.getElementById('export-config-btn').style.display = 'inline-block';
-    updateTexts();
   }
 
   // ───── MAP SETUP (Correction de l'Erreur Leaflet) ───────────────────
@@ -964,6 +967,7 @@ window.addEventListener('DOMContentLoaded', async function () {
   // Lancement
   renderPhotos();
   renderPois();
+  updateTexts();
 });
 </script>
 
