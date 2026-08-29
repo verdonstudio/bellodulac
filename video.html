@@ -185,13 +185,10 @@
             if (targetLogementId.includes('moustiers')) {
                 return norm.includes('moustiers') || norm.includes('etoile');
             }
-            const isSallesFamily = norm.includes('salles') || norm.includes('lac') || compact.includes('bello');
-            if (!isSallesFamily) return false;
-            const has6 = /\b6\b/.test(norm) || norm.includes('6p') || norm.includes('6 pers');
-            const has8 = /\b8\b/.test(norm) || norm.includes('8p') || norm.includes('8 pers');
-            if (targetLogementId === 'salles6' && has8) return false;
-            if (targetLogementId === 'salles8' && has6) return false;
-            return true;
+            // Bell'O du Lac 6P et 8P sont la meme maison (memes coordonnees dans logements.js) --
+            // une seule TV existe pour les deux logements : on reconnait donc n'importe quelle
+            // annonce "Salles"/"Bell'O du Lac", que le sejour reserve soit la variante 6P ou 8P.
+            return norm.includes('salles') || norm.includes('lac') || compact.includes('bello');
         }
         const CHECKOUT_CUTOFF = '11:00';
         function currentTimeHHMM() {
@@ -228,6 +225,10 @@
         }
         function languageFromReservation(logementId) {
             const todaysReservation = todayReservationMatch(logementId);
+            // Priorite au champ "langue" de reservations.js (source la plus directe -- fonctionne
+            // meme sans entree redirect.js pour ce code) avant de retomber sur l'ancien repli
+            // (langue lue dans les liens de redirect.js ci-dessous).
+            if (todaysReservation && todaysReservation.langue) return todaysReservation.langue;
             const resCode = (todaysReservation && todaysReservation.code) || 'default';
             const reservationData = (typeof reservations !== 'undefined' && (reservations[resCode] || reservations['default'])) || {};
             const candidates = ['home', 'map', 'evenements', 'highlights', 'panorama'];

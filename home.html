@@ -159,13 +159,10 @@
     if (targetLogementId.includes('moustiers')) {
       return norm.includes('moustiers') || norm.includes('etoile');
     }
-    const isSallesFamily = norm.includes('salles') || norm.includes('lac') || compact.includes('bello');
-    if (!isSallesFamily) return false;
-    const has6 = /\b6\b/.test(norm) || norm.includes('6p') || norm.includes('6 pers');
-    const has8 = /\b8\b/.test(norm) || norm.includes('8p') || norm.includes('8 pers');
-    if (targetLogementId === 'salles6' && has8) return false;
-    if (targetLogementId === 'salles8' && has6) return false;
-    return true; // pas de precision de capacite dans le texte -> on considere que ca correspond
+    // Bell'O du Lac 6P et 8P sont la meme maison (memes coordonnees dans logements.js) --
+    // une seule TV existe pour les deux logements : on reconnait donc n'importe quelle
+    // annonce "Salles"/"Bell'O du Lac", que le sejour reserve soit la variante 6P ou 8P.
+    return norm.includes('salles') || norm.includes('lac') || compact.includes('bello');
   }
 
   // Heure a partir de laquelle un voyageur qui part AUJOURD'HUI n'est plus affiche (comme un
@@ -250,7 +247,10 @@
     return null;
   }
 
-  let lang = (urlParams.get('lang') || paramFromReservation('lang') || 'FR').toUpperCase();
+  // Priorite au ?lang= explicite, puis au champ "langue" de reservations.js (source la plus
+  // directe -- fonctionne meme sans entree redirect.js pour ce code), puis a l'ancien repli
+  // (langue lue dans les liens de redirect.js), puis FR par defaut.
+  let lang = (urlParams.get('lang') || (todaysReservation && todaysReservation.langue) || paramFromReservation('lang') || 'FR').toUpperCase();
   if (!['FR', 'EN', 'DE', 'NL'].includes(lang)) lang = 'FR';
 
   const todaysGuestName = todaysReservation ? todaysReservation.nom : null;
