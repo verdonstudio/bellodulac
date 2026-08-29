@@ -2159,7 +2159,7 @@ function syncUrl(replace = true) {
 
   // Distance a vol d'oiseau entre le logement courant et un POI, pour decider si le lien
   // "Y aller" doit privilegier un itineraire pieton ou voiture (meme seuil que sur
-  // commerces.html : en dessous de 1,2 km, on suppose que la personne ira a pied).
+  // commerces.html : en dessous de 1,3 km, on suppose que la personne ira a pied).
   function haversineMeters(lat1, lon1, lat2, lon2) {
     const R = 6371000;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -2172,7 +2172,7 @@ function syncUrl(replace = true) {
   function isWalkingDistance(poi) {
     const listing = LISTINGS && LISTINGS[state.listingId];
     if (!listing || !listing.coords || !poi || !poi.coords) return false;
-    return haversineMeters(listing.coords.lat, listing.coords.lon, poi.coords[0], poi.coords[1]) <= 1200;
+    return haversineMeters(listing.coords.lat, listing.coords.lon, poi.coords[0], poi.coords[1]) <= 1300;
   }
 
   // Ouvre en cascade une liste de liens : chacun est tente a son tour, et si la page est

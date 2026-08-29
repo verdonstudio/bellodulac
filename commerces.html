@@ -273,7 +273,7 @@
 
     // -------- Distance / temps depuis le logement (a vol d'oiseau) --------
     // Meme logique que le lien "Y aller" de index.html : on estime un temps de trajet
-    // indicatif sans dependre d'une API de routage externe. En dessous de 1,2 km on
+    // indicatif sans dependre d'une API de routage externe. En dessous de 1,3 km on
     // suppose un trajet a pied (~4,5 km/h), au-dela un trajet en voiture (~45 km/h,
     // vitesse moyenne raisonnable sur les petites routes autour du lac).
     function haversineKm(lat1, lon1, lat2, lon2) {
@@ -298,7 +298,7 @@
         if (override) return { km: override.km, minutes: override.min };
         if (!home || !poi.coords) return null;
         const km = haversineKm(home.lat, home.lng, poi.coords[0], poi.coords[1]);
-        const speedKmh = km <= 1.2 ? 4.5 : 45;
+        const speedKmh = km <= 1.3 ? 4.5 : 45;
         const minutes = Math.max(1, Math.round((km / speedKmh) * 60));
         return { km, minutes };
     }
