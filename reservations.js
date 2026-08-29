@@ -35,7 +35,7 @@
    ========================================================================== */
 
 window.RESERVATIONS = [
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Sandrine",   voyageurs: 4, arrivee: "28/08/2026", depart: "29/08/2026", code: "BELLO" },
+  { annonce: "Maison Bell'O 6P", nom: "Sandrine",   voyageurs: 4, arrivee: "29/08/2026", depart: "01/09/2026", code: "BELLO" },
   { annonce: "Bell'Etoile (Moustiers)", nom: "Thomas",   voyageurs: 3, arrivee: "16/10/2026", depart: "19/10/2026", code: "HMFFSNS4BJ" },
   { annonce: "Bell'Etoile (Moustiers)", nom: "Michelle",      voyageurs: 4, arrivee: "01/10/2026", depart: "04/10/2026", code: "HMAZKZK5XA" },
   { annonce: "Maison Bell'O 6P",        nom: "Julie",      voyageurs: 6, arrivee: "25/09/2026", depart: "27/09/2026", code: "HMDXYHZQZN" },
