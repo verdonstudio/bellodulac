@@ -2148,16 +2148,32 @@ function syncUrl(replace = true) {
     return getPoiCats(poi).includes(key);
   }
 
-  // -------- Lien "Y aller" : ajouté systématiquement pour les POI de ces catégories, en
-  // plus des liens déjà définis dans pois.js (ex. "Plus d'informations"). Les autres
-  // catégories (restaurants, pharmacies, etc.) ne sont pas concernées.
-  const POI_NAV_FALLBACK_CATS = [
-    'nature', 'equitation', 'parking_gratuit', 'parking_zonebleu', 'parking_payant',
-    'visite', 'laverie', 'relais', 'ordures', 'commerce', 'station', 'plage', 'sportaquatique',
-    'pharmacie', 'restaurant'
-  ];
+  // -------- Lien "Y aller" : ajouté systématiquement pour tout POI ayant des coordonnées,
+  // en plus des liens déjà définis dans pois.js (ex. "Plus d'informations").
 
-  // Distance a vol d'oiseau entre le logement courant et un POI, pour decider si le lien
+  // Position de la personne (geolocalisation navigateur), demandee une seule fois au
+  // chargement, en tache de fond -- si elle est accordee, l'itineraire "Y aller" et le choix
+  // pied/voiture se basent sur la position REELLE de la personne plutot que sur le logement.
+  // Si elle est refusee/indisponible (pas de support, timeout, refus...), userPos reste null
+  // et on retombe sur les coordonnees du logement courant (comportement precedent).
+  let userPos = null;
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude }; },
+      () => { /* refuse ou indisponible : userPos reste null, repli sur le logement */ },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
+    );
+  }
+  // Point de depart a utiliser pour le calcul de distance/itineraire : la position de la
+  // personne si on l'a, sinon le logement courant (logements.js utilise "lon", pas "lng").
+  function originCoords() {
+    if (userPos) return userPos;
+    const listing = LISTINGS && LISTINGS[state.listingId];
+    if (listing && listing.coords) return { lat: listing.coords.lat, lng: listing.coords.lon };
+    return null;
+  }
+
+  // Distance a vol d'oiseau entre le point de depart et un POI, pour decider si le lien
   // "Y aller" doit privilegier un itineraire pieton ou voiture (meme seuil que sur
   // commerces.html : en dessous de 1,3 km, on suppose que la personne ira a pied).
   function haversineMeters(lat1, lon1, lat2, lon2) {
@@ -2170,9 +2186,9 @@ function syncUrl(replace = true) {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   }
   function isWalkingDistance(poi) {
-    const listing = LISTINGS && LISTINGS[state.listingId];
-    if (!listing || !listing.coords || !poi || !poi.coords) return false;
-    return haversineMeters(listing.coords.lat, listing.coords.lon, poi.coords[0], poi.coords[1]) <= 1300;
+    const origin = originCoords();
+    if (!origin || !poi || !poi.coords) return false;
+    return haversineMeters(origin.lat, origin.lng, poi.coords[0], poi.coords[1]) <= 1300;
   }
 
   // Ouvre en cascade une liste de liens : chacun est tente a son tour, et si la page est
@@ -2271,10 +2287,8 @@ function getPoiLinks(content, poi) {
     }
 
     // Lien "Y aller" : ajouté systématiquement (en plus des liens existants, ex. "Plus
-    // d'informations") pour les POI des catégories concernées (voir POI_NAV_FALLBACK_CATS
-    // ci-dessus), tant qu'il n'y en a pas déjà un.
-    if (poi && poi.coords && getPoiCats(poi).some(c => POI_NAV_FALLBACK_CATS.includes(c))
-        && !links.some(l => l.label === I18N[state.lang].go_there)) {
+    // d'informations") pour tous les POI ayant des coordonnées, tant qu'il n'y en a pas déjà un.
+    if (poi && poi.coords && !links.some(l => l.label === I18N[state.lang].go_there)) {
       const nav = buildGoToUrl(poi.coords[0], poi.coords[1], content.name || '', isWalkingDistance(poi));
       links.push({
         url: nav.href,
