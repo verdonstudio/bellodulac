@@ -2230,23 +2230,6 @@ function syncUrl(replace = true) {
     tryNext();
   };
 
-  // Reduit un tracé (souvent des dizaines de points) a une poignee de points intermediaires
-  // repartis uniformement, a passer en "waypoints" a Google Maps pour forcer l'appli a suivre
-  // le chemin reel plutot que de recalculer son propre itineraire (utile quand le trace connu
-  // s'ecarte de ce que proposerait un GPS classique, ex. sentier pietons hors-route).
-  function buildTraceWaypointsParam(coords, maxPoints) {
-    if (!Array.isArray(coords) || coords.length < 3) return '';
-    const max = maxPoints || 8;
-    const inner = coords.slice(1, -1); // le 1er et dernier point sont l'origine/la destination
-    if (!inner.length) return '';
-    const step = Math.max(1, Math.ceil(inner.length / max));
-    const picked = [];
-    for (let i = 0; i < inner.length && picked.length < max; i += step) {
-      picked.push(inner[i]);
-    }
-    return picked.map(c => `${c[0]},${c[1]}`).join('|');
-  }
-
   // Construit le(s) lien(s) d'itinéraire "Y aller". Android : "geo:" fait proposer par le
   // système toutes les applis installées capables de le gérer (Google Maps/Waze/etc.) -- un
   // seul lien suffit. iOS n'a en revanche aucun équivalent système ("maps.apple.com" ouvre
@@ -2255,46 +2238,74 @@ function syncUrl(replace = true) {
   // Google Maps puis Apple Plans a pied), avec Apple Plans en tout dernier repli garanti.
   // PC/TV : Google Maps directement, seule option utilisable sans appli native.
   //
-  // traceCoords (optionnel) : quand le POI a un tracé précis connu (poi.trace, ex. chemin
-  // pietonnier different de ce que calculerait un GPS), on le transmet a Google Maps sous
-  // forme de "waypoints" pour forcer l'itineraire a suivre ce chemin exact. Seul Google Maps
-  // supporte des waypoints via son URL -- Waze et Apple Plans n'ont pas cette possibilite et
-  // recalculeraient leur propre itineraire (potentiellement different) : on les retire donc
-  // de la cascade dans ce cas, quitte a n'avoir que Google Maps (appli, puis son site web en
-  // repli garanti, plutot qu'Apple Plans qui ignorerait le tracé).
-  function buildGoToUrl(lat, lng, label, walking, traceCoords) {
+  // NB : on a tente de transmettre le tracé connu (poi.trace) a Google Maps sous forme de
+  // "waypoints" pour les POI avec un chemin precis different de ce qu'un GPS calculerait
+  // (ex. raccourci hors-sentier) -- mais Google Maps/Waze/Apple Plans recalculent toujours
+  // leur propre itineraire le long de LEUR reseau de routes/chemins connu : un waypoint sur
+  // un chemin qu'ils ignorent est juste "aimante" (snap) vers la route la plus proche, donc
+  // ca ne marche pas pour un raccourci non reference. Pour ces POI (voir getPoiLinks), on
+  // reste desormais sur notre propre carte, qui affiche le tracé exact enregistre.
+  function buildGoToUrl(lat, lng, label, walking) {
     const encLabel = encodeURIComponent(label || '');
     const ua = (navigator.userAgent || '');
     const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
     const isAndroid = /Android/i.test(ua);
-    const waypointsParam = traceCoords ? buildTraceWaypointsParam(traceCoords) : '';
-    // Un tracé connu est forcement pietonnier (chemin, sentier...) : on force le mode marche.
-    const effectiveWalking = waypointsParam ? true : walking;
-    const gmapsWebUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}` +
-      (waypointsParam ? `&waypoints=${waypointsParam}` : '') +
-      `&travelmode=${effectiveWalking ? 'walking' : 'driving'}`;
     if (isAndroid) {
-      if (waypointsParam) {
-        // "geo:" ne sait pas transporter d'itineraire (juste un point) : on utilise le lien
-        // Google Maps web, qui ouvre directement l'appli si elle est installee (App Link).
-        return { href: gmapsWebUrl };
-      }
       return { href: `geo:${lat},${lng}?q=${lat},${lng}(${encLabel})` };
     }
     if (isIOS) {
-      const appleUrl = `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}&dirflg=${effectiveWalking ? 'w' : 'd'}`;
-      const gmapsUrl = `comgooglemaps://?daddr=${lat},${lng}&q=${encLabel}&directionsmode=${effectiveWalking ? 'walking' : 'driving'}` +
-        (waypointsParam ? `&waypoints=${waypointsParam}` : '');
+      const appleUrl = `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}&dirflg=${walking ? 'w' : 'd'}`;
+      const gmapsUrl = `comgooglemaps://?daddr=${lat},${lng}&q=${encLabel}&directionsmode=${walking ? 'walking' : 'driving'}`;
       const wazeUrl = `waze://?ll=${lat},${lng}&navigate=yes`;
-      if (waypointsParam) {
-        // Seul Google Maps peut honorer le tracé : Waze/Apple Plans sortis de la cascade.
-        return { href: gmapsWebUrl, chain: [gmapsUrl, gmapsWebUrl] };
-      }
       const chain = walking ? [gmapsUrl, appleUrl] : [wazeUrl, gmapsUrl, appleUrl];
       return { href: appleUrl, chain };
     }
-    return { href: gmapsWebUrl };
+    return { href: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}` };
   }
+
+  // -------- "Y aller" pour un POI au tracé connu et précis (poi.trace) : plutot que de
+  // renvoyer vers une appli externe qui recalculerait un itineraire different (voir note
+  // ci-dessus), on reste sur notre carte -- elle affiche le VRAI chemin -- et on y ajoute la
+  // position de la personne (nouvelle localisation haute precision demandee a la volee, plus
+  // fiable que celle prise une fois au chargement de la page) pour qu'elle puisse se repérer
+  // par rapport au tracé.
+  let userPosMarker = null;
+  const YOU_ARE_HERE_LABEL = { FR: 'Vous êtes ici', EN: 'You are here', DE: 'Sie sind hier', NL: 'U bent hier' };
+  function showUserPositionMarker(pos) {
+    if (!mapState.map || !Lglobal || !pos) return;
+    if (userPosMarker) {
+      userPosMarker.setLatLng([pos.lat, pos.lng]);
+    } else {
+      userPosMarker = Lglobal.circleMarker([pos.lat, pos.lng], {
+        radius: 8,
+        color: '#ffffff',
+        weight: 3,
+        fillColor: '#1a73e8',
+        fillOpacity: 1
+      }).addTo(mapState.map);
+      userPosMarker.bindTooltip(YOU_ARE_HERE_LABEL[state.lang] || YOU_ARE_HERE_LABEL.FR);
+    }
+  }
+  window.focusPoiTraceWithPosition = function (poiId) {
+    const poi = (window.POIS || []).find(p => p.id === poiId);
+    const traceCoords = getPoiTraceCoords(poi);
+    if (!traceCoords) return;
+    showPoiTrace(poiId); // dessine le tracé exact et centre la carte dessus
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          showUserPositionMarker(userPos);
+          if (mapState.traceLayer) {
+            const bounds = Lglobal.latLngBounds(traceCoords).extend([userPos.lat, userPos.lng]);
+            mapState.map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
+          }
+        },
+        () => { /* position indisponible : le tracé reste affiché seul */ },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+      );
+    }
+  };
 
 function getPoiLinks(content, poi) {
     const buildFullUrl = (rawUrl) => {
@@ -2342,12 +2353,18 @@ function getPoiLinks(content, poi) {
     // d'informations") pour tous les POI ayant des coordonnées, tant qu'il n'y en a pas déjà un.
     if (poi && poi.coords && !links.some(l => l.label === I18N[state.lang].go_there)) {
       const traceCoords = getPoiTraceCoords(poi);
-      const nav = buildGoToUrl(poi.coords[0], poi.coords[1], content.name || '', isWalkingDistance(poi), traceCoords);
-      links.push({
-        url: nav.href,
-        label: I18N[state.lang].go_there,
-        chain: nav.chain
-      });
+      if (traceCoords) {
+        // Tracé connu et précis : on reste sur notre carte plutôt que d'envoyer vers une
+        // appli externe qui recalculerait un itinéraire différent (voir buildGoToUrl).
+        links.push({ url: '#', label: I18N[state.lang].go_there, traceFollow: poi.id });
+      } else {
+        const nav = buildGoToUrl(poi.coords[0], poi.coords[1], content.name || '', isWalkingDistance(poi));
+        links.push({
+          url: nav.href,
+          label: I18N[state.lang].go_there,
+          chain: nav.chain
+        });
+      }
     }
 
     // Interception spécifique pour la catégorie logement (comme dans panorama ou backintime)
@@ -2443,7 +2460,11 @@ function getPoiLinks(content, poi) {
 			// cascade avant le repli Apple Plans -- l.url reste le href (utile si le JS ne
 			// s'execute pas), mais le clic passe par openNavChain.
 			let chainAttr = '';
-			if (Array.isArray(l.chain) && l.chain.length) {
+			if (l.traceFollow) {
+			  // POI avec tracé connu et précis : on reste sur la carte au lieu d'ouvrir une
+			  // appli externe (voir focusPoiTraceWithPosition et la note dans buildGoToUrl).
+			  chainAttr = ` onclick="window.focusPoiTraceWithPosition('${l.traceFollow}'); return false;"`;
+			} else if (Array.isArray(l.chain) && l.chain.length) {
 			  const chainId = 'nav' + (navChainSeq++);
 			  window.__navChains[chainId] = l.chain;
 			  chainAttr = ` onclick="window.openNavChain(window.__navChains['${chainId}']); return false;"`;
