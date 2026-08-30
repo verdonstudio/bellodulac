@@ -2290,18 +2290,25 @@ function syncUrl(replace = true) {
     const poi = (window.POIS || []).find(p => p.id === poiId);
     const traceCoords = getPoiTraceCoords(poi);
     if (!traceCoords) return;
-    showPoiTrace(poiId); // dessine le tracé exact et centre la carte dessus
+    showPoiTrace(poiId); // dessine le tracé exact et centre la carte dessus (deja fait si traceAutoShow)
+    const showAt = (pos) => {
+      showUserPositionMarker(pos);
+      if (mapState.traceLayer) {
+        const bounds = Lglobal.latLngBounds(traceCoords).extend([pos.lat, pos.lng]);
+        mapState.map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
+      }
+    };
+    // Retour visuel immediat avec la derniere position connue (prise au chargement de la
+    // page) si on l'a deja -- sinon, sur mobile, une position haute precision fraiche peut
+    // prendre plusieurs secondes et on pouvait avoir l'impression que le clic ne faisait rien.
+    if (userPos) showAt(userPos);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          showUserPositionMarker(userPos);
-          if (mapState.traceLayer) {
-            const bounds = Lglobal.latLngBounds(traceCoords).extend([userPos.lat, userPos.lng]);
-            mapState.map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
-          }
+          showAt(userPos); // remplace/affine avec la position fraiche des qu'elle arrive
         },
-        () => { /* position indisponible : le tracé reste affiché seul */ },
+        () => { /* position indisponible : le tracé (et la derniere position connue) reste affiché */ },
         { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
       );
     }
@@ -2353,7 +2360,12 @@ function getPoiLinks(content, poi) {
     // d'informations") pour tous les POI ayant des coordonnées, tant qu'il n'y en a pas déjà un.
     if (poi && poi.coords && !links.some(l => l.label === I18N[state.lang].go_there)) {
       const traceCoords = getPoiTraceCoords(poi);
-      if (traceCoords) {
+      // "followOnMap" (dans poi.trace) : configurable POI par POI -- seuls les tracés dont on
+      // sait qu'ils s'écartent significativement de ce qu'un GPS calculerait (ex. Plage de
+      // Margaridon) restent sur notre carte ; les autres POI avec un tracé gardent le
+      // comportement standard (cascade vers l'appli de navigation choisie).
+      const followOnMap = !!(poi.trace && !Array.isArray(poi.trace) && poi.trace.followOnMap);
+      if (traceCoords && followOnMap) {
         // Tracé connu et précis : on reste sur notre carte plutôt que d'envoyer vers une
         // appli externe qui recalculerait un itinéraire différent (voir buildGoToUrl).
         links.push({ url: '#', label: I18N[state.lang].go_there, traceFollow: poi.id });

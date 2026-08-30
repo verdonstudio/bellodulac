@@ -5008,6 +5008,7 @@ window.POIS = [
         "salles6",
         "salles8"
       ],
+      "followOnMap": true,
       "coords": [
         [
           43.77414,
