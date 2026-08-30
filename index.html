@@ -2207,14 +2207,25 @@ function syncUrl(replace = true) {
       }
       let left = false;
       const markLeft = () => { left = true; };
+      // "blur" se declenche souvent avant "visibilitychange"/"pagehide" sur iOS lors du
+      // passage a une autre appli via un schema d'URL personnalise (comgooglemaps://,
+      // waze://...) : on ecoute les trois pour detecter le depart au plus tot.
       document.addEventListener('visibilitychange', markLeft, { once: true });
       window.addEventListener('pagehide', markLeft, { once: true });
+      window.addEventListener('blur', markLeft, { once: true });
       window.location.href = urls[i];
       setTimeout(() => {
         document.removeEventListener('visibilitychange', markLeft);
         window.removeEventListener('pagehide', markLeft);
-        if (!left) { i++; tryNext(); }
-      }, 600);
+        window.removeEventListener('blur', markLeft);
+        // On revérifie aussi document.hidden au cas où l'evenement n'aurait pas ete
+        // capte : iOS peut mettre plus de 600ms a basculer vers l'appli (ecran de
+        // confirmation, appli lourde a charger...) -- un delai trop court faisait
+        // parfois enchainer sur le lien suivant (ex. Apple Plans) alors que l'appli
+        // precedente (ex. Google Maps) s'etait bien ouverte, d'ou un double
+        // changement d'appli constate par certains utilisateurs.
+        if (!left && !document.hidden) { i++; tryNext(); }
+      }, 1500);
     }
     tryNext();
   };
@@ -2571,7 +2582,7 @@ function getPoiLinks(content, poi) {
     return `${(meters / 1000).toFixed(1)} km`;
   }
 
-  function showPoiTrace(poiId) {
+  function showPoiTrace(poiId, opts) {
     if (!mapState.map || !Lglobal) return;
     const poi = (window.POIS || []).find(p => p.id === poiId);
     const traceCoords = getPoiTraceCoords(poi);
@@ -2601,7 +2612,14 @@ function getPoiLinks(content, poi) {
     }
     mapState.traceBadgeKind = 'poi';
 
-    mapState.map.closePopup();
+    // Ferme le popup uniquement lors d'un clic manuel sur le bouton "🚶 voir le tracé" :
+    // laisse la place au tracé sur la carte. En revanche, pour traceAutoShow (le tracé
+    // s'affiche automatiquement des l'ouverture du popup, voir le handler popupopen), on
+    // garde le popup ouvert -- sinon il se fermait immediatement apres avoir ete ouvert
+    // (le "toaster" du POI ne s'affichait alors plus, seul le tracé restait visible).
+    if (!(opts && opts.keepPopupOpen)) {
+      mapState.map.closePopup();
+    }
     mapState.map.fitBounds(mapState.traceLayer.getBounds(), { padding: [60, 60], maxZoom: 17 });
     syncUrl();
   }
@@ -2947,8 +2965,9 @@ function getPoiLinks(content, poi) {
         m.setPopupContent(buildPopupHTML(poi));
         maybeClearTraceOnSelection(poi.id);
         // traceAutoShow : affiche le tracé immediatement, sans passer par le bouton "🚶".
+        // keepPopupOpen:true pour ne pas refermer le popup qu'on vient tout juste d'ouvrir.
         if (poi.traceAutoShow && getPoiTraceCoords(poi)) {
-          showPoiTrace(poi.id);
+          showPoiTrace(poi.id, { keepPopupOpen: true });
         }
         state.poiId = poi.id;
         syncUrl();
