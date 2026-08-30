@@ -2218,14 +2218,16 @@ function syncUrl(replace = true) {
         document.removeEventListener('visibilitychange', markLeft);
         window.removeEventListener('pagehide', markLeft);
         window.removeEventListener('blur', markLeft);
-        // On revérifie aussi document.hidden au cas où l'evenement n'aurait pas ete
-        // capte : iOS peut mettre plus de 600ms a basculer vers l'appli (ecran de
-        // confirmation, appli lourde a charger...) -- un delai trop court faisait
-        // parfois enchainer sur le lien suivant (ex. Apple Plans) alors que l'appli
-        // precedente (ex. Google Maps) s'etait bien ouverte, d'ou un double
+        // On revérifie aussi document.hidden ET document.hasFocus() au cas où aucun des
+        // evenements n'aurait ete capte : certains navigateurs (Chrome iOS notamment, dont
+        // le shell differe de Safari) peuvent mettre plus de temps a basculer vers l'appli
+        // (ecran de confirmation, appli lourde a charger...) sans forcement declencher
+        // "visibilitychange"/"pagehide"/"blur" -- un delai trop court ou une detection
+        // incomplete faisait parfois enchainer sur le lien suivant (ex. Apple Plans) alors
+        // que l'appli precedente (ex. Google Maps) s'etait bien ouverte, d'ou un double
         // changement d'appli constate par certains utilisateurs.
-        if (!left && !document.hidden) { i++; tryNext(); }
-      }, 1500);
+        if (!left && !document.hidden && document.hasFocus()) { i++; tryNext(); }
+      }, 2000);
     }
     tryNext();
   };
@@ -2427,7 +2429,8 @@ function getPoiLinks(content, poi) {
     return links.map(l => ({
       url: buildFullUrl(l.url),
       label: l.label,
-      chain: l.chain
+      chain: l.chain,
+      traceFollow: l.traceFollow
     }));
   }
 
