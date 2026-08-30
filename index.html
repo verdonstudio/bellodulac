@@ -2271,6 +2271,28 @@ function syncUrl(replace = true) {
   // par rapport au tracé.
   let userPosMarker = null;
   const YOU_ARE_HERE_LABEL = { FR: 'Vous êtes ici', EN: 'You are here', DE: 'Sie sind hier', NL: 'U bent hier' };
+
+  // Petit message flottant temporaire : sert notamment a signaler un echec de geolocalisation
+  // (refus, indisponible...) qui autrement echouait silencieusement -- on ne savait pas
+  // pourquoi le point bleu n'apparaissait pas.
+  let geoToastEl = null;
+  function showGeoToast(text) {
+    if (!geoToastEl) {
+      geoToastEl = document.createElement('div');
+      geoToastEl.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:rgba(20,20,20,.92);color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;z-index:99999;box-shadow:0 2px 10px rgba(0,0,0,.3);max-width:80vw;text-align:center;pointer-events:none;transition:opacity .3s;opacity:0;';
+      document.body.appendChild(geoToastEl);
+    }
+    geoToastEl.textContent = text;
+    geoToastEl.style.opacity = '1';
+    clearTimeout(geoToastEl._hideTimer);
+    geoToastEl._hideTimer = setTimeout(() => { geoToastEl.style.opacity = '0'; }, 4000);
+  }
+  const GEO_ERROR_LABEL = {
+    FR: { denied: 'Localisation refusée : autorisez-la dans les réglages du navigateur pour voir votre position sur la carte.', unavailable: 'Position indisponible pour le moment (signal GPS faible ?).' },
+    EN: { denied: 'Location denied: allow it in your browser settings to see your position on the map.', unavailable: 'Position unavailable right now (weak GPS signal?).' },
+    DE: { denied: 'Standort verweigert: erlauben Sie ihn in den Browsereinstellungen, um Ihre Position auf der Karte zu sehen.', unavailable: 'Position derzeit nicht verfügbar (schwaches GPS-Signal?).' },
+    NL: { denied: 'Locatie geweigerd: sta dit toe in de browserinstellingen om uw positie op de kaart te zien.', unavailable: 'Positie momenteel niet beschikbaar (zwak gps-signaal?).' }
+  };
   function showUserPositionMarker(pos) {
     if (!mapState.map || !Lglobal || !pos) return;
     if (userPosMarker) {
@@ -2308,9 +2330,18 @@ function syncUrl(replace = true) {
           userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
           showAt(userPos); // remplace/affine avec la position fraiche des qu'elle arrive
         },
-        () => { /* position indisponible : le tracé (et la derniere position connue) reste affiché */ },
+        (err) => {
+          // Echec (refus, indisponible, timeout...) : si on n'avait deja rien affiche via
+          // la derniere position connue, on le signale plutot que de rester silencieux.
+          if (!userPos) {
+            const labels = GEO_ERROR_LABEL[state.lang] || GEO_ERROR_LABEL.FR;
+            showGeoToast(err && err.code === 1 ? labels.denied : labels.unavailable);
+          }
+        },
         { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
       );
+    } else {
+      showGeoToast((GEO_ERROR_LABEL[state.lang] || GEO_ERROR_LABEL.FR).unavailable);
     }
   };
 
