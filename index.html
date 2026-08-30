@@ -2230,6 +2230,23 @@ function syncUrl(replace = true) {
     tryNext();
   };
 
+  // Reduit un tracé (souvent des dizaines de points) a une poignee de points intermediaires
+  // repartis uniformement, a passer en "waypoints" a Google Maps pour forcer l'appli a suivre
+  // le chemin reel plutot que de recalculer son propre itineraire (utile quand le trace connu
+  // s'ecarte de ce que proposerait un GPS classique, ex. sentier pietons hors-route).
+  function buildTraceWaypointsParam(coords, maxPoints) {
+    if (!Array.isArray(coords) || coords.length < 3) return '';
+    const max = maxPoints || 8;
+    const inner = coords.slice(1, -1); // le 1er et dernier point sont l'origine/la destination
+    if (!inner.length) return '';
+    const step = Math.max(1, Math.ceil(inner.length / max));
+    const picked = [];
+    for (let i = 0; i < inner.length && picked.length < max; i += step) {
+      picked.push(inner[i]);
+    }
+    return picked.map(c => `${c[0]},${c[1]}`).join('|');
+  }
+
   // Construit le(s) lien(s) d'itinéraire "Y aller". Android : "geo:" fait proposer par le
   // système toutes les applis installées capables de le gérer (Google Maps/Waze/etc.) -- un
   // seul lien suffit. iOS n'a en revanche aucun équivalent système ("maps.apple.com" ouvre
@@ -2237,22 +2254,46 @@ function syncUrl(replace = true) {
   // cascade les schemas d'URL propres a chaque appli (Waze puis Google Maps en voiture,
   // Google Maps puis Apple Plans a pied), avec Apple Plans en tout dernier repli garanti.
   // PC/TV : Google Maps directement, seule option utilisable sans appli native.
-  function buildGoToUrl(lat, lng, label, walking) {
+  //
+  // traceCoords (optionnel) : quand le POI a un tracé précis connu (poi.trace, ex. chemin
+  // pietonnier different de ce que calculerait un GPS), on le transmet a Google Maps sous
+  // forme de "waypoints" pour forcer l'itineraire a suivre ce chemin exact. Seul Google Maps
+  // supporte des waypoints via son URL -- Waze et Apple Plans n'ont pas cette possibilite et
+  // recalculeraient leur propre itineraire (potentiellement different) : on les retire donc
+  // de la cascade dans ce cas, quitte a n'avoir que Google Maps (appli, puis son site web en
+  // repli garanti, plutot qu'Apple Plans qui ignorerait le tracé).
+  function buildGoToUrl(lat, lng, label, walking, traceCoords) {
     const encLabel = encodeURIComponent(label || '');
     const ua = (navigator.userAgent || '');
     const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
     const isAndroid = /Android/i.test(ua);
+    const waypointsParam = traceCoords ? buildTraceWaypointsParam(traceCoords) : '';
+    // Un tracé connu est forcement pietonnier (chemin, sentier...) : on force le mode marche.
+    const effectiveWalking = waypointsParam ? true : walking;
+    const gmapsWebUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}` +
+      (waypointsParam ? `&waypoints=${waypointsParam}` : '') +
+      `&travelmode=${effectiveWalking ? 'walking' : 'driving'}`;
     if (isAndroid) {
+      if (waypointsParam) {
+        // "geo:" ne sait pas transporter d'itineraire (juste un point) : on utilise le lien
+        // Google Maps web, qui ouvre directement l'appli si elle est installee (App Link).
+        return { href: gmapsWebUrl };
+      }
       return { href: `geo:${lat},${lng}?q=${lat},${lng}(${encLabel})` };
     }
     if (isIOS) {
-      const appleUrl = `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}&dirflg=${walking ? 'w' : 'd'}`;
-      const gmapsUrl = `comgooglemaps://?daddr=${lat},${lng}&q=${encLabel}&directionsmode=${walking ? 'walking' : 'driving'}`;
+      const appleUrl = `https://maps.apple.com/?daddr=${lat},${lng}&q=${encLabel}&dirflg=${effectiveWalking ? 'w' : 'd'}`;
+      const gmapsUrl = `comgooglemaps://?daddr=${lat},${lng}&q=${encLabel}&directionsmode=${effectiveWalking ? 'walking' : 'driving'}` +
+        (waypointsParam ? `&waypoints=${waypointsParam}` : '');
       const wazeUrl = `waze://?ll=${lat},${lng}&navigate=yes`;
+      if (waypointsParam) {
+        // Seul Google Maps peut honorer le tracé : Waze/Apple Plans sortis de la cascade.
+        return { href: gmapsWebUrl, chain: [gmapsUrl, gmapsWebUrl] };
+      }
       const chain = walking ? [gmapsUrl, appleUrl] : [wazeUrl, gmapsUrl, appleUrl];
       return { href: appleUrl, chain };
     }
-    return { href: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}` };
+    return { href: gmapsWebUrl };
   }
 
 function getPoiLinks(content, poi) {
@@ -2300,7 +2341,8 @@ function getPoiLinks(content, poi) {
     // Lien "Y aller" : ajouté systématiquement (en plus des liens existants, ex. "Plus
     // d'informations") pour tous les POI ayant des coordonnées, tant qu'il n'y en a pas déjà un.
     if (poi && poi.coords && !links.some(l => l.label === I18N[state.lang].go_there)) {
-      const nav = buildGoToUrl(poi.coords[0], poi.coords[1], content.name || '', isWalkingDistance(poi));
+      const traceCoords = getPoiTraceCoords(poi);
+      const nav = buildGoToUrl(poi.coords[0], poi.coords[1], content.name || '', isWalkingDistance(poi), traceCoords);
       links.push({
         url: nav.href,
         label: I18N[state.lang].go_there,
