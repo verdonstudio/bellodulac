@@ -2300,7 +2300,16 @@ function syncUrl(replace = true) {
     if (userPosMarker) {
       userPosMarker.setLatLng([pos.lat, pos.lng]);
     } else {
+      // Un circleMarker vit par defaut dans l'overlayPane (z-index 400), sous le markerPane
+      // (z-index 600) qui contient les pins des POI -- le point bleu se retrouvait donc
+      // visuellement sous les POI en cas de superposition. On cree un pane dedie, place
+      // au-dessus du markerPane, pour garantir qu'il reste toujours visible par-dessus.
+      if (!mapState.map.getPane('userPosPane')) {
+        mapState.map.createPane('userPosPane');
+        mapState.map.getPane('userPosPane').style.zIndex = 650;
+      }
       userPosMarker = Lglobal.circleMarker([pos.lat, pos.lng], {
+        pane: 'userPosPane',
         radius: 8,
         color: '#ffffff',
         weight: 3,
