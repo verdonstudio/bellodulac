@@ -242,6 +242,26 @@
             return null;
         }
 
+        // La video d'intro TV (mode "?next=...", lancee a chaque demarrage/reveil de
+        // l'appli Android) ne doit se jouer que le jour d'arrivee (le "premier soir") puis
+        // le lendemain matin jusqu'a 11h -- au-dela, on saute directement vers "next"
+        // (tv.html) plutot que de la rejouer a chaque fois pendant tout le reste du sejour.
+        function dayAfter(isoDate) {
+            const d = new Date(isoDate + 'T00:00:00');
+            d.setDate(d.getDate() + 1);
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+        function isWithinIntroWindow(logementId) {
+            const reservation = todayReservationMatch(logementId);
+            if (!reservation) return false; // aucun sejour identifie aujourd'hui : pas d'intro
+            const arrivee = parseFlexibleDate(reservation.arrivee);
+            if (!arrivee) return false;
+            const today = todayLocalISO();
+            if (today === arrivee) return true; // jour d'arrivee (soir)
+            if (today === dayAfter(arrivee) && currentTimeHHMM() < CHECKOUT_CUTOFF) return true; // lendemain matin
+            return false;
+        }
+
         function readUrlParams() {
             const p = new URLSearchParams(window.location.search);
             const rawLang = p.get('lang') || p.get('lng');
@@ -479,6 +499,16 @@
 
         function start() {
             readUrlParams();
+
+            // Mode TV ("next" fourni) : en dehors de la fenetre d'intro (voir
+            // isWithinIntroWindow), on saute directement vers "next" sans jouer la video
+            // ni meme afficher la page (pas de flash noir/topbar avant la redirection).
+            if (state.nextUrl && !isWithinIntroWindow(state.logement)) {
+                hasNavigatedToNext = true;
+                window.location.replace(state.nextUrl);
+                return;
+            }
+
             syncUrl();
             applyI18n();
             initVideo();
