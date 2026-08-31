@@ -16,6 +16,97 @@
     <script src="reservations.js"></script>
     <script src="redirect.js"></script>
 
+    <!-- Garde-fou anti-flash : en mode TV ("?next=..."), decide AVANT le premier rendu de la
+         page (donc avant meme que la topbar "Mon Livret Verdon" n'apparaisse a l'ecran) s'il
+         faut sauter directement vers "next" (voir isWithinIntroWindow plus bas dans le script
+         principal, execute seulement apres DOMContentLoaded -- trop tard pour eviter le flash).
+         Duplique volontairement une version minimale de la meme logique de detection de
+         reservation plutot que de dependre du script principal, pour rediriger le plus tot
+         possible ; le script principal refait de toute facon le meme controle par securite. -->
+    <script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var nextUrl = params.get('next');
+        if (!nextUrl) return; // pas le mode TV (video de POI classique) : rien a faire ici
+
+        function todayLocalISO() {
+            var d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+        function parseFlexibleDate(str) {
+            if (!str) return null;
+            str = String(str).trim();
+            var m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (m) return m[1] + '-' + m[2] + '-' + m[3];
+            m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            if (m) return m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0');
+            return null;
+        }
+        function annonceMatchesLogement(annonce, targetLogementId) {
+            var norm = String(annonce || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+            var compact = norm.replace(/[^a-z0-9]/g, '');
+            if (norm === targetLogementId) return true;
+            if (targetLogementId.indexOf('moustiers') !== -1) {
+                return norm.indexOf('moustiers') !== -1 || norm.indexOf('etoile') !== -1;
+            }
+            return norm.indexOf('salles') !== -1 || norm.indexOf('lac') !== -1 || compact.indexOf('bello') !== -1;
+        }
+        var CHECKOUT_CUTOFF = '11:00';
+        function currentTimeHHMM() {
+            var d = new Date();
+            return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+        }
+        function todayReservationMatch(logementId) {
+            if (typeof window.RESERVATIONS === 'undefined' || !Array.isArray(window.RESERVATIONS)) return null;
+            var today = todayLocalISO();
+            var candidates = window.RESERVATIONS.filter(function (r) {
+                var arrivee = parseFlexibleDate(r.arrivee);
+                var depart = parseFlexibleDate(r.depart);
+                if (!arrivee || !depart) return false;
+                if (today < arrivee || today > depart) return false;
+                return annonceMatchesLogement(r.annonce, logementId);
+            });
+            if (!candidates.length) return null;
+            if (candidates.length === 1) {
+                var only = candidates[0];
+                var departsToday = parseFlexibleDate(only.depart) === today;
+                var arrivesToday = parseFlexibleDate(only.arrivee) === today;
+                if (departsToday && !arrivesToday && currentTimeHHMM() >= CHECKOUT_CUTOFF) return null;
+                return only;
+            }
+            var departing = candidates.find(function (r) { return parseFlexibleDate(r.depart) === today && parseFlexibleDate(r.arrivee) !== today; });
+            var arriving = candidates.find(function (r) { return parseFlexibleDate(r.arrivee) === today && parseFlexibleDate(r.depart) !== today; });
+            if (currentTimeHHMM() < CHECKOUT_CUTOFF) {
+                if (departing) return departing;
+                if (arriving) return arriving;
+            } else if (arriving) {
+                return arriving;
+            }
+            return null;
+        }
+        function dayAfter(isoDate) {
+            var d = new Date(isoDate + 'T00:00:00');
+            d.setDate(d.getDate() + 1);
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+        function isWithinIntroWindow(logementId) {
+            var reservation = todayReservationMatch(logementId);
+            if (!reservation) return false;
+            var arrivee = parseFlexibleDate(reservation.arrivee);
+            if (!arrivee) return false;
+            var today = todayLocalISO();
+            if (today === arrivee) return true;
+            if (today === dayAfter(arrivee) && currentTimeHHMM() < CHECKOUT_CUTOFF) return true;
+            return false;
+        }
+
+        var logement = params.get('logement') || params.get('listing') || params.get('l') || params.get('id') || 'salles6';
+        if (!isWithinIntroWindow(logement)) {
+            window.location.replace(nextUrl);
+        }
+    })();
+    </script>
+
     <style>
         :root {
             --c-bg:        #fdfbf7;
