@@ -3812,6 +3812,44 @@ window.POIS = [
     ]
   },
   {
+    "id": "commerce-boucherie-bondil-salles",
+    "cat": "commerce",
+    "coords": [
+      43.774358,
+      6.211533
+    ],
+    "stars": 1,
+    "img": "https://bellodulac.netlify.app/images/salles_boucherie.jpeg",
+    "fr": {
+      "name": "Boucherie Bondil",
+      "desc": "Type : Boucherie / Charcuterie / Traiteur. Boucherie familiale au cœur du village, boulevard de la Tuilière. Viande fraîche, charcuterie de pays, spécialités chevaline, halal et casher, plats cuisinés et rôtisserie.",
+      "url": "https://www.google.com/maps/search/?api=1&query=Boucherie+Bondil+Boulevard+de+la+Tuili%C3%A8re+Les+Salles-sur-Verdon",
+      "urlLabel": "Plus d'informations"
+    },
+    "en": {
+      "name": "Boucherie Bondil",
+      "desc": "Type: Butcher / Delicatessen / Caterer. Family-run butcher's shop in the heart of the village, on Boulevard de la Tuilière. Fresh meat, local charcuterie, horse meat, halal and kosher specialities, ready meals and rotisserie.",
+      "url": "https://www.google.com/maps/search/?api=1&query=Boucherie+Bondil+Boulevard+de+la+Tuili%C3%A8re+Les+Salles-sur-Verdon",
+      "urlLabel": "More details"
+    },
+    "de": {
+      "name": "Boucherie Bondil",
+      "desc": "Typ: Metzgerei / Feinkost / Traiteur. Familiengeführte Metzgerei im Dorfzentrum, Boulevard de la Tuilière. Frisches Fleisch, regionale Wurstwaren, Pferdefleisch-, Halal- und koschere Spezialitäten, fertige Gerichte und Grillhähnchen.",
+      "url": "https://www.google.com/maps/search/?api=1&query=Boucherie+Bondil+Boulevard+de+la+Tuili%C3%A8re+Les+Salles-sur-Verdon",
+      "urlLabel": "Weitere Informationen"
+    },
+    "nl": {
+      "name": "Boucherie Bondil",
+      "desc": "Type: Slagerij / Fijnkost / Traiteur. Familieslagerij in het hart van het dorp, Boulevard de la Tuilière. Vers vlees, lokale charcuterie, paardenvlees-, halal- en koosjere specialiteiten, kant-en-klare gerechten en rotisserie.",
+      "url": "https://www.google.com/maps/search/?api=1&query=Boucherie+Bondil+Boulevard+de+la+Tuili%C3%A8re+Les+Salles-sur-Verdon",
+      "urlLabel": "Meer informatie"
+    },
+    "shops": [
+      "salles6",
+      "salles8"
+    ]
+  },
+  {
     "id": "commerce-aups",
     "cat": "commerce",
     "coords": [
@@ -12814,25 +12852,25 @@ window.POIS = [
     "stars": 1,
     "img": "https://bellodulac.vercel.app/images/moustiers_boucherie.jpeg",
     "fr": {
-      "name": "Maison Bondil",
+      "name": "Boucherie Bondil",
       "desc": "Type : Boucherie / Charcuterie / Traiteur. Boucherie familiale depuis cinq générations, installée dans les arcades en pierres de la rue du Courtil. Spécialités de Provence, charcuterie de pays, plats cuisinés et conserves maison.",
       "url": "https://www.maison-bondil.fr/",
       "urlLabel": "Plus d'informations"
     },
     "en": {
-      "name": "Maison Bondil",
+      "name": "Boucherie Bondil",
       "desc": "Type: Butcher / Delicatessen / Caterer. Family-run butcher's shop for five generations, set in the stone arcades of Rue du Courtil. Provençal specialities, local charcuterie, ready meals and homemade preserves.",
       "url": "https://www.maison-bondil.fr/",
       "urlLabel": "More details"
     },
     "de": {
-      "name": "Maison Bondil",
+      "name": "Boucherie Bondil",
       "desc": "Typ: Metzgerei / Feinkost / Traiteur. Seit fünf Generationen familiengeführte Metzgerei in den Steinarkaden der Rue du Courtil. Provenzalische Spezialitäten, regionale Wurstwaren, fertige Gerichte und hausgemachte Konserven.",
       "url": "https://www.maison-bondil.fr/",
       "urlLabel": "Weitere Informationen"
     },
     "nl": {
-      "name": "Maison Bondil",
+      "name": "Boucherie Bondil",
       "desc": "Type: Slagerij / Fijnkost / Traiteur. Al vijf generaties een familieslagerij, gevestigd in de stenen arcaden van de Rue du Courtil. Provençaalse specialiteiten, lokale charcuterie, kant-en-klare gerechten en zelfgemaakte conserven.",
       "url": "https://www.maison-bondil.fr/",
       "urlLabel": "Meer informatie"
