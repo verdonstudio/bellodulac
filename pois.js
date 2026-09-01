@@ -3819,7 +3819,7 @@ window.POIS = [
       6.211533
     ],
     "stars": 1,
-    "img": "https://bellodulac.netlify.app/images/salles_boucherie.jpeg",
+    "img": "https://bellodulac.vercel.app/images/salles_boucherie.jpeg",
     "fr": {
       "name": "Boucherie Bondil",
       "desc": "Type : Boucherie / Charcuterie / Traiteur. Boucherie familiale au cœur du village, boulevard de la Tuilière. Viande fraîche, charcuterie de pays, spécialités chevaline, halal et casher, plats cuisinés et rôtisserie.",
