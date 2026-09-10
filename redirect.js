@@ -182,7 +182,7 @@ const reservations = {
         "plage-bellodulac1": "index.html?lang=DE&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&zoom=17&pos=43.77194%2C6.20816&fullscreen=1&trace=plage-salles",
         "plage-bellodulac2": "index.html?lang=DE&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
         "martel": "index.html?lang=DE&logement=moustiers&edatestart=2026-09-10&edateend=2026-09-13&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel",
-        "fetedulac": "https://translate.google.com/translate?sl=fr&tl=de&u=https://www.lacs-gorges-verdon.fr/sortir/agenda/23006-fete-du-lac-de-sainte-croix.html"
+        "fetedulac": "https://translate.google.com/translate?sl=fr&tl=de&u=https://www.lacs-gorges-verdon.fr/actualite/21-le-lac-de-sainte-croix-en-fete---3-jours-de-fete-au-c-ur-du-verdon"
     },
     "HMDXYHZQZN": {
         "home": "home.html?res=HMDXYHZQZN&lang=FR&logement=salles6",
