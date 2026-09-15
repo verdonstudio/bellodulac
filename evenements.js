@@ -924,6 +924,47 @@ window.EVENTS_DATA = {
     "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/ludo-bois-les-ateliers-du-musee-aiguines-fr-4255857/"
   },
   {
+    "id": "rec-moustiers-visite-marcel-provence",
+    "cat": "culture",
+    "place": "Moustiers-Sainte-Marie",
+    "time": {
+      "FR": "10h30 – 12h00",
+      "EN": "10:30 AM – 12:00 PM",
+      "DE": "10:30 – 12:00",
+      "NL": "10:30 – 12:00"
+    },
+    "title": {
+      "FR": "Visite guidée théâtralisée : Moustiers au temps de Marcel Provence",
+      "EN": "Theatrical guided tour: Moustiers in the time of Marcel Provence",
+      "DE": "Theaterführung: Moustiers zur Zeit von Marcel Provence",
+      "NL": "Theatrale rondleiding: Moustiers ten tijde van Marcel Provence"
+    },
+    "details": {
+      "FR": "Visite immersive et théâtralisée sur les traces de Marcel Provence, à l'origine du renouveau de la faïence à Moustiers. Réservation obligatoire.",
+      "EN": "Immersive, dramatised tour following in the footsteps of Marcel Provence, who revived Moustiers' earthenware craft. Booking essential.",
+      "DE": "Immersive Theaterführung auf den Spuren von Marcel Provence, der die Fayencekunst in Moustiers wiederbelebte. Reservierung erforderlich.",
+      "NL": "Meeslepende, theatrale rondleiding in de voetsporen van Marcel Provence, die het faience-ambacht in Moustiers nieuw leven inblies. Reservering verplicht."
+    },
+    "favorite": false,
+    "rating": 2,
+    "recurrence": {
+      "freq": "weekly",
+      "interval": 1,
+      "startDate": "2026-05-01",
+      "endDate": "2026-09-30",
+      "byDay": [
+        "thu"
+      ]
+    },
+    "logement": "both",
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/109/7/33818477-diaporama.png",
+    "url": {
+      "FR": "https://www.moustiers.fr/fiche/visite-guidee-theatralisee-moustiers-au-temps-de-marcel-provence/",
+      "EN": "https://www.moustiers.fr/en/fiche/visite-guidee-theatralisee-moustiers-au-temps-de-marcel-provence-3/",
+      "DE": "https://www.moustiers.fr/de/fiche/visite-guidee-theatralisee-moustiers-au-temps-de-marcel-provence-2/"
+    }
+  },
+  {
     "id": "evt-52",
     "cat": "culture",
     "place": "Les Salles-sur-Verdon",
@@ -4235,10 +4276,10 @@ window.EVENTS_DATA = {
     "place": "Moustiers-Sainte-Marie",
     "time": "Journée",
     "title": {
-      "FR": "Journées Européennes du Patrimoine 2026 #43",
-      "EN": "European Heritage Days 2026 #43",
-      "DE": "Europäische Tage des Denkmals 2026 #43",
-      "NL": "Europese Erfgoeddagen 2026 #43"
+      "FR": "Journées Européennes du Patrimoine 2026",
+      "EN": "European Heritage Days 2026",
+      "DE": "Europäische Tage des Kulturerbes 2026",
+      "NL": "Europese Erfgoeddagen 2026"
     },
     "details": {
       "FR": "Découverte du patrimoine local : visites, animations. Les 19 et 20/09.",
@@ -4751,6 +4792,303 @@ window.EVENTS_DATA = {
     "date": "2026-08-01",
     "url": "https://provence-alpes-cotedazur.com/que-faire/sortir/toutes-les-sorties/exposition-temporaire-sors-de-ta-reserve-quinson-fr-5006431/",
     "img": "https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9zdGF0aWMuYXBpZGFlLXRvdXJpc21lLmNvbS9maWxlc3RvcmUvb2JqZXRzLXRvdXJpc3RpcXVlcy9pbWFnZXMvMTIzLzI0Ny8yNzcxOTU0Ny5qcGc=/image.jpg"
+  },
+  {
+    "id": "evt-festival-outdoor-rando-2026",
+    "cat": "sport",
+    "place": "Digne-les-Bains",
+    "time": {
+      "FR": "Du jeu. au dim.",
+      "EN": "Thu–Sun",
+      "DE": "Do.–So.",
+      "NL": "Do–zo"
+    },
+    "title": {
+      "FR": "Festival de l'Outdoor et de la Rando",
+      "EN": "Outdoor and Hiking Festival",
+      "DE": "Outdoor- und Wanderfestival",
+      "NL": "Outdoor- en wandelfestival"
+    },
+    "details": {
+      "FR": "Treks, randonnées et sports outdoor accompagnés (VTT, escalade, canyoning, parapente...), village festif au plan d'eau de Digne-les-Bains. Un des 4 départs se fait à Moustiers-Sainte-Marie.",
+      "EN": "Guided treks, hikes and outdoor sports (mountain biking, climbing, canyoning, paragliding...), festive village at the Digne-les-Bains lake. One of the 4 starting points is in Moustiers-Sainte-Marie.",
+      "DE": "Begleitete Treks, Wanderungen und Outdoor-Sportarten (Mountainbike, Klettern, Canyoning, Gleitschirmfliegen...), Festdorf am See von Digne-les-Bains. Einer der 4 Startpunkte liegt in Moustiers-Sainte-Marie.",
+      "NL": "Begeleide treks, wandelingen en outdoorsporten (mountainbiken, klimmen, canyoning, paragliding...), feestdorp aan het meer van Digne-les-Bains. Een van de 4 vertrekpunten ligt in Moustiers-Sainte-Marie."
+    },
+    "favorite": true,
+    "rating": 2,
+    "recurrence": {
+      "freq": "daily",
+      "interval": 1,
+      "startDate": "2026-09-17",
+      "endDate": "2026-09-20"
+    },
+    "logement": "both",
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/25/2/42336793-diaporama.jpg",
+    "url": {
+      "FR": "https://www.moustiers.fr/fiche/festival-de-loutdoor-et-de-la-rando/",
+      "EN": "https://www.moustiers.fr/en/fiche/festival-de-loutdoor-et-de-la-rando-3/",
+      "DE": "https://www.moustiers.fr/de/fiche/festival-de-loutdoor-et-de-la-rando-2/"
+    }
+  },
+  {
+    "id": "evt-clique-salloise-activites",
+    "cat": "sport",
+    "place": "Les Salles-sur-Verdon",
+    "time": {
+      "FR": "Selon activité (voir détails)",
+      "EN": "Varies by activity (see details)",
+      "DE": "Je nach Aktivität (siehe Details)",
+      "NL": "Afhankelijk van de activiteit (zie details)"
+    },
+    "title": {
+      "FR": "Activités de la Clique Salloise",
+      "EN": "Clique Salloise activities",
+      "DE": "Aktivitäten der Clique Salloise",
+      "NL": "Activiteiten van de Clique Salloise"
+    },
+    "details": {
+      "FR": "Association locale : pelote (mar./jeu./ven.), gym et atelier musique le lundi, chant le vendredi. Moment convivial pour se rencontrer, discuter et créer ensemble. Réservé aux adhérents.",
+      "EN": "Local association: pelota (Tue/Thu/Fri), gym and music workshop on Mondays, singing on Fridays. A friendly gathering to meet, chat and create together. Members only.",
+      "DE": "Lokaler Verein: Pelota (Di./Do./Fr.), Gymnastik und Musikworkshop montags, Gesang freitags. Geselliges Treffen zum Austausch und gemeinsamen Gestalten. Nur für Mitglieder.",
+      "NL": "Lokale vereniging: pelota (di/do/vr), gym en muziekworkshop op maandag, zang op vrijdag. Gezellig samenzijn om te ontmoeten, praten en samen te creëren. Alleen voor leden."
+    },
+    "favorite": false,
+    "rating": 1,
+    "recurrence": {
+      "freq": "weekly",
+      "interval": 1,
+      "startDate": "2026-09-15",
+      "endDate": "2026-12-31",
+      "byDay": [
+        "tue",
+        "thu",
+        "fri"
+      ]
+    },
+    "logement": "both",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22990_2_1.jpg",
+    "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22990-activites-de-la-clique-salloise.html"
+  },
+  {
+    "id": "evt-reunion-decorations-noel-salles",
+    "cat": "fete",
+    "place": "Les Salles-sur-Verdon",
+    "time": {
+      "FR": "À partir de 17h30",
+      "EN": "From 5:30 PM",
+      "DE": "Ab 17:30 Uhr",
+      "NL": "Vanaf 17:30"
+    },
+    "title": {
+      "FR": "Réunion de préparation des décorations de Noël",
+      "EN": "Christmas decorations prep meeting",
+      "DE": "Vorbereitungstreffen für die Weihnachtsdekoration",
+      "NL": "Voorbereidingsbijeenkomst kerstversiering"
+    },
+    "details": {
+      "FR": "Réunion et lancement de la collecte de boîtes à chaussures pour les cadeaux solidaires.",
+      "EN": "Meeting and launch of the shoebox collection for charity gifts.",
+      "DE": "Treffen und Start der Schuhkarton-Sammlung für Solidaritätsgeschenke.",
+      "NL": "Bijeenkomst en start van de schoenendozeninzameling voor solidariteitscadeaus."
+    },
+    "favorite": false,
+    "rating": 1,
+    "date": "2026-09-18",
+    "logement": "both",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/23003_2_1.jpg",
+    "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/23003-reunion-de-preparation-des-decorations-de-noel.html"
+  },
+  {
+    "id": "evt-apres-midi-jeux-societe-salles",
+    "cat": "culture",
+    "place": "Les Salles-sur-Verdon",
+    "time": {
+      "FR": "16h00–17h00",
+      "EN": "4:00–5:00 PM",
+      "DE": "16:00–17:00",
+      "NL": "16:00–17:00"
+    },
+    "title": {
+      "FR": "Après-midi \"Jeux de société\"",
+      "EN": "\"Board games\" afternoon",
+      "DE": "Nachmittag \"Gesellschaftsspiele\"",
+      "NL": "Namiddag \"Gezelschapsspelen\""
+    },
+    "details": {
+      "FR": "Moment convivial ouvert à tous, spécial familles et enfants. Autres dates à venir : 24/10, 07/11 et 12/12.",
+      "EN": "Friendly gathering open to everyone, family and kids special. More dates coming: Oct 24, Nov 7 and Dec 12.",
+      "DE": "Geselliges Treffen für alle offen, Familien und Kinder. Weitere Termine: 24.10., 07.11. und 12.12.",
+      "NL": "Gezellig samenzijn voor iedereen, speciaal voor gezinnen en kinderen. Meer data: 24/10, 07/11 en 12/12."
+    },
+    "favorite": false,
+    "rating": 1,
+    "date": "2026-09-19",
+    "logement": "both",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22988_2_1.jpg",
+    "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22988-apres-midis--jeux-de-societe-.html"
+  },
+  {
+    "id": "evt-feu-artifice-bauduen-2026",
+    "cat": "fete",
+    "place": "Bauduen",
+    "time": {
+      "FR": "À la tombée de la nuit",
+      "EN": "At nightfall",
+      "DE": "Bei Einbruch der Dunkelheit",
+      "NL": "Bij valavond"
+    },
+    "title": {
+      "FR": "Feu d'artifice",
+      "EN": "Fireworks",
+      "DE": "Feuerwerk",
+      "NL": "Vuurwerk"
+    },
+    "details": {
+      "FR": "Feu d'artifice tiré à la tombée de la nuit au bord du lac. La plage et la RD49 (entrée du village) sont fermées à partir de 20h.",
+      "EN": "Fireworks display at nightfall by the lake. The beach and the RD49 road (village entrance) are closed from 8 PM.",
+      "DE": "Feuerwerk bei Einbruch der Dunkelheit am See. Der Strand und die RD49 (Dorfeinfahrt) sind ab 20 Uhr gesperrt.",
+      "NL": "Vuurwerk bij valavond aan het meer. Het strand en de RD49 (dorpsingang) zijn vanaf 20 uur afgesloten."
+    },
+    "favorite": true,
+    "rating": 2,
+    "date": "2026-09-19",
+    "logement": "both",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22926_2_1.jpg",
+    "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22926-feu-d-artifice.html"
+  },
+  {
+    "id": "evt-musee-tourneurs-bois-jep-2026",
+    "cat": "culture",
+    "place": "Aiguines",
+    "time": {
+      "FR": "10h00–17h00",
+      "EN": "10:00 AM–5:00 PM",
+      "DE": "10:00–17:00",
+      "NL": "10:00–17:00"
+    },
+    "title": {
+      "FR": "Visite du musée des tourneurs sur bois — Journées du Patrimoine",
+      "EN": "Wood turners museum visit — Heritage Days",
+      "DE": "Besichtigung des Holzdrechsler-Museums — Tag des offenen Denkmals",
+      "NL": "Bezoek aan het museum van houtdraaiers — Open Monumentendag"
+    },
+    "details": {
+      "FR": "Visite gratuite du musée des tourneurs sur bois à l'occasion des Journées Européennes du Patrimoine.",
+      "EN": "Free visit of the wood turners museum for European Heritage Days.",
+      "DE": "Kostenloser Besuch des Holzdrechsler-Museums anlässlich des Europäischen Tags des offenen Denkmals.",
+      "NL": "Gratis bezoek aan het museum van houtdraaiers ter gelegenheid van de Europese Erfgoeddagen."
+    },
+    "favorite": false,
+    "rating": 2,
+    "recurrence": {
+      "freq": "daily",
+      "interval": 1,
+      "startDate": "2026-09-19",
+      "endDate": "2026-09-20"
+    },
+    "logement": "both",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/23027_2_1.jpg",
+    "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/23027-visite-du-musee-des-tourneurs-sur-bois---journees-europeennes-du-patrimoine-2026.html"
+  },
+  {
+    "id": "evt-grottes-villecroze",
+    "cat": "culture",
+    "place": "Villecroze",
+    "time": {
+      "FR": "10h–11h et 14h–16h (selon saison)",
+      "EN": "10–11 AM and 2–4 PM (seasonal)",
+      "DE": "10–11 und 14–16 Uhr (saisonal)",
+      "NL": "10–11 en 14–16 uur (seizoensgebonden)"
+    },
+    "title": {
+      "FR": "Visite des grottes fortifiées de Villecroze",
+      "EN": "Villecroze fortified caves tour",
+      "DE": "Besichtigung der befestigten Höhlen von Villecroze",
+      "NL": "Bezoek aan de versterkte grotten van Villecroze"
+    },
+    "details": {
+      "FR": "Grottes troglodytiques classées, fortifiées au IXe siècle, avec passage derrière une cascade et vue sur le parc. 5€, billets sur grottes-villecroze.fr. Horaires variables selon la saison.",
+      "EN": "Listed troglodyte caves, fortified in the 9th century, with a passage behind a waterfall and park views. €5, tickets on grottes-villecroze.fr. Opening hours vary by season.",
+      "DE": "Denkmalgeschützte Höhlenwohnungen, im 9. Jahrhundert befestigt, mit einem Durchgang hinter einem Wasserfall und Parkblick. 5€, Tickets auf grottes-villecroze.fr. Öffnungszeiten je nach Saison.",
+      "NL": "Beschermde grotwoningen, in de 9e eeuw versterkt, met een doorgang achter een waterval en uitzicht op het park. €5, tickets op grottes-villecroze.fr. Openingstijden variëren per seizoen."
+    },
+    "favorite": false,
+    "rating": 2,
+    "recurrence": {
+      "freq": "weekly",
+      "interval": 1,
+      "startDate": "2026-09-01",
+      "endDate": "2026-09-30",
+      "byDay": [
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ]
+    },
+    "logement": "both",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22065_2_1.jpg",
+    "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22065-visite-des-grottes-fortifiees-de-villecroze.html"
+  },
+  {
+    "id": "evt-aioli-bauduen-2026",
+    "cat": "fete",
+    "place": "Bauduen",
+    "time": {
+      "FR": "À partir de 19h00",
+      "EN": "From 7:00 PM",
+      "DE": "Ab 19:00 Uhr",
+      "NL": "Vanaf 19:00"
+    },
+    "title": {
+      "FR": "Réservez votre aïoli !",
+      "EN": "Book your aïoli dinner!",
+      "DE": "Reservieren Sie Ihr Aïoli!",
+      "NL": "Reserveer uw aïoli!"
+    },
+    "details": {
+      "FR": "Repas convivial et festif autour d'un aïoli provençal, suivi du feu d'artifice (21h30-21h45). Couverts fournis. Réservation obligatoire avant le 15/09. Adulte 25€, enfant -12 ans 20€.",
+      "EN": "Friendly, festive meal around a Provençal aïoli, followed by fireworks (9:30-9:45 PM). Cutlery provided. Booking required before Sep 15. Adult €25, child under 12 €20.",
+      "DE": "Geselliges, festliches Essen rund um einen provenzalischen Aïoli, gefolgt von Feuerwerk (21:30-21:45 Uhr). Besteck wird gestellt. Reservierung vor dem 15.09. erforderlich. Erwachsene 25€, Kinder unter 12 20€.",
+      "NL": "Gezellige, feestelijke maaltijd rond een Provençaalse aïoli, gevolgd door vuurwerk (21:30-21:45 uur). Bestek wordt geleverd. Reservering verplicht vóór 15/09. Volwassene €25, kind onder 12 jaar €20."
+    },
+    "favorite": false,
+    "rating": 2,
+    "date": "2026-09-19",
+    "logement": "both",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/23016_2_1.jpg",
+    "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/23016-reservez-votre-aioli--.html"
+  },
+  {
+    "id": "evt-visite-guidee-artignosc",
+    "cat": "culture",
+    "place": "Artignosc-sur-Verdon",
+    "time": {
+      "FR": "Sur réservation (à la demande)",
+      "EN": "By reservation (on request)",
+      "DE": "Nach Reservierung (auf Anfrage)",
+      "NL": "Op reservering (op aanvraag)"
+    },
+    "title": {
+      "FR": "Visite guidée du village d'Artignosc-sur-Verdon",
+      "EN": "Guided tour of Artignosc-sur-Verdon village",
+      "DE": "Geführte Besichtigung des Dorfes Artignosc-sur-Verdon",
+      "NL": "Gegidste rondleiding door het dorp Artignosc-sur-Verdon"
+    },
+    "details": {
+      "FR": "Visite avec Pascale, passionnée de son village. Toute l'année sur réservation (min. 4 personnes), au 06 33 16 91 48.",
+      "EN": "Tour with Pascale, passionate about her village. Available year-round by reservation (min. 4 people), call +33 6 33 16 91 48.",
+      "DE": "Führung mit Pascale, die für ihr Dorf brennt. Ganzjährig auf Reservierung (mind. 4 Personen), Tel. +33 6 33 16 91 48.",
+      "NL": "Rondleiding met Pascale, gepassioneerd door haar dorp. Het hele jaar door op reservering (min. 4 personen), tel. +33 6 33 16 91 48."
+    },
+    "favorite": false,
+    "rating": 1,
+    "date": "2026-09-17",
+    "logement": "both",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/21773_2_1.jpg",
+    "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/21773-visite-guidee-du-village-d-artignosc-sur-verdon.html"
   }
 ]
 };	

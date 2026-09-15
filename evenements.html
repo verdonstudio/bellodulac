@@ -1030,7 +1030,12 @@
 		function catDef(cfg, id) { return cfg.categories.find(c => c.id === id) || { icon: '•', color: '#64748b', label: { FR: id, EN: id } }; }
 
 		function eventUrl(evt) {
-			if (evt.url) return evt.url;
+			// evt.url accepte soit une chaine simple (comportement historique, identique pour
+			// toutes les langues), soit un objet {FR, EN, DE, NL} pour cibler la bonne page
+			// source par langue (ex. offices de tourisme ayant un site traduit) -- t() gere
+			// deja les deux formats et retombe sur FR puis EN si la langue courante manque.
+			const localizedUrl = t(evt.url);
+			if (localizedUrl) return localizedUrl;
 			const q = encodeURIComponent(`${evt.place}, ${t(evt.title)}`);
 			return `https://www.google.com/search?q=${q}`;
 		}
