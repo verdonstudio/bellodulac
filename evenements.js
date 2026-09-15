@@ -3543,7 +3543,7 @@ window.EVENTS_DATA = {
       "freq": "weekly",
       "interval": 1,
       "startDate": null,
-      "endDate": null,
+      "endDate": "2026-08-30",
       "byDay": [
         "fri"
       ]
@@ -3871,7 +3871,7 @@ window.EVENTS_DATA = {
     "url": "https://www.moustiers.fr/fiche/marche-paysan-du-verdon-9/",
     "favorite": false,
     "rating": 0,
-    "date": "2026-07-26"
+    "date": "2026-08-30"
   },
   {
     "id": "evt-26",
