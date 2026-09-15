@@ -4250,7 +4250,7 @@ window.EVENTS_DATA = {
     "rating": 3,
     "logement": "both",
     "date": "2026-09-19",
-    "url": "https://www.moustiers.fr/en/fiche/european-heritage-days-2026-43/",
+    "url": "https://www.moustiers.fr/de/fiche/europaische-tage-des-kulturerbes-2026/",
     "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/230/56/42154214-diaporama.png"
   },
   {
