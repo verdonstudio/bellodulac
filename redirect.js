@@ -17,6 +17,22 @@ const reservations = {
         "plage-bellodulac2": "index.html?lang=EN&logement=salles6&edatestart=2026-08-29&edateend=2026-09-01&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
         "martel": "index.html?lang=EN&logement=salles6&edatestart=2026-08-29&edateend=2026-09-01&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
     },
+    "HMRWX4HKS9": {
+        "home": "home.html?res=HMRWX4HKS9&lang=EN&logement=moustiers",
+        "map": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&zoom=13&pos=43.82945%2C6.21921",
+        "evenements": "evenements.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29",
+        "highlights": "highlights.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&from=evenements&showevents=3stars&showpois=true",
+        "panorama": "panorama.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29",
+        "today": "highlights.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&from=evenements&showevents=today&showpois=today",
+        "parking": "index.html?logement=moustiers&lang=EN&edatestart=2026-09-26&edateend=2026-09-29&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
+        "trash": "index.html?logement=moustiers&lang=EN&edatestart=2026-09-26&edateend=2026-09-29&zoom=16&pos=43.84536%2C6.2203&cat=ordures&fullscreen=1",
+        "baudinard": "index.html?logement=moustiers&lang=EN&edatestart=2026-09-26&edateend=2026-09-29&zoom=13&pos=43.73917%2C6.08299&fullscreen=1&poi=aquattitude-montpezat",
+        "quinson": "index.html?logement=moustiers&lang=EN&edatestart=2026-09-26&edateend=2026-09-29&zoom=16.5&pos=43.69367%2C6.04253&fullscreen=1&poi=canoe-quinson",
+        "galetas": "index.html?logement=moustiers&lang=EN&edatestart=2026-09-26&edateend=2026-09-29&zoom=15.5&pos=43.80229%2C6.25044&poi=canoe-galetas-1",
+        "plage-bellodulac1": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&zoom=17&pos=43.77194%2C6.20816&fullscreen=1&trace=plage-salles",
+        "plage-bellodulac2": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
+        "martel": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
+    },
     "HMTZQK98E3": {
         "home": "home.html?res=HMTZQK98E3&lang=DE&logement=salles6",
         "map": "index.html?lang=DE&logement=salles6&edatestart=2026-09-15&edateend=2026-09-24&zoom=12&pos=43.77258%2C6.20831",
