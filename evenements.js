@@ -3399,7 +3399,7 @@ window.EVENTS_DATA = {
     "id": "evt-87",
     "cat": "sport",
     "place": "Les Salles-sur-Verdon",
-    "time": "Voir programme",
+    "time": "matin",
     "title": {
       "FR": "Natureman Var",
       "EN": "Natureman Var",
@@ -3423,7 +3423,7 @@ window.EVENTS_DATA = {
     "id": "evt-87_nat2",
     "cat": "sport",
     "place": "Les Salles-sur-Verdon",
-    "time": "Voir programme",
+    "time": "matin",
     "title": {
       "FR": "Natureman Var",
       "EN": "Natureman Var",
@@ -3447,7 +3447,7 @@ window.EVENTS_DATA = {
     "id": "evt-87_nat3",
     "cat": "sport",
     "place": "Les Salles-sur-Verdon",
-    "time": "Voir programme",
+    "time": "matin",
     "title": {
       "FR": "Natureman Var",
       "EN": "Natureman Var",
