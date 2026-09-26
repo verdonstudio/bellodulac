@@ -3420,6 +3420,54 @@ window.EVENTS_DATA = {
     "img": "https://natureman-var.fr/wp-content/uploads/2023/01/1PARCOURS-1.jpeg"
   },
   {
+    "id": "evt-87_nat2",
+    "cat": "sport",
+    "place": "Les Salles-sur-Verdon",
+    "time": "Voir programme",
+    "title": {
+      "FR": "Natureman Var",
+      "EN": "Natureman Var",
+      "DE": "Natureman Var",
+      "NL": "Natureman Var"
+    },
+    "details": {
+      "FR": "13ème édition du triathlon nature Natureman Var. Retrait des dossards le 25/09, course principale le 26/09, épreuve \"Natur'M\" le 27/09.",
+      "EN": "13th edition of the Natureman Var off-road triathlon. Race-pack collection on 25/09, main race on 26/09, \"Natur'M\" event on 27/09.",
+      "DE": "13. Ausgabe des Natur-Triathlons Natureman Var. Startunterlagen-Ausgabe am 25.09., Hauptrennen am 26.09., „Natur'M“-Wettbewerb am 27.09.",
+      "NL": "13e editie van de natuurtriatlon Natureman Var. Uitreiking startnummers op 25/09, hoofdwedstrijd op 26/09, evenement 'Natur'M' op 27/09."
+    },
+    "favorite": true,
+    "rating": 3,
+    "date": "2026-09-26",
+    "url": "https://natureman-var.fr/",
+    "logement": "both",
+    "img": "https://natureman-var.fr/wp-content/uploads/2023/01/1PARCOURS-1.jpeg"
+  },
+  {
+    "id": "evt-87_nat3",
+    "cat": "sport",
+    "place": "Les Salles-sur-Verdon",
+    "time": "Voir programme",
+    "title": {
+      "FR": "Natureman Var",
+      "EN": "Natureman Var",
+      "DE": "Natureman Var",
+      "NL": "Natureman Var"
+    },
+    "details": {
+      "FR": "13ème édition du triathlon nature Natureman Var. Retrait des dossards le 25/09, course principale le 26/09, épreuve \"Natur'M\" le 27/09.",
+      "EN": "13th edition of the Natureman Var off-road triathlon. Race-pack collection on 25/09, main race on 26/09, \"Natur'M\" event on 27/09.",
+      "DE": "13. Ausgabe des Natur-Triathlons Natureman Var. Startunterlagen-Ausgabe am 25.09., Hauptrennen am 26.09., „Natur'M“-Wettbewerb am 27.09.",
+      "NL": "13e editie van de natuurtriatlon Natureman Var. Uitreiking startnummers op 25/09, hoofdwedstrijd op 26/09, evenement 'Natur'M' op 27/09."
+    },
+    "favorite": true,
+    "rating": 3,
+    "date": "2026-09-27",
+    "url": "https://natureman-var.fr/",
+    "logement": "both",
+    "img": "https://natureman-var.fr/wp-content/uploads/2023/01/1PARCOURS-1.jpeg"
+  },
+  {
     "id": "2609MAMA",
     "cat": "fete",
     "place": "Sainte-Croix-du-Verdon",
