@@ -31,7 +31,8 @@ const reservations = {
         "galetas": "index.html?logement=moustiers&lang=EN&edatestart=2026-09-26&edateend=2026-09-29&zoom=15.5&pos=43.80229%2C6.25044&poi=canoe-galetas-1",
         "plage-bellodulac1": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&zoom=17&pos=43.77194%2C6.20816&fullscreen=1&trace=plage-salles",
         "plage-bellodulac2": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
-        "martel": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
+        "martel": "index.html?lang=EN&logement=moustiers&edatestart=2026-09-26&edateend=2026-09-29&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel",
+        "moustiers" : "index.html?logement=moustiers&lang=EN&poi=rando-moustiers&zoom=12&pos=43.86585%2C6.22169&fullscreen=1"
     },
     "HMTZQK98E3": {
         "home": "home.html?res=HMTZQK98E3&lang=DE&logement=salles6",
