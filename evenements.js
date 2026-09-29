@@ -3563,7 +3563,10 @@ window.EVENTS_DATA = {
         "sat"
       ]
     },
-    "url": "https://www.francecomfort.com/fr/des-vues/305/marches-castellane",
+    "url": {
+      "FR": "https://www.francecomfort.com/fr/des-vues/305/marches-castellane",
+      "NL": "https://www.francecomfort.com/nl/bezienswaardigheden/305/markten-castellane"
+    },
     "img": "https://www.castellane-verdon.com/app/uploads/2025/08/marche-castellane-1024x804.webp"
   },
   {
@@ -3829,7 +3832,7 @@ window.EVENTS_DATA = {
       "freq": "weekly",
       "interval": 1,
       "startDate": null,
-      "endDate": null,
+      "endDate": "2026-09-30",
       "byDay": [
         "tue",
         "thu",
