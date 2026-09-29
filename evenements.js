@@ -5143,6 +5143,142 @@ window.EVENTS_DATA = {
     "logement": "both",
     "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/21773_2_1.jpg",
     "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/21773-visite-guidee-du-village-d-artignosc-sur-verdon.html"
+  },
+  {
+    "id": "evt-117",
+    "cat": "culture",
+    "place": "Les Salles-sur-Verdon",
+    "time": {
+      "FR": "16h00–17h00",
+      "EN": "4:00 PM–5:00 PM",
+      "DE": "16:00–17:00",
+      "NL": "16:00–17:00"
+    },
+    "title": {
+      "FR": "Après-midis « Jeux de société »",
+      "EN": "Board games afternoon",
+      "DE": "Nachmittag mit Gesellschaftsspielen",
+      "NL": "Namiddag bordspellen"
+    },
+    "details": {
+      "FR": "Moment convivial autour des jeux de société, ouvert à tous. Spécial familles et enfants. Gratuit.",
+      "EN": "A friendly get-together around board games, open to all. Family and children special. Free.",
+      "DE": "Geselliger Nachmittag mit Gesellschaftsspielen, offen für alle. Schwerpunkt Familien und Kinder. Kostenlos.",
+      "NL": "Gezellige namiddag met bordspellen, open voor iedereen. Speciaal voor gezinnen en kinderen. Gratis."
+    },
+    "favorite": false,
+    "rating": 1,
+    "logement": "both",
+    "date": "2026-09-19",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22988_2_1.jpg",
+    "url": {
+      "FR": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "EN": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "DE": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "NL": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html"
+    }
+  },
+  {
+    "id": "evt-118",
+    "cat": "culture",
+    "place": "Les Salles-sur-Verdon",
+    "time": {
+      "FR": "16h00–17h00",
+      "EN": "4:00 PM–5:00 PM",
+      "DE": "16:00–17:00",
+      "NL": "16:00–17:00"
+    },
+    "title": {
+      "FR": "Après-midis « Jeux de société »",
+      "EN": "Board games afternoon",
+      "DE": "Nachmittag mit Gesellschaftsspielen",
+      "NL": "Namiddag bordspellen"
+    },
+    "details": {
+      "FR": "Moment convivial autour des jeux de société, ouvert à tous. Spécial adolescents. Gratuit.",
+      "EN": "A friendly get-together around board games, open to all. Teens special. Free.",
+      "DE": "Geselliger Nachmittag mit Gesellschaftsspielen, offen für alle. Schwerpunkt Jugendliche. Kostenlos.",
+      "NL": "Gezellige namiddag met bordspellen, open voor iedereen. Speciaal voor tieners. Gratis."
+    },
+    "favorite": false,
+    "rating": 1,
+    "logement": "both",
+    "date": "2026-10-24",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22988_2_1.jpg",
+    "url": {
+      "FR": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "EN": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "DE": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "NL": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html"
+    }
+  },
+  {
+    "id": "evt-119",
+    "cat": "culture",
+    "place": "Les Salles-sur-Verdon",
+    "time": {
+      "FR": "16h00–17h00",
+      "EN": "4:00 PM–5:00 PM",
+      "DE": "16:00–17:00",
+      "NL": "16:00–17:00"
+    },
+    "title": {
+      "FR": "Après-midis « Jeux de société »",
+      "EN": "Board games afternoon",
+      "DE": "Nachmittag mit Gesellschaftsspielen",
+      "NL": "Namiddag bordspellen"
+    },
+    "details": {
+      "FR": "Moment convivial autour des jeux de société, ouvert à tous. Spécial familles et enfants. Gratuit.",
+      "EN": "A friendly get-together around board games, open to all. Family and children special. Free.",
+      "DE": "Geselliger Nachmittag mit Gesellschaftsspielen, offen für alle. Schwerpunkt Familien und Kinder. Kostenlos.",
+      "NL": "Gezellige namiddag met bordspellen, open voor iedereen. Speciaal voor gezinnen en kinderen. Gratis."
+    },
+    "favorite": false,
+    "rating": 1,
+    "logement": "both",
+    "date": "2026-11-07",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22988_2_1.jpg",
+    "url": {
+      "FR": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "EN": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "DE": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "NL": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html"
+    }
+  },
+  {
+    "id": "evt-120",
+    "cat": "culture",
+    "place": "Les Salles-sur-Verdon",
+    "time": {
+      "FR": "16h00–17h00",
+      "EN": "4:00 PM–5:00 PM",
+      "DE": "16:00–17:00",
+      "NL": "16:00–17:00"
+    },
+    "title": {
+      "FR": "Après-midis « Jeux de société »",
+      "EN": "Board games afternoon",
+      "DE": "Nachmittag mit Gesellschaftsspielen",
+      "NL": "Namiddag bordspellen"
+    },
+    "details": {
+      "FR": "Moment convivial autour des jeux de société, ouvert à tous. Spécial adolescents. Gratuit.",
+      "EN": "A friendly get-together around board games, open to all. Teens special. Free.",
+      "DE": "Geselliger Nachmittag mit Gesellschaftsspielen, offen für alle. Schwerpunkt Jugendliche. Kostenlos.",
+      "NL": "Gezellige namiddag met bordspellen, open voor iedereen. Speciaal voor tieners. Gratis."
+    },
+    "favorite": false,
+    "rating": 1,
+    "logement": "both",
+    "date": "2026-12-12",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22988_2_1.jpg",
+    "url": {
+      "FR": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "EN": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "DE": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
+      "NL": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html"
+    }
   }
 ]
-};	
+};
