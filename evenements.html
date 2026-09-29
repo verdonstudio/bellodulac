@@ -454,6 +454,7 @@
 				fByDay: "Jours de la semaine", fByMonthDay: "Jour du mois", fStart: "Debut", fEnd: "Fin (optionnel)",
 				fTimeFr: "Horaire (FR)", fTimeEn: "Horaire (EN)", fTitleFr: "Titre (FR)", fTitleEn: "Titre (EN)",
 				fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Lien (URL, optionnel)",
+				fUrlFr: "Lien (URL, FR)", fUrlEn: "Lien (URL, EN, optionnel)", fUrlDe: "Lien (URL, DE, optionnel)", fUrlNl: "Lien (URL, NL, optionnel)",
 				fImg: "Image (URL ou chemin)",
 				fFavorite: "Coup de coeur", fRating: "Note maison (0 a 3)",
 				freqDaily: "Quotidien", freqWeekly: "Hebdomadaire", freqMonthly: "Mensuel",
@@ -493,6 +494,7 @@
 				fByDay: "Days of week", fByMonthDay: "Day of month", fStart: "Start", fEnd: "End (optional)",
 				fTimeFr: "Time (FR)", fTimeEn: "Time (EN)", fTitleFr: "Title (FR)", fTitleEn: "Title (EN)",
 				fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Link (URL, optional)",
+				fUrlFr: "Link (URL, FR)", fUrlEn: "Link (URL, EN, optional)", fUrlDe: "Link (URL, DE, optional)", fUrlNl: "Link (URL, NL, optional)",
 				fImg: "Image (URL or path)",
 				fFavorite: "Highlight", fRating: "House rating (0 to 3)",
 				freqDaily: "Daily", freqWeekly: "Weekly", freqMonthly: "Monthly",
@@ -532,6 +534,7 @@
 				fByDay: "Wochentage", fByMonthDay: "Tag des Monats", fStart: "Beginn", fEnd: "Ende (optional)",
 				fTimeFr: "Uhrzeit (FR)", fTimeEn: "Uhrzeit (EN)", fTitleFr: "Titel (FR)", fTitleEn: "Titel (EN)",
 				fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Link (URL, optional)",
+				fUrlFr: "Link (URL, FR)", fUrlEn: "Link (URL, EN, optional)", fUrlDe: "Link (URL, DE, optional)", fUrlNl: "Link (URL, NL, optional)",
 				fImg: "Bild (URL oder Pfad)",
 				fFavorite: "Favorit", fRating: "Hausbewertung (0 bis 3)",
 				freqDaily: "Täglich", freqWeekly: "Wöchentlich", freqMonthly: "Monatlich",
@@ -571,6 +574,7 @@
 				fByDay: "Dagen van de week", fByMonthDay: "Dag van de maand", fStart: "Start", fEnd: "Einde (optioneel)",
 				fTimeFr: "Tijdstip (FR)", fTimeEn: "Tijdstip (EN)", fTitleFr: "Titel (FR)", fTitleEn: "Titel (EN)",
 				fDetailsFr: "Details (FR)", fDetailsEn: "Details (EN)", fUrl: "Link (URL, optioneel)",
+				fUrlFr: "Link (URL, FR)", fUrlEn: "Link (URL, EN, optioneel)", fUrlDe: "Link (URL, DE, optioneel)", fUrlNl: "Link (URL, NL, optioneel)",
 				fImg: "Afbeelding (URL of pad)",
 				fFavorite: "Favoriet", fRating: "Huisbeoordeling (0 tot 3)",
 				freqDaily: "Dagelijks", freqWeekly: "Wekelijks", freqMonthly: "Maandelijks",
@@ -1675,6 +1679,32 @@
 			return { FR: f, EN: e };
 		}
 
+		// comme locGet/locPack ci-dessus, mais pour evt.url qui accepte jusqu'a 4 langues
+		// (FR/EN/DE/NL) - voir eventUrl() : une chaine simple s'applique a toutes les
+		// langues, un objet {FR,EN,DE,NL} cible une page source differente par langue
+		// (ex. offices de tourisme ayant un site traduit), comme deja pratique dans
+		// pois.js pour chaque POI. Les langues non renseignees retombent sur FR au
+        // rendu (t() gere le repli), donc on les laisse vides ici plutot que dupliquer FR.
+		function urlGet(val) {
+			if (val == null) return { fr: '', en: '', de: '', nl: '' };
+			if (typeof val === 'object') return { fr: val.FR || '', en: val.EN || '', de: val.DE || '', nl: val.NL || '' };
+			return { fr: String(val), en: '', de: '', nl: '' };
+		}
+
+		function urlPack(fr, en, de, nl) {
+			const f = (fr || '').trim();
+			const e = (en || '').trim();
+			const d = (de || '').trim();
+			const n = (nl || '').trim();
+			if (!e && !d && !n) return f; // comportement historique : une seule URL pour toutes les langues
+			const obj = {};
+			if (f) obj.FR = f;
+			if (e && e !== f) obj.EN = e;
+			if (d && d !== f) obj.DE = d;
+			if (n && n !== f) obj.NL = n;
+			return obj;
+		}
+
 		function enterEditMode() {
 			const data = window.EVENTS_DATA;
 			if (!data) return;
@@ -1902,8 +1932,15 @@
 				<div class="ef-grid">
 					<div><span class="ef-label">${L.fImg}</span><input type="text" class="f-img" placeholder="https://bellodulac.netlify.app/images/mon-evenement.jpg"></div>
 				</div>
+				<div class="ef-grid">
+					<div><span class="ef-label">${L.fUrlFr}</span><input type="text" class="f-url-fr"></div>
+					<div><span class="ef-label">${L.fUrlEn}</span><input type="text" class="f-url-en"></div>
+				</div>
+				<div class="ef-grid">
+					<div><span class="ef-label">${L.fUrlDe}</span><input type="text" class="f-url-de"></div>
+					<div><span class="ef-label">${L.fUrlNl}</span><input type="text" class="f-url-nl"></div>
+				</div>
 				<div class="ef-grid-3" style="align-items:end;">
-					<div><span class="ef-label">${L.fUrl}</span><input type="text" class="f-url"></div>
 					<label class="ef-checkline" style="padding-bottom:6px;"><input type="checkbox" class="f-favorite"> ${L.fFavorite}</label>
 					<div><span class="ef-label">${L.fRating}</span>
 						<select class="f-rating"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
@@ -1926,7 +1963,11 @@
 			$('.f-details-fr', wrap).value = detailsLoc.fr;
 			$('.f-details-en', wrap).value = detailsLoc.en;
 			$('.f-img', wrap).value = evt.img || '';
-			$('.f-url', wrap).value = evt.url || '';
+			const urlLoc = urlGet(evt.url);
+			$('.f-url-fr', wrap).value = urlLoc.fr;
+			$('.f-url-en', wrap).value = urlLoc.en;
+			$('.f-url-de', wrap).value = urlLoc.de;
+			$('.f-url-nl', wrap).value = urlLoc.nl;
 			$('.f-favorite', wrap).checked = !!evt.favorite;
 			$('.f-rating', wrap).value = String(evt.rating || 0);
 
@@ -2047,8 +2088,14 @@
 			const activeLogement = $$('.f-logement-btn', wrap).find(b => b.classList.contains('active'));
 			evt.logement = activeLogement ? activeLogement.dataset.logement : 'both';
 
-			const urlVal = $('.f-url', wrap).value.trim();
-			if (urlVal) evt.url = urlVal; else delete evt.url;
+			const urlPacked = urlPack(
+				$('.f-url-fr', wrap).value,
+				$('.f-url-en', wrap).value,
+				$('.f-url-de', wrap).value,
+				$('.f-url-nl', wrap).value
+			);
+			const hasUrl = typeof urlPacked === 'string' ? !!urlPacked : Object.keys(urlPacked).length > 0;
+			if (hasUrl) evt.url = urlPacked; else delete evt.url;
 
 			const imgVal = $('.f-img', wrap).value.trim();
 			if (imgVal) evt.img = imgVal; else delete evt.img;
