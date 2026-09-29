@@ -3724,7 +3724,10 @@ window.EVENTS_DATA = {
     "favorite": false,
     "rating": 2,
     "logement": "both",
-    "url": "https://www.tripadvisor.fr/Attraction_Review-g672316-d20911103-Reviews-Marche_Provencal_De_Aups-Aups_Var_Provence_Alpes_Cote_d_Azur.html",
+    "url": {
+      "FR": "https://www.tripadvisor.fr/Attraction_Review-g672316-d20911103-Reviews-Marche_Provencal_De_Aups-Aups_Var_Provence_Alpes_Cote_d_Azur.html",
+      "NL": "https://www.tripadvisor.nl/Attraction_Review-g672316-d20911103-Reviews-Marche_Provencal_De_Aups-Aups_Var_Provence_Alpes_Cote_d_Azur.html"
+    },
     "recurrence": {
       "freq": "weekly",
       "interval": 1,
