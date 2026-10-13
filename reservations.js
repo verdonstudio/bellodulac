@@ -43,7 +43,7 @@ window.RESERVATIONS = [
   { annonce: "Bell'Etoile (Moustiers)", nom: "Freia",   voyageurs: 4, arrivee: "21/10/2026", depart: "25/10/2026", langue: "DE", code: "HM3Q3PQHNW" },
   { annonce: "Maison Bell'O 8P", nom: "Estelle",   voyageurs: 4, arrivee: "21/10/2026", depart: "25/10/2026", langue: "NL", code: "HM9XYMWPBZ" },
   { annonce: "Bell'Etoile (Moustiers)", nom: "Chelsea",   voyageurs: 2, arrivee: "26/09/2026", depart: "29/09/2026", langue: "EN", code: "HMRWX4HKS9" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Thomas",   voyageurs: 3, arrivee: "16/10/2026", depart: "19/10/2026", langue: "FR", code: "HMFFSNS4BJ" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Thomas",   voyageurs: 3, arrivee: "16/10/2026", depart: "19/10/2026", langue: "EN", code: "HMFFSNS4BJ" },
   { annonce: "Bell'Etoile (Moustiers)", nom: "Michelle",      voyageurs: 4, arrivee: "01/10/2026", depart: "04/10/2026", langue: "FR", code: "HMAZKZK5XA" },
   { annonce: "Maison Bell'O 6P",        nom: "Julie",      voyageurs: 6, arrivee: "25/09/2026", depart: "27/09/2026", langue: "FR", code: "HMDXYHZQZN" },
   { annonce: "Bell'Etoile (Moustiers)", nom: "Franziska",  voyageurs: 2, arrivee: "10/09/2026", depart: "13/09/2026", langue: "DE", code: "HM9FT3XCJQ" },
