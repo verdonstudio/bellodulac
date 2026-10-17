@@ -5317,10 +5317,10 @@ window.EVENTS_DATA = {
     "cat": "culture",
     "place": "Les Salles-sur-Verdon",
     "time": {
-      "FR": "Horaire à confirmer",
-      "EN": "Time to be confirmed",
-      "DE": "Uhrzeit wird noch bestätigt",
-      "NL": "Tijdstip nog te bevestigen"
+      "FR": "18h00",
+      "EN": "6:00 PM",
+      "DE": "18:00",
+      "NL": "18:00"
     },
     "title": {
       "FR": "Spectacle « Les Courants d'Arrachement »",
