@@ -5279,6 +5279,38 @@ window.EVENTS_DATA = {
       "DE": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html",
       "NL": "https://www.lacs-gorges-verdon.com/sortir/agenda/22988-apres-midis--jeux-de-societe-.html"
     }
+  },
+  {
+    "id": "evt-121",
+    "cat": "fete",
+    "place": "Moustiers-Sainte-Marie",
+    "time": {
+      "FR": "19h00–23h00",
+      "EN": "7:00 PM–11:00 PM",
+      "DE": "19:00–23:00",
+      "NL": "19:00–23:00"
+    },
+    "title": {
+      "FR": "Soirée dansante latine à La Cascade",
+      "EN": "Latin dance evening at La Cascade",
+      "DE": "Lateinamerikanischer Tanzabend im La Cascade",
+      "NL": "Latijns-Amerikaanse danspartij bij La Cascade"
+    },
+    "details": {
+      "FR": "Au restaurant La Cascade, DJ Joe de Cuba fait vibrer le public au son des musiques latines, dans une ambiance festive et conviviale.",
+      "EN": "At La Cascade restaurant, DJ Joe from Cuba gets everyone moving to Latin music in a festive and friendly atmosphere.",
+      "DE": "Im Restaurant La Cascade bringt DJ Joe de Cuba das Publikum mit lateinamerikanischer Musik in Schwung, in festlicher und geselliger Atmosphäre.",
+      "NL": "In restaurant La Cascade laat DJ Joe de Cuba het publiek swingen op Latijns-Amerikaanse muziek, in een feestelijke en gezellige sfeer."
+    },
+    "favorite": false,
+    "rating": 1,
+    "logement": "both",
+    "date": "2026-10-17",
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/74/92/43342922-diaporama.jpg",
+    "url": {
+      "FR": "https://www.moustiers.fr/fiche/soiree-dansante-latine-a-la-cascade/",
+      "EN": "https://www.moustiers.fr/en/fiche/latin-dance-evening-at-la-cascade/"
+    }
   }
 ]
 };
