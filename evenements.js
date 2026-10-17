@@ -5302,7 +5302,7 @@ window.EVENTS_DATA = {
       "DE": "Im Restaurant La Cascade bringt DJ Joe de Cuba das Publikum mit lateinamerikanischer Musik in Schwung, in festlicher und geselliger Atmosphäre.",
       "NL": "In restaurant La Cascade laat DJ Joe de Cuba het publiek swingen op Latijns-Amerikaanse muziek, in een feestelijke en gezellige sfeer."
     },
-    "favorite": false,
+    "favorite": true,
     "rating": 1,
     "logement": "both",
     "date": "2026-10-17",
