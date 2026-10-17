@@ -5311,6 +5311,34 @@ window.EVENTS_DATA = {
       "FR": "https://www.moustiers.fr/fiche/soiree-dansante-latine-a-la-cascade/",
       "EN": "https://www.moustiers.fr/en/fiche/latin-dance-evening-at-la-cascade/"
     }
+  },
+  {
+    "id": "evt-122",
+    "cat": "culture",
+    "place": "Les Salles-sur-Verdon",
+    "time": {
+      "FR": "Horaire à confirmer",
+      "EN": "Time to be confirmed",
+      "DE": "Uhrzeit wird noch bestätigt",
+      "NL": "Tijdstip nog te bevestigen"
+    },
+    "title": {
+      "FR": "Spectacle « Les Courants d'Arrachement »",
+      "EN": "Show \"Les Courants d'Arrachement\"",
+      "DE": "Aufführung „Les Courants d'Arrachement“",
+      "NL": "Voorstelling \"Les Courants d'Arrachement\""
+    },
+    "details": {
+      "FR": "Théâtre à la médiathèque « Le secret des pages », dans le cadre du lancement du prix des lecteurs du Var : spectacle de la compagnie Douce tiré du livre du même titre.",
+      "EN": "Theatre at the \"Le secret des pages\" library, as part of the launch of the Var readers' prize: a show by the Douce company based on the book of the same title.",
+      "DE": "Theater in der Mediathek „Le secret des pages“ zum Auftakt des Lesepreises des Var: Aufführung der Compagnie Douce nach dem gleichnamigen Buch.",
+      "NL": "Theater in de mediatheek \"Le secret des pages\" ter gelegenheid van de lancering van de leesprijs van de Var: voorstelling van het gezelschap Douce naar het gelijknamige boek."
+    },
+    "favorite": true,
+    "rating": 3,
+    "logement": "both",
+    "date": "2026-10-17",
+    "url": "https://scenesdusud.fr/spectacle/spectacle-les-courants-d-arrachement-les-salles-sur-verdon"
   }
 ]
 };
