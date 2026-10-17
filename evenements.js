@@ -5303,7 +5303,7 @@ window.EVENTS_DATA = {
       "NL": "In restaurant La Cascade laat DJ Joe de Cuba het publiek swingen op Latijns-Amerikaanse muziek, in een feestelijke en gezellige sfeer."
     },
     "favorite": true,
-    "rating": 2,
+    "rating": 3,
     "logement": "both",
     "date": "2026-10-17",
     "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/74/92/43342922-diaporama.jpg",
