@@ -5338,6 +5338,7 @@ window.EVENTS_DATA = {
     "rating": 3,
     "logement": "both",
     "date": "2026-10-17",
+    "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/110/143/42766190.png",
     "url": "https://scenesdusud.fr/spectacle/spectacle-les-courants-d-arrachement-les-salles-sur-verdon"
   }
 ]
