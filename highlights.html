@@ -809,7 +809,9 @@
     }
 
     function eventUrl(evt) {
-        if (evt.url) return evt.url;
+        // evt.url : chaine simple ou objet {FR, EN, DE, NL} (t() gere les deux, repli FR puis EN)
+        const localizedUrl = t(evt.url);
+        if (localizedUrl) return localizedUrl;
         const q = encodeURIComponent(`${evt.place || ''}, ${t(evt.title)}`);
         return `https://www.google.com/search?q=${q}`;
     }
