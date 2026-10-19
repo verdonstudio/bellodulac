@@ -5483,12 +5483,7 @@ window.EVENTS_DATA = {
     "favorite": true,
     "rating": 3,
     "logement": "both",
-    "recurrence": {
-      "freq": "daily",
-      "interval": 1,
-      "startDate": "2026-04-01",
-      "endDate": "2026-11-01"
-    },
+    "date": "2026-10-22",
     "img": "https://la-provence-verte.net/amusez-vous/photos/3_max.jpg",
     "url": "https://la-provence-verte.net/amusez-vous/amusezvous-location-canoe-basses-gorges-du-verdon_3.html"
   }
