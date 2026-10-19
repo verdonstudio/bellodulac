@@ -3724,8 +3724,8 @@ window.EVENTS_DATA = {
       "DE": "Place Frédéric Mistral",
       "NL": "Place Frédéric Mistral"
     },
-    "favorite": false,
-    "rating": 2,
+    "favorite": true,
+    "rating": 3,
     "logement": "both",
     "url": {
       "FR": "https://www.tripadvisor.fr/Attraction_Review-g672316-d20911103-Reviews-Marche_Provencal_De_Aups-Aups_Var_Provence_Alpes_Cote_d_Azur.html",
@@ -4437,8 +4437,8 @@ window.EVENTS_DATA = {
       "DE": "Führung mit einem zugelassenen Fremdenführer des Fremdenverkehrsamts.",
       "NL": "Rondleiding door een erkende gids van het toeristenbureau."
     },
-    "favorite": false,
-    "rating": 0,
+    "favorite": true,
+    "rating": 3,
     "logement": "both",
     "recurrence": {
       "freq": "weekly",
@@ -4449,7 +4449,11 @@ window.EVENTS_DATA = {
         "tue"
       ]
     },
-    "url": "https://www.moustiers.fr/en/fiche/individual-guided-tour-of-moustiers-2/",
+    "url": {
+      "FR": "https://www.moustiers.fr/fiche/visites-guidees-du-centre-ancien-pour-les-individuels/",
+      "EN": "https://www.moustiers.fr/en/fiche/individual-guided-tour-of-moustiers-2/",
+      "DE": "https://www.moustiers.fr/de/fiche/individual-guided-tour-of-moustiers/"
+    },
     "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/118/216/42063990-diaporama.png"
   },
   {
@@ -5067,8 +5071,8 @@ window.EVENTS_DATA = {
       "DE": "Denkmalgeschützte Höhlenwohnungen, im 9. Jahrhundert befestigt, mit einem Durchgang hinter einem Wasserfall und Parkblick. 5€, Tickets auf grottes-villecroze.fr. Öffnungszeiten je nach Saison.",
       "NL": "Beschermde grotwoningen, in de 9e eeuw versterkt, met een doorgang achter een waterval en uitzicht op het park. €5, tickets op grottes-villecroze.fr. Openingstijden variëren per seizoen."
     },
-    "favorite": false,
-    "rating": 2,
+    "favorite": true,
+    "rating": 3,
     "recurrence": {
       "freq": "weekly",
       "interval": 1,
@@ -5166,8 +5170,8 @@ window.EVENTS_DATA = {
       "DE": "Geselliger Nachmittag mit Gesellschaftsspielen, offen für alle. Schwerpunkt Familien und Kinder. Kostenlos.",
       "NL": "Gezellige namiddag met bordspellen, open voor iedereen. Speciaal voor gezinnen en kinderen. Gratis."
     },
-    "favorite": false,
-    "rating": 1,
+    "favorite": true,
+    "rating": 3,
     "logement": "both",
     "date": "2026-09-19",
     "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22988_2_1.jpg",
@@ -5200,8 +5204,8 @@ window.EVENTS_DATA = {
       "DE": "Geselliger Nachmittag mit Gesellschaftsspielen, offen für alle. Schwerpunkt Jugendliche. Kostenlos.",
       "NL": "Gezellige namiddag met bordspellen, open voor iedereen. Speciaal voor tieners. Gratis."
     },
-    "favorite": false,
-    "rating": 1,
+    "favorite": true,
+    "rating": 3,
     "logement": "both",
     "date": "2026-10-24",
     "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22988_2_1.jpg",
@@ -5234,8 +5238,8 @@ window.EVENTS_DATA = {
       "DE": "Geselliger Nachmittag mit Gesellschaftsspielen, offen für alle. Schwerpunkt Familien und Kinder. Kostenlos.",
       "NL": "Gezellige namiddag met bordspellen, open voor iedereen. Speciaal voor gezinnen en kinderen. Gratis."
     },
-    "favorite": false,
-    "rating": 1,
+    "favorite": true,
+    "rating": 3,
     "logement": "both",
     "date": "2026-11-07",
     "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22988_2_1.jpg",
@@ -5268,8 +5272,8 @@ window.EVENTS_DATA = {
       "DE": "Geselliger Nachmittag mit Gesellschaftsspielen, offen für alle. Schwerpunkt Jugendliche. Kostenlos.",
       "NL": "Gezellige namiddag met bordspellen, open voor iedereen. Speciaal voor tieners. Gratis."
     },
-    "favorite": false,
-    "rating": 1,
+    "favorite": true,
+    "rating": 3,
     "logement": "both",
     "date": "2026-12-12",
     "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22988_2_1.jpg",
@@ -5340,6 +5344,153 @@ window.EVENTS_DATA = {
     "date": "2026-10-17",
     "img": "https://synapi.visitvar.fr/apidae/filestore/objets-touristiques/images/110/143/42766190.png",
     "url": "https://scenesdusud.fr/spectacle/spectacle-les-courants-d-arrachement-les-salles-sur-verdon"
+  },
+  {
+    "id": "rec-moustiers-marche-provencal-vendredi",
+    "cat": "marche",
+    "place": "Moustiers-Sainte-Marie",
+    "time": {
+      "FR": "Matin",
+      "EN": "Morning",
+      "DE": "Morgens",
+      "NL": "Ochtend"
+    },
+    "title": {
+      "FR": "Marché provençal de Moustiers",
+      "EN": "Moustiers Provençal market",
+      "DE": "Provenzalischer Markt in Moustiers",
+      "NL": "Provençaalse markt van Moustiers"
+    },
+    "details": {
+      "FR": "Tous les vendredis matin, toute l'année, place de la Mairie. Produits locaux. Accès libre.",
+      "EN": "Every Friday morning, all year round, Place de la Mairie. Local products. Free access.",
+      "DE": "Jeden Freitagvormittag, das ganze Jahr über, Place de la Mairie. Regionale Produkte. Freier Eintritt.",
+      "NL": "Elke vrijdagochtend, het hele jaar door, Place de la Mairie. Lokale producten. Gratis toegang."
+    },
+    "favorite": true,
+    "rating": 3,
+    "logement": "both",
+    "recurrence": {
+      "freq": "weekly",
+      "interval": 1,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "byDay": [
+        "fri"
+      ]
+    },
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/245/199/16893941-diaporama.png",
+    "url": {
+      "FR": "https://www.moustiers.fr/fiche/marche-provencal/",
+      "EN": "https://www.moustiers.fr/en/fiche/provencal-market-2/",
+      "DE": "https://www.moustiers.fr/de/fiche/provencal-market/"
+    }
+  },
+  {
+    "id": "evt-octobre-rose-moustiers-2026",
+    "cat": "fete",
+    "place": "Moustiers-Sainte-Marie",
+    "time": {
+      "FR": "À partir de 10h00",
+      "EN": "From 10:00 AM",
+      "DE": "Ab 10:00 Uhr",
+      "NL": "Vanaf 10:00"
+    },
+    "title": {
+      "FR": "Octobre Rose avec le Comité des Fêtes",
+      "EN": "Octobre Rose with the Comité des Fêtes",
+      "DE": "Octobre Rose mit dem Comité des Fêtes",
+      "NL": "Octobre Rose met het Comité des Fêtes"
+    },
+    "details": {
+      "FR": "Dimanche 25 octobre : café éphémère sur le pont dès 9h (crêpes, gâteaux, jeux de société), ateliers créatifs enfants à 14h30 (2 €), balade de 3 km avec Rando Évasion Verdon à 14h (5 €, inscription à l'Office de Tourisme). Dons reversés à la Ligue contre le cancer.",
+      "EN": "Sunday 25 October: pop-up café on the bridge from 9 am (crêpes, cakes, board games), children's craft activities at 2:30 pm (€2), 3 km walk with Rando Évasion Verdon at 2 pm (€5, register at the Tourist Office). Donations go to the League Against Cancer.",
+      "DE": "Sonntag, 25. Oktober: Pop-up-Café auf der Brücke ab 9 Uhr (Crêpes, Kuchen, Gesellschaftsspiele), Bastelworkshops für Kinder um 14:30 Uhr (2 €), 3-km-Wanderung mit Rando Évasion Verdon um 14 Uhr (5 €, Anmeldung im Fremdenverkehrsamt). Spenden gehen an die Liga gegen Krebs.",
+      "NL": "Zondag 25 oktober: pop-upcafé op de brug vanaf 9 uur (pannenkoeken, gebak, bordspellen), knutselactiviteiten voor kinderen om 14:30 uur (2 €), wandeling van 3 km met Rando Évasion Verdon om 14 uur (5 €, inschrijven bij het toeristenbureau). Giften gaan naar de Liga tegen Kanker."
+    },
+    "favorite": true,
+    "rating": 3,
+    "logement": "both",
+    "date": "2026-10-25",
+    "img": "https://static.apidae-tourisme.com/filestore/objets-touristiques/images/180/171/43363252-diaporama.jpg",
+    "url": {
+      "FR": "https://www.moustiers.fr/fiche/octobre-rose-avec-le-comite-des-fetes/",
+      "EN": "https://www.moustiers.fr/en/fiche/octobre-rose-with-the-comite-des-fetes/",
+      "DE": "https://www.moustiers.fr/de/fiche/octobre-rose-mit-der-comite-des-fetes/"
+    }
+  },
+  {
+    "id": "evt-grottes-villecroze-octobre",
+    "cat": "culture",
+    "place": "Villecroze",
+    "time": {
+      "FR": "13h–15h",
+      "EN": "1–3 PM",
+      "DE": "13–15 Uhr",
+      "NL": "13–15 uur"
+    },
+    "title": {
+      "FR": "Visite des grottes fortifiées de Villecroze",
+      "EN": "Villecroze fortified caves tour",
+      "DE": "Besichtigung der befestigten Höhlen von Villecroze",
+      "NL": "Bezoek aan de versterkte grotten van Villecroze"
+    },
+    "details": {
+      "FR": "Grottes troglodytiques classées, fortifiées au IXe siècle, avec passage derrière une cascade et vue sur le parc. 5€, billets sur grottes-villecroze.fr. Départs toutes les heures en octobre.",
+      "EN": "Listed troglodyte caves, fortified in the 9th century, with a passage behind a waterfall and park views. €5, tickets on grottes-villecroze.fr. Hourly departures in October.",
+      "DE": "Denkmalgeschützte Höhlenwohnungen, im 9. Jahrhundert befestigt, mit einem Durchgang hinter einem Wasserfall und Parkblick. 5€, Tickets auf grottes-villecroze.fr. Im Oktober stündliche Abfahrten.",
+      "NL": "Beschermde grotwoningen, in de 9e eeuw versterkt, met een doorgang achter een waterval en uitzicht op het park. €5, tickets op grottes-villecroze.fr. In oktober elk uur een vertrek."
+    },
+    "favorite": true,
+    "rating": 3,
+    "recurrence": {
+      "freq": "weekly",
+      "interval": 1,
+      "startDate": "2026-10-01",
+      "endDate": "2026-10-31",
+      "byDay": [
+        "wed",
+        "sat",
+        "sun"
+      ]
+    },
+    "logement": "both",
+    "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22065_2_1.jpg",
+    "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22065-visite-des-grottes-fortifiees-de-villecroze.html"
+  },
+  {
+    "id": "rec-montmeyan-canoe-basses-gorges",
+    "cat": "sport",
+    "place": "Montmeyan",
+    "time": {
+      "FR": "Sur rendez-vous",
+      "EN": "By appointment",
+      "DE": "Nach Vereinbarung",
+      "NL": "Op afspraak"
+    },
+    "title": {
+      "FR": "Location de canoë dans les basses gorges du Verdon",
+      "EN": "Canoe rental in the lower Verdon gorges",
+      "DE": "Kanuverleih in den unteren Verdonschluchten",
+      "NL": "Kanoverhuur in de lagere Verdonkloof"
+    },
+    "details": {
+      "FR": "Départ du lac de Montmeyan-Quinson, parcours facile jusqu'à 9 km, de 1h à 1 journée, tous âges (dès 4 ans avec un adulte). De 8 € l'heure à 33 € la journée en canoë 1 place. Tous les jours jusqu'au 01/11.",
+      "EN": "Departure from Lake Montmeyan-Quinson, easy route of up to 9 km, from 1 hour to a full day, all ages (from age 4 with an adult). From €8 per hour to €33 per day for a 1-seat canoe. Daily until 1 November.",
+      "DE": "Start am See von Montmeyan-Quinson, leichte Strecke von bis zu 9 km, von 1 Stunde bis zu einem ganzen Tag, für alle Altersgruppen (ab 4 Jahren mit einem Erwachsenen). Ab 8 € pro Stunde bis 33 € pro Tag im Einer-Kanu. Täglich bis zum 1. November.",
+      "NL": "Vertrek vanaf het meer van Montmeyan-Quinson, gemakkelijke route tot 9 km, van 1 uur tot een hele dag, alle leeftijden (vanaf 4 jaar met een volwassene). Vanaf 8 € per uur tot 33 € per dag voor een eenpersoonskano. Dagelijks tot 1 november."
+    },
+    "favorite": true,
+    "rating": 3,
+    "logement": "both",
+    "recurrence": {
+      "freq": "daily",
+      "interval": 1,
+      "startDate": "2026-04-01",
+      "endDate": "2026-11-01"
+    },
+    "img": "https://la-provence-verte.net/amusez-vous/photos/3_max.jpg",
+    "url": "https://la-provence-verte.net/amusez-vous/amusezvous-location-canoe-basses-gorges-du-verdon_3.html"
   }
 ]
 };
