@@ -5443,17 +5443,7 @@ window.EVENTS_DATA = {
     },
     "favorite": true,
     "rating": 3,
-    "recurrence": {
-      "freq": "weekly",
-      "interval": 1,
-      "startDate": "2026-10-01",
-      "endDate": "2026-10-31",
-      "byDay": [
-        "wed",
-        "sat",
-        "sun"
-      ]
-    },
+    "date": "2026-10-24",
     "logement": "both",
     "img": "https://www.tourinprovence.fr/synchACVS/ressources/images/APIDAE/maxi/22065_2_1.jpg",
     "url": "https://www.lacs-gorges-verdon.fr/sortir/agenda/22065-visite-des-grottes-fortifiees-de-villecroze.html"
