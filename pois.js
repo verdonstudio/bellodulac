@@ -12981,8 +12981,8 @@ window.POIS = [
     "id": "parking-samson",
     "cat": "parking_gratuit",
     "coords": [
-      43.7928128,
-      6.4015629
+      43.79297,
+      6.40169
     ],
     "stars": 1,
     "fr": {
