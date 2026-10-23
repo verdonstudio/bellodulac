@@ -12976,5 +12976,54 @@ window.POIS = [
         }
       ]
     }
+  },
+  {
+    "id": "parking-samson",
+    "cat": "parking_gratuit",
+    "coords": [
+      43.7928128,
+      6.4015629
+    ],
+    "stars": 1,
+    "fr": {
+      "name": "Parking Samson",
+      "desc": "Parking Samson, dans les gorges du Verdon.",
+      "links": [
+        {
+          "url": "https://www.google.com/maps/place/Parking+Samson/@43.7924173,6.4006516,17.96z/data=!4m6!3m5!1s0x12cbf73095b6febb:0x5f9d9f825279ced1!8m2!3d43.7928128!4d6.4015629!16s%2Fg%2F11ny1sjknc",
+          "label": "Voir sur Google Maps 📍"
+        }
+      ]
+    },
+    "en": {
+      "name": "Samson Parking",
+      "desc": "Samson car park, in the Verdon gorges.",
+      "links": [
+        {
+          "url": "https://www.google.com/maps/place/Parking+Samson/@43.7924173,6.4006516,17.96z/data=!4m6!3m5!1s0x12cbf73095b6febb:0x5f9d9f825279ced1!8m2!3d43.7928128!4d6.4015629!16s%2Fg%2F11ny1sjknc",
+          "label": "View on Google Maps 📍"
+        }
+      ]
+    },
+    "de": {
+      "name": "Parkplatz Samson",
+      "desc": "Parkplatz Samson in den Verdonschluchten.",
+      "links": [
+        {
+          "url": "https://www.google.com/maps/place/Parking+Samson/@43.7924173,6.4006516,17.96z/data=!4m6!3m5!1s0x12cbf73095b6febb:0x5f9d9f825279ced1!8m2!3d43.7928128!4d6.4015629!16s%2Fg%2F11ny1sjknc",
+          "label": "Auf Google Maps ansehen 📍"
+        }
+      ]
+    },
+    "nl": {
+      "name": "Parkeerplaats Samson",
+      "desc": "Parkeerplaats Samson in de Verdonkloof.",
+      "links": [
+        {
+          "url": "https://www.google.com/maps/place/Parking+Samson/@43.7924173,6.4006516,17.96z/data=!4m6!3m5!1s0x12cbf73095b6febb:0x5f9d9f825279ced1!8m2!3d43.7928128!4d6.4015629!16s%2Fg%2F11ny1sjknc",
+          "label": "Bekijk op Google Maps 📍"
+        }
+      ]
+    }
   }
 ];
