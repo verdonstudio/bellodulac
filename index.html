@@ -1606,6 +1606,10 @@
     const rawFullscreen = p.get('fullscreen') || p.get('fs');
     const rawEdit    = p.get('edit');
     const rawTv      = p.get('tv');
+    // meteo=true|1 (ou weather=..., ou tab=meteo|weather|outils) : on atterrit directement
+    // sur l'onglet Outils, ou se trouve la meteo (7 jours + heure par heure).
+    const rawMeteo   = p.get('meteo') || p.get('weather');
+    const rawTab     = (p.get('tab') || '').trim().toLowerCase();
 
     let catsArray = null;
     if (rawCats) {
@@ -1645,7 +1649,8 @@
       traceHome: rawTrace === 'true' || rawTrace === '1',
       fullscreen: rawFullscreen === 'true' || rawFullscreen === '1',
       edit: rawEdit === 'true' || rawEdit === '1',
-      tv: rawTv === 'true' || rawTv === '1'
+      tv: rawTv === 'true' || rawTv === '1',
+      meteo: rawMeteo === 'true' || rawMeteo === '1' || ['meteo', 'weather', 'outils'].includes(rawTab)
     };
   }
 
@@ -3571,7 +3576,7 @@ function getPoiLinks(content, poi) {
       if (det.open && !det.contains(e.target)) det.open = false;
     });
 
-    setTab('logement');
+    setTab(urlParams.meteo ? 'outils' : 'logement');
     render();
     applyMapFullscreenUI();
     syncUrl();
