@@ -803,6 +803,7 @@
       wish: "Nous vous souhaitons un excellent séjour dans le Verdon !",
       weather_title: "Météo 7 jours",
       weather_loading: "Chargement de la météo...",
+      weather_hourly: "Heure par heure",
       map_title: "Plan & alentours",
       map_sub: "Découvrez les pépites du Verdon",
       map_open: "Ouvrir dans Google Maps →",
@@ -871,6 +872,7 @@
       wish: "We wish you a wonderful stay in the Verdon!",
       weather_title: "7-day weather",
       weather_loading: "Loading weather...",
+      weather_hourly: "Hour by hour",
       map_title: "Map & surroundings",
       map_sub: "Discover the gems of the Verdon",
       map_open: "Open in Google Maps →",
@@ -939,6 +941,7 @@
       wish: "Wir wünschen Ihnen einen wunderschönen Aufenthalt im Verdon!",
       weather_title: "Wetter für 7 Tage",
       weather_loading: "Wetter wird geladen...",
+      weather_hourly: "Stündlich",
       map_title: "Karte & Umgebung",
       map_sub: "Entdecken Sie die Schätze des Verdon",
       map_open: "In Google Maps öffnen →",
@@ -1005,6 +1008,7 @@
       wish: "Wij wensen u een heerlijk verblijf in de Verdon!",
       weather_title: "Weer voor 7 dagen",
       weather_loading: "Weer wordt geladen...",
+      weather_hourly: "Uur per uur",
       map_title: "Kaart & omgeving",
       map_sub: "Ontdek de parels van de Verdon",
       map_open: "Openen in Google Maps →",
@@ -2053,14 +2057,50 @@ function syncUrl(replace = true) {
     wc.innerHTML = `<span>${dict.weather_loading}</span>`;
     try {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${L.coords.lat}&longitude=${L.coords.lon}`
-                + `&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe%2FParis&forecast_days=7`;
+                + `&daily=weather_code,temperature_2m_max,temperature_2m_min`
+                + `&hourly=temperature_2m,weather_code,precipitation_probability`
+                + `&timezone=Europe%2FParis&forecast_days=7`;
       const res = await fetch(url);
       const data = await res.json();
       const d = data.daily;
       if (!d) throw new Error('no data');
+      const h = data.hourly;
       const today = new Date();
       const strip = document.createElement('div');
       strip.className = 'weather-strip flex gap-2 overflow-x-auto -mx-1 px-1 pb-1';
+
+      // Meteo heure par heure du jour selectionne (6h-22h), sous la bande des 7 jours.
+      // Cliquer sur un jour l'affiche ; "aujourd'hui" par defaut.
+      const hourly = document.createElement('div');
+      const showHourly = (iso, cell) => {
+        strip.querySelectorAll('[data-day]').forEach(c => c.classList.remove('ring-2', 'ring-[var(--c-primary)]'));
+        if (cell) cell.classList.add('ring-2', 'ring-[var(--c-primary)]');
+        hourly.innerHTML = '';
+        if (!h || !h.time) return;
+        const title = document.createElement('div');
+        title.className = 'text-xs uppercase tracking-wider text-[var(--c-muted)] font-semibold mt-4 mb-2';
+        title.textContent = dict.weather_hourly;
+        const row = document.createElement('div');
+        row.className = 'weather-strip flex gap-2 overflow-x-auto -mx-1 px-1 pb-1';
+        h.time.forEach((t, k) => {
+          if (t.slice(0, 10) !== iso) return;
+          const hour = parseInt(t.slice(11, 13), 10);
+          if (hour < 6 || hour > 22) return;
+          const pp = h.precipitation_probability ? h.precipitation_probability[k] : null;
+          const hc = document.createElement('div');
+          hc.className = 'shrink-0 w-[56px] text-center bg-[var(--c-primary-soft)]/60 rounded-xl py-2 px-1';
+          hc.innerHTML = `
+            <div class="text-[11px] text-[var(--c-muted)] font-medium">${hour}h</div>
+            <div class="text-xl my-0.5">${wxEmoji(h.weather_code[k])}</div>
+            <div class="text-[13px] font-semibold">${Math.round(h.temperature_2m[k])}°</div>
+            <div class="text-[10px] text-[var(--c-muted)]">${pp != null && pp > 0 ? '💧' + pp + '%' : '&nbsp;'}</div>
+          `;
+          row.appendChild(hc);
+        });
+        hourly.appendChild(title);
+        hourly.appendChild(row);
+      };
+
       d.time.forEach((iso, i) => {
         const date = new Date(iso);
         let label;
@@ -2072,7 +2112,9 @@ function syncUrl(replace = true) {
         const tmax = Math.round(d.temperature_2m_max[i]);
         const tmin = Math.round(d.temperature_2m_min[i]);
         const cell = document.createElement('div');
-        cell.className = 'shrink-0 w-[68px] text-center bg-[var(--c-primary-soft)]/60 rounded-xl py-3 px-1';
+        cell.className = 'shrink-0 w-[68px] text-center bg-[var(--c-primary-soft)]/60 rounded-xl py-3 px-1 cursor-pointer';
+        cell.dataset.day = iso;
+        cell.addEventListener('click', () => showHourly(iso, cell));
         cell.innerHTML = `
           <div class="text-[11px] text-[var(--c-muted)] font-medium">${label}</div>
           <div class="text-2xl my-1">${emoji}</div>
@@ -2083,6 +2125,8 @@ function syncUrl(replace = true) {
       });
       wc.innerHTML = '';
       wc.appendChild(strip);
+      wc.appendChild(hourly);
+      showHourly(d.time[0], strip.firstElementChild);
     } catch (e) {
       wc.innerHTML = `<span class="text-[var(--c-warm)]">${dict.weather_error}</span>`;
     }
