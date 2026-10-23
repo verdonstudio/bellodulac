@@ -39,6 +39,8 @@
    ========================================================================== */
 
 window.RESERVATIONS = [
+  { annonce: "Maison Bell'O 6P", nom: "Johan",   voyageurs: 3, arrivee: "26/10/2026", depart: "30/10/2026", langue: "FR", code: "HMDXKBJ5Q3" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Elodie",   voyageurs: 4, arrivee: "26/10/2026", depart: "29/10/2026", langue: "FR", code: "HM5KXQP3H3" },
   { annonce: "Maison Bell'O 6P", nom: "Sandrine",   voyageurs: 4, arrivee: "29/08/2026", depart: "01/09/2026", langue: "EN", code: "BELLO" },
   { annonce: "Bell'Etoile (Moustiers)", nom: "Freia",   voyageurs: 4, arrivee: "21/10/2026", depart: "25/10/2026", langue: "DE", code: "HM3Q3PQHNW" },
   { annonce: "Maison Bell'O 8P", nom: "Estelle",   voyageurs: 4, arrivee: "21/10/2026", depart: "25/10/2026", langue: "NL", code: "HM9XYMWPBZ" },
