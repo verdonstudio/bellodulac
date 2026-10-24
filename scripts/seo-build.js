@@ -205,6 +205,9 @@ function headBlock(file, cfg, html) {
     `<meta name="twitter:image" content="${OG_IMAGE}">`,
   ];
   if (file === 'index.html') {
+    // Verification de propriete Google Search Console (propriete "prefixe d'URL",
+    // methode balise HTML). Ne pas supprimer, sinon la propriete est invalidee.
+    lines.push('<meta name="google-site-verification" content="A_XxS2tu3HWg8yfqcvDVA-iEEYBMlfj9XazR8iFTscE">');
     lines.push(jsonLdScript([websiteJsonLd(), ...listingsJsonLd()]));
   } else if (file === 'logements.html') {
     lines.push(jsonLdScript(listingsJsonLd()));
