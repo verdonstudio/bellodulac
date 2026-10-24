@@ -112,9 +112,15 @@ function listingsJsonLd() {
   const out = [];
   for (const l of Object.values(LOG.listings)) {
     const m = /^(.*?),\s*([^,]+?),\s*(\d{5})$/.exec(l.address || '');
+    // Type "LodgingBusiness" et non "VacationRental" : le test des résultats enrichis
+    // exige pour VacationRental (réservé au programme partenaire Google Vacation
+    // Rentals) containsPlace/occupancy, 8 images, etc. - des données que nous n'avons
+    // pas et que nous ne voulons pas inventer. LodgingBusiness reste compris par
+    // Google et les moteurs IA, sans erreur "critique".
     const node = {
-      '@type': 'VacationRental',
+      '@type': 'LodgingBusiness',
       '@id': `${BASE}/logements.html#${l.id}`,
+      identifier: l.room ? String(l.room) : l.id,
       name: l.label.FR,
       description: l.desc.FR,
       url: `${BASE}/logements.html`,
@@ -125,6 +131,7 @@ function listingsJsonLd() {
         streetAddress: m ? m[1] : l.address,
         addressLocality: m ? m[2] : undefined,
         postalCode: m ? m[3] : undefined,
+        addressRegion: "Provence-Alpes-Côte d'Azur",
         addressCountry: 'FR',
       },
       geo: { '@type': 'GeoCoordinates', latitude: l.coords.lat, longitude: l.coords.lon },
