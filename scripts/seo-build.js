@@ -127,7 +127,7 @@ function listingsJsonLd() {
       identifier: l.room ? String(l.room) : l.id,
       name: l.label.FR,
       description: l.desc.FR,
-      url: `${BASE}/logements.html`,
+      url: `${BASE}/${(require('./logement-pages.js').PAGES[l.id] || {}).slug || 'logements.html'}`,
       image: l.cover,
       inLanguage: ['fr', 'en', 'de', 'nl'],
       address: {
@@ -317,7 +317,11 @@ for (const file of NOINDEX_PAGES) {
 }
 
 // sitemap.xml
-const urls = Object.values(PUBLIC_PAGES).map(c => c.url);
+// pages commerciales par logement (scripts/logement-pages.js)
+const LP = require('./logement-pages.js');
+const lpFiles = LP.build(LOG, BASE, OG_IMAGE, SITE_NAME);
+for (const [f, c] of Object.entries(lpFiles)) { write(f, c); console.log('OK   ', f); }
+const urls = [...Object.values(PUBLIC_PAGES).map(c => c.url), ...LP.pageUrls()];
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
   urls.map(u => `  <url>\n    <loc>${BASE}${u}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`).join('\n') +
   `\n</urlset>\n`);
@@ -331,7 +335,8 @@ lines.push("> Livret d'accueil numérique et guide local (français, anglais, al
 lines.push('');
 lines.push('## Logements');
 Object.values(LOG.listings).sort((a, b) => (a.order || 0) - (b.order || 0)).forEach(l => {
-  lines.push(`- [${l.label.FR}](${BASE}/logements.html) : ${l.desc.FR}. ${l.address}.`);
+  const pg = require('./logement-pages.js').PAGES[l.id];
+  lines.push(`- [${l.label.FR}](${BASE}/${pg ? pg.slug : 'logements.html'}) : ${l.desc.FR}. ${l.address}.`);
 });
 lines.push('');
 lines.push('## Pages principales');

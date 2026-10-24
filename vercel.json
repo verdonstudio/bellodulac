@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/location-salles-sur-verdon-6-personnes", "destination": "/location-salles-sur-verdon-6-personnes.html" },
+    { "source": "/location-salles-sur-verdon-8-personnes", "destination": "/location-salles-sur-verdon-8-personnes.html" },
+    { "source": "/location-moustiers-sainte-marie", "destination": "/location-moustiers-sainte-marie.html" }
+  ]
+}

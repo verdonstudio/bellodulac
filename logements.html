@@ -22,7 +22,7 @@
   <meta name="twitter:title" content="Nos logements — Bell'O du Lac™ &amp; Bell'Étoile™">
   <meta name="twitter:description" content="Nos 3 logements dans le Verdon : Bell'Étoile à Moustiers-Sainte-Marie (terrasse vue village) et Bell'O du Lac aux Salles-sur-Verdon, près du lac de Sainte-Croix.">
   <meta name="twitter:image" content="https://bellodulac.netlify.app/images/moustiers-terrasse.jpg">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LodgingBusiness","@id":"https://bellodulac.vercel.app/logements.html#moustiers","identifier":"1631901662839629884","name":"Bell'Étoile — Moustiers, terrasse vue village","description":"Vue imprenable & terrasse au centre de Moustiers","url":"https://bellodulac.vercel.app/logements.html","image":"https://bellodulac.netlify.app/images/moustiers-terrasse.jpg","inLanguage":["fr","en","de","nl"],"address":{"@type":"PostalAddress","streetAddress":"1055 Av. Frédéric Mistral","addressLocality":"Moustiers-Sainte-Marie","postalCode":"04360","addressRegion":"Provence-Alpes-Côte d'Azur","addressCountry":"FR"},"geo":{"@type":"GeoCoordinates","latitude":43.84714,"longitude":6.22078},"sameAs":["https://www.airbnb.fr/rooms/1631901662839629884"]},{"@type":"LodgingBusiness","@id":"https://bellodulac.vercel.app/logements.html#salles6","identifier":"1401227916063751925","name":"Bell'O du Lac 6P — Les Salles-sur-Verdon","description":"Maison 6 personnes, à pied du lac, chambre vue lac & jardin","url":"https://bellodulac.vercel.app/logements.html","image":"https://bellodulac.netlify.app/images/bello6-cover.jpg","inLanguage":["fr","en","de","nl"],"address":{"@type":"PostalAddress","streetAddress":"5 Rue Sainte-Catherine","addressLocality":"Les Salles-sur-Verdon","postalCode":"83630","addressRegion":"Provence-Alpes-Côte d'Azur","addressCountry":"FR"},"geo":{"@type":"GeoCoordinates","latitude":43.77264860239855,"longitude":6.208356320858003},"sameAs":["https://www.airbnb.fr/rooms/1401227916063751925"]},{"@type":"LodgingBusiness","@id":"https://bellodulac.vercel.app/logements.html#salles8","identifier":"1396288753176684832","name":"Bell'O du Lac 8P — Les Salles-sur-Verdon, vue lac","description":"Maison 8 personnes & jardin, à pied du lac, chambre vue lac","url":"https://bellodulac.vercel.app/logements.html","image":"https://bellodulac.netlify.app/images/bello8-cover.jpg","inLanguage":["fr","en","de","nl"],"address":{"@type":"PostalAddress","streetAddress":"5 Rue Sainte-Catherine","addressLocality":"Les Salles-sur-Verdon","postalCode":"83630","addressRegion":"Provence-Alpes-Côte d'Azur","addressCountry":"FR"},"geo":{"@type":"GeoCoordinates","latitude":43.77264860239855,"longitude":6.208356320858003},"sameAs":["https://www.airbnb.fr/rooms/1396288753176684832"]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LodgingBusiness","@id":"https://bellodulac.vercel.app/logements.html#moustiers","identifier":"1631901662839629884","name":"Bell'Étoile — Moustiers, terrasse vue village","description":"Vue imprenable & terrasse au centre de Moustiers","url":"https://bellodulac.vercel.app/location-moustiers-sainte-marie","image":"https://bellodulac.netlify.app/images/moustiers-terrasse.jpg","inLanguage":["fr","en","de","nl"],"address":{"@type":"PostalAddress","streetAddress":"1055 Av. Frédéric Mistral","addressLocality":"Moustiers-Sainte-Marie","postalCode":"04360","addressRegion":"Provence-Alpes-Côte d'Azur","addressCountry":"FR"},"geo":{"@type":"GeoCoordinates","latitude":43.84714,"longitude":6.22078},"sameAs":["https://www.airbnb.fr/rooms/1631901662839629884"]},{"@type":"LodgingBusiness","@id":"https://bellodulac.vercel.app/logements.html#salles6","identifier":"1401227916063751925","name":"Bell'O du Lac 6P — Les Salles-sur-Verdon","description":"Maison 6 personnes, à pied du lac, chambre vue lac & jardin","url":"https://bellodulac.vercel.app/location-salles-sur-verdon-6-personnes","image":"https://bellodulac.netlify.app/images/bello6-cover.jpg","inLanguage":["fr","en","de","nl"],"address":{"@type":"PostalAddress","streetAddress":"5 Rue Sainte-Catherine","addressLocality":"Les Salles-sur-Verdon","postalCode":"83630","addressRegion":"Provence-Alpes-Côte d'Azur","addressCountry":"FR"},"geo":{"@type":"GeoCoordinates","latitude":43.77264860239855,"longitude":6.208356320858003},"sameAs":["https://www.airbnb.fr/rooms/1401227916063751925"]},{"@type":"LodgingBusiness","@id":"https://bellodulac.vercel.app/logements.html#salles8","identifier":"1396288753176684832","name":"Bell'O du Lac 8P — Les Salles-sur-Verdon, vue lac","description":"Maison 8 personnes & jardin, à pied du lac, chambre vue lac","url":"https://bellodulac.vercel.app/location-salles-sur-verdon-8-personnes","image":"https://bellodulac.netlify.app/images/bello8-cover.jpg","inLanguage":["fr","en","de","nl"],"address":{"@type":"PostalAddress","streetAddress":"5 Rue Sainte-Catherine","addressLocality":"Les Salles-sur-Verdon","postalCode":"83630","addressRegion":"Provence-Alpes-Côte d'Azur","addressCountry":"FR"},"geo":{"@type":"GeoCoordinates","latitude":43.77264860239855,"longitude":6.208356320858003},"sameAs":["https://www.airbnb.fr/rooms/1396288753176684832"]}]}</script>
   <!-- SEO:END -->
 
 <script src="analytics.js"></script>
@@ -139,6 +139,7 @@
     // desormais de logements.js (source de verite partagee avec index/panorama/evenements).
     // room = id Airbnb (page annonce publique) ; host_contact reprend le lien
     // "contact_host" deja utilise sur index.html pour chaque logement.
+    const LISTING_PAGES = { salles6: 'location-salles-sur-verdon-6-personnes', salles8: 'location-salles-sur-verdon-8-personnes', moustiers: 'location-moustiers-sainte-marie' };
     let LISTINGS = [];
     function buildListingsFromConfig() {
         const data = (window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings) || {};
@@ -150,7 +151,7 @@
             back: "Retour", label: "Nos logements",
             pageTitle: "Nos logements dans le Verdon",
             pageSubtitle: "Découvrez nos annonces et réservez directement sur Airbnb.",
-            viewListing: "Voir l'annonce", contactHost: "Contacter l'hôte",
+            moreInfo: "Détails & disponibilités", viewListing: "Voir l'annonce", contactHost: "Contacter l'hôte",
             reviewsSuffix: (n) => `${n} avis`,
             footerNote: "",
         },
@@ -158,7 +159,7 @@
             back: "Back", label: "Our stays",
             pageTitle: "Our stays in the Verdon",
             pageSubtitle: "Discover our listings and book directly on Airbnb.",
-            viewListing: "View listing", contactHost: "Contact the host",
+            moreInfo: "Details & availability", viewListing: "View listing", contactHost: "Contact the host",
             reviewsSuffix: (n) => `${n} reviews`,
             footerNote: "",
         },
@@ -166,7 +167,7 @@
             back: "Zurück", label: "Unsere Unterkünfte",
             pageTitle: "Unsere Unterkünfte im Verdon",
             pageSubtitle: "Entdecken Sie unsere Unterkünfte und buchen Sie direkt über Airbnb.",
-            viewListing: "Anzeige ansehen", contactHost: "Gastgeber kontaktieren",
+            moreInfo: "Details & Verfügbarkeit", viewListing: "Anzeige ansehen", contactHost: "Gastgeber kontaktieren",
             reviewsSuffix: (n) => `${n} Bewertungen`,
             footerNote: "",
         },
@@ -174,7 +175,7 @@
             back: "Terug", label: "Onze verblijven",
             pageTitle: "Onze verblijven in de Verdon",
             pageSubtitle: "Ontdek onze accommodaties en boek rechtstreeks via Airbnb.",
-            viewListing: "Bekijk advertentie", contactHost: "Contact met de gastheer",
+            moreInfo: "Details & beschikbaarheid", viewListing: "Bekijk advertentie", contactHost: "Contact met de gastheer",
             reviewsSuffix: (n) => `${n} beoordelingen`,
             footerNote: "",
         }
@@ -212,12 +213,16 @@
                         <span class="listing-reviews">· ${L.reviewsSuffix(item.reviews)}</span>
                     </div>
                     <div class="flex flex-wrap gap-2 mt-4">
-                        <a class="btn-listing btn-listing-primary" href="https://www.airbnb.fr/rooms/${item.room}" target="_blank" rel="noopener">${L.viewListing}</a>
-                        <a class="btn-listing btn-listing-outline" href="${item.host_contact}" target="_blank" rel="noopener">${L.contactHost}</a>
+                        <a class="btn-listing btn-listing-primary" data-track="listing_click" data-lg="${item.id}" href="https://www.airbnb.fr/rooms/${item.room}" target="_blank" rel="noopener">${L.viewListing}</a>
+                        <a class="btn-listing btn-listing-outline" data-track="contact_host_click" data-lg="${item.id}" href="${item.host_contact}" target="_blank" rel="noopener">${L.contactHost}</a>
+                        ${LISTING_PAGES[item.id] ? `<a class="btn-listing btn-listing-outline" href="/${LISTING_PAGES[item.id]}?lang=${state.lang}">${L.moreInfo}</a>` : ''}
                     </div>
                 </div>
             </div>
         `).join('');
+        grid.querySelectorAll('[data-track]').forEach(a => a.addEventListener('click', () => {
+            try { window.BDLAnalytics && BDLAnalytics.track(a.dataset.track, { logement: a.dataset.lg, source: 'logements_page' }); } catch (e) {}
+        }));
     }
 
     // Retrouve l'annonce (avec son logo) correspondant au logement courant, en tolerant
