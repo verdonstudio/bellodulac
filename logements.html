@@ -151,7 +151,7 @@
             back: "Retour", label: "Nos logements",
             pageTitle: "Nos logements dans le Verdon",
             pageSubtitle: "Découvrez nos annonces et réservez directement sur Airbnb.",
-            moreInfo: "Détails & disponibilités", viewListing: "Voir l'annonce", contactHost: "Contacter l'hôte",
+            viewListing: "Voir l'annonce", contactHost: "Contacter l'hôte",
             reviewsSuffix: (n) => `${n} avis`,
             footerNote: "",
         },
@@ -159,7 +159,7 @@
             back: "Back", label: "Our stays",
             pageTitle: "Our stays in the Verdon",
             pageSubtitle: "Discover our listings and book directly on Airbnb.",
-            moreInfo: "Details & availability", viewListing: "View listing", contactHost: "Contact the host",
+            viewListing: "View listing", contactHost: "Contact the host",
             reviewsSuffix: (n) => `${n} reviews`,
             footerNote: "",
         },
@@ -167,7 +167,7 @@
             back: "Zurück", label: "Unsere Unterkünfte",
             pageTitle: "Unsere Unterkünfte im Verdon",
             pageSubtitle: "Entdecken Sie unsere Unterkünfte und buchen Sie direkt über Airbnb.",
-            moreInfo: "Details & Verfügbarkeit", viewListing: "Anzeige ansehen", contactHost: "Gastgeber kontaktieren",
+            viewListing: "Anzeige ansehen", contactHost: "Gastgeber kontaktieren",
             reviewsSuffix: (n) => `${n} Bewertungen`,
             footerNote: "",
         },
@@ -175,7 +175,7 @@
             back: "Terug", label: "Onze verblijven",
             pageTitle: "Onze verblijven in de Verdon",
             pageSubtitle: "Ontdek onze accommodaties en boek rechtstreeks via Airbnb.",
-            moreInfo: "Details & beschikbaarheid", viewListing: "Bekijk advertentie", contactHost: "Contact met de gastheer",
+            viewListing: "Bekijk advertentie", contactHost: "Contact met de gastheer",
             reviewsSuffix: (n) => `${n} beoordelingen`,
             footerNote: "",
         }
@@ -214,7 +214,7 @@
                     </div>
                     <div class="flex flex-wrap gap-2 mt-4">
                         ${LISTING_PAGES[item.id]
-                            ? `<a class="btn-listing btn-listing-primary" data-track="listing_click" data-lg="${item.id}" data-page="${item.id}" href="/${LISTING_PAGES[item.id]}?lang=${state.lang}">${L.moreInfo}</a>`
+                            ? `<a class="btn-listing btn-listing-primary" data-track="listing_click" data-lg="${item.id}" data-page="${item.id}" href="/${LISTING_PAGES[item.id]}?lang=${state.lang}">${L.viewListing}</a>`
                             : `<a class="btn-listing btn-listing-primary" data-track="listing_click" data-lg="${item.id}" href="https://www.airbnb.fr/rooms/${item.room}" target="_blank" rel="noopener">${L.viewListing}</a>`}
                         <a class="btn-listing btn-listing-outline" data-track="contact_host_click" data-lg="${item.id}" href="${item.host_contact}" target="_blank" rel="noopener">${L.contactHost}</a>
                     </div>
