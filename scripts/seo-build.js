@@ -207,7 +207,7 @@ function headBlock(file, cfg, html) {
   if (file === 'index.html') {
     // Verification de propriete Google Search Console (propriete "prefixe d'URL",
     // methode balise HTML). Ne pas supprimer, sinon la propriete est invalidee.
-    lines.push('<meta name="google-site-verification" content="A_XxS2tu3HWg8yfqcvDVA-iEEYBMlfj9XazR8iFTscE">');
+    lines.push('<meta name="google-site-verification" content="tFs62iwdWFLWWZdzdBgjJLYShFuclAhmRXNql2tXTHM">');
     lines.push(jsonLdScript([websiteJsonLd(), ...listingsJsonLd()]));
   } else if (file === 'logements.html') {
     lines.push(jsonLdScript(listingsJsonLd()));
