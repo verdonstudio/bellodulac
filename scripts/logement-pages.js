@@ -5,6 +5,7 @@
    edatestart, showevents, meteo, ...) sont conserves dans les liens sortants
    (retour, autres logements) et le parametre lang suit le selecteur de langue. */
 const AB = require('./airbnb-data.js');
+const I18N = require('./airbnb-i18n.js');
 // Adresse de reception des demandes : jamais affichee, et assemblee cote navigateur
 // au clic (pas d'adresse en clair dans le HTML).
 const CONTACT_USER = 'verdonstudio', CONTACT_DOMAIN = 'gmail.com';
@@ -119,9 +120,58 @@ function build(LOG, BASE, OG_IMAGE, SITE_NAME) {
     };
     const st = a.stats;
     const stats = `${st.guests} voyageurs · ${st.bedrooms} chambres · ${st.beds} lits · ${st.baths} salle${st.baths > 1 ? 's' : ''} de bain`;
-    const clientData = { id, room: String(l.room), maxGuests: st.guests, title: l.label.FR, label: l.label, desc: l.desc, place: l.place, welcome: l.welcome,
+    const clientData = { id, room: String(l.room), maxGuests: st.guests, title: l.label.FR, 
       photos: a.photos, u: CONTACT_USER.split('').reverse().join(''), d: CONTACT_DOMAIN };
     const baseDir = a.photos[0].replace(/[^/]+$/, '');
+
+    // Contenu principal (colonne de gauche) dans une langue donnee : FR = source (airbnb-data.js),
+    // EN/DE/NL = airbnb-i18n.js (textes propres au logement) + dict (libelles communs).
+    const tr = (txt, lang) => lang === 'FR' ? txt : ((I18N.dict[txt] && I18N.dict[txt][lang]) || txt);
+    const T10 = I18N[id];
+    function content(lang) {
+      const c = lang === 'FR' ? { highlights: a.highlights, description: a.description, sections: a.sections, locationText: a.locationText } : T10[lang];
+      const fr = lang === 'FR';
+      const hostLine = fr
+        ? `<strong>${esc(host.name)}</strong> · Superhôte · ${host.years} ans en tant qu'hôte · ${fr1(host.rating)} / 5 (${host.reviews} évaluations)<br>Langue parlée : ${esc(host.languages)} · ${esc(host.response)}`
+        : `<strong>${esc(host.name)}</strong> · ${tr('Superhôte', lang)} · ${host.years} ${tr("ans en tant qu'hôte", lang)} · ${host.rating} / 5 (${host.reviews} ${tr('évaluations', lang)})<br>${tr('Langue parlée : Français', lang)} · ${tr(host.response, lang)}`;
+      const rn = n => fr ? fr1(n) : String(n);
+      return `
+    <p id="lead">${esc(l.desc[lang])}. ${esc(l.place[lang])}.</p>
+
+    <h2>${tr('Points forts', lang)}</h2>
+    <div class="hl">${c.highlights.map(h => `<div><strong>${esc(h[0])}</strong>${esc(h[1])}</div>`).join('')}</div>
+
+    <h2>${tr('Description', lang)}</h2>
+    ${para(c.description)}
+    ${c.sections.map(sec => `<h3>${esc(fr ? tr(sec[0], 'FR') : tr(sec[0], lang))}</h3>${para(sec[1])}`).join('')}
+    <p class="note">${tr("Numéro d'enregistrement", lang)} : ${esc(a.registration)}</p>
+
+    <h2>${tr('Où vous dormirez', lang)}</h2>
+    <div class="beds">${a.bedrooms.map(b => `<figure><img src="${img(a.photoFor(b[2]) || (baseDir + b[2]), 720)}" alt="${esc(tr(b[3] || b[0], lang))}" loading="lazy"><figcaption><strong>${esc(tr(b[0], lang))}</strong><br>${esc(tr(b[1], lang))}</figcaption></figure>`).join('')}</div>
+
+    <h2>${tr('Ce que propose ce logement', lang)}</h2>
+    <div class="am">${a.amenities.map(g => `<section><h3>${esc(tr(g[0], lang))}</h3><ul>${g[1].map(x => `<li>${esc(tr(x, lang))}</li>`).join('')}</ul></section>`).join('')}
+    <section><h3>${tr('Non disponible', lang)}</h3><ul class="na">${a.notIncluded.map(x => `<li>${esc(tr(x, lang))}</li>`).join('')}</ul></section></div>
+
+    <h2>${tr('Évaluations', lang)} (${rn(a.rating)} / 5 · ${a.reviews} ${tr('avis Airbnb', lang)})</h2>
+    <div class="cats">${a.ratingCats.map(rc => `<div>${esc(tr(rc[0], lang))}<b>${rn(rc[1].toFixed(1))}</b></div>`).join('')}</div>
+
+    <h2>${tr('Où se situe le logement', lang)}</h2>
+    <p>${esc(c.locationText)}</p>
+
+    <h2>${tr('Votre hôte', lang)}</h2>
+    <p>${hostLine}</p>
+  `;
+    }
+    const statsL = lang => {
+      const f = n => tr(n, lang);
+      return `${st.guests} ${f('voyageurs')} · ${st.bedrooms} ${f('chambres')} · ${st.beds} ${f('lits')} · ${st.baths} ${st.baths > 1 ? f('salles de bain') : f('salle de bain')}`;
+    };
+    const langData = { h1: { FR: p.h1 }, stats: { FR: stats }, html: {} };
+    for (const lg of ['EN', 'DE', 'NL']) { langData.h1[lg] = T10[lg].h1; langData.stats[lg] = statsL(lg); langData.html[lg] = content(lg); }
+    clientData.lang = langData;
+    langData.pills = {};
+    for (const [k] of others) { const ol = LOG.listings[k]; langData.pills[k] = { title: ol.title, place: ol.place, desc: ol.desc }; }
 
     out[p.slug + '.html'] = `<!DOCTYPE html>
 <html lang="fr">
@@ -155,7 +205,7 @@ function build(LOG, BASE, OG_IMAGE, SITE_NAME) {
 </header>
 <main>
   <h1 id="h1">${esc(p.h1)}</h1>
-  <p class="stats">${esc(stats)}</p>
+  <p class="stats" id="stats">${esc(stats)}</p>
   <p class="rating">★ ${fr1(a.rating)} · ${a.reviews} <span id="t-reviews">avis sur Airbnb</span>${a.guestFavorite ? ' · <span id="t-fav">Coup de cœur voyageurs</span>' : ''}</p>
 
   <div class="gallery" id="gallery">
@@ -164,35 +214,7 @@ function build(LOG, BASE, OG_IMAGE, SITE_NAME) {
   </div>
 
   <div class="layout">
-  <div class="content">
-    <p id="lead">${esc(l.desc.FR)}. ${esc(l.place.FR)}.</p>
-
-    <h2 id="t-hl">Points forts</h2>
-    <div class="hl">${a.highlights.map(h => `<div><strong>${esc(h[0])}</strong>${esc(h[1])}</div>`).join('')}</div>
-
-    <h2 id="t-about">Description</h2>
-    <p id="welcome" hidden></p>
-    <p class="note" id="t-frnote" hidden>Description détaillée en français.</p>
-    ${para(a.description)}
-    ${a.sections.map(s => `<h3>${esc(s[0])}</h3>${para(s[1])}`).join('')}
-    <p class="note"><span id="t-reg">Numéro d'enregistrement</span> : ${esc(a.registration)}</p>
-
-    <h2 id="t-sleep">Où vous dormirez</h2>
-    <div class="beds">${a.bedrooms.map(b => `<figure><img src="${img(a.photoFor(b[2]) || (baseDir + b[2]), 720)}" alt="${esc(b[3] || b[0])}" loading="lazy"><figcaption><strong>${esc(b[0])}</strong><br>${esc(b[1])}</figcaption></figure>`).join('')}</div>
-
-    <h2 id="t-am">Ce que propose ce logement</h2>
-    <div class="am">${a.amenities.map(g => `<section><h3>${esc(g[0])}</h3><ul>${g[1].map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>`).join('')}
-    <section><h3 id="t-na">Non disponible</h3><ul class="na">${a.notIncluded.map(x => `<li>${esc(x)}</li>`).join('')}</ul></section></div>
-
-    <h2 id="t-rat">Évaluations (${fr1(a.rating)} / 5 · ${a.reviews} avis Airbnb)</h2>
-    <div class="cats">${a.ratingCats.map(c => `<div>${esc(c[0])}<b>${fr1(c[1].toFixed(1))}</b></div>`).join('')}</div>
-
-    <h2 id="t-loc">Où se situe le logement</h2>
-    <p>${esc(a.locationText)}</p>
-
-    <h2 id="t-host">Votre hôte</h2>
-    <p><strong>${esc(host.name)}</strong> · Superhôte · ${host.years} ans en tant qu'hôte · ${fr1(host.rating)} / 5 (${host.reviews} évaluations)<br>Langue parlée : ${esc(host.languages)} · ${esc(host.response)}</p>
-  </div>
+  <div class="content" id="content">${content('FR')}</div>
 
   <aside class="book" id="avail">
     <h2 id="t-book">Réserver ce logement</h2>
@@ -224,7 +246,7 @@ function build(LOG, BASE, OG_IMAGE, SITE_NAME) {
 
   <h2 id="t-more">Découvrir aussi</h2>
   <div class="cards">
-    ${others.map(([k, o]) => { const ol = LOG.listings[k], oa = AB[k]; return `<div class="pill"><img class="cv" src="${ol.cover}" alt="${esc(ol.title.FR)}" loading="lazy"><div class="b"><div class="t"><img src="${ol.logo}" alt=""><h3>${esc(ol.title.FR)}</h3></div><p class="pl">${esc(ol.place.FR)}</p><p class="d">${esc(ol.desc.FR)}</p><p class="rating">★ ${fr1(oa.rating)} · ${oa.reviews} avis</p><a class="go" data-lg="${k}" data-slug="${o.slug}" href="/${o.slug}">Voir ce logement</a></div></div>`; }).join('')}
+    ${others.map(([k, o]) => { const ol = LOG.listings[k], oa = AB[k]; return `<div class="pill" data-lg="${k}"><img class="cv" src="${ol.cover}" alt="${esc(ol.title.FR)}" loading="lazy"><div class="b"><div class="t"><img src="${ol.logo}" alt=""><h3 class="pt">${esc(ol.title.FR)}</h3></div><p class="pl">${esc(ol.place.FR)}</p><p class="d">${esc(ol.desc.FR)}</p><p class="rating">★ ${fr1(oa.rating)} · ${oa.reviews} <span class="pw">avis</span></p><a class="go" data-lg="${k}" data-slug="${o.slug}" href="/${o.slug}">Voir ce logement</a></div></div>`; }).join('')}
   </div>
 </main>
 <div class="stickybook"><a href="#avail" id="t-stick">Réserver ce logement</a></div>
@@ -236,15 +258,16 @@ function build(LOG, BASE, OG_IMAGE, SITE_NAME) {
 (function(){
 var D=${JSON.stringify(clientData).replace(/</g, '\\u003c')};
 var T={
-FR:{back:'Nos logements',reviews:'avis sur Airbnb',fav:'Coup de cœur voyageurs',allph:'Voir les '+D.photos.length+' photos',hl:'Points forts',about:'Description',frnote:'',sleep:'Où vous dormirez',am:'Ce que propose ce logement',na:'Non disponible',rat:'Évaluations',loc:'Où se situe le logement',host:'Votre hôte',book:'Réserver ce logement',inn:'Arrivée',out:'Départ',ad:'Voyageurs',airbnb:'Réserver sur Airbnb',or:'ou',contact:'Nous contacter pour réserver',name:'Nom',tel:'Téléphone',msg:'Message (facultatif)',send:'Envoyer la demande par email',mailnote:"Nous vous répondons rapidement par email ou téléphone.",sending:'Envoi en cours…',sent:"Merci ! Votre demande est bien envoyée. Nous vous contacterons très prochainement pour vous communiquer les modalités de la réservation.",fail:"L'envoi automatique n'a pas abouti : votre messagerie va s'ouvrir avec la demande pré-remplie.",needmail:'Merci de renseigner votre nom et un email valide.',note:"Réservation et paiement sécurisés sur Airbnb. D'autres moyens de réserver arrivent bientôt.",more:'Découvrir aussi',go:'Voir ce logement',reg:"Numéro d'enregistrement",mailsub:'Demande de réservation',mailhello:'Bonjour, je souhaite réserver',errdates:'Merci de renseigner vos dates.'},
-EN:{back:'Our stays',reviews:'reviews on Airbnb',fav:'Guest favourite',allph:'Show all '+D.photos.length+' photos',hl:'Highlights',about:'About this place',frnote:'Detailed description in French.',sleep:"Where you'll sleep",am:'What this place offers',na:'Not available',rat:'Ratings',loc:'Where it is',host:'Your host',book:'Book this stay',inn:'Check-in',out:'Check-out',ad:'Guests',airbnb:'Book on Airbnb',or:'or',contact:'Contact us to book',name:'Name',tel:'Phone',msg:'Message (optional)',send:'Send the request by email',mailnote:'We will reply quickly by email or phone.',sending:'Sending…',sent:"Thank you! Your request has been sent. We will contact you very soon with the booking details.",fail:'Automatic sending failed: your email app will open with the request pre-filled.',needmail:'Please enter your name and a valid email.',note:'Secure booking and payment on Airbnb. More ways to book are coming soon.',more:'Also discover',go:'View this stay',reg:'Registration number',mailsub:'Booking request',mailhello:'Hello, I would like to book',errdates:'Please enter your dates.'},
-DE:{back:'Unsere Unterkünfte',reviews:'Bewertungen auf Airbnb',fav:'Liebling unter den Gästen',allph:'Alle '+D.photos.length+' Fotos ansehen',hl:'Highlights',about:'Beschreibung',frnote:'Ausführliche Beschreibung auf Französisch.',sleep:'Schlafmöglichkeiten',am:'Ausstattung',na:'Nicht vorhanden',rat:'Bewertungen',loc:'Lage',host:'Ihr Gastgeber',book:'Diese Unterkunft buchen',inn:'Anreise',out:'Abreise',ad:'Gäste',airbnb:'Auf Airbnb buchen',or:'oder',contact:'Kontaktieren Sie uns zum Buchen',name:'Name',tel:'Telefon',msg:'Nachricht (optional)',send:'Anfrage per E-Mail senden',mailnote:'Wir antworten Ihnen schnell per E-Mail oder Telefon.',sending:'Wird gesendet…',sent:"Danke! Ihre Anfrage wurde gesendet. Wir melden uns in Kürze bei Ihnen mit den Details zur Buchung.",fail:'Der automatische Versand ist fehlgeschlagen: Ihr E-Mail-Programm öffnet sich mit der vorausgefüllten Anfrage.',needmail:'Bitte Namen und gültige E-Mail angeben.',note:'Sichere Buchung und Zahlung über Airbnb. Weitere Buchungswege folgen bald.',more:'Auch entdecken',go:'Unterkunft ansehen',reg:'Registrierungsnummer',mailsub:'Buchungsanfrage',mailhello:'Guten Tag, ich möchte buchen',errdates:'Bitte geben Sie Ihre Daten an.'},
-NL:{back:'Onze verblijven',reviews:'beoordelingen op Airbnb',fav:'Gastenfavoriet',allph:'Alle '+D.photos.length+' foto’s bekijken',hl:'Highlights',about:'Beschrijving',frnote:'Uitgebreide beschrijving in het Frans.',sleep:'Waar u slaapt',am:'Voorzieningen',na:'Niet beschikbaar',rat:'Beoordelingen',loc:'Locatie',host:'Uw gastheer',book:'Dit verblijf boeken',inn:'Aankomst',out:'Vertrek',ad:'Gasten',airbnb:'Boeken via Airbnb',or:'of',contact:'Neem contact op om te boeken',name:'Naam',tel:'Telefoon',msg:'Bericht (optioneel)',send:'Aanvraag per e-mail versturen',mailnote:'Wij antwoorden snel per e-mail of telefoon.',sending:'Bezig met verzenden…',sent:"Dank u! Uw aanvraag is verzonden. Wij nemen zeer binnenkort contact met u op over de boekingsmodaliteiten.",fail:'Automatisch verzenden is mislukt: uw e-mailprogramma opent met de ingevulde aanvraag.',needmail:'Vul uw naam en een geldig e-mailadres in.',note:'Veilig boeken en betalen via Airbnb. Meer boekingsmogelijkheden volgen binnenkort.',more:'Ontdek ook',go:'Verblijf bekijken',reg:'Registratienummer',mailsub:'Boekingsaanvraag',mailhello:'Hallo, ik wil graag boeken',errdates:'Vul uw data in.'}
+FR:{revw:'avis',back:'Nos logements',reviews:'avis sur Airbnb',fav:'Coup de cœur voyageurs',allph:'Voir les '+D.photos.length+' photos',hl:'Points forts',about:'Description',frnote:'',sleep:'Où vous dormirez',am:'Ce que propose ce logement',na:'Non disponible',rat:'Évaluations',loc:'Où se situe le logement',host:'Votre hôte',book:'Réserver ce logement',inn:'Arrivée',out:'Départ',ad:'Voyageurs',airbnb:'Réserver sur Airbnb',or:'ou',contact:'Nous contacter pour réserver',name:'Nom',tel:'Téléphone',msg:'Message (facultatif)',send:'Envoyer la demande par email',mailnote:"Nous vous répondons rapidement par email ou téléphone.",sending:'Envoi en cours…',sent:"Merci ! Votre demande est bien envoyée. Nous vous contacterons très prochainement pour vous communiquer les modalités de la réservation.",fail:"L'envoi automatique n'a pas abouti : votre messagerie va s'ouvrir avec la demande pré-remplie.",needmail:'Merci de renseigner votre nom et un email valide.',note:"Réservation et paiement sécurisés sur Airbnb. D'autres moyens de réserver arrivent bientôt.",more:'Découvrir aussi',go:'Voir ce logement',reg:"Numéro d'enregistrement",mailsub:'Demande de réservation',mailhello:'Bonjour, je souhaite réserver',errdates:'Merci de renseigner vos dates.'},
+EN:{revw:'reviews',back:'Our stays',reviews:'reviews on Airbnb',fav:'Guest favourite',allph:'Show all '+D.photos.length+' photos',hl:'Highlights',about:'About this place',frnote:'Detailed description in French.',sleep:"Where you'll sleep",am:'What this place offers',na:'Not available',rat:'Ratings',loc:'Where it is',host:'Your host',book:'Book this stay',inn:'Check-in',out:'Check-out',ad:'Guests',airbnb:'Book on Airbnb',or:'or',contact:'Contact us to book',name:'Name',tel:'Phone',msg:'Message (optional)',send:'Send the request by email',mailnote:'We will reply quickly by email or phone.',sending:'Sending…',sent:"Thank you! Your request has been sent. We will contact you very soon with the booking details.",fail:'Automatic sending failed: your email app will open with the request pre-filled.',needmail:'Please enter your name and a valid email.',note:'Secure booking and payment on Airbnb. More ways to book are coming soon.',more:'Also discover',go:'View this stay',reg:'Registration number',mailsub:'Booking request',mailhello:'Hello, I would like to book',errdates:'Please enter your dates.'},
+DE:{revw:'Bewertungen',back:'Unsere Unterkünfte',reviews:'Bewertungen auf Airbnb',fav:'Liebling unter den Gästen',allph:'Alle '+D.photos.length+' Fotos ansehen',hl:'Highlights',about:'Beschreibung',frnote:'Ausführliche Beschreibung auf Französisch.',sleep:'Schlafmöglichkeiten',am:'Ausstattung',na:'Nicht vorhanden',rat:'Bewertungen',loc:'Lage',host:'Ihr Gastgeber',book:'Diese Unterkunft buchen',inn:'Anreise',out:'Abreise',ad:'Gäste',airbnb:'Auf Airbnb buchen',or:'oder',contact:'Kontaktieren Sie uns zum Buchen',name:'Name',tel:'Telefon',msg:'Nachricht (optional)',send:'Anfrage per E-Mail senden',mailnote:'Wir antworten Ihnen schnell per E-Mail oder Telefon.',sending:'Wird gesendet…',sent:"Danke! Ihre Anfrage wurde gesendet. Wir melden uns in Kürze bei Ihnen mit den Details zur Buchung.",fail:'Der automatische Versand ist fehlgeschlagen: Ihr E-Mail-Programm öffnet sich mit der vorausgefüllten Anfrage.',needmail:'Bitte Namen und gültige E-Mail angeben.',note:'Sichere Buchung und Zahlung über Airbnb. Weitere Buchungswege folgen bald.',more:'Auch entdecken',go:'Unterkunft ansehen',reg:'Registrierungsnummer',mailsub:'Buchungsanfrage',mailhello:'Guten Tag, ich möchte buchen',errdates:'Bitte geben Sie Ihre Daten an.'},
+NL:{revw:'beoordelingen',back:'Onze verblijven',reviews:'beoordelingen op Airbnb',fav:'Gastenfavoriet',allph:'Alle '+D.photos.length+' foto’s bekijken',hl:'Highlights',about:'Beschrijving',frnote:'Uitgebreide beschrijving in het Frans.',sleep:'Waar u slaapt',am:'Voorzieningen',na:'Niet beschikbaar',rat:'Beoordelingen',loc:'Locatie',host:'Uw gastheer',book:'Dit verblijf boeken',inn:'Aankomst',out:'Vertrek',ad:'Gasten',airbnb:'Boeken via Airbnb',or:'of',contact:'Neem contact op om te boeken',name:'Naam',tel:'Telefoon',msg:'Bericht (optioneel)',send:'Aanvraag per e-mail versturen',mailnote:'Wij antwoorden snel per e-mail of telefoon.',sending:'Bezig met verzenden…',sent:"Dank u! Uw aanvraag is verzonden. Wij nemen zeer binnenkort contact met u op over de boekingsmodaliteiten.",fail:'Automatisch verzenden is mislukt: uw e-mailprogramma opent met de ingevulde aanvraag.',needmail:'Vul uw naam en een geldig e-mailadres in.',note:'Veilig boeken en betalen via Airbnb. Meer boekingsmogelijkheden volgen binnenkort.',more:'Ontdek ook',go:'Verblijf bekijken',reg:'Registratienummer',mailsub:'Boekingsaanvraag',mailhello:'Hallo, ik wil graag boeken',errdates:'Vul uw data in.'}
 };
 var $=function(i){return document.getElementById(i)};
 // --- Parametres d'URL : on conserve TOUS les parametres recus (res, action, edatestart,
 // showevents, meteo, from...). lang suit le selecteur ; logement est force pour les liens sortants.
 var qs=new URLSearchParams(location.search);
+var frHtml=null;
 var lang=(qs.get('lang')||'FR').toUpperCase();
 if(!T[lang])lang='FR';
 function query(logement){var p=new URLSearchParams(qs.toString());p.set('lang',lang);p.set('logement',logement||D.id);return p.toString();}
@@ -255,9 +278,11 @@ function apply(){
  var t=T[lang];document.documentElement.lang=lang.toLowerCase();$('lang').value=lang;
  [['t-back','back'],['t-reviews','reviews'],['t-fav','fav'],['t-allph','allph'],['t-hl','hl'],['t-about','about'],['t-sleep','sleep'],['t-am','am'],['t-na','na'],['t-loc','loc'],['t-host','host'],['t-book','book'],['t-stick','book'],['t-in','inn'],['t-out','out'],['t-ad','ad'],['t-airbnb','airbnb'],['t-or','or'],['t-contact','contact'],['t-name','name'],['t-tel','tel'],['t-msg','msg'],['t-send','send'],['t-mailnote','mailnote'],['t-note','note'],['t-more','more'],['t-reg','reg']].forEach(function(p){set(p[0],p[1])});
  document.querySelectorAll('.pill a.go').forEach(function(a){a.textContent=t.go;a.href='/'+a.dataset.slug+'?'+query(a.dataset.lg);});
- var w=$('welcome'),fn=$('t-frnote');
- if(lang!=='FR'){$('lead').textContent=D.desc[lang]+'. '+D.place[lang]+'.';w.textContent=D.welcome[lang];w.hidden=false;fn.textContent=t.frnote;fn.hidden=false;$('h1').textContent=D.label[lang];}
- else{$('lead').textContent=D.desc.FR+'. '+D.place.FR+'.';w.hidden=true;fn.hidden=true;}
+ var c=$('content');
+ if(frHtml===null)frHtml=c.innerHTML;
+ c.innerHTML=lang==='FR'?frHtml:D.lang.html[lang];
+ $('h1').textContent=D.lang.h1[lang];$('stats').textContent=D.lang.stats[lang];
+ document.querySelectorAll('.pill').forEach(function(pl){var k=pl.dataset.lg,d=D.lang.pills[k];pl.querySelector('.pt').textContent=d.title[lang];pl.querySelector('.pl').textContent=d.place[lang];pl.querySelector('.d').textContent=d.desc[lang];pl.querySelector('.pw').textContent=t.revw;});
  $('back').href='/logements.html?'+query();
  syncUrl();
 }
