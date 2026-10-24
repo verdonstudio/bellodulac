@@ -1617,7 +1617,7 @@ window.EVENTS_DATA = {
       "freq": "weekly",
       "interval": 1,
       "startDate": null,
-      "endDate": null,
+      "endDate": "2026-09-14",
       "byDay": [
         "mon"
       ]
