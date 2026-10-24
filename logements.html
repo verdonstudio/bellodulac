@@ -213,9 +213,10 @@
                         <span class="listing-reviews">· ${L.reviewsSuffix(item.reviews)}</span>
                     </div>
                     <div class="flex flex-wrap gap-2 mt-4">
-                        <a class="btn-listing btn-listing-primary" data-track="listing_click" data-lg="${item.id}" href="https://www.airbnb.fr/rooms/${item.room}" target="_blank" rel="noopener">${L.viewListing}</a>
+                        ${LISTING_PAGES[item.id]
+                            ? `<a class="btn-listing btn-listing-primary" data-track="listing_click" data-lg="${item.id}" data-page="${item.id}" href="/${LISTING_PAGES[item.id]}?lang=${state.lang}">${L.moreInfo}</a>`
+                            : `<a class="btn-listing btn-listing-primary" data-track="listing_click" data-lg="${item.id}" href="https://www.airbnb.fr/rooms/${item.room}" target="_blank" rel="noopener">${L.viewListing}</a>`}
                         <a class="btn-listing btn-listing-outline" data-track="contact_host_click" data-lg="${item.id}" href="${item.host_contact}" target="_blank" rel="noopener">${L.contactHost}</a>
-                        ${LISTING_PAGES[item.id] ? `<a class="btn-listing btn-listing-outline" data-page="${item.id}" href="/${LISTING_PAGES[item.id]}?lang=${state.lang}">${L.moreInfo}</a>` : ''}
                     </div>
                 </div>
             </div>
