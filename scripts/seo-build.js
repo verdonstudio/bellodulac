@@ -67,6 +67,7 @@ const PUBLIC_PAGES = {
   },
   'galerie.html': {
     url: '/galerie.html',
+    h1: 'Galerie photos du Verdon — Moustiers-Sainte-Marie et lac de Sainte-Croix',
     desc: "Galerie photos du Verdon : Moustiers-Sainte-Marie, lac de Sainte-Croix, Les Salles-sur-Verdon.",
   },
   'panorama.html': {
@@ -75,14 +76,17 @@ const PUBLIC_PAGES = {
   },
   'moustiers_backintime.html': {
     url: '/moustiers_backintime.html',
+    h1: "Remonter le temps à Moustiers-Sainte-Marie",
     desc: "Remonter le temps à Moustiers-Sainte-Marie : le village hier et aujourd'hui.",
   },
   'salles_backintime.html': {
     url: '/salles_backintime.html',
+    h1: "Remonter le temps aux Salles-sur-Verdon",
     desc: "Remonter le temps aux Salles-sur-Verdon : le village englouti par le lac de Sainte-Croix, hier et aujourd'hui.",
   },
   'lac_backintime.html': {
     url: '/lac_backintime.html',
+    h1: "Remonter le temps au lac de Sainte-Croix",
     desc: "Remonter le temps au lac de Sainte-Croix : avant et après la mise en eau.",
   },
 };
@@ -285,6 +289,14 @@ for (const [file, cfg] of Object.entries(PUBLIC_PAGES)) {
   html = replaceBlock(html, '<!-- SEO:START', '<!-- SEO:END -->', headBlock(file, cfg, html), /<title>[\s\S]*?<\/title>/i);
   if (file === 'index.html') {
     html = replaceBlock(html, '<!-- SEO-BODY:START', '<!-- SEO-BODY:END -->', noscriptBlock(), /<body[^>]*>/i);
+  } else if (cfg.h1) {
+    // Pages sans titre H1 visible : on ajoute un H1 lisible par les robots et les
+    // lecteurs d'ecran, masque visuellement (technique "sr-only", pas de texte cache
+    // trompeur : le contenu decrit exactement la page).
+    const h1 = '<!-- SEO-BODY:START (genere par scripts/seo-build.js - ne pas editer a la main) -->\n' +
+      `<h1 style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">${esc(cfg.h1)}</h1>\n` +
+      '<!-- SEO-BODY:END -->';
+    html = replaceBlock(html, '<!-- SEO-BODY:START', '<!-- SEO-BODY:END -->', h1, /<body[^>]*>/i);
   }
   // Viewport : on retire le blocage du zoom (mauvais pour l'accessibilite et penalise
   // sur mobile) sur les pages de contenu. Les pages "application" (panorama, cartes
