@@ -609,9 +609,11 @@
             // Bouton Se loger : conserve la langue et le logement courants (sans les autres parametres panorama)
             const btnSeloger = document.getElementById('btn-selogers');
             if (btnSeloger) {
-                const selogerParams = new URLSearchParams();
+                // conserve TOUS les parametres d'URL courants (+ from pour le retour)
+                const selogerParams = new URLSearchParams(window.location.search);
                 selogerParams.set('lang', state.lang);
                 selogerParams.set('logement', logement);
+                selogerParams.set('from', 'panorama');
                 btnSeloger.href = `logements.html?${selogerParams.toString()}`;
             }
         }

@@ -1930,7 +1930,10 @@ function syncUrl(replace = true) {
     // Synchronisation de l'URL pour le bouton Se loger (garde la langue et le logement courants)
     const btnSeloger = document.getElementById('btn-selogers');
     if (btnSeloger) {
-      btnSeloger.href = `logements.html?lang=${state.lang}&logement=${state.listingId}`;
+      // conserve TOUS les parametres d'URL courants (+ from pour le retour)
+      const sp = new URLSearchParams(window.location.search);
+      sp.set('lang', state.lang); sp.set('logement', state.listingId); sp.set('from', 'index');
+      btnSeloger.href = `logements.html?${sp.toString()}`;
     }
 
     // Synchronisation de l'URL pour le bouton Evenements

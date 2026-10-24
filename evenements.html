@@ -810,7 +810,10 @@
 			// Bouton Se loger : conserve la langue et le logement courants (valeur precise)
 			const btnSeloger = $('#btn-selogers');
 			if (btnSeloger) {
-				btnSeloger.href = `logements.html?lang=${state.lang}&logement=${state.logementRaw}`;
+				// conserve TOUS les parametres d'URL courants (+ from pour le retour)
+				const sp = new URLSearchParams(window.location.search);
+				sp.set('lang', state.lang); sp.set('logement', state.logementRaw); sp.set('from', 'evenements');
+				btnSeloger.href = `logements.html?${sp.toString()}`;
 			}
 		}
 

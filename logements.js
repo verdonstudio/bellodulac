@@ -28,8 +28,8 @@ window.LOGEMENTS_DATA = {
       brand: { FR: "Bell'Étoile", EN: "Bell'Étoile", DE: "Bell'Étoile", NL: "Bell'Étoile" },
       address: "1055 Av. Frédéric Mistral, Moustiers-Sainte-Marie, 04360",
       coords: { lat: 43.84714, lon: 6.22078 },
-      rating: 4.92,
-      reviews: 12,
+      rating: 4.95,
+      reviews: 19,
       room: "1631901662839629884",
       host_contact: "https://www.airbnb.fr/contact_host/1631901662839629884/send_message",
       welcome: {
@@ -53,8 +53,8 @@ window.LOGEMENTS_DATA = {
       brand: { FR: "Bell'O du Lac", EN: "Bell'O du Lac", DE: "Bell'O du Lac", NL: "Bell'O du Lac" },
       address: "5 Rue Sainte-Catherine, Les Salles-sur-Verdon, 83630",
       coords: { lat: 43.77264860239855, lon: 6.208356320858003 },
-      rating: 4.81,
-      reviews: 16,
+      rating: 4.79,
+      reviews: 19,
       room: "1401227916063751925",
       host_contact: "https://www.airbnb.fr/contact_host/1401227916063751925/send_message",
       welcome: {
@@ -78,8 +78,8 @@ window.LOGEMENTS_DATA = {
       brand: { FR: "Bell'O du Lac", EN: "Bell'O du Lac", DE: "Bell'O du Lac", NL: "Bell'O du Lac" },
       address: "5 Rue Sainte-Catherine, Les Salles-sur-Verdon, 83630",
       coords: { lat: 43.77264860239855, lon: 6.208356320858003 },
-      rating: 4.83,
-      reviews: 6,
+      rating: 4.9,
+      reviews: 10,
       room: "1396288753176684832",
       host_contact: "https://www.airbnb.fr/contact_host/1396288753176684832/send_message",
       welcome: {
