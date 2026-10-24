@@ -1,0 +1,38 @@
+# robots.txt — Bell'O du Lac & Bell'Étoile
+# Les pages personnelles/techniques (display, highlights, home, tv, video,
+# url-generator) ne sont PAS bloquees ici : elles portent une balise
+# <meta name="robots" content="noindex"> que les robots doivent pouvoir lire.
+# (Un Disallow les empecherait de voir le noindex et pourrait les laisser indexees.)
+
+User-agent: *
+Allow: /
+
+# Moteurs IA : autorises explicitement
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://bellodulac.vercel.app/sitemap.xml

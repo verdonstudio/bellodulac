@@ -1,0 +1,20 @@
+# Bell'O du Lac & Bell'Étoile
+
+> Livret d'accueil numérique et guide local (français, anglais, allemand, néerlandais) pour des logements de vacances à Moustiers-Sainte-Marie et aux Salles-sur-Verdon, près du lac de Sainte-Croix et des gorges du Verdon (Provence, France).
+
+## Logements
+- [Bell'O du Lac 8P — Les Salles-sur-Verdon, vue lac](https://bellodulac.vercel.app/logements.html) : Maison 8 personnes & jardin, à pied du lac, chambre vue lac. 5 Rue Sainte-Catherine, Les Salles-sur-Verdon, 83630.
+- [Bell'O du Lac 6P — Les Salles-sur-Verdon](https://bellodulac.vercel.app/logements.html) : Maison 6 personnes, à pied du lac, chambre vue lac & jardin. 5 Rue Sainte-Catherine, Les Salles-sur-Verdon, 83630.
+- [Bell'Étoile — Moustiers, terrasse vue village](https://bellodulac.vercel.app/logements.html) : Vue imprenable & terrasse au centre de Moustiers. 1055 Av. Frédéric Mistral, Moustiers-Sainte-Marie, 04360.
+
+## Pages principales
+- [Livret d'accueil, carte des bons plans, météo](https://bellodulac.vercel.app/) : infos pratiques, restaurants, commerces, points d'intérêt.
+- [Événements du Verdon](https://bellodulac.vercel.app/evenements.html) : marchés, brocantes, fêtes et animations, mis à jour régulièrement.
+- [Infos pratiques](https://bellodulac.vercel.app/infos.html)
+- [Commerces et services](https://bellodulac.vercel.app/commerces.html)
+- [Panorama 360°](https://bellodulac.vercel.app/panorama.html)
+- [Galerie photos](https://bellodulac.vercel.app/galerie.html)
+
+## Notes
+- Les pages utilisent le paramètre `?lang=FR|EN|DE|NL` pour la langue et `?logement=moustiers|salles6|salles8` pour le logement.
+- Les liens avec un code de réservation (display.html, highlights.html, home.html, tv.html) sont personnels et non indexés.
