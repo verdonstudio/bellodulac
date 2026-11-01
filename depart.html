@@ -157,7 +157,7 @@
 
     // 2) consignes
     C.items(house, lang).forEach(function (it) {
-      var lead = it.optional ? '<span class="opt"><b>' + esc(it.b) + ' : </b>' + esc(it.t) + '</span>' : '<b>' + esc(it.b) + ' : </b>' + esc(it.t);
+      var lead = '<b>' + esc(it.b) + ' : </b>' + esc(it.t);
       html += '<li>' + lead;
       if (it.k === 'trash' && house === 'moustiers') {
         var poi = C.logements.moustiers.trashPoi;

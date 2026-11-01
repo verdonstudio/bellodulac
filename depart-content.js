@@ -99,29 +99,25 @@
     FR: {
       state: ['État du logement', "Merci de laisser le logement dans l'état dans lequel vous l'avez trouvé."],
       linen: ['Linge', 'Rassemblez les serviettes sales.'],
-      kitchen: ['Cuisine', 'Laissez la cuisine propre, videz le frigo et le lave-vaisselle, et déposez la vaisselle sale restante dans la machine.'],
-      dish: ['Facultatif', 'Si vous pouvez également lancer le cycle de lavage de la vaisselle, cela nous aiderait énormément !'],
+      kitchen: ['Cuisine', 'Laissez la cuisine propre, videz le frigo et le lave-vaisselle, et déposez la vaisselle sale restante dans la machine. Si vous pouvez également lancer le cycle de lavage de la vaisselle, cela nous aiderait énormément !'],
       keys: ['Clés', "Enfin, n'oubliez pas de déposer votre trousseau dans la boîte à clés."]
     },
     EN: {
       state: ['Condition of the accommodation', 'Please leave the accommodation in the same condition as you found it.'],
       linen: ['Linen', 'Please gather the dirty towels.'],
-      kitchen: ['Kitchen', 'Leave the kitchen clean, empty the fridge and the dishwasher, and put any remaining dirty dishes in the machine.'],
-      dish: ['Optional', 'If you could also start the dishwasher cycle, it would help us enormously!'],
+      kitchen: ['Kitchen', 'Leave the kitchen clean, empty the fridge and the dishwasher, and put any remaining dirty dishes in the machine. If you could also start the dishwasher cycle, it would help us enormously!'],
       keys: ['Keys', 'Finally, please leave your keys in the key box.']
     },
     DE: {
       state: ['Zustand der Unterkunft', 'Bitte hinterlassen Sie die Unterkunft in dem Zustand, in dem Sie sie vorgefunden haben.'],
       linen: ['Wäsche', 'Bitte sammeln Sie die schmutzigen Handtücher ein.'],
-      kitchen: ['Küche', 'Hinterlassen Sie die Küche sauber, leeren Sie Kühlschrank und Geschirrspüler und stellen Sie das restliche schmutzige Geschirr in die Maschine.'],
-      dish: ['Optional', 'Wenn Sie zusätzlich das Spülprogramm starten könnten, würde uns das sehr helfen!'],
+      kitchen: ['Küche', 'Hinterlassen Sie die Küche sauber, leeren Sie Kühlschrank und Geschirrspüler und stellen Sie das restliche schmutzige Geschirr in die Maschine. Wenn Sie zusätzlich das Spülprogramm starten könnten, würde uns das sehr helfen!'],
       keys: ['Schlüssel', 'Legen Sie zum Schluss Ihren Schlüsselbund bitte in den Schlüsselkasten.']
     },
     NL: {
       state: ['Staat van het verblijf', 'Laat het verblijf alstublieft achter zoals u het heeft aangetroffen.'],
       linen: ['Linnengoed', 'Verzamel de vuile handdoeken.'],
-      kitchen: ['Keuken', 'Laat de keuken schoon achter, maak de koelkast en de vaatwasser leeg en zet het resterende vuile servies in de machine.'],
-      dish: ['Optioneel', 'Als u ook het afwasprogramma zou kunnen starten, helpt ons dat enorm!'],
+      kitchen: ['Keuken', 'Laat de keuken schoon achter, maak de koelkast en de vaatwasser leeg en zet het resterende vuile servies in de machine. Als u ook het afwasprogramma zou kunnen starten, helpt ons dat enorm!'],
       keys: ['Sleutels', 'Leg tot slot uw sleutels in de sleutelkluis.']
     }
   };
@@ -165,7 +161,7 @@
     }
   };
 
-  var ORDER = ['state', 'close', 'trash', 'linen', 'kitchen', 'dish', 'keys'];
+  var ORDER = ['state', 'close', 'linen', 'kitchen', 'trash', 'keys'];
 
   var logements = {
     moustiers: {
@@ -176,12 +172,12 @@
     salles: { brand: "Bell'O du Lac" }
   };
 
-  // Liste d'items [{k, b, t, optional}] pour un logement/langue.
+  // Liste d'items [{k, b, t}] pour un logement/langue.
   function items(logement, lang) {
     var c = common[lang], s = specific[logement][lang], out = [];
     ORDER.forEach(function (k) {
       var pair = c[k] || s[k];
-      out.push({ k: k, b: pair[0], t: pair[1], optional: k === 'dish' });
+      out.push({ k: k, b: pair[0], t: pair[1] });
     });
     return out;
   }
