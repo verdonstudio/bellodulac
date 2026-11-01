@@ -27,7 +27,7 @@
       intro: "J'espère que vous passez un très bon séjour dans notre logement. Pour votre départ, voici quelques indications :",
       introSheet: 'Merci pour votre séjour ! Avant de partir, merci de penser à :',
       checkoutAt: 'Le logement doit être libéré au plus tard le {date} à {time}.',
-      checkoutGeneric: "Le logement doit être libéré au plus tard à l'heure de départ indiquée dans votre réservation.",
+      checkoutGeneric: 'Le logement doit être libéré au plus tard à {time} le jour de votre départ.',
       checkoutLabel: 'Heure de départ',
       stay: 'Séjour du {a} au {b}',
       closing: "Nous mettons tout notre cœur et notre énergie pour vous faire vivre de belles vacances et nous espérons que vous avez vécu une belle expérience et que vous repartez avec plein de souvenirs en tête ! Merci beaucoup pour tout.",
@@ -45,7 +45,7 @@
       intro: 'We hope you are having a wonderful stay in our accommodation. For your departure, here are a few reminders:',
       introSheet: 'Thank you for staying with us! Before you leave, please remember to:',
       checkoutAt: 'The accommodation must be vacated by {time} on {date} at the latest.',
-      checkoutGeneric: 'The accommodation must be vacated by the check-out time given in your booking.',
+      checkoutGeneric: 'The accommodation must be vacated by {time} on the day of departure.',
       checkoutLabel: 'Check-out time',
       stay: 'Stay from {a} to {b}',
       closing: 'We put all our heart and energy into giving you a lovely holiday, and we hope you had a wonderful experience and are leaving with plenty of memories! Thank you so much for everything.',
@@ -63,7 +63,7 @@
       intro: 'Wir hoffen, Sie verbringen einen wunderbaren Aufenthalt in unserer Unterkunft. Zu Ihrer Abreise hier einige Hinweise:',
       introSheet: 'Vielen Dank für Ihren Aufenthalt! Bitte denken Sie vor der Abreise an Folgendes:',
       checkoutAt: 'Die Unterkunft muss spätestens am {date} um {time} Uhr geräumt sein.',
-      checkoutGeneric: 'Die Unterkunft muss spätestens zur in Ihrer Buchung angegebenen Abreisezeit geräumt sein.',
+      checkoutGeneric: 'Die Unterkunft muss am Abreisetag spätestens um {time} Uhr geräumt sein.',
       checkoutLabel: 'Abreisezeit',
       stay: 'Aufenthalt vom {a} bis {b}',
       closing: 'Wir geben unser Herz und unsere ganze Energie, damit Sie schöne Ferien erleben, und hoffen, dass Sie einen wunderbaren Aufenthalt hatten und mit vielen Erinnerungen abreisen! Vielen Dank für alles.',
@@ -81,7 +81,7 @@
       intro: 'We hopen dat u een heerlijk verblijf heeft in onze accommodatie. Voor uw vertrek hierbij een paar aanwijzingen:',
       introSheet: 'Bedankt voor uw verblijf! Denk er voor vertrek aan om:',
       checkoutAt: 'Het verblijf moet uiterlijk op {date} om {time} uur worden verlaten.',
-      checkoutGeneric: 'Het verblijf moet uiterlijk op het in uw boeking vermelde vertrektijdstip worden verlaten.',
+      checkoutGeneric: 'Het verblijf moet op de dag van vertrek uiterlijk om {time} uur worden verlaten.',
       checkoutLabel: 'Vertrektijd',
       stay: 'Verblijf van {a} tot {b}',
       closing: 'Wij steken al ons hart en onze energie erin om u een mooie vakantie te bezorgen en hopen dat u een prachtige ervaring heeft gehad en met veel herinneringen vertrekt! Hartelijk dank voor alles.',
@@ -186,7 +186,16 @@
     return out;
   }
 
-  var api = { LANGS: LANGS, ui: ui, items: items, logements: logements, DEFAULT_CHECKOUT_TIME: DEFAULT_CHECKOUT_TIME };
+  // "10:00" -> "10h00" (FR), "10:00 am" (EN), "10:00" (DE/NL)
+  function fmtTime(lang, hhmm) {
+    var m = String(hhmm).match(/^(\d{1,2})[:h](\d{2})$/); if (!m) return hhmm;
+    var h = +m[1], mi = m[2];
+    if (lang === 'FR') return h + 'h' + mi;
+    if (lang === 'EN') return ((h % 12) || 12) + ':' + mi + (h < 12 ? ' am' : ' pm');
+    return String(h).padStart(2, '0') + ':' + mi;
+  }
+
+  var api = { LANGS: LANGS, fmtTime: fmtTime, ui: ui, items: items, logements: logements, DEFAULT_CHECKOUT_TIME: DEFAULT_CHECKOUT_TIME };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.DEPART_CONTENT = api;
 })(typeof window !== 'undefined' ? window : this);

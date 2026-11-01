@@ -37,7 +37,7 @@ function page(house, lang, isLast) {
   kids.push(new Paragraph({ spacing: { before: 120, after: 80 }, children: [new TextRun({ text: u.section.toUpperCase(), font: 'Calibri', size: 24, bold: true, color: HEAD })] }));
 
   // 1re consigne : heure de départ (version générique, la page web donne la date et l'heure exactes)
-  const rows = [[u.checkoutLabel, u.checkoutGeneric]].concat(C.items(house, lang).map(i => [i.b, i.t]));
+  const rows = [[u.checkoutLabel, u.checkoutGeneric.replace('{time}', C.fmtTime(lang, C.DEFAULT_CHECKOUT_TIME))]].concat(C.items(house, lang).map(i => [i.b, i.t]));
   rows.forEach(([b, t]) => kids.push(new Paragraph({
     numbering: { reference: 'bul', level: 0 }, spacing: { after: 90 },
     children: [new TextRun({ text: b + ' : ', bold: true, font: 'Cambria', size: 25 }), new TextRun({ text: t, font: 'Cambria', size: 25 })],
@@ -92,7 +92,7 @@ function cell(house, lang, borders) {
     spacing: { after: 60 }, border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: LINE, space: 2 } },
     children: [new TextRun({ text: lang + '  ', font: 'Calibri', size: 20, bold: true, color: LINE }), new TextRun({ text: u.title, font: 'Calibri', size: 30, color: TITLE })],
   }));
-  const rows = [[u.checkoutLabel, u.checkoutGeneric]].concat(C.items(house, lang).map(i => [i.b, i.t]));
+  const rows = [[u.checkoutLabel, u.checkoutGeneric.replace('{time}', C.fmtTime(lang, C.DEFAULT_CHECKOUT_TIME))]].concat(C.items(house, lang).map(i => [i.b, i.t]));
   rows.forEach(([b, t]) => kids.push(new Paragraph({
     numbering: { reference: 'bul', level: 0 }, spacing: { after: 50 },
     children: [new TextRun({ text: b + ' : ', bold: true, font: 'Cambria', size: 20 }), new TextRun({ text: t, font: 'Cambria', size: 20 })],

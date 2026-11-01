@@ -152,7 +152,7 @@
     var html = '';
     // 1) heure de départ (personnalisée si on connaît la réservation)
     var time = fmtTime((res && res.heure_depart) || C.DEFAULT_CHECKOUT_TIME);
-    var checkout = dep ? fill(u.checkoutAt, { date: fmtDate(dep, true), time: time }) : u.checkoutGeneric;
+    var checkout = dep ? fill(u.checkoutAt, { date: fmtDate(dep, true), time: time }) : fill(u.checkoutGeneric, { time: time });
     html += '<li><b>' + esc(u.checkoutLabel) + ' : </b>' + esc(checkout) + '</li>';
 
     // 2) consignes
