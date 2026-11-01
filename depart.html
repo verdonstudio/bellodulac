@@ -122,7 +122,9 @@
   // QR "poubelle" (depart.html?logement=moustiers&go=trash) : ouvre directement la carte avec
   // l'itinéraire à pied vers la poubelle, dans la langue de la réservation en cours (sinon FR).
   if (params.get('go') === 'trash' && house === 'moustiers') {
-    window.location.replace(trashMapUrl());
+    // petit délai pour laisser partir l'événement GA4 avant la redirection
+    try { window.BDLAnalytics && BDLAnalytics.track('depart_trash_qr', { logement: 'moustiers', has_reservation: !!res, shown_lang: lang }); } catch (e) {}
+    setTimeout(function () { window.location.replace(trashMapUrl()); }, 400);
     return;
   }
 
