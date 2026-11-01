@@ -13025,5 +13025,55 @@ window.POIS = [
         }
       ]
     }
+  },
+  {
+    "id": "ordures-bell-etoile-moustiers",
+    "cat": "ordures",
+    "coords": [
+      43.84694,
+      6.2209
+    ],
+    "stars": 1,
+    "img": "https://bellodulac.vercel.app/images/poubelle-moustiers.jpg",
+    "fr": {
+      "name": "Poubelle – Bell'Étoile",
+      "desc": "Poubelle (ordures non recyclables) la plus proche de Bell'Étoile, à utiliser pendant votre séjour et pour jeter vos ordures avant votre départ. Elle se trouve dans le petit chemin juste en face de la porte d'entrée, là où se trouve le dépose-minute : sortez de la maison, traversez la rue et prenez le petit chemin en face, la poubelle verte est à quelques mètres.",
+      "links": [
+        {
+          "url": "https://www.google.com/maps/dir/?api=1&destination=43.84694,6.2209&travelmode=walking",
+          "label": "Itinéraire à pied 🚶"
+        }
+      ]
+    },
+    "en": {
+      "name": "Bin – Bell'Étoile",
+      "desc": "The closest bin (non-recyclable waste) to Bell'Étoile, to use during your stay and to throw away your rubbish before you leave. It is in the small lane right opposite the front door, where the drop-off zone is: leave the house, cross the street and take the small lane opposite, the green bin is a few metres away.",
+      "links": [
+        {
+          "url": "https://www.google.com/maps/dir/?api=1&destination=43.84694,6.2209&travelmode=walking",
+          "label": "Walking directions 🚶"
+        }
+      ]
+    },
+    "de": {
+      "name": "Mülleimer – Bell'Étoile",
+      "desc": "Der nächste Mülleimer (nicht recycelbarer Abfall) zu Bell'Étoile, für Ihren Aufenthalt und um Ihren Müll vor der Abreise zu entsorgen. Er befindet sich in der kleinen Gasse direkt gegenüber der Haustür, dort wo die Absetzzone ist: Verlassen Sie das Haus, überqueren Sie die Straße und nehmen Sie die kleine Gasse gegenüber, der grüne Mülleimer steht nur wenige Meter entfernt.",
+      "links": [
+        {
+          "url": "https://www.google.com/maps/dir/?api=1&destination=43.84694,6.2209&travelmode=walking",
+          "label": "Fußweg-Route 🚶"
+        }
+      ]
+    },
+    "nl": {
+      "name": "Vuilnisbak – Bell'Étoile",
+      "desc": "De dichtstbijzijnde vuilnisbak (niet-recyclebaar afval) bij Bell'Étoile, voor tijdens uw verblijf en om uw afval weg te gooien voor vertrek. Hij staat in het kleine steegje recht tegenover de voordeur, waar ook de stopplaats is: verlaat het huis, steek de straat over en neem het steegje aan de overkant, de groene vuilnisbak staat een paar meter verderop.",
+      "links": [
+        {
+          "url": "https://www.google.com/maps/dir/?api=1&destination=43.84694,6.2209&travelmode=walking",
+          "label": "Wandelroute 🚶"
+        }
+      ]
+    }
   }
 ];
