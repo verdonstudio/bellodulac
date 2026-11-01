@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructions de départ — Bell'O du Lac™ & Bell'Étoile™</title>
+  <!-- SEO:START (genere par scripts/seo-build.js - ne pas editer a la main) -->
+  <meta name="robots" content="noindex, nofollow">
+  <!-- SEO:END -->
+<!-- Page ouverte via le QR code collé derrière la porte des WC (un QR pour Moustiers :
+     depart.html?logement=moustiers, un pour les Salles : depart.html?logement=salles).
+     Retrouve la réservation en cours dans reservations.js (langue + prénom) ; sans
+     réservation : version française. Textes : depart-content.js. Présentation : même
+     modèle que le "Guide de bienvenue" (logo en haut à droite, titre souligné, rubriques bleues). -->
+<script src="analytics.js"></script>
+<script src="logements.js"></script>
+<script src="reservations.js"></script>
+<script src="depart-content.js"></script>
+<style>
+  :root { --title: #17365d; --line: #4f81bd; --h: #365f91; --ink: #1e1e1e; --link: #0563c1; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--ink); font-family: Cambria, Georgia, 'Times New Roman', serif; font-size: 16px; line-height: 1.5; }
+  .page { max-width: 760px; margin: 0 auto; padding: 14px 22px 48px; }
+  .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .top select { font: 13px Calibri, Arial, sans-serif; padding: 5px 8px; border: 1px solid #c9d3e0; border-radius: 6px; background: #fff; color: var(--h); }
+  .logo { height: 78px; width: auto; display: block; }
+  h1 { font-family: Calibri, 'Segoe UI', Arial, sans-serif; font-weight: 400; font-size: 2rem; color: var(--title); text-align: center; margin: 22px 0 6px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  .stay { text-align: center; color: #555; font-size: .9rem; margin: 6px 0 18px; }
+  h2 { font-family: Calibri, 'Segoe UI', Arial, sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; color: var(--h); margin: 26px 0 6px; }
+  p { margin: 0 0 12px; }
+  .hello { font-weight: 700; }
+  ul { margin: 0; padding-left: 22px; }
+  li { margin: 0 0 9px; }
+  li b { font-weight: 700; }
+  li .opt { color: #555; }
+  a { color: var(--link); }
+  .mapbtn { display: inline-block; margin: 4px 0 10px; font-family: Calibri, Arial, sans-serif; font-weight: 700; text-decoration: none; color: #fff; background: var(--h); padding: 8px 16px; border-radius: 999px; }
+  .photo { display: block; width: 100%; max-width: 360px; border-radius: 6px; margin: 6px 0 10px; }
+  .closing { margin-top: 24px; }
+  .sign { text-align: right; margin-top: 18px; }
+  .sign b { display: block; }
+  footer { margin-top: 36px; text-align: center; font: 11px Calibri, Arial, sans-serif; color: #888; }
+  @media print { .top select { display: none; } .mapbtn { display: none; } .page { padding: 0; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <select id="lang" aria-label="Langue / Language"><option>FR</option><option>EN</option><option>DE</option><option>NL</option></select>
+    <img id="logo" class="logo" alt="" hidden>
+  </div>
+
+  <h1 id="title">Instructions de départ</h1>
+  <p class="stay" id="stay" hidden></p>
+
+  <p class="hello" id="hello"></p>
+  <p id="intro"></p>
+
+  <h2 id="section"></h2>
+  <ul id="list"></ul>
+
+  <p class="closing" id="closing"></p>
+  <p class="sign"><span id="hosts"></span><b id="signature"></b></p>
+
+  <footer>© 2026 Bell'O du Lac™ &amp; Bell'Étoile™</footer>
+</div>
+
+<script>
+(function () {
+  var C = window.DEPART_CONTENT;
+  var params = new URLSearchParams(window.location.search);
+  var raw = (params.get('logement') || 'moustiers').toLowerCase();
+  var house = (raw.indexOf('moustiers') >= 0 || raw.indexOf('etoile') >= 0) ? 'moustiers' : 'salles';
+
+  // ---- Réservation en cours (mêmes règles que home.html / tv.html : reservations.js) ----
+  // Après cette heure, le jour du départ, on ne considère plus la réservation comme "en cours"
+  // (et on retombe sur la version française par défaut).
+  var DEPART_CUTOFF = '12:00';
+  function todayISO() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function nowHHMM() { var d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+  function parseDate(str) {
+    if (!str) return null; str = String(str).trim();
+    var m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/); if (m) return m[1] + '-' + m[2] + '-' + m[3];
+    m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); if (m) return m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0');
+    return null;
+  }
+  function matches(annonce) {
+    var norm = String(annonce || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    var compact = norm.replace(/[^a-z0-9]/g, '');
+    if (house === 'moustiers') return norm.indexOf('moustiers') >= 0 || norm.indexOf('etoile') >= 0;
+    return norm.indexOf('salles') >= 0 || norm.indexOf('lac') >= 0 || compact.indexOf('bello') >= 0 || norm.indexOf('salles') === 0;
+  }
+  function currentReservation() {
+    var list = window.RESERVATIONS; if (!Array.isArray(list)) return null;
+    var today = todayISO();
+    var c = list.filter(function (r) {
+      var a = parseDate(r.arrivee), d = parseDate(r.depart);
+      return a && d && today >= a && today <= d && matches(r.annonce);
+    });
+    if (!c.length) return null;
+    var departing = c.filter(function (r) { return parseDate(r.depart) === today && parseDate(r.arrivee) !== today; })[0];
+    var arriving = c.filter(function (r) { return parseDate(r.arrivee) === today && parseDate(r.depart) !== today; })[0];
+    var staying = c.filter(function (r) { return parseDate(r.arrivee) < today && parseDate(r.depart) > today; })[0];
+    if (staying) return staying;
+    if (departing && arriving) return nowHHMM() < DEPART_CUTOFF ? departing : arriving;
+    if (departing) return nowHHMM() < DEPART_CUTOFF ? departing : null;
+    return arriving || c[0];
+  }
+  var res = currentReservation();
+
+  // ---- Langue : ?lang explicite > langue de la réservation > FR ----
+  var lang = (params.get('lang') || (res && res.langue) || 'FR').toUpperCase();
+  if (C.LANGS.indexOf(lang) < 0) lang = 'FR';
+
+  var LOCALE = { FR: 'fr-FR', EN: 'en-GB', DE: 'de-DE', NL: 'nl-NL' };
+  function fmtDate(iso, long) {
+    var p = iso.split('-'); var d = new Date(+p[0], +p[1] - 1, +p[2]);
+    return d.toLocaleDateString(LOCALE[lang], long === 'year' ? { day: 'numeric', month: 'long', year: 'numeric' } : long ? { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' } : { day: 'numeric', month: 'long' });
+  }
+  function fmtTime(hhmm) {
+    var m = String(hhmm).match(/^(\d{1,2})[:h](\d{2})$/); if (!m) return hhmm;
+    var h = +m[1], mi = m[2];
+    if (lang === 'FR') return h + 'h' + mi;
+    if (lang === 'EN') return ((h % 12) || 12) + ':' + mi + (h < 12 ? ' am' : ' pm');
+    return String(h).padStart(2, '0') + ':' + mi;
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function fill(s, o) { return String(s).replace(/\{(\w+)\}/g, function (_, k) { return o[k] != null ? o[k] : ''; }); }
+  var $ = function (id) { return document.getElementById(id); };
+
+  function render() {
+    var u = C.ui[lang];
+    document.documentElement.lang = lang.toLowerCase();
+    document.title = u.title + ' — ' + C.logements[house].brand;
+    $('lang').value = lang;
+    $('title').textContent = u.title;
+    $('section').textContent = u.section;
+
+    // Logo (même source que logements.js)
+    var data = window.LOGEMENTS_DATA && window.LOGEMENTS_DATA.listings;
+    var listing = data && (house === 'moustiers' ? data.moustiers : data.salles6);
+    if (listing && listing.logo) { $('logo').src = listing.logo; $('logo').alt = C.logements[house].brand; $('logo').hidden = false; }
+
+    // Réservation : prénom, dates
+    var name = res && res.nom ? String(res.nom).trim() : '';
+    $('hello').textContent = name ? fill(u.hello, { name: name }) : u.helloAnon;
+    $('intro').textContent = u.intro;
+    var stay = $('stay');
+    var arr = res && parseDate(res.arrivee), dep = res && parseDate(res.depart);
+    if (arr && dep) { stay.textContent = fill(u.stay, { a: fmtDate(arr, false), b: fmtDate(dep, 'year') }); stay.hidden = false; } else { stay.hidden = true; }
+
+    var html = '';
+    // 1) heure de départ (personnalisée si on connaît la réservation)
+    var time = fmtTime((res && res.heure_depart) || C.DEFAULT_CHECKOUT_TIME);
+    var checkout = dep ? fill(u.checkoutAt, { date: fmtDate(dep, true), time: time }) : u.checkoutGeneric;
+    html += '<li><b>' + esc(u.checkoutLabel) + ' : </b>' + esc(checkout) + '</li>';
+
+    // 2) consignes
+    C.items(house, lang).forEach(function (it) {
+      var lead = it.optional ? '<span class="opt"><b>' + esc(it.b) + ' : </b>' + esc(it.t) + '</span>' : '<b>' + esc(it.b) + ' : </b>' + esc(it.t);
+      html += '<li>' + lead;
+      if (it.k === 'trash' && house === 'moustiers') {
+        var poi = C.logements.moustiers.trashPoi;
+        var q = new URLSearchParams();
+        q.set('lang', lang); q.set('logement', 'moustiers'); q.set('pos', poi.pos); q.set('fullscreen', '1'); q.set('pin', 'true'); q.set('trace', 'true');
+        html += '<br><a class="mapbtn" href="index.html?' + q.toString() + '">📍 ' + esc(u.mapLink) + '</a>'
+             + '<img class="photo" src="' + poi.photo + '" alt="' + esc(u.photoAlt) + '" loading="lazy">';
+      }
+      html += '</li>';
+    });
+    $('list').innerHTML = html;
+
+    $('closing').textContent = u.closing;
+    $('hosts').textContent = u.hosts;
+    $('signature').textContent = u.signature;
+
+    // URL : lang suit le sélecteur, les autres paramètres sont conservés
+    params.set('lang', lang);
+    try { history.replaceState(null, '', location.pathname + '?' + params.toString() + location.hash); } catch (e) {}
+  }
+
+  $('lang').addEventListener('change', function (e) { lang = e.target.value; render(); try { window.BDLAnalytics && BDLAnalytics.track('depart_lang_change', { target: lang }); } catch (x) {} });
+  render();
+  try { window.BDLAnalytics && BDLAnalytics.track('depart_view', { logement: house, has_reservation: !!res, shown_lang: lang }); } catch (e) {}
+})();
+</script>
+</body>
+</html>

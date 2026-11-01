@@ -22,6 +22,9 @@
      fait la difference entre les deux maisons des Salles-sur-Verdon).
    - arrivee / depart : au format "AAAA-MM-JJ" (recommande) ou "JJ/MM/AAAA".
      Bornes incluses (le jour du depart affiche encore le message de bienvenue).
+   - heure_depart : heure de départ au format "HH:MM" (ex: "10:00"), affichée sur
+     depart.html (instructions de départ du QR code). Optionnel : si absente,
+     depart-content.js utilise DEFAULT_CHECKOUT_TIME.
    - langue : "FR"/"EN"/"DE"/"NL" -- langue du voyageur, utilisee directement (pas
      besoin d'attendre que redirect.js existe pour ce code). Optionnel : si absente,
      on retombe sur l'ancien comportement (langue lue dans les liens de redirect.js
@@ -39,18 +42,18 @@
    ========================================================================== */
 
 window.RESERVATIONS = [
-  { annonce: "Maison Bell'O 6P", nom: "Johan",   voyageurs: 3, arrivee: "26/10/2026", depart: "30/10/2026", langue: "FR", code: "HMDXKBJ5Q3" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Elodie",   voyageurs: 4, arrivee: "26/10/2026", depart: "29/10/2026", langue: "FR", code: "HM5KXQP3H3" },
-  { annonce: "Maison Bell'O 6P", nom: "Sandrine",   voyageurs: 4, arrivee: "29/08/2026", depart: "01/09/2026", langue: "EN", code: "BELLO" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Freia",   voyageurs: 4, arrivee: "21/10/2026", depart: "25/10/2026", langue: "DE", code: "HM3Q3PQHNW" },
-  { annonce: "Maison Bell'O 8P", nom: "Estelle",   voyageurs: 4, arrivee: "21/10/2026", depart: "25/10/2026", langue: "NL", code: "HM9XYMWPBZ" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Chelsea",   voyageurs: 2, arrivee: "26/09/2026", depart: "29/09/2026", langue: "EN", code: "HMRWX4HKS9" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Thomas",   voyageurs: 3, arrivee: "16/10/2026", depart: "19/10/2026", langue: "EN", code: "HMFFSNS4BJ" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Michelle",      voyageurs: 4, arrivee: "01/10/2026", depart: "04/10/2026", langue: "FR", code: "HMAZKZK5XA" },
-  { annonce: "Maison Bell'O 6P",        nom: "Julie",      voyageurs: 6, arrivee: "25/09/2026", depart: "27/09/2026", langue: "FR", code: "HMDXYHZQZN" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Franziska",  voyageurs: 2, arrivee: "10/09/2026", depart: "13/09/2026", langue: "DE", code: "HM9FT3XCJQ" },
-  { annonce: "Maison Bell'O 6P",        nom: "Marylène",     voyageurs: 3, arrivee: "08/09/2026", depart: "14/09/2026", langue: "FR", code: "HMMBAKWMFD" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Anais",     voyageurs: 2, arrivee: "31/08/2026", depart: "05/09/2026", langue: "FR", code: "HMYRZQWQNF" },
-  { annonce: "Bell'Etoile (Moustiers)", nom: "Nathalie",   voyageurs: 4, arrivee: "25/08/2026", depart: "28/08/2026", langue: "FR", code: "HMB2JRYYN5" },
-  { annonce: "Maison Bell'O 8P",        nom: "Sylvia",   voyageurs: 4, arrivee: "22/08/2026", depart: "29/08/2026", langue: "DE", code: "HMKZPX4TMA" }
+  { annonce: "Maison Bell'O 6P", nom: "Johan",   voyageurs: 3, arrivee: "26/10/2026", depart: "30/10/2026", heure_depart: "10:00", langue: "FR", code: "HMDXKBJ5Q3" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Elodie",   voyageurs: 4, arrivee: "26/10/2026", depart: "29/10/2026", heure_depart: "10:00", langue: "FR", code: "HM5KXQP3H3" },
+  { annonce: "Maison Bell'O 6P", nom: "Sandrine",   voyageurs: 4, arrivee: "29/08/2026", depart: "01/09/2026", heure_depart: "10:00", langue: "EN", code: "BELLO" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Freia",   voyageurs: 4, arrivee: "21/10/2026", depart: "25/10/2026", heure_depart: "10:00", langue: "DE", code: "HM3Q3PQHNW" },
+  { annonce: "Maison Bell'O 8P", nom: "Estelle",   voyageurs: 4, arrivee: "21/10/2026", depart: "25/10/2026", heure_depart: "10:00", langue: "NL", code: "HM9XYMWPBZ" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Chelsea",   voyageurs: 2, arrivee: "26/09/2026", depart: "29/09/2026", heure_depart: "10:00", langue: "EN", code: "HMRWX4HKS9" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Thomas",   voyageurs: 3, arrivee: "16/10/2026", depart: "19/10/2026", heure_depart: "10:00", langue: "EN", code: "HMFFSNS4BJ" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Michelle",      voyageurs: 4, arrivee: "01/10/2026", depart: "04/10/2026", heure_depart: "10:00", langue: "FR", code: "HMAZKZK5XA" },
+  { annonce: "Maison Bell'O 6P",        nom: "Julie",      voyageurs: 6, arrivee: "25/09/2026", depart: "27/09/2026", heure_depart: "10:00", langue: "FR", code: "HMDXYHZQZN" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Franziska",  voyageurs: 2, arrivee: "10/09/2026", depart: "13/09/2026", heure_depart: "10:00", langue: "DE", code: "HM9FT3XCJQ" },
+  { annonce: "Maison Bell'O 6P",        nom: "Marylène",     voyageurs: 3, arrivee: "08/09/2026", depart: "14/09/2026", heure_depart: "10:00", langue: "FR", code: "HMMBAKWMFD" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Anais",     voyageurs: 2, arrivee: "31/08/2026", depart: "05/09/2026", heure_depart: "10:00", langue: "FR", code: "HMYRZQWQNF" },
+  { annonce: "Bell'Etoile (Moustiers)", nom: "Nathalie",   voyageurs: 4, arrivee: "25/08/2026", depart: "28/08/2026", heure_depart: "10:00", langue: "FR", code: "HMB2JRYYN5" },
+  { annonce: "Maison Bell'O 8P",        nom: "Sylvia",   voyageurs: 4, arrivee: "22/08/2026", depart: "29/08/2026", heure_depart: "10:00", langue: "DE", code: "HMKZPX4TMA" }
 ];

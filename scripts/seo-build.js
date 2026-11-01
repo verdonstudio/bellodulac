@@ -94,7 +94,7 @@ const PUBLIC_PAGES = {
 // ---------- pages perso / techniques (a ne PAS indexer) ----------
 // home.html et tv.html affichent le nom du voyageur du jour ; display.html et
 // highlights.html sont des liens de reservation personnalises.
-const NOINDEX_PAGES = ['display.html', 'highlights.html', 'home.html', 'tv.html', 'video.html', 'url-generator.html'];
+const NOINDEX_PAGES = ['depart.html', 'display.html', 'highlights.html', 'home.html', 'tv.html', 'video.html', 'url-generator.html'];
 
 function replaceBlock(html, start, end, block, insertAfterRe) {
   const re = new RegExp(`[ \\t]*${start}[\\s\\S]*?${end}\\n?`, 'm');
