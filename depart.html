@@ -112,12 +112,17 @@
   var lang = (params.get('lang') || (res && res.langue) || 'FR').toUpperCase();
   if (C.LANGS.indexOf(lang) < 0) lang = 'FR';
 
+  // Lien vers la carte, centrée sur le POI "Poubelle – Bell'Étoile" (pois.js), dans la langue courante
+  function trashMapUrl() {
+    var poi = C.logements.moustiers.trashPoi, q = new URLSearchParams();
+    q.set('lang', lang); q.set('logement', 'moustiers'); q.set('poi', poi.id); q.set('fullscreen', '1'); q.set('zoom', String(poi.zoom));
+    return 'index.html?' + q.toString();
+  }
+
   // QR "poubelle" (depart.html?logement=moustiers&go=trash) : ouvre directement la carte avec
   // l'itinéraire à pied vers la poubelle, dans la langue de la réservation en cours (sinon FR).
   if (params.get('go') === 'trash' && house === 'moustiers') {
-    var poiR = C.logements.moustiers.trashPoi, qr = new URLSearchParams();
-    qr.set('lang', lang); qr.set('logement', 'moustiers'); qr.set('pos', poiR.pos); qr.set('fullscreen', '1'); qr.set('pin', 'true'); qr.set('trace', 'true');
-    window.location.replace('index.html?' + qr.toString());
+    window.location.replace(trashMapUrl());
     return;
   }
 
@@ -169,11 +174,8 @@
       var lead = '<b>' + esc(it.b) + ' : </b>' + esc(it.t);
       html += '<li>' + lead;
       if (it.k === 'trash' && house === 'moustiers') {
-        var poi = C.logements.moustiers.trashPoi;
-        var q = new URLSearchParams();
-        q.set('lang', lang); q.set('logement', 'moustiers'); q.set('pos', poi.pos); q.set('fullscreen', '1'); q.set('pin', 'true'); q.set('trace', 'true');
-        html += '<br><a class="mapbtn" href="index.html?' + q.toString() + '">📍 ' + esc(u.mapLink) + '</a>'
-             + '<img class="photo" src="' + poi.photo + '" alt="' + esc(u.photoAlt) + '" loading="lazy">';
+        html += '<br><a class="mapbtn" href="' + trashMapUrl() + '">📍 ' + esc(u.mapLink) + '</a>'
+             + '<img class="photo" src="' + C.logements.moustiers.trashPoi.photo + '" alt="' + esc(u.photoAlt) + '" loading="lazy">';
       }
       html += '</li>';
     });

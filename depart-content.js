@@ -167,7 +167,7 @@
     moustiers: {
       brand: "Bell'Étoile",
       // Position du POI "Poubelle – Bell'Étoile" (pois.js, id ordures-bell-etoile-moustiers)
-      trashPoi: { pos: '43.84694,6.2209', photo: 'images/poubelle-moustiers.jpg' }
+      trashPoi: { id: 'ordures-bell-etoile-moustiers', zoom: 18, photo: 'images/poubelle-moustiers.jpg' }
     },
     salles: { brand: "Bell'O du Lac" }
   };
