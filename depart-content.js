@@ -34,8 +34,8 @@
       hosts: 'Vos hôtes', signature: 'Sandrine et Stephan',
       mapLink: 'Voir la poubelle sur la carte (itinéraire à pied)',
       photoAlt: 'La poubelle, dans le petit chemin en face de la porte d’entrée',
-      qrCaption: 'Scannez ce code pour afficher ces instructions personnalisées (date et heure de départ).',
-      qrCaptionMoustiers: 'Scannez ce code pour afficher ces instructions personnalisées (date et heure de départ, plan pour accéder à la poubelle).',
+      qrCaption: "Scannez : pour avoir les instructions sur votre téléphone",
+      qrBin: "Scannez : pour être guidé jusqu'à la poubelle",
       lang: 'Langue'
     },
     EN: {
@@ -52,8 +52,8 @@
       hosts: 'Your hosts', signature: 'Sandrine and Stephan',
       mapLink: 'See the bin on the map (walking directions)',
       photoAlt: 'The bin, in the small lane opposite the front door',
-      qrCaption: 'Scan this code to see these instructions personalised for you (check-out date and time).',
-      qrCaptionMoustiers: 'Scan this code to see these instructions personalised for you (check-out date and time, map to the bin).',
+      qrCaption: "Scan: to get the instructions on your phone",
+      qrBin: "Scan: to be guided to the bin",
       lang: 'Language'
     },
     DE: {
@@ -70,8 +70,8 @@
       hosts: 'Ihre Gastgeber', signature: 'Sandrine und Stephan',
       mapLink: 'Mülleimer auf der Karte ansehen (Fußweg)',
       photoAlt: 'Der Mülleimer in der kleinen Gasse gegenüber der Eingangstür',
-      qrCaption: 'Scannen Sie diesen Code, um diese Hinweise persönlich angepasst anzuzeigen (Abreisedatum und -zeit).',
-      qrCaptionMoustiers: 'Scannen Sie diesen Code, um diese Hinweise persönlich angepasst anzuzeigen (Abreisedatum und -zeit, Karte zum Mülleimer).',
+      qrCaption: "Scannen: für die Hinweise auf Ihrem Handy",
+      qrBin: "Scannen: für den Weg zum Mülleimer",
       lang: 'Sprache'
     },
     NL: {
@@ -88,8 +88,8 @@
       hosts: 'Uw gastheren', signature: 'Sandrine en Stephan',
       mapLink: 'Bekijk de vuilnisbak op de kaart (wandelroute)',
       photoAlt: 'De vuilnisbak in het steegje tegenover de voordeur',
-      qrCaption: 'Scan deze code om deze instructies persoonlijk voor u te bekijken (vertrekdatum en -tijd).',
-      qrCaptionMoustiers: 'Scan deze code om deze instructies persoonlijk voor u te bekijken (vertrekdatum en -tijd, kaart naar de vuilnisbak).',
+      qrCaption: "Scan: voor de instructies op uw telefoon",
+      qrBin: "Scan: voor de route naar de vuilnisbak",
       lang: 'Taal'
     }
   };
@@ -98,25 +98,25 @@
   var common = {
     FR: {
       state: ['État du logement', "Merci de laisser le logement dans l'état dans lequel vous l'avez trouvé."],
-      linen: ['Linge', 'Rassemblez les serviettes sales.'],
+      linen: ['Linge', "Rassemblez les serviettes sales et retirez les housses de couette et d'oreiller."],
       kitchen: ['Cuisine', 'Laissez la cuisine propre, videz le frigo et le lave-vaisselle, et déposez la vaisselle sale restante dans la machine. Si vous pouvez également lancer le cycle de lavage de la vaisselle, cela nous aiderait énormément !'],
       keys: ['Clés', "Enfin, n'oubliez pas de déposer votre trousseau dans la boîte à clés."]
     },
     EN: {
       state: ['Condition of the accommodation', 'Please leave the accommodation in the same condition as you found it.'],
-      linen: ['Linen', 'Please gather the dirty towels.'],
+      linen: ['Linen', 'Please gather the dirty towels and remove the duvet covers and pillowcases.'],
       kitchen: ['Kitchen', 'Leave the kitchen clean, empty the fridge and the dishwasher, and put any remaining dirty dishes in the machine. If you could also start the dishwasher cycle, it would help us enormously!'],
       keys: ['Keys', 'Finally, please leave your keys in the key box.']
     },
     DE: {
       state: ['Zustand der Unterkunft', 'Bitte hinterlassen Sie die Unterkunft in dem Zustand, in dem Sie sie vorgefunden haben.'],
-      linen: ['Wäsche', 'Bitte sammeln Sie die schmutzigen Handtücher ein.'],
+      linen: ['Wäsche', 'Bitte sammeln Sie die schmutzigen Handtücher ein und ziehen Sie die Bettdecken- und Kopfkissenbezüge ab.'],
       kitchen: ['Küche', 'Hinterlassen Sie die Küche sauber, leeren Sie Kühlschrank und Geschirrspüler und stellen Sie das restliche schmutzige Geschirr in die Maschine. Wenn Sie zusätzlich das Spülprogramm starten könnten, würde uns das sehr helfen!'],
       keys: ['Schlüssel', 'Legen Sie zum Schluss Ihren Schlüsselbund bitte in den Schlüsselkasten.']
     },
     NL: {
       state: ['Staat van het verblijf', 'Laat het verblijf alstublieft achter zoals u het heeft aangetroffen.'],
-      linen: ['Linnengoed', 'Verzamel de vuile handdoeken.'],
+      linen: ['Linnengoed', 'Verzamel de vuile handdoeken en verwijder de dekbedovertrekken en kussenslopen.'],
       kitchen: ['Keuken', 'Laat de keuken schoon achter, maak de koelkast en de vaatwasser leeg en zet het resterende vuile servies in de machine. Als u ook het afwasprogramma zou kunnen starten, helpt ons dat enorm!'],
       keys: ['Sleutels', 'Leg tot slot uw sleutels in de sleutelkluis.']
     }

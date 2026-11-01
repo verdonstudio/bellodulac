@@ -13,7 +13,7 @@ const C = require('../depart-content.js');
 const ROOT = path.join(__dirname, '..');
 const BASE = 'https://bellodulac.vercel.app/depart.html?logement=';
 const SHEETS = {
-  moustiers: { file: 'FICHE_DEPART_MOUSTIERS.docx', logo: 'fiches/logos/bell-etoile.png', logoH: 2.1, qr: 'fiches/qr-moustiers.png' },
+  moustiers: { file: 'FICHE_DEPART_MOUSTIERS.docx', logo: 'fiches/logos/bell-etoile.png', logoH: 2.1, qr: 'fiches/qr-moustiers.png', qrBin: 'fiches/qr-poubelle-moustiers.png' },
   salles:    { file: 'FICHE_DEPART_SALLES.docx',    logo: 'fiches/logos/bellodulac.png',  logoH: 2.1, qr: 'fiches/qr-salles.png' },
 };
 const CM = 360000; // EMU par cm
@@ -47,10 +47,19 @@ function page(house, lang, isLast) {
   kids.push(new Paragraph({ alignment: AlignmentType.RIGHT, spacing: { after: 0 }, children: [new TextRun({ text: u.hosts, font: 'Cambria', size: 22 })] }));
   kids.push(new Paragraph({ alignment: AlignmentType.RIGHT, spacing: { after: 140 }, children: [new TextRun({ text: u.signature, font: 'Cambria', size: 22, bold: true })] }));
 
-  // QR code + légende
-  kids.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60, after: 60 }, children: [img(sh.qr, 4.6)] }));
-  kids.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: house === 'moustiers' ? u.qrCaptionMoustiers : u.qrCaption, font: 'Calibri', size: 21, color: '444444' })] }));
-  kids.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 0 }, children: [new TextRun({ text: BASE + house, font: 'Calibri', size: 17, color: '888888' })] }));
+  // QR code(s) + légende(s) : Moustiers = 2 QR (instructions + poubelle), Salles = 1 QR
+  const NBs = { top: NB, bottom: NB, left: NB, right: NB };
+  const qrCell = (file, text, w) => new TableCell({ width: { size: w, type: WidthType.DXA }, borders: NBs, children: [
+    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60, after: 60 }, children: [img(file, house === 'moustiers' ? 3.8 : 4.6)] }),
+    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text, font: 'Calibri', size: 21, color: '333333' })] }),
+  ] });
+  if (house === 'moustiers') {
+    kids.push(new Table({ width: { size: 10400, type: WidthType.DXA }, columnWidths: [5200, 5200],
+      rows: [new TableRow({ children: [qrCell(sh.qr, u.qrCaption, 5200), qrCell(sh.qrBin, u.qrBin, 5200)] })] }));
+  } else {
+    kids.push(new Table({ width: { size: 10400, type: WidthType.DXA }, columnWidths: [10400],
+      rows: [new TableRow({ children: [qrCell(sh.qr, u.qrCaption, 10400)] })] }));
+  }
   if (!isLast) kids.push(new Paragraph({ children: [new PageBreak()] }));
   return kids;
 }
@@ -78,10 +87,6 @@ async function build(house) {
 
 
 // ---------- Version 1 page : les 4 langues sur une seule feuille A4 (grille 2 x 2) ----------
-const CAPTION = {
-  moustiers: ['FR  Scannez : instructions personnalisées + plan de la poubelle', 'EN  Scan: personalised instructions + map to the bin', 'DE  Scannen: persönliche Hinweise + Karte zum Mülleimer', 'NL  Scan: persoonlijke instructies + kaart naar de vuilnisbak'],
-  salles:    ['FR  Scannez : instructions personnalisées (date et heure de départ)', 'EN  Scan: personalised instructions (check-out date and time)', 'DE  Scannen: persönliche Hinweise (Abreisedatum und -zeit)', 'NL  Scan: persoonlijke instructies (vertrekdatum en -tijd)'],
-};
 const NB = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
 const DOT = { style: BorderStyle.DOTTED, size: 4, color: 'AAAAAA' };
 
@@ -115,16 +120,19 @@ async function buildOnePage(house) {
     rows: [row('FR', 'EN', true), row('DE', 'NL', false)],
   });
   const header = new Header({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [img(sh.logo, 1.7)] })] });
-  const qrRow = new Table({
-    width: { size: 10400, type: WidthType.DXA }, columnWidths: [2600, 7800],
-    rows: [new TableRow({ children: [
-      new TableCell({ width: { size: 2600, type: WidthType.DXA }, borders: { top: NB, bottom: NB, left: NB, right: NB }, verticalAlign: VerticalAlign.CENTER,
-        children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [img(sh.qr, 4.2)] })] }),
-      new TableCell({ width: { size: 7800, type: WidthType.DXA }, borders: { top: NB, bottom: NB, left: NB, right: NB }, verticalAlign: VerticalAlign.CENTER,
-        children: CAPTION[house].map(t => new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: t.slice(0, 2) + '  ', bold: true, font: 'Calibri', size: 20, color: LINE }), new TextRun({ text: t.slice(4), font: 'Calibri', size: 20, color: '333333' })] }))
-          .concat([new Paragraph({ spacing: { before: 60 }, children: [new TextRun({ text: BASE + house, font: 'Calibri', size: 15, color: '888888' }), new TextRun({ text: '      Sandrine & Stephan', font: 'Cambria', size: 20, bold: true })] })]) }),
-    ] })],
-  });
+  const NB4 = { top: NB, bottom: NB, left: NB, right: NB };
+  const capLines = (key) => C.LANGS.map(l => new Paragraph({ spacing: { after: 30 }, children: [
+    new TextRun({ text: l + '  ', bold: true, font: 'Calibri', size: 18, color: LINE }),
+    new TextRun({ text: C.ui[l][key], font: 'Calibri', size: 18, color: '333333' })] }));
+  const qrCellImg = (file, w) => new TableCell({ width: { size: w, type: WidthType.DXA }, borders: NB4, verticalAlign: VerticalAlign.CENTER,
+    children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [img(file, house === 'moustiers' ? 3.3 : 4.2)] })] });
+  const qrCellTxt = (key, w) => new TableCell({ width: { size: w, type: WidthType.DXA }, borders: NB4, verticalAlign: VerticalAlign.CENTER, margins: { left: 80, right: 80 }, children: capLines(key) });
+  const qrRow = house === 'moustiers'
+    ? new Table({ width: { size: 10400, type: WidthType.DXA }, columnWidths: [1900, 3300, 1900, 3300],
+        rows: [new TableRow({ children: [qrCellImg(sh.qr, 1900), qrCellTxt('qrCaption', 3300), qrCellImg(sh.qrBin, 1900), qrCellTxt('qrBin', 3300)] })] })
+    : new Table({ width: { size: 10400, type: WidthType.DXA }, columnWidths: [2600, 7800],
+        rows: [new TableRow({ children: [qrCellImg(sh.qr, 2600), qrCellTxt('qrCaption', 7800)] })] });
+  const signature = new Paragraph({ alignment: AlignmentType.RIGHT, spacing: { before: 60 }, children: [new TextRun({ text: 'Sandrine & Stephan', font: 'Cambria', size: 20, bold: true })] });
   const doc = new Document({
     creator: "Bell'O du Lac & Bell'Étoile",
     title: 'Instructions de départ (1 page) — ' + C.logements[house].brand,
@@ -133,7 +141,7 @@ async function buildOnePage(house) {
     sections: [{
       properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 900, right: 753, bottom: 500, left: 753, header: 300, footer: 200 } } },
       headers: { default: header },
-      children: [table, new Paragraph({ spacing: { before: 60, after: 60 }, border: { top: { style: BorderStyle.SINGLE, size: 6, color: LINE, space: 4 } }, children: [] }), qrRow],
+      children: [table, new Paragraph({ spacing: { before: 60, after: 60 }, border: { top: { style: BorderStyle.SINGLE, size: 6, color: LINE, space: 4 } }, children: [] }), qrRow, signature],
     }],
   });
   const out = path.join(ROOT, 'fiches', sh.file.replace('.docx', '_1PAGE.docx'));

@@ -112,6 +112,15 @@
   var lang = (params.get('lang') || (res && res.langue) || 'FR').toUpperCase();
   if (C.LANGS.indexOf(lang) < 0) lang = 'FR';
 
+  // QR "poubelle" (depart.html?logement=moustiers&go=trash) : ouvre directement la carte avec
+  // l'itinéraire à pied vers la poubelle, dans la langue de la réservation en cours (sinon FR).
+  if (params.get('go') === 'trash' && house === 'moustiers') {
+    var poiR = C.logements.moustiers.trashPoi, qr = new URLSearchParams();
+    qr.set('lang', lang); qr.set('logement', 'moustiers'); qr.set('pos', poiR.pos); qr.set('fullscreen', '1'); qr.set('pin', 'true'); qr.set('trace', 'true');
+    window.location.replace('index.html?' + qr.toString());
+    return;
+  }
+
   var LOCALE = { FR: 'fr-FR', EN: 'en-GB', DE: 'de-DE', NL: 'nl-NL' };
   function fmtDate(iso, long) {
     var p = iso.split('-'); var d = new Date(+p[0], +p[1] - 1, +p[2]);
