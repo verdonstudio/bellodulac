@@ -393,6 +393,22 @@ const reservations = {
         "plage-bellodulac2": "index.html?lang=DE&logement=salles6&edatestart=2027-09-23&edateend=2027-10-01&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
         "martel": "index.html?lang=DE&logement=salles6&edatestart=2027-09-23&edateend=2027-10-01&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
     },
+    "HMQQCXJQPT": {
+        "home": "home.html?res=HMQQCXJQPT&lang=EN&logement=salles8",
+        "map": "index.html?lang=EN&logement=salles8&edatestart=2027-06-05&edateend=2027-06-14&zoom=12&pos=43.77258%2C6.20831",
+        "evenements": "evenements.html?lang=EN&logement=salles8&edatestart=2027-06-05&edateend=2027-06-14",
+        "highlights": "highlights.html?lang=EN&logement=salles8&edatestart=2027-06-05&edateend=2027-06-14&from=evenements&showevents=3stars&showpois=true",
+        "panorama": "panorama.html?lang=EN&logement=salles8&edatestart=2027-06-05&edateend=2027-06-14",
+        "today": "highlights.html?lang=EN&logement=salles8&edatestart=2027-06-05&edateend=2027-06-14&from=evenements&showevents=today&showpois=today",
+        "parking": "index.html?logement=salles8&lang=EN&edatestart=2027-06-05&edateend=2027-06-14&zoom=16.5&pos=43.84511%2C6.22124&cat=parking_gratuit%2Cparking_zonebleu%2Cparking_payant&fullscreen=1",
+        "trash": "index.html?logement=salles8&lang=EN&edatestart=2027-06-05&edateend=2027-06-14&zoom=16&pos=43.84536%2C6.2203&cat=ordures&fullscreen=1",
+        "baudinard": "index.html?logement=salles8&lang=EN&edatestart=2027-06-05&edateend=2027-06-14&zoom=13&pos=43.73917%2C6.08299&fullscreen=1&poi=aquattitude-montpezat",
+        "quinson": "index.html?logement=salles8&lang=EN&edatestart=2027-06-05&edateend=2027-06-14&zoom=16.5&pos=43.69367%2C6.04253&fullscreen=1&poi=canoe-quinson",
+        "galetas": "index.html?logement=salles8&lang=EN&edatestart=2027-06-05&edateend=2027-06-14&zoom=15.5&pos=43.80229%2C6.25044&poi=canoe-galetas-1",
+        "plage-bellodulac1": "index.html?lang=EN&logement=salles8&edatestart=2027-06-05&edateend=2027-06-14&zoom=17&pos=43.77194%2C6.20816&fullscreen=1&trace=plage-salles",
+        "plage-bellodulac2": "index.html?lang=EN&logement=salles8&edatestart=2027-06-05&edateend=2027-06-14&zoom=17&pos=43.77341%2C6.20707&fullscreen=1&trace=plage-margaridon",
+        "martel": "index.html?lang=EN&logement=salles8&edatestart=2027-06-05&edateend=2027-06-14&zoom=12&pos=43.77109%2C6.30169&poi=blanc-martel"
+    },
     "default": {
         "today": "highlights.html?from=evenements&showevents=today&showpois=today",
         "evenements": "evenements.html?lang=FR&showevents=today",
